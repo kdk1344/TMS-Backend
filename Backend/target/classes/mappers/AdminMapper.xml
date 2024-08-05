@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- user-mapper.xml -->
+<mapper namespace="com.tms.backend.mapper.AdminMapper">
+    <insert id="insert" parameterType="User">
+		INSERT INTO TBLL_MEMBER (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
+		VALUES(#{userID}, #{userName}, #{password}, #{name}, 0, #{userType})
+	</insert>
+</mapper>

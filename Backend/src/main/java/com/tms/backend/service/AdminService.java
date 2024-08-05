@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tms.backend.controller.UserController;
+import com.tms.backend.mapper.AdminMapper;
 import com.tms.backend.mapper.UserMapper;
 import com.tms.backend.vo.User;
 
@@ -14,20 +15,12 @@ import lombok.extern.log4j.Log4j;
 
 @Service
 @Log4j
-public class UserService {
+public class AdminService {
 
     @Autowired
-    private UserMapper userMapper;
+    private AdminMapper adminmapper;
 
-    public User authenticateUser(String userID, String Password) {
-        User user = userMapper.getUserByUserID(userID);
-        if(user == null) {
-        	return null;
-        }
-        if(user.getPassword().equals(Password)) {
-        	return user;
-        } else {
-        	return null;
-        }
-    }
+    public void join(User user) {
+		adminmapper.insert(user);
+	}
 }
