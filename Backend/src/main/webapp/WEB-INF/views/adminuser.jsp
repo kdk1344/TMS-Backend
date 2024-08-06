@@ -25,28 +25,28 @@
         <div class="content">
             <div class="buttons">
                 <button onclick="addNew()">등록</button>
-                	<div style="background-color: #fff; border: 1px solid #000; padding: 20px; width: 300px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 4px 8px rgba(0,0,0,0.1); display:none;">
+                	<div style="background-color: #fff; border: 1px solid #000; padding: 20px; width: 300px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 			            <h1>사용자 등록/수정</h1>
 			            <form action="join" method="post">
 			                <label for="userID">ID</label>
 			                <input type="text" id="userID" name="userID" placeholder="수정시 변경불가">
 			
-			                <label for="userName">사용자명</label>
-			                <input type="text" id="userName" name="userName">
+			                <label for="username">사용자명</label>
+			                <input type="text" id="username" name="username">
 			
 			                <label for="password">패스위드</label>
 			                <input type="password" id="password" name="password">
 			
-			                <label for="userType">직무</label>
-			                <select id="userType" name="userType">
+			                <label for="roleName">직무</label>
+			                <select id="roleName" name="roleName">
 			                    <option value="type1">Type 1</option>
 			                    <option value="type2">Type 2</option>
 								<option value="type3">Type 3</option>
 								<option value="type4">Type 4</option>
 			                </select>
 			
-			                <button type="button" onclick="submitForm()">저장</button>
-			                <button type="button" onclick="closePopup()">닫기</button>
+			                <li><input type="submit" class="button" value="저장" /></li>
+			                <li><input type="submit" class="button" value="닫기" /></li>
 			            </form>
 			        </div>
                 <button onclick="deleteSelected()">삭제</button>

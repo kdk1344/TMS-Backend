@@ -54,9 +54,5 @@ public class UserController {
 			}
 		}
     
-    @GetMapping("/adminuser")
-    public String UserPage() {
-        return "adminuser";
-    }
 
 }

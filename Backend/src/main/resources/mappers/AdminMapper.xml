@@ -4,7 +4,7 @@
 <!-- user-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.AdminMapper">
     <insert id="insert" parameterType="User">
-		INSERT INTO TBLL_MEMBER (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
-		VALUES(#{userID}, #{userName}, #{password}, #{name}, 0, #{userType})
+		INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
+		VALUES(#{userID}, #{username}, #{password}, 0, #{roleName})
 	</insert>
 </mapper>
