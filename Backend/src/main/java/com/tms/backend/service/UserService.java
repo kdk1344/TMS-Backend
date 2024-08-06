@@ -2,8 +2,8 @@
 package com.tms.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tms.backend.controller.UserController;
@@ -15,6 +15,9 @@ import lombok.extern.log4j.Log4j;
 @Service
 @Log4j
 public class UserService {
+	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserMapper userMapper;
@@ -24,7 +27,7 @@ public class UserService {
         if(user == null) {
         	return null;
         }
-        if(user.getPassword().equals(Password)) {
+        if(passwordEncoder.matches(Password, user.getPassword())) {
         	return user;
         } else {
         	return null;
