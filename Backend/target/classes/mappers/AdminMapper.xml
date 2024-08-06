@@ -5,6 +5,13 @@
 <mapper namespace="com.tms.backend.mapper.AdminMapper">
     <insert id="insert" parameterType="User">
 		INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
-		VALUES(#{userID}, #{username}, #{password}, 0, #{roleName})
+		VALUES(#{userID}, #{username}, #{password}, 
+		CASE 
+            WHEN #{roleName} = 'type1' THEN 1
+            WHEN #{roleName} = 'type2' THEN 2
+            WHEN #{roleName} = 'type3' THEN 3
+            ELSE 0
+        END,
+        #{roleName})
 	</insert>
 </mapper>
