@@ -36,5 +36,15 @@
     <delete id="deleteUser" parameterType="String">
         DELETE FROM users WHERE USER_ID = #{userID}
     </delete>
+    
+    <select id="findAll" resultType="User" parameterType="Criteria">
+        SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_NAME as roleName
+        FROM users
+        LIMIT #{pageStart}, #{perPageNum}
+    </select>
+
+    <select id="countUsers" resultType="int">
+        SELECT COUNT(*) FROM users
+    </select>
 	
 </mapper>

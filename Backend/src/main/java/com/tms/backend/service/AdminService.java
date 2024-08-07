@@ -1,6 +1,8 @@
 
 package com.tms.backend.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.AdminMapper;
 import com.tms.backend.mapper.UserMapper;
+import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
@@ -45,4 +48,13 @@ public class AdminService {
     public boolean deleteUser(String id) {
         return adminmapper.deleteUser(id) > 0;
     }
+    
+    public int getTotal(Criteria criteria) {
+		return adminmapper.countUsers();
+	}
+    
+    public List<User> getList(Criteria criteria) {
+    	log.info("!!!!");
+		return adminmapper.findAll(criteria);
+	}
 }

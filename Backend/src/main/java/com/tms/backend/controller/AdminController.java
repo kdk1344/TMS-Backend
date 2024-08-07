@@ -22,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.UserService;
+import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
@@ -41,7 +43,10 @@ public class AdminController {
 	private UserService userService;
     
     @GetMapping("/adminuser")
-    public String UserPage() {
+    public String UserPage(Criteria criteria, Model model) {
+    	log.info(adminService.getList(criteria));
+        model.addAttribute("userList", adminService.getList(criteria));
+        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
         return "adminuser";
     }
     
@@ -74,7 +79,10 @@ public class AdminController {
     }
     
     @GetMapping("test")
-    public String TestPage() {
+    public String TestPage(Criteria criteria, Model model) {
+    	log.info(adminService.getList(criteria));
+        model.addAttribute("userList", adminService.getList(criteria));
+        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
     	return "test";
     }
     
