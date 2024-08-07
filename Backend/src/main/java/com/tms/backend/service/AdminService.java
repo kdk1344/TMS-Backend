@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.AdminMapper;
@@ -30,4 +31,18 @@ public class AdminService {
     	user.setPassword(encodedPassword);
 		adminmapper.insert(user);
 	}
+    
+    public void saveUser(User user) {
+        adminmapper.insertUser(user);
+    }
+    
+    @Transactional
+    public boolean updateUser(User user) {
+        return adminmapper.updateUser(user) > 0;
+    }
+    
+    @Transactional
+    public boolean deleteUser(String id) {
+        return adminmapper.deleteUser(id) > 0;
+    }
 }

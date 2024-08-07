@@ -4,8 +4,12 @@
 <!-- user-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.UserMapper">
     <select id="getUserByUserID" parameterType="String" resultType="User">
-        SELECT USER_ID, PASSWORD
+        SELECT *
         FROM users
         WHERE USER_ID = #{userID}
+    </select>
+    
+    <select id="findAll" resultType="User">
+        SELECT * FROM users
     </select>
 </mapper>

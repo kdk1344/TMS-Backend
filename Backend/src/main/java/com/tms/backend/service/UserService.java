@@ -1,6 +1,8 @@
 
 package com.tms.backend.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,5 +34,9 @@ public class UserService {
         } else {
         	return null;
         }
+    }
+    
+    public List<User> getAllUsers() {
+        return userMapper.findAll();
     }
 }
