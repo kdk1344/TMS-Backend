@@ -3,63 +3,83 @@
 	<html lang="ko">
 
 	<head>
-		<meta charset="UTF-8">
+		<%@ include file="./common.jsp" %>
+			<meta charset="UTF-8">
 			<link rel="stylesheet" type="text/css" href="../../resources/css/style.css">
-			<title>System Administor</title>
+			<link rel="stylesheet" type="text/css" href="../../resources/css/adminuser.css">
 
+			<title>System Administor</title>
+			<script type="module" src="../../resources/js/adminuser.js" defer></script>
 	</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>TMS</h1>
-            <div class="search-bar">
-                <select name="category" id="category">
-                    <option value="option1">카테고리1</option>
-                    <option value="option2">카테고리2</option>
-                </select>
-                <input type="text" id="search-input" placeholder="조회 조건 입력">
-                <button onclick="search()">조회</button>
-                <button onclick="reset()">초기화</button>
-            </div>
-        </div>
-        <div class="content">
-            <div class="buttons">
-                <button onclick="addNew()">등록</button>
-                	<div style="background-color: #fff; border: 1px solid #000; padding: 20px; width: 300px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-			            <h1>사용자 등록/수정</h1>
-			            <form action="join" method="post">
-			                <label for="userID">ID</label>
-			                <input type="text" id="userID" name="userID" placeholder="수정시 변경불가">
-			
-			                <label for="username">사용자명</label>
-			                <input type="text" id="username" name="username">
-			
-			                <label for="password">패스위드</label>
-			                <input type="password" id="password" name="password">
-			
-			                <label for="roleName">직무</label>
-			                <select id="roleName" name="roleName">
-			                    <option value="type1">Type 1</option>
-			                    <option value="type2">Type 2</option>
-								<option value="type3">Type 3</option>
-								<option value="type4">Type 4</option>
-			                </select>
-			
-			                <li><input type="submit" class="button" value="저장" /></li>
-			                <li><input type="submit" class="button" value="닫기" /></li>
-			            </form>
-			        </div>
-                <button onclick="deleteSelected()">삭제</button>
-            </div>
-            <div class="list">
-                <!-- 리스트 데이터 표시 영역 -->
-            </div>
-        </div>
-        <div class="footer">
-            <span>총회 리스팅 영역</span>
-        </div>
-    </div>
-</body>
-<script type="text/javasript">
+
+	<body>
+		<div class="container">
+			<div class="header">
+				<h1>TMS</h1>
+				<div class="search-bar">
+					<select name="category" id="category">
+						<option value="option1">카테고리1</option>
+						<option value="option2">카테고리2</option>
+					</select>
+					<input type="text" id="search-input" placeholder="조회 조건 입력">
+					<button onclick="search()">조회</button>
+					<button onclick="reset()">초기화</button>
+				</div>
+			</div>
+			<div class="content">
+				<div class="buttons">
+					<!-- Trigger the modal with a button -->
+					<button onclick="addNew()">등록</button>
+
+					<!-- Modal -->
+					<div id="userRegisterModal" class="modal">
+						<!-- Modal content -->
+						<div class="modal-content">
+							<h2>사용자 등록/수정</h2>
+							<form action="join" method="post">
+								<div class="form group">
+									<label for="userID">아이디</label>
+									<input type="text" id="userID" name="userID" placeholder="수정 시 변경불가" required>
+								</div>
+
+								<div class="form group">
+									<label for="username">사용자명</label>
+									<input type="text" id="username" name="username" required>
+								</div>
+
+								<div class="form group">
+									<label for="password">비밀번호</label>
+									<input type="password" id="password" name="password" required>
+								</div>
+
+								<div class="form group">
+									<label for="roleName">직무</label>
+									<select id="roleName" name="roleName">
+										<option value="type1">직무 1</option>
+										<option value="type2">직무 2</option>
+										<option value="type3">직무 3</option>
+										<option value="type4">직무 4</option>
+									</select>
+								</div>
+
+								<button type="submit">저장</button>
+								<button type="button" id="closeModalButton">닫기</button>
+							</form>
+						</div>
+					</div>
+
+					<button onclick="deleteSelected()">삭제</button>
+				</div>
+				<div class="list">
+					<!-- 리스트 데이터 표시 영역 -->
+				</div>
+			</div>
+			<div class="footer">
+				<span>총회 리스팅 영역</span>
+			</div>
+		</div>
+	</body>
+	<script type="text/javasript">
 </script>
-</html>
+
+	</html>
