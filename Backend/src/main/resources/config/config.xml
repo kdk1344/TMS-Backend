@@ -8,6 +8,7 @@
 	<typeAliases>
 		<typeAlias type="com.tms.backend.vo.User" alias="User"/>
 		<typeAlias type="com.tms.backend.vo.Criteria" alias="Criteria"/>
+		<typeAlias type="com.tms.backend.vo.Notice" alias="Notice"/>
 	</typeAliases>
 
 </configuration>

@@ -13,6 +13,7 @@ import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.AdminMapper;
 import com.tms.backend.mapper.UserMapper;
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
@@ -61,7 +62,15 @@ public class AdminService {
  // 여러 사용자 정보를 데이터베이스에 저장
     public void saveAll(List<User> users) {
         for (User user : users) {
+        	log.info(user);
+        	String encodedPassword = passwordEncoder.encode(user.getPassword());
+        	log.info(encodedPassword);
+        	user.setPassword(encodedPassword);
             adminmapper.insertUser(user);
         }
+    }
+    
+    public List<Notice> getAllnotices() {
+        return adminmapper.findntAll();
     }
 }

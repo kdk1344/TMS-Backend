@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
@@ -20,4 +21,5 @@ public interface AdminMapper {
     public int deleteUser(String id);
     public List<User> findAll(Criteria criteria);
 	public int countUsers(Criteria criteria);
+	public List<Notice> findntAll();
 }

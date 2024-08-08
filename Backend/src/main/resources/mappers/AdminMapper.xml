@@ -62,5 +62,9 @@
             AND AUTHORITY_NAME = #{authorityName}
         </if>
     </select>
+    
+    <select id="findntAll" resultType="Notice">
+        SELECT * FROM Notices ORDER BY POST_DATE DESC
+    </select>
 	
 </mapper>

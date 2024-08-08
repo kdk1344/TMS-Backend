@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
 
@@ -52,6 +53,20 @@ public class AdminController {
         model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
         return "adminuser";
     }
+    
+    @GetMapping("/notice")
+    public String getNotices(Model model) {
+        List<Notice> notices = adminService.getAllnotices();
+        model.addAttribute("notices", notices);
+        return "notice";
+    }
+    
+    @GetMapping(value="api/notices", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Notice> getUserList() {
+        return adminService.getAllnotices();
+    }
+    
     
     @PostMapping("join")
     public String Join(User user) {
