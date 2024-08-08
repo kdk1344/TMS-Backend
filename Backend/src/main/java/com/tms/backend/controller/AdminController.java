@@ -117,36 +117,6 @@ public class AdminController {
         return adminService.getList(criteria);
     }
     
-//
-//    @PostMapping("/upload")
-//    public String uploadExcel(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-//        if (file.isEmpty()) {
-//            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-//            return "redirect:/tms/adminuser";
-//        }
-//
-//        try {
-//            Workbook workbook = new XSSFWorkbook(file.getInputStream());
-//            Sheet sheet = workbook.getSheetAt(0);
-//            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-//                Row row = sheet.getRow(i);
-//                User user = new User();
-//                user.setuserID(row.getCell(0).getStringCellValue());
-//                user.setuserName(row.getCell(1).getStringCellValue());
-//                user.setPassword(row.getCell(2).getStringCellValue());
-//                user.setauthorityCode((int) row.getCell(3).getNumericCellValue());
-//                user.setauthorityName(row.getCell(4).getStringCellValue());
-//                adminService.saveUser(user);
-//            }
-//            workbook.close();
-//        } catch (IOException e) {
-//            log.error("Failed to upload the Excel file", e);
-//        }
-//
-//        redirectAttributes.addFlashAttribute("message", "File uploaded successfully");
-//        return "redirect:/tms/adminuser";
-//    }
-    
     // 전체 사용자 정보를 엑셀로 다운로드
     @GetMapping("/downloadAll")
     public void downloadAllUsers(HttpServletResponse response) throws IOException {
@@ -206,7 +176,7 @@ public class AdminController {
     public String uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "파일이 없습니다. 다시 시도해 주세요.");
-            return "redirect:/tms/test";
+            return "redirect:/tms/adminuser";
         }
 
         try (InputStream inputStream = file.getInputStream()) {
@@ -237,7 +207,7 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("message", "파일 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
         }
 
-        return "redirect:/tms/test";
+        return "redirect:/tms/adminuser";
     }
 
 }
