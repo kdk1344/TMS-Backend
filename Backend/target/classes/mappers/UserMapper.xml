@@ -13,9 +13,23 @@
         SELECT USER_ID, USER_NAME, AUTHORITY_NAME FROM users
     </select>
     
-    <select id="findUsersByFilter" parameterType="string" resultType="User">
-        SELECT USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME 
-        FROM Users 
-        WHERE USER_NAME LIKE CONCAT('%', #{filter}, '%')
+    <select id="UfindAll" resultType="User">
+        SELECT USER_ID as userId, USER_NAME as userName, PASSWORD as password,
+        AUTHORITY_CODE as roleCode, AUTHORITY_NAME as authorityName 
+		FROM users
+    </select>
+    
+    <select id="findUsersByCriteria" parameterType="Criteria" resultType="User">
+        SELECT USER_ID AS userId, USER_NAME as userName, PASSWORD as password,
+        AUTHORITY_CODE as roleCode, AUTHORITY_NAME as authorityName  
+        FROM Users
+        WHERE 1=1
+        <if test="userName != null and userName != ''">
+            AND USER_NAME LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="authorityName != null and authorityName != ''">
+            AND AUTHORITY_NAME = #{authorityName}
+        </if>
+        ORDER BY USER_ID
     </select>
 </mapper>

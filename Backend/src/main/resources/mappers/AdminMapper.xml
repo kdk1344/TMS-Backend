@@ -5,29 +5,29 @@
 <mapper namespace="com.tms.backend.mapper.AdminMapper">
     <insert id="insert" parameterType="User">
 		INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
-		VALUES(#{userID}, #{username}, #{password}, 
+		VALUES(#{userID}, #{userName}, #{password}, 
 		CASE 
-            WHEN #{roleName} = 'type1' THEN 1
-            WHEN #{roleName} = 'type2' THEN 2
-            WHEN #{roleName} = 'type3' THEN 3
+            WHEN #{authorityName} = 'type1' THEN 1
+            WHEN #{authorityName} = 'type2' THEN 2
+            WHEN #{authorityName} = 'type3' THEN 3
             ELSE 0
         END,
-        #{roleName})
+        #{authorityName})
 	</insert>
 	<insert id="insertUser" parameterType="User">
         INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
-        VALUES (#{userID}, #{username}, #{password},#{roleCode}, #{roleName})
+        VALUES (#{userID}, #{userName}, #{password},#{roleCode}, #{authorityName})
     </insert>
     
     <update id="updateUser" parameterType="com.tms.backend.vo.User">
         UPDATE users
-        SET UserName = #{user.username},
+        SET userName = #{user.userName},
             Password = #{user.password},
-            RoleName = #{user.roleName},
+            authorityName = #{user.authorityName},
             RoleCode = CASE 
-                          WHEN #{user.roleName} = 'type1' THEN 1
-                          WHEN #{user.roleName} = 'type2' THEN 2
-                          WHEN #{user.roleName} = 'type3' THEN 3
+                          WHEN #{user.authorityName} = 'type1' THEN 1
+                          WHEN #{user.authorityName} = 'type2' THEN 2
+                          WHEN #{user.authorityName} = 'type3' THEN 3
                           ELSE 0
                       END
         WHERE UserID = #{user.userID}
@@ -38,13 +38,29 @@
     </delete>
     
     <select id="findAll" resultType="User" parameterType="Criteria">
-        SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_NAME as roleName
+        SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_NAME as authorityName
         FROM users
+        WHERE 1=1
+        <if test="userName != null and userName != ''">
+            AND USER_NAME LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="authorityName != null and authorityName != ''">
+            AND AUTHORITY_NAME = #{authorityName}
+        </if>
+        ORDER BY USER_ID
         LIMIT #{pageStart}, #{perPageNum}
     </select>
 
     <select id="countUsers" resultType="int">
-        SELECT COUNT(*) FROM users
+        SELECT COUNT(*)
+        FROM Users
+        WHERE 1=1
+        <if test="userName != null and userName != ''">
+            AND USER_NAME LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="authorityName != null and authorityName != ''">
+            AND AUTHORITY_NAME = #{authorityName}
+        </if>
     </select>
 	
 </mapper>

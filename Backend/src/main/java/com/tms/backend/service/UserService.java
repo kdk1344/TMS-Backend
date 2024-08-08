@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.UserMapper;
+import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
@@ -35,11 +36,16 @@ public class UserService {
         }
     }
     
+    public List<User> getAllUser() {
+        return userMapper.UfindAll();
+    }
+    
     public List<User> getAllUsers() {
         return userMapper.findAll();
     }
     
-    public List<User> getFilteredUsers(String filter) {
-        return userMapper.findUsersByFilter(filter);
+    // 조건에 맞는 사용자 정보 가져오기
+    public List<User> getFilteredUsers(Criteria criteria) {
+        return userMapper.findUsersByCriteria(criteria);
     }
 }

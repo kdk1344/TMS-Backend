@@ -80,10 +80,22 @@ public class AdminController {
     }
     
     @GetMapping("test")
-    public String TestPage(Criteria criteria, Model model) {
-    	log.info(adminService.getList(criteria));
-        model.addAttribute("userList", adminService.getList(criteria));
-        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
+    public String TestPage(@RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "userName", required = false) String userName,
+            @RequestParam(value = "authorityName", required = false) String authorityName,
+            Model model) {
+
+        Criteria criteria = new Criteria();
+        criteria.setPage(page);
+        criteria.setuserName(userName);
+        criteria.setauthorityName(authorityName);
+
+        List<User> userList = adminService.getList(criteria);
+        int total = adminService.getTotal(criteria);
+        log.info(userList);
+
+        model.addAttribute("userList", userList);
+        model.addAttribute("pageDTO", new PageDTO(total, criteria));
     	return "test";
     }
     
@@ -91,14 +103,14 @@ public class AdminController {
     @ResponseBody
     public List<User> getUserList(
         @RequestParam(value = "page", defaultValue = "1") int page,
-        @RequestParam(value = "username", required = false) String username,
-        @RequestParam(value = "roleName", required = false) String roleName) {
+        @RequestParam(value = "userName", required = false) String userName,
+        @RequestParam(value = "authorityName", required = false) String authorityName) {
 
     	Criteria criteria = new Criteria();
         criteria.setPage(page);
         criteria.setPerPageNum(10);
-        criteria.setUsername(username);
-        criteria.setRoleName(roleName);
+        criteria.setuserName(userName);
+        criteria.setauthorityName(authorityName);
 
         return adminService.getList(criteria);
     }
@@ -112,19 +124,19 @@ public class AdminController {
 //
 //        Row headerRow = sheet.createRow(0);
 //        headerRow.createCell(0).setCellValue("UserID");
-//        headerRow.createCell(1).setCellValue("UserName");
+//        headerRow.createCell(1).setCellValue("userName");
 //        headerRow.createCell(2).setCellValue("Password");
 //        headerRow.createCell(3).setCellValue("RoleCode");
-//        headerRow.createCell(4).setCellValue("RoleName");
+//        headerRow.createCell(4).setCellValue("authorityName");
 //
 //        int rowNum = 1;
 //        for (User user : userList) {
 //            Row row = sheet.createRow(rowNum++);
 //            row.createCell(0).setCellValue(user.getuserID());
-//            row.createCell(1).setCellValue(user.getUsername());
+//            row.createCell(1).setCellValue(user.getuserName());
 //            row.createCell(2).setCellValue(user.getPassword());
 //            row.createCell(3).setCellValue(user.getRoleCode());
-//            row.createCell(4).setCellValue(user.getRoleName());
+//            row.createCell(4).setCellValue(user.getauthorityName());
 //        }
 //
 //        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -149,10 +161,10 @@ public class AdminController {
 //                Row row = sheet.getRow(i);
 //                User user = new User();
 //                user.setuserID(row.getCell(0).getStringCellValue());
-//                user.setUsername(row.getCell(1).getStringCellValue());
+//                user.setuserName(row.getCell(1).getStringCellValue());
 //                user.setPassword(row.getCell(2).getStringCellValue());
 //                user.setRoleCode((int) row.getCell(3).getNumericCellValue());
-//                user.setRoleName(row.getCell(4).getStringCellValue());
+//                user.setauthorityName(row.getCell(4).getStringCellValue());
 //                adminService.saveUser(user);
 //            }
 //            workbook.close();
@@ -167,7 +179,7 @@ public class AdminController {
     // 전체 사용자 정보를 엑셀로 다운로드
     @GetMapping("/downloadAll")
     public void downloadAllUsers(HttpServletResponse response) throws IOException {
-        List<User> userList = userService.getAllUsers();
+        List<User> userList = userService.getAllUser();
         log.info("check");
         log.info(userList);
         exportToExcel(response, userList, "all_users.xlsx");
@@ -175,8 +187,16 @@ public class AdminController {
 
     // 조회된 사용자 정보를 엑셀로 다운로드
     @GetMapping("/downloadFiltered")
-    public void downloadFilteredUsers(@RequestParam("filter") String filter, HttpServletResponse response) throws IOException {
-        List<User> filteredUserList = userService.getFilteredUsers(filter);
+    public void downloadFilteredUsers(
+            @RequestParam(value = "userName", required = false) String userName,
+            @RequestParam(value = "authorityName", required = false) String authorityName,
+            HttpServletResponse response) throws IOException {
+
+        Criteria criteria = new Criteria();
+        criteria.setuserName(userName);
+        criteria.setauthorityName(authorityName);
+
+        List<User> filteredUserList = userService.getFilteredUsers(criteria);
         exportToExcel(response, filteredUserList, "filtered_users.xlsx");
     }
 
@@ -187,19 +207,20 @@ public class AdminController {
 
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("UserID");
-        headerRow.createCell(1).setCellValue("UserName");
+        headerRow.createCell(1).setCellValue("userName");
         headerRow.createCell(2).setCellValue("Password");
         headerRow.createCell(3).setCellValue("AuthorityCode");
         headerRow.createCell(4).setCellValue("AuthorityName");
 
         int rowNum = 1;
         for (User user : userList) {
+        	log.info(user);
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(user.getuserID());
-            row.createCell(1).setCellValue(user.getUsername());
+            row.createCell(1).setCellValue(user.getuserName());
             row.createCell(2).setCellValue(user.getPassword());
             row.createCell(3).setCellValue(user.getRoleCode());
-            row.createCell(4).setCellValue(user.getRoleName());
+            row.createCell(4).setCellValue(user.getauthorityName());
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

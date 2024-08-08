@@ -19,5 +19,5 @@ public interface AdminMapper {
     public int updateUser(User user);
     public int deleteUser(String id);
     public List<User> findAll(Criteria criteria);
-	public int countUsers();
+	public int countUsers(Criteria criteria);
 }

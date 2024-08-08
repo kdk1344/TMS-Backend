@@ -9,8 +9,8 @@ import lombok.Data;
 public class Criteria {
     private int page;
     private int perPageNum;
-    private String username; // 사용자명 검색
-    private String roleName; // 권한명 검색
+    private String userName; // 사용자명 검색
+    private String authorityName; // 권한명 검색
 
     public Criteria() {
         this.page = 1;
@@ -37,19 +37,19 @@ public class Criteria {
         return (this.page - 1) * perPageNum;
     }
     
-    public String getUsername() {
-        return username;
+    public String getuserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setuserName(String userName) {
+        this.userName = userName;
     }
     
-    public String getRoleName() {
-        return roleName;
+    public String getauthorityName() {
+        return authorityName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setauthorityName(String authorityName) {
+        this.authorityName = authorityName;
     }
 }

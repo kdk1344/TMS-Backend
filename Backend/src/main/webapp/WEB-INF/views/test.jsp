@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<%@ include file="./common.jsp" %>
     <title>사용자 관리</title>
     <style>
         table {
@@ -35,13 +34,13 @@
     <h1>사용자 관리</h1>
 
     <div class="search-bar">
-        <form action="userList" method="get">
-            <input type="text" name="username" placeholder="사용자명 검색" value="${param.username}">
+        <form action="test" method="get">
+            <input type="text" name="userName" placeholder="사용자명 검색" value="${param.userName}">
             <select name="authorityName">
                 <option value="">직무 선택</option>
-                <option value="type1" ${param.roleName == 'type1' ? 'selected' : ''}>type1</option>
-                <option value="type2" ${param.roleName == 'type2' ? 'selected' : ''}>type2</option>
-                <option value="type3" ${param.roleName == 'type3' ? 'selected' : ''}>type3</option>
+                <option value="type1" ${param.authorityName == 'type1' ? 'selected' : ''}>type1</option>
+                <option value="type2" ${param.authorityName == 'type2' ? 'selected' : ''}>type2</option>
+                <option value="type3" ${param.authorityName == 'type3' ? 'selected' : ''}>type3</option>
             </select>
             <button type="submit">검색</button>
         </form>
@@ -73,8 +72,8 @@
             <c:forEach var="user" items="${userList}">
                 <tr>
                     <td>${user.userID}</td>
-                    <td>${user.username}</td>
-                    <td>${user.roleName}</td>
+                    <td>${user.userName}</td>
+                    <td>${user.authorityName}</td>
                 </tr>
             </c:forEach>
         </tbody>

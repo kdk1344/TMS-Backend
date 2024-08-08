@@ -6,10 +6,10 @@ import lombok.Data;
 public class User {
 
     private String userID;        // 사용자 ID
-    private String username;      // 사용자명
+    private String userName;      // 사용자명
     private String password;      // 패스워드
     private int roleCode;      // 권한 코드
-    private String roleName;      // 권한명
+    private String authorityName;      // 권한명
     
     // Getter 및 Setter
     public String getuserID() {
@@ -20,12 +20,12 @@ public class User {
         this.userID = userID;
     }
 
-    public String getUsername() {
-        return username;
+    public String getuserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setuserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -44,11 +44,11 @@ public class User {
         this.roleCode = roleCode;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getauthorityName() {
+        return authorityName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setauthorityName(String authorityName) {
+        this.authorityName = authorityName;
     }
 }

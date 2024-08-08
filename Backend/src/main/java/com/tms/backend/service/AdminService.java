@@ -50,11 +50,11 @@ public class AdminService {
     }
     
     public int getTotal(Criteria criteria) {
-		return adminmapper.countUsers();
+		return adminmapper.countUsers(criteria);
 	}
     
     public List<User> getList(Criteria criteria) {
-    	log.info("!!!!");
+    	log.info(criteria);
 		return adminmapper.findAll(criteria);
 	}
 }
