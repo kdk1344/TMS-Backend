@@ -51,8 +51,8 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="roleName">직무</label>
-                  <select id="roleName" name="roleName">
+                  <label for="authorityName">직무</label>
+                  <select id="authorityName" name="authorityName">
                     <option value="type1">직무 1</option>
                     <option value="type2">직무 2</option>
                     <option value="type3">직무 3</option>
