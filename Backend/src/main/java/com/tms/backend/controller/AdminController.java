@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,6 +86,23 @@ public class AdminController {
         model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
     	return "test";
     }
+    
+    @GetMapping(value="api/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<User> getUserList(
+        @RequestParam(value = "page", defaultValue = "1") int page,
+        @RequestParam(value = "username", required = false) String username,
+        @RequestParam(value = "roleName", required = false) String roleName) {
+
+    	Criteria criteria = new Criteria();
+        criteria.setPage(page);
+        criteria.setPerPageNum(10);
+        criteria.setUsername(username);
+        criteria.setRoleName(roleName);
+
+        return adminService.getList(criteria);
+    }
+    
     
 //    @GetMapping("/download")
 //    public void downloadExcel(HttpServletResponse response) throws IOException {

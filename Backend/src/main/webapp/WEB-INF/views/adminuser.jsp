@@ -70,9 +70,9 @@
 
           <button onclick="deleteSelected()">삭제</button>
         </div>
-        <div class="list">
+        <ul class="list" id="userList">
           <!-- 리스트 데이터 표시 영역 -->
-        </div>
+        </ul>
       </div>
       <div class="footer">
         <span>총회 리스팅 영역</span>
