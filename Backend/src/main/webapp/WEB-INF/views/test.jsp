@@ -58,6 +58,13 @@
             <input type="hidden" name="authorityName" value="${param.authorityName}">
             <button type="submit">조회된 사용자 다운로드</button>
         </form>
+        
+        <h1>엑셀 파일 업로드</h1>
+
+	    <form method="post" action="upload" enctype="multipart/form-data">
+	        <input type="file" name="file" accept=".xlsx" required />
+	        <button type="submit">업로드</button>
+	    </form>
     </div>
 
     <table>

@@ -15,13 +15,13 @@
     
     <select id="UfindAll" resultType="User">
         SELECT USER_ID as userId, USER_NAME as userName, PASSWORD as password,
-        AUTHORITY_CODE as roleCode, AUTHORITY_NAME as authorityName 
+        AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName 
 		FROM users
     </select>
     
     <select id="findUsersByCriteria" parameterType="Criteria" resultType="User">
         SELECT USER_ID AS userId, USER_NAME as userName, PASSWORD as password,
-        AUTHORITY_CODE as roleCode, AUTHORITY_NAME as authorityName  
+        AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName  
         FROM Users
         WHERE 1=1
         <if test="userName != null and userName != ''">

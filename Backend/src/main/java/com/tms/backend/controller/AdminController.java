@@ -1,6 +1,8 @@
 package com.tms.backend.controller;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.*;
@@ -115,37 +117,6 @@ public class AdminController {
         return adminService.getList(criteria);
     }
     
-    
-//    @GetMapping("/download")
-//    public void downloadExcel(HttpServletResponse response) throws IOException {
-//        List<User> userList = userService.getAllUsers();
-//        Workbook workbook = new XSSFWorkbook();
-//        Sheet sheet = workbook.createSheet("Users");
-//
-//        Row headerRow = sheet.createRow(0);
-//        headerRow.createCell(0).setCellValue("UserID");
-//        headerRow.createCell(1).setCellValue("userName");
-//        headerRow.createCell(2).setCellValue("Password");
-//        headerRow.createCell(3).setCellValue("RoleCode");
-//        headerRow.createCell(4).setCellValue("authorityName");
-//
-//        int rowNum = 1;
-//        for (User user : userList) {
-//            Row row = sheet.createRow(rowNum++);
-//            row.createCell(0).setCellValue(user.getuserID());
-//            row.createCell(1).setCellValue(user.getuserName());
-//            row.createCell(2).setCellValue(user.getPassword());
-//            row.createCell(3).setCellValue(user.getRoleCode());
-//            row.createCell(4).setCellValue(user.getauthorityName());
-//        }
-//
-//        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-//        response.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
-//        try (OutputStream os = response.getOutputStream()) {
-//            workbook.write(os);
-//        }
-//        workbook.close();
-//    }
 //
 //    @PostMapping("/upload")
 //    public String uploadExcel(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -163,7 +134,7 @@ public class AdminController {
 //                user.setuserID(row.getCell(0).getStringCellValue());
 //                user.setuserName(row.getCell(1).getStringCellValue());
 //                user.setPassword(row.getCell(2).getStringCellValue());
-//                user.setRoleCode((int) row.getCell(3).getNumericCellValue());
+//                user.setauthorityCode((int) row.getCell(3).getNumericCellValue());
 //                user.setauthorityName(row.getCell(4).getStringCellValue());
 //                adminService.saveUser(user);
 //            }
@@ -219,7 +190,7 @@ public class AdminController {
             row.createCell(0).setCellValue(user.getuserID());
             row.createCell(1).setCellValue(user.getuserName());
             row.createCell(2).setCellValue(user.getPassword());
-            row.createCell(3).setCellValue(user.getRoleCode());
+            row.createCell(3).setCellValue(user.getauthorityCode());
             row.createCell(4).setCellValue(user.getauthorityName());
         }
 
@@ -229,6 +200,44 @@ public class AdminController {
             workbook.write(os);
         }
         workbook.close();
+    }
+    
+    @PostMapping("/upload")
+    public String uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "파일이 없습니다. 다시 시도해 주세요.");
+            return "redirect:/tms/test";
+        }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            List<User> users = new ArrayList<User>();
+
+            // 첫 번째 행은 헤더이므로 건너뜁니다.
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    User user = new User();
+                    user.setuserID(row.getCell(0).getStringCellValue());
+                    user.setuserName(row.getCell(1).getStringCellValue());
+                    user.setPassword(row.getCell(2).getStringCellValue());
+                    user.setauthorityCode((int)row.getCell(3).getNumericCellValue());
+                    user.setauthorityName(row.getCell(4).getStringCellValue());
+                    users.add(user);
+                }
+            }
+
+            // 데이터베이스에 저장
+            adminService.saveAll(users);
+            redirectAttributes.addFlashAttribute("message", "파일 업로드가 성공적으로 완료되었습니다!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "파일 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        }
+
+        return "redirect:/tms/test";
     }
 
 }

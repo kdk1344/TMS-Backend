@@ -16,7 +16,7 @@
 	</insert>
 	<insert id="insertUser" parameterType="User">
         INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
-        VALUES (#{userID}, #{userName}, #{password},#{roleCode}, #{authorityName})
+        VALUES (#{userID}, #{userName}, #{password},#{authorityCode}, #{authorityName})
     </insert>
     
     <update id="updateUser" parameterType="com.tms.backend.vo.User">
@@ -24,7 +24,7 @@
         SET userName = #{user.userName},
             Password = #{user.password},
             authorityName = #{user.authorityName},
-            RoleCode = CASE 
+            authorityCode = CASE 
                           WHEN #{user.authorityName} = 'type1' THEN 1
                           WHEN #{user.authorityName} = 'type2' THEN 2
                           WHEN #{user.authorityName} = 'type3' THEN 3

@@ -57,4 +57,11 @@ public class AdminService {
     	log.info(criteria);
 		return adminmapper.findAll(criteria);
 	}
+    
+ // 여러 사용자 정보를 데이터베이스에 저장
+    public void saveAll(List<User> users) {
+        for (User user : users) {
+            adminmapper.insertUser(user);
+        }
+    }
 }

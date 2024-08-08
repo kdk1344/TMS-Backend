@@ -8,7 +8,7 @@ public class User {
     private String userID;        // 사용자 ID
     private String userName;      // 사용자명
     private String password;      // 패스워드
-    private int roleCode;      // 권한 코드
+    private int authorityCode;      // 권한 코드
     private String authorityName;      // 권한명
     
     // Getter 및 Setter
@@ -36,12 +36,12 @@ public class User {
         this.password = password;
     }
 
-    public int getRoleCode() {
-        return roleCode;
+    public int getauthorityCode() {
+        return authorityCode;
     }
 
-    public void setRoleCode(int roleCode) {
-        this.roleCode = roleCode;
+    public void setauthorityCode(int authorityCode) {
+        this.authorityCode = authorityCode;
     }
 
     public String getauthorityName() {

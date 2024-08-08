@@ -17,5 +17,5 @@ public interface UserMapper {
     public User getUserByUserID(String userID);
     public List<User> findAll();
     public List<User> UfindAll();
-    public List<User> findUsersByCriteria(@Param("criteria") Criteria criteria);
+    public List<User> findUsersByCriteria(Criteria criteria);
 }
