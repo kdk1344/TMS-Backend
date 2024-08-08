@@ -10,6 +10,12 @@
     </select>
     
     <select id="findAll" resultType="User">
-        SELECT * FROM users
+        SELECT USER_ID, USER_NAME, AUTHORITY_NAME FROM users
+    </select>
+    
+    <select id="findUsersByFilter" parameterType="string" resultType="User">
+        SELECT USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME 
+        FROM Users 
+        WHERE USER_NAME LIKE CONCAT('%', #{filter}, '%')
     </select>
 </mapper>

@@ -163,5 +163,51 @@ public class AdminController {
 //        redirectAttributes.addFlashAttribute("message", "File uploaded successfully");
 //        return "redirect:/tms/adminuser";
 //    }
+    
+    // 전체 사용자 정보를 엑셀로 다운로드
+    @GetMapping("/downloadAll")
+    public void downloadAllUsers(HttpServletResponse response) throws IOException {
+        List<User> userList = userService.getAllUsers();
+        log.info("check");
+        log.info(userList);
+        exportToExcel(response, userList, "all_users.xlsx");
+    }
+
+    // 조회된 사용자 정보를 엑셀로 다운로드
+    @GetMapping("/downloadFiltered")
+    public void downloadFilteredUsers(@RequestParam("filter") String filter, HttpServletResponse response) throws IOException {
+        List<User> filteredUserList = userService.getFilteredUsers(filter);
+        exportToExcel(response, filteredUserList, "filtered_users.xlsx");
+    }
+
+    // 엑셀 파일로 데이터를 내보내는 메서드
+    private void exportToExcel(HttpServletResponse response, List<User> userList, String fileName) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Users");
+
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("UserID");
+        headerRow.createCell(1).setCellValue("UserName");
+        headerRow.createCell(2).setCellValue("Password");
+        headerRow.createCell(3).setCellValue("AuthorityCode");
+        headerRow.createCell(4).setCellValue("AuthorityName");
+
+        int rowNum = 1;
+        for (User user : userList) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(user.getuserID());
+            row.createCell(1).setCellValue(user.getUsername());
+            row.createCell(2).setCellValue(user.getPassword());
+            row.createCell(3).setCellValue(user.getRoleCode());
+            row.createCell(4).setCellValue(user.getRoleName());
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        try (OutputStream os = response.getOutputStream()) {
+            workbook.write(os);
+        }
+        workbook.close();
+    }
 
 }

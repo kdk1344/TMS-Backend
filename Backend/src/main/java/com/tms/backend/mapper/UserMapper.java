@@ -3,6 +3,7 @@ package com.tms.backend.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.tms.backend.vo.User;
@@ -14,4 +15,5 @@ public interface UserMapper {
 
     public User getUserByUserID(String userID);
     public List<User> findAll();
+    public List<User> findUsersByFilter(@Param("filter") String filter);
 }

@@ -38,4 +38,8 @@ public class UserService {
     public List<User> getAllUsers() {
         return userMapper.findAll();
     }
+    
+    public List<User> getFilteredUsers(String filter) {
+        return userMapper.findUsersByFilter(filter);
+    }
 }
