@@ -27,7 +27,7 @@
 		<load-on-startup>1</load-on-startup>
 		
 		<multipart-config>
-			<location>C:\\upload\\temp</location>
+			<location>C:\Users\User\Downloads </location>
 			<max-file-size>20971520</max-file-size> <!-- 1MB * 20 업로드 되는 파일의 최대 크기 -->
 			<max-request-size>41943040</max-request-size> <!-- 1MB * 40 한 번에 올릴 수 있는 최대 크기 -->
 			<file-size-threshold>20971520</file-size-threshold> <!-- 20MB 임시 메모리 영역 사용 -->
