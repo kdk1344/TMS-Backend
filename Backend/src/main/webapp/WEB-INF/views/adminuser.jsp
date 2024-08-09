@@ -14,15 +14,6 @@
     <div class="container">
       <div class="header">
         <h1>TMS</h1>
-        <!-- <div class="search-bar">
-          <select name="category" id="category">
-            <option value="option1">카테고리1</option>
-            <option value="option2">카테고리2</option>
-          </select>
-          <input type="text" id="search-input" placeholder="조회 조건 입력" />
-          <button onclick="search()">조회</button>
-          <button onclick="reset()">초기화</button>
-        </div> -->
       </div>
       <div class="content">
         <!-- Modal -->
@@ -30,23 +21,23 @@
           <!-- Modal content -->
           <div class="modal-content">
             <h2>사용자 등록/수정</h2>
-            <form action="join" method="post">
-              <div class="form-group">
+            <form action="join" method="post" class="modal-form">
+              <div class="modal-form-group">
                 <label for="userID">아이디</label>
                 <input type="text" id="userID" name="userID" placeholder="수정 시 변경불가" required />
               </div>
 
-              <div class="form-group">
+              <div class="modal-form-group">
                 <label for="userName">사용자명</label>
                 <input type="text" id="userName" name="userName" required />
               </div>
 
-              <div class="form-group">
+              <div class="modal-form-group">
                 <label for="password">비밀번호</label>
                 <input type="password" id="password" name="password" required autocomplete />
               </div>
 
-              <div class="form-group">
+              <div class="modal-form-group">
                 <label for="authorityName">직무</label>
                 <select id="authorityName" name="authorityName">
                   <option value="type1">직무 1</option>
@@ -63,6 +54,30 @@
             </form>
           </div>
         </div>
+
+        <!-- 사용자 조회 필터링 폼 -->
+        <form id="userFilterForm">
+          <div class="filter-container">
+            <div class="form-group">
+              <label for="userName">이름</label>
+              <input type="text" id="userNameForFilter" name="userName" placeholder="이름을 입력하세요" />
+            </div>
+            <div class="form-group">
+              <label for="authorityNameForFilter">직무</label>
+              <select id="authorityNameForFilter" name="authorityName">
+                <option value="">전체</option>
+                <option value="type1">직무 1</option>
+                <option value="type2">직무 2</option>
+                <option value="type3">직무 3</option>
+                <option value="type4">직무 4</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex-box">
+            <button type="submit" id="searchUserButton">조회</button>
+            <button type="reset" id="resetButton">초기화</button>
+          </div>
+        </form>
 
         <!-- 버튼 그룹 -->
         <div class="button-group">

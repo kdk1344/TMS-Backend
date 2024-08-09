@@ -48,6 +48,28 @@ function displayUsers(users) {
   setupPagination(10);
 }
 
+// 초기화 버튼 클릭 시 폼 리셋
+const userFilterForm = document.getElementById("userFilterForm");
+
+function submitUserFilter(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  const userName = document.getElementById("userNameForFilter").value.trim();
+  const authorityName = document.getElementById("authorityNameForFilter").value;
+
+  // 페이지를 1로 초기화하고 getUsers 호출
+  currentPage = 1;
+  getUsers({ page: currentPage, userName, authorityName });
+}
+
+function resetUserFilter() {
+  // 폼 초기화
+  this.reset();
+}
+
+userFilterForm.addEventListener("submit", submitUserFilter);
+userFilterForm.addEventListener("reset", resetUserFilter);
+
 function setupPagination(totalPages) {
   const userPagination = document.getElementById("userPagination");
 
