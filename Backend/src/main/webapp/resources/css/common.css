@@ -4,6 +4,12 @@
   outline: none;
 }
 
+/* 전역 접근 가능한 변수 정의 */
+:root {
+  --primary-color: #006eff; /* 파란색 변수 */
+  --secondary-color: #2ecc71;
+}
+
 body {
   display: flex;
   justify-content: center;
@@ -26,12 +32,12 @@ a {
 button {
   cursor: pointer;
 
-  padding: 16px;
+  padding: 8px 16px;
   outline: none;
   border: none;
 
   border-radius: 4px;
-  background-color: #006eff;
+  background-color: var(--primary-color);
 
   color: white;
   font-weight: 600;
@@ -47,6 +53,11 @@ select {
 
   border: 1px solid black;
   border-radius: 4px;
+}
+
+input[type="checkbox"] {
+  width: fit-content;
+  transform: scale(1.5); /* 1.5배 크기로 확대 */
 }
 
 button:hover,

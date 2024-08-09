@@ -13,6 +13,10 @@ form {
   width: 400px;
 }
 
+form button {
+  width: 100%;
+}
+
 .form-group {
   display: flex;
   justify-content: space-between;
@@ -30,14 +34,12 @@ form {
   font-weight: 600;
 }
 
-.button-container {
+.button-group {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
-}
+  gap: 8px;
 
-.button-container button {
-  width: 100%;
+  margin-bottom: 16px;
 }
 
 .container {
@@ -54,16 +56,90 @@ form {
 
 .content {
   flex: 1;
-  background-color: #f1f1f1;
-  padding: 10px;
+  padding: 20px;
 }
 
-.list {
-  background-color: white;
-  margin-top: 10px;
+table {
+  width: 100%;
+  height: 70vh;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead {
+  font-weight: 700;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
   padding: 10px;
-  height: calc(100% - 50px);
-  overflow-y: auto;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th input,
+td input {
+  width: 100px;
+}
+
+/* 체크박스 열 너비 설정 */
+th:first-child,
+td:first-child {
+  width: 50px;
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.pagination button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  border: none;
+  background-color: transparent;
+  padding: 8px;
+
+  color: rgb(60, 60, 60);
+  font-size: 16px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.pagination button:hover,
+.pagination button:focus {
+  box-shadow: none;
+}
+
+.pagination button.prev,
+.pagination button.next {
+  padding-bottom: 10px;
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.pagination button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.pagination button:disabled {
+  color: darkgray;
+  pointer-events: none;
 }
 
 .footer {
@@ -71,4 +147,10 @@ form {
   color: white;
   padding: 10px;
   text-align: center;
+}
+
+.flex-box {
+  display: flex;
+
+  gap: 8px;
 }
