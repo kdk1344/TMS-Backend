@@ -37,8 +37,8 @@
               </div>
 
               <div class="form-group">
-                <label for="username">사용자명</label>
-                <input type="text" id="username" name="username" required />
+                <label for="userName">사용자명</label>
+                <input type="text" id="userName" name="userName" required />
               </div>
 
               <div class="form-group">
