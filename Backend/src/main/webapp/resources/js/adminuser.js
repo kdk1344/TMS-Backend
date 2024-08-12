@@ -3,7 +3,7 @@ import { tmsFetch } from "./common.js";
 let currentPage = 1;
 
 // DOM 요소들
-// const userRegisterForm = document.getElementById("userRegisterForm");
+const userRegisterForm = document.getElementById("userRegisterForm");
 const userFilterForm = document.getElementById("userFilterForm");
 const userTableBody = document.getElementById("userTableBody");
 const userPagination = document.getElementById("userPagination");
@@ -21,6 +21,10 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
+  if (userRegisterForm) {
+    userRegisterForm.addEventListener("submit", handleUserRegisterFormSubmit);
+  }
+
   if (userFilterForm) {
     userFilterForm.addEventListener("submit", submitUserFilter);
     userFilterForm.addEventListener("reset", resetUserFilter);
@@ -140,32 +144,40 @@ function resetUserFilter() {
   this.reset(); // 폼 초기화
 }
 
-// // 사용자 등록
-// async function handleUserRegisterFormSubmit(event) {
-//   event.preventDefault(); // 폼 제출 기본 동작 방지
+// 사용자 등록
+async function handleUserRegisterFormSubmit(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
 
-//   const formData = new FormData(event.target);
-//   const formDataObj = Object.fromEntries(formData.entries()); // FormData를 객체로 변환
+  const confirmed = confirm("사용자를 등록하시겠습니까?");
 
-//   try {
-//     const response = await fetch(event.target.action, {
-//       method: event.target.method,
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(formDataObj),
-//     });
+  if (!confirmed) return;
 
-//     if (response.ok) {
-//       alert("사용자 등록이 완료되었습니다.");
-//       event.target.reset(); // 폼 초기화
-//       closeModal(); // 모달 닫기
-//     } else {
-//       alert("사용자 등록에 실패했습니다.");
-//     }
-//   } catch (error) {
-//     console.error("Error submitting user register form:", error);
-//     alert("서버 오류가 발생했습니다.");
-//   }
-// }
+  const formData = new FormData(event.target);
+
+  // FormData 객체를 JSON 객체로 변환
+  const formDataObj = Object.fromEntries(formData.entries());
+
+  try {
+    const { user, status } = await tmsFetch("/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formDataObj),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`사용자(ID: ${user.userID}) 등록이 완료되었습니다.`);
+      event.target.reset(); // 폼 초기화
+      closeModal(); // 모달 닫기
+    } else {
+      alert("사용자 등록에 실패했습니다. 다시 시도해주세요.");
+    }
+  } catch (error) {
+    console.error("Error submitting user register form:", error);
+    alert("서버 오류가 발생했습니다.");
+  }
+}
 
 // 체크박스 전체 선택/해제
 function toggleAllCheckboxes() {
@@ -189,15 +201,20 @@ async function deleteUser() {
       return;
     }
 
-    await tmsFetch("/deleteuser", {
+    const { status } = await tmsFetch("/deleteuser", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(selectedUserIDs),
     });
 
-    alert("사용자가 삭제되었습니다.");
+    const success = status === "success";
 
-    // location.reload(); // 페이지 새로고침
+    if (success) {
+      alert(`사용자 삭제가 완료되었습니다.`);
+      location.reload(); // 페이지 새로고침
+    } else {
+      alert("사용자 삭제에 실패했습니다. 다시 시도해주세요.");
+    }
   } catch (error) {
     console.error("Error deleting users:", error);
   }
