@@ -17,15 +17,15 @@ async function getUsers({ page = 1, userName = "", authorityName = "" } = {}) {
       authorityName: authorityName,
     }).toString();
 
-    const users = await tmsFetch(`/users?${query}`);
+    const { totalPages, userList: users } = await tmsFetch(`/users?${query}`);
 
-    displayUsers(users);
+    displayUsers(users, totalPages);
   } catch (error) {
     console.error("Error fetching users:", error);
   }
 }
 
-function displayUsers(users) {
+function displayUsers(users, totalPages) {
   const userTableBody = document.getElementById("userTableBody");
 
   userTableBody.innerHTML = ""; // 기존 사용자 목록 제거
@@ -43,9 +43,7 @@ function displayUsers(users) {
     userTableBody.appendChild(row);
   });
 
-  /** @todo 서버에서 총 페이지 개수 받아와야함 */
-  // setupPagination(users.totalPages);
-  setupPagination(10);
+  setupPagination(totalPages);
 }
 
 // 초기화 버튼 클릭 시 폼 리셋
