@@ -74,7 +74,7 @@ public class AdminController {
         return "redirect:/tms/adminuser";
     }
     
-    @DeleteMapping("/deleteuser")
+    @DeleteMapping("api/deleteuser")
     @ResponseBody
     public Map<String, String> deleteUsers(@RequestBody List<String> IDList) {
         boolean success = adminService.deleteUser(IDList.toArray(new String[0]));
