@@ -60,9 +60,9 @@ public class AdminController {
     }
     
     
-    @PostMapping("join")
+    @PostMapping("api/join")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> join(User user) {
+    public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
         Map<String, Object> response = new HashMap<>();
         try {
             adminService.join(user);  // join 메서드에서 성공 시 예외를 발생시키지 않음
