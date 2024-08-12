@@ -60,7 +60,7 @@ public class AdminController {
     }
     
     
-    @PostMapping("api/join")
+    @PostMapping(value= "api/join", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
         Map<String, Object> response = new HashMap<>();
@@ -82,26 +82,51 @@ public class AdminController {
         }
     }
     
-    @PostMapping("idmodify")
-    public String IdModify(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
-        boolean success = adminService.updateUser(user);
-        if (success) {
-            redirectAttributes.addFlashAttribute("message", "User updated successfully!");
-        } else {
-            redirectAttributes.addFlashAttribute("message", "Error updating user.");
+    @PostMapping(value= "idmodify" , produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> idModify(@RequestBody User user) {
+    	Map<String, Object> response = new HashMap<>();
+        try {
+            boolean success = adminService.updateUser(user);
+            if (success) {
+                response.put("status", "success");
+                response.put("message", "User updated successfully!");
+                response.put("user", user); // 업데이트된 사용자 정보 반환
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response.put("status", "failure");
+                response.put("message", "Error updating user.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "Error occurred while updating user.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return "redirect:/tms/adminuser";
     }
     
-    @DeleteMapping("api/deleteuser")
+    @DeleteMapping(value= "api/deleteuser", produces = "application/json")
     @ResponseBody
-    public Map<String, String> deleteUsers(@RequestBody List<String> IDList) {
-        boolean success = adminService.deleteUser(IDList.toArray(new String[0]));
+    public ResponseEntity<Map<String, Object>> deleteUsers(@RequestBody List<String> IDList) {
+    	Map<String, Object> response = new HashMap<>();
+        try {
+            boolean success = adminService.deleteUser(IDList.toArray(new String[0]));
 
-        if (success) {
-            return Map.of("message", "Users deleted successfully!");
-        } else {
-            return Map.of("message", "Error deleting users.");
+            if (success) {
+                response.put("status", "success");
+                response.put("message", "Users deleted successfully!");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response.put("status", "failure");
+                response.put("message", "Error deleting users.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "Error occurred while deleting users.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
