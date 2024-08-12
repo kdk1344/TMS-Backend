@@ -21,7 +21,7 @@
           <!-- Modal content -->
           <div class="modal-content">
             <h2>사용자 등록/수정</h2>
-            <form action="join" method="post" class="modal-form">
+            <form id="userRegistrForm" action="join" method="post" class="modal-form">
               <div class="modal-form-group">
                 <label for="userID">아이디</label>
                 <input type="text" id="userID" name="userID" placeholder="수정 시 변경불가" required />

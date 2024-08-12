@@ -27,7 +27,7 @@ form button {
 
 .form-group label {
   display: block;
-  width: 40px;
+  width: 48px;
 
   font-weight: 600;
 }
@@ -160,14 +160,14 @@ td:first-child {
   font-size: 20px;
 }
 
-.pagination button.active {
-  background-color: var(--primary-color);
-  color: white;
-}
-
 .pagination button:disabled {
   color: darkgray;
   pointer-events: none;
+}
+
+.pagination button.active {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .footer {
