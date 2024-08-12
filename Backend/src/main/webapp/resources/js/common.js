@@ -6,11 +6,11 @@
  * @returns {Promise<T|null>} The fetched data in JSON format, or null if not JSON.
  * @throws {Error} Throws a Error if the response status is an error or if fetching fails.
  */
-export const tmsFetch = async (url, options) => {
+export async function tmsFetch(url, options) {
   const TMS_BASE_URL = "/tms/api";
 
   return fetchAPI(TMS_BASE_URL + url, options);
-};
+}
 
 /**
  * Fetches data from an API and handles different HTTP status errors.
@@ -20,7 +20,7 @@ export const tmsFetch = async (url, options) => {
  * @returns {Promise<T|null>} The fetched data in JSON format, or null if not JSON.
  * @throws {Error} Throws a Error if the response status is an error or if fetching fails.
  */
-export const fetchAPI = async (url, options) => {
+export async function fetchAPI(url, options) {
   try {
     const response = await fetch(url, options);
 
@@ -42,4 +42,4 @@ export const fetchAPI = async (url, options) => {
   } catch (error) {
     console.error(error);
   }
-};
+}

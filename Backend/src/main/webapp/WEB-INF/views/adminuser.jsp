@@ -83,7 +83,7 @@
         <div class="button-group">
           <div class="flex-box">
             <button id="openModalButton">등록</button>
-            <button onclick="deleteUserButton">삭제</button>
+            <button id="deleteUserButton">삭제</button>
           </div>
           <div class="flex-box">
             <button id="uploadUserFileButton">파일 업로드</button>

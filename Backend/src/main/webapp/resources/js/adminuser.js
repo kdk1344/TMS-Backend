@@ -152,3 +152,42 @@ window.onclick = function (event) {
     userRegisterModal.style.display = "none";
   }
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+  /** 사용자 삭제 */
+  const deleteUserButton = document.getElementById("deleteUserButton");
+
+  deleteUserButton.addEventListener("click", deleteUser);
+
+  async function deleteUser() {
+    try {
+      const selectedUserIDs = [];
+      const userCheckboxes = document.querySelectorAll('input[name="user"]');
+
+      userCheckboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+          selectedUserIDs.push(checkbox.value);
+        }
+      });
+
+      if (selectedUserIDs.length <= 0) {
+        alert("삭제할 사용자를 선택해주세요.");
+        return;
+      }
+
+      // JSON으로 요청 본문을 준비합니다.
+
+      await tmsFetch("/deleteuser", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedUserIDs),
+      });
+
+      location.reload(); // 페이지 새로고침
+    } catch (error) {
+      console.error("Error delete users:", error);
+    }
+  }
+});
