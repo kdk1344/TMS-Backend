@@ -87,14 +87,17 @@ public class AdminController {
         return "redirect:/tms/adminuser";
     }
     
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
-        boolean success = adminService.deleteUser(id);
+    @GetMapping("/delete")
+    public String deleteUsers(@RequestParam("IDList") String ids, RedirectAttributes redirectAttributes) {
+        String[] idArray = ids.split(","); // 쉼표로 구분된 ID 문자열을 배열로 변환
+        boolean success = adminService.deleteUser(idArray);
+        
         if (success) {
-            redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
+            redirectAttributes.addFlashAttribute("message", "Users deleted successfully!");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error deleting user.");
+            redirectAttributes.addFlashAttribute("message", "Error deleting users.");
         }
+
         return "redirect:/tms/adminuser";
     }
     

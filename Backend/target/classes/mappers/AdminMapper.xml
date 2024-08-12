@@ -34,7 +34,12 @@
     </update>
     
     <delete id="deleteUser" parameterType="String">
-        DELETE FROM users WHERE USER_ID = #{userID}
+        DELETE FROM Users
+        WHERE USER_ID IN
+        <foreach item="id" index="index" collection="array"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
     
     <select id="findAll" resultType="User" parameterType="Criteria">
