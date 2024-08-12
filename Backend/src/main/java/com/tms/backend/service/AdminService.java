@@ -45,9 +45,14 @@ public class AdminService {
         return adminmapper.updateUser(user) > 0;
     }
     
-    @Transactional
-    public boolean deleteUser(String id) {
-        return adminmapper.deleteUser(id) > 0;
+    public boolean deleteUser(String[] ids) {
+    	try {
+            adminmapper.deleteUser(ids);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     
     public int getTotal(Criteria criteria) {

@@ -18,7 +18,7 @@ public interface AdminMapper {
     public void insert(User user);
     public void insertUser(User user);
     public int updateUser(User user);
-    public int deleteUser(String id);
+    void deleteUser(String[] ids);
     public List<User> findAll(Criteria criteria);
 	public int countUsers(Criteria criteria);
 	public List<Notice> findntAll();
