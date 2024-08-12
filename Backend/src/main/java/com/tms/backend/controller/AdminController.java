@@ -50,23 +50,10 @@ public class AdminController {
     
     @GetMapping("/adminuser")
     public String UserPage(Criteria criteria, Model model) {
-//    	log.info(adminService.getList(criteria));
-//        model.addAttribute("userList", adminService.getList(criteria));
-//        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
+    	log.info(adminService.getList(criteria));
+        model.addAttribute("userList", adminService.getList(criteria));
+        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
         return "adminuser";
-    }
-    
-    @GetMapping("/notice")
-    public String getNotices(Model model) {
-        List<Notice> notices = adminService.getAllnotices();
-        model.addAttribute("notices", notices);
-        return "notice";
-    }
-    
-    @GetMapping(value="api/notices", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Notice> getUserList() {
-        return adminService.getAllnotices();
     }
     
     
@@ -87,19 +74,31 @@ public class AdminController {
         return "redirect:/tms/adminuser";
     }
     
-    @GetMapping("/delete")
-    public String deleteUsers(@RequestParam("IDList") String ids, RedirectAttributes redirectAttributes) {
-        String[] idArray = ids.split(","); // 쉼표로 구분된 ID 문자열을 배열로 변환
-        boolean success = adminService.deleteUser(idArray);
-        
-        if (success) {
-            redirectAttributes.addFlashAttribute("message", "Users deleted successfully!");
-        } else {
-            redirectAttributes.addFlashAttribute("message", "Error deleting users.");
-        }
+    @DeleteMapping("/deleteuser")
+    @ResponseBody
+    public Map<String, String> deleteUsers(@RequestBody List<String> IDList) {
+        boolean success = adminService.deleteUser(IDList.toArray(new String[0]));
 
-        return "redirect:/tms/adminuser";
+        if (success) {
+            return Map.of("message", "Users deleted successfully!");
+        } else {
+            return Map.of("message", "Error deleting users.");
+        }
     }
+    
+//    @GetMapping("/delete")
+//    public String deleteUsers(@RequestParam("IDList") String ids, RedirectAttributes redirectAttributes) {
+//        String[] idArray = ids.split(","); // 쉼표로 구분된 ID 문자열을 배열로 변환
+//        boolean success = adminService.deleteUser(idArray);
+//        
+//        if (success) {
+//            redirectAttributes.addFlashAttribute("message", "Users deleted successfully!");
+//        } else {
+//            redirectAttributes.addFlashAttribute("message", "Error deleting users.");
+//        }
+//
+//        return "redirect:/tms/adminuser";
+//    }
     
     @GetMapping("test")
     public String TestPage(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -120,22 +119,6 @@ public class AdminController {
         model.addAttribute("pageDTO", new PageDTO(total, criteria));
     	return "test";
     }
-    
-//    @GetMapping(value="api/users", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public List<User> getUserList(
-//        @RequestParam(value = "page", defaultValue = "1") int page,
-//        @RequestParam(value = "userName", required = false) String userName,
-//        @RequestParam(value = "authorityName", required = false) String authorityName) {
-//
-//    	Criteria criteria = new Criteria();
-//        criteria.setPage(page);
-//        criteria.setPerPageNum(10);
-//        criteria.setuserName(userName);
-//        criteria.setauthorityName(authorityName);
-//
-//        return adminService.getList(criteria);
-//    }
     
     @GetMapping(value = "api/users", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -255,6 +238,75 @@ public class AdminController {
         }
 
         return "redirect:/tms/adminuser";
+    }
+    
+    
+    ////공지사항 Controller
+    
+    @GetMapping("/notice")
+    public String getNotices(Model model) {
+        List<Notice> notices = adminService.getAllNotices();
+        model.addAttribute("notices", notices);
+        return "notice";
+    }
+    
+ // 모든 공지사항을 JSON 형식으로 반환
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Notice> getAllNotices() {
+        return adminService.getAllNotices();
+    }
+
+    // 특정 ID의 공지사항을 JSON 형식으로 반환
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Notice getNoticeById(@PathVariable("id") Long id) {
+        return adminService.getNoticeById(id);
+    }
+
+    // 공지사항 목록 페이지로 이동
+    @GetMapping("/list")
+    public String showNoticeList(Model model) {
+        List<Notice> notices = adminService.getAllNotices();
+        model.addAttribute("notices", notices);
+        return "notice/list"; // JSP 파일의 경로
+    }
+
+    // 공지사항 등록 폼 페이지로 이동
+    @GetMapping("/new")
+    public String showCreateNoticeForm(Model model) {
+        model.addAttribute("notice", new Notice());
+        return "notice/form"; // JSP 파일의 경로
+    }
+
+    // 새 공지사항 등록
+    @PostMapping
+    public String createNotice(@ModelAttribute Notice notice) {
+        adminService.createNotice(notice);
+        return "redirect:/notices/list";
+    }
+
+    // 공지사항 수정 폼 페이지로 이동
+    @GetMapping("/edit/{id}")
+    public String showEditNoticeForm(@PathVariable("id") Long id, Model model) {
+        Notice notice = adminService.getNoticeById(id);
+        model.addAttribute("notice", notice);
+        return "notice/edit"; // JSP 파일의 경로
+    }
+
+    // 공지사항 수정
+    @PostMapping("/edit/{id}")
+    public String updateNotice(@PathVariable("id") Long id, @ModelAttribute Notice notice) {
+        notice.setSeq(id);
+        adminService.updateNotice(notice);
+        return "redirect:/notices/list";
+    }
+
+    // 공지사항 삭제
+    @PostMapping("/delete/{id}")
+    public String deleteNotice(@PathVariable("id") Long id) {
+        adminService.deleteNotice(id);
+        return "redirect:/notices/list";
     }
 
 }

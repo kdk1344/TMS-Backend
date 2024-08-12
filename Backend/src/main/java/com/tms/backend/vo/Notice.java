@@ -2,23 +2,25 @@ package com.tms.backend.vo;
 
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Notice {
-	private int seq;
-    private Date postDate;
-    private String title;
-    private String content;
-    private Date createdDate;
-    private Date lastModifiedDate;
+	private Long seq; // 공지사항의 고유 식별자
+    private Date postDate; // 게시일자
+    private String title; // 공지사항 제목
+    private String content; // 공지사항 내용
+    private Date createdDate; // 최초 생성일시
+    private Date lastModifiedDate; // 최종 변경일시
+    private List<FileAttachment> attachments; // 첨부파일 목록
 
     // Getters and Setters
 
-    public int getSeq() {
+    public Long getSeq() {
         return seq;
     }
 
-    public void setSeq(int seq) {
+    public void setSeq(Long seq) {
         this.seq = seq;
     }
 
@@ -60,5 +62,13 @@ public class Notice {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public List<FileAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<FileAttachment> attachments) {
+        this.attachments = attachments;
     }
 }

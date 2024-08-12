@@ -21,5 +21,11 @@ public interface AdminMapper {
     void deleteUser(String[] ids);
     public List<User> findAll(Criteria criteria);
 	public int countUsers(Criteria criteria);
-	public List<Notice> findntAll();
+	
+	//공지사항
+	public List<Notice> getAllNotices();
+    public Notice getNoticeById(Long id);
+    public void insertNotice(Notice notice);
+    public void updateNotice(Notice notice);
+    public void deleteNotice(Long id);
 }

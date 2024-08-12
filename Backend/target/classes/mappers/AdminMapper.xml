@@ -68,8 +68,29 @@
         </if>
     </select>
     
-    <select id="findntAll" resultType="Notice">
-        SELECT * FROM Notices ORDER BY POST_DATE DESC
+	
+	<resultMap id="fileAttachmentResultMap" type="FA">
+        <result property="type" column="TYPE" />
+        <id property="identifier" column="IDENTIFIER" />
+        <result property="seq" column="SEQ" />
+        <result property="storageLocation" column="STORAGE_LOCATION" />
+        <result property="fileName" column="FILE_NAME" />
+        <result property="createdDate" column="CREATED_DATE" />
+    </resultMap>
+
+    <select id="getAttachmentsByNoticeId" parameterType="long" resultMap="fileAttachmentResultMap">
+        SELECT * FROM file_attachments WHERE SEQ = #{seq}
     </select>
+
+    <insert id="insertFileAttachment" parameterType="FA">
+        INSERT INTO file_attachments (TYPE, IDENTIFIER, SEQ, STORAGE_LOCATION, FILE_NAME, CREATED_DATE)
+        VALUES (#{type}, #{identifier}, #{seq}, #{storageLocation}, #{fileName}, NOW())
+    </insert>
+
+    <delete id="deleteAttachmentsByNoticeId" parameterType="long">
+        DELETE FROM file_attachments WHERE SEQ = #{seq}
+    </delete>    
+
+
 	
 </mapper>

@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.AdminMapper;
+import com.tms.backend.mapper.FileAttachmentMapper;
 import com.tms.backend.mapper.UserMapper;
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 
@@ -27,6 +29,9 @@ public class AdminService {
 
     @Autowired
     private AdminMapper adminmapper;
+    
+    @Autowired
+    private FileAttachmentMapper fileAttachmentMapper;
 
     public void join(User user) {
     	log.info(user);
@@ -75,7 +80,47 @@ public class AdminService {
         }
     }
     
-    public List<Notice> getAllnotices() {
-        return adminmapper.findntAll();
+    //// 공지사항 서비스
+    
+    public List<Notice> getAllNotices() {
+        List<Notice> notices = adminmapper.getAllNotices();
+        for (Notice notice : notices) {
+            notice.setAttachments(fileAttachmentMapper.getAttachmentsByNoticeId(notice.getSeq()));
+        }
+        return notices;
+    }
+
+    public Notice getNoticeById(Long id) {
+        Notice notice = adminmapper.getNoticeById(id);
+        if (notice != null) {
+            notice.setAttachments(fileAttachmentMapper.getAttachmentsByNoticeId(id));
+        }
+        return notice;
+    }
+
+    public void createNotice(Notice notice) {
+        adminmapper.insertNotice(notice);
+        if (notice.getAttachments() != null) {
+            for (FileAttachment attachment : notice.getAttachments()) {
+                attachment.setSeq(notice.getSeq());
+                fileAttachmentMapper.insertFileAttachment(attachment);
+            }
+        }
+    }
+
+    public void updateNotice(Notice notice) {
+        adminmapper.updateNotice(notice);
+        fileAttachmentMapper.deleteAttachmentsByNoticeId(notice.getSeq());
+        if (notice.getAttachments() != null) {
+            for (FileAttachment attachment : notice.getAttachments()) {
+                attachment.setSeq(notice.getSeq());
+                fileAttachmentMapper.insertFileAttachment(attachment);
+            }
+        }
+    }
+
+    public void deleteNotice(Long id) {
+        fileAttachmentMapper.deleteAttachmentsByNoticeId(id);
+        adminmapper.deleteNotice(id);
     }
 }
