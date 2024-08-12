@@ -83,11 +83,7 @@ public class AdminService {
     //// 공지사항 서비스
     
     public List<Notice> getAllNotices() {
-        List<Notice> notices = adminmapper.getAllNotices();
-        for (Notice notice : notices) {
-            notice.setAttachments(fileAttachmentMapper.getAttachmentsByNoticeId(notice.getSeq()));
-        }
-        return notices;
+        return adminmapper.getAllNotices();
     }
 
     public Notice getNoticeById(Long id) {
@@ -122,5 +118,14 @@ public class AdminService {
     public void deleteNotice(Long id) {
         fileAttachmentMapper.deleteAttachmentsByNoticeId(id);
         adminmapper.deleteNotice(id);
+    }
+
+    public List<Notice> searchNotices(String postDate, String title, String content, int page, int size) {
+        int offset = (page - 1) * size;
+        return adminmapper.searchNotices(postDate, title, content, offset, size);
+    }
+
+    public int getTotalNoticesCount(String postDate, String title, String content) {
+        return adminmapper.getTotalNoticesCount(postDate, title, content);
     }
 }

@@ -67,6 +67,8 @@
             AND AUTHORITY_NAME = #{authorityName}
         </if>
     </select>
+ 
+ 
     
     <resultMap id="noticeResultMap" type="Notice">
         <id property="seq" column="SEQ" />
@@ -78,11 +80,11 @@
     </resultMap>
 
     <select id="getAllNotices" resultMap="noticeResultMap">
-        SELECT * FROM notices
+        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE FROM notices
     </select>
 
     <select id="getNoticeById" parameterType="long" resultMap="noticeResultMap">
-        SELECT * FROM notices WHERE SEQ = #{id}
+        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE FROM notices WHERE SEQ = #{id}
     </select>
 
     <insert id="insertNotice" parameterType="Notice">
@@ -102,6 +104,21 @@
     <delete id="deleteNotice" parameterType="long">
         DELETE FROM notices WHERE SEQ = #{id}
     </delete>
+
+    <select id="searchNotices" parameterType="map" resultMap="noticeResultMap">
+        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE FROM notices
+        WHERE (#{postDate} IS NULL OR POST_DATE = #{postDate})
+          AND (#{title} IS NULL OR TITLE LIKE CONCAT('%', #{title}, '%'))
+          AND (#{content} IS NULL OR CONTENT LIKE CONCAT('%', #{content}, '%'))
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="getTotalNoticesCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM notices
+        WHERE (#{postDate} IS NULL OR POST_DATE = #{postDate})
+          AND (#{title} IS NULL OR TITLE LIKE CONCAT('%', #{title}, '%'))
+          AND (#{content} IS NULL OR CONTENT LIKE CONCAT('%', #{content}, '%'))
+    </select>
 
 
 	

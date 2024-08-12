@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.Criteria;
@@ -58,9 +61,25 @@ public class AdminController {
     
     
     @PostMapping("join")
-    public String Join(User user) {
-    	adminService.join(user);
-    	return "redirect:/tms/adminuser";
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> join(User user) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            adminService.join(user);  // join 메서드에서 성공 시 예외를 발생시키지 않음
+            response.put("status", "success");
+            response.put("message", "User successfully registered!");
+            response.put("user", user); // 가입된 사용자 정보 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            response.put("status", "failure");
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "Error occurred while registering user.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
     @PostMapping("idmodify")
@@ -85,20 +104,6 @@ public class AdminController {
             return Map.of("message", "Error deleting users.");
         }
     }
-    
-//    @GetMapping("/delete")
-//    public String deleteUsers(@RequestParam("IDList") String ids, RedirectAttributes redirectAttributes) {
-//        String[] idArray = ids.split(","); // 쉼표로 구분된 ID 문자열을 배열로 변환
-//        boolean success = adminService.deleteUser(idArray);
-//        
-//        if (success) {
-//            redirectAttributes.addFlashAttribute("message", "Users deleted successfully!");
-//        } else {
-//            redirectAttributes.addFlashAttribute("message", "Error deleting users.");
-//        }
-//
-//        return "redirect:/tms/adminuser";
-//    }
     
     @GetMapping("test")
     public String TestPage(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -243,70 +248,54 @@ public class AdminController {
     
     ////공지사항 Controller
     
-    @GetMapping("/notice")
-    public String getNotices(Model model) {
-        List<Notice> notices = adminService.getAllNotices();
-        model.addAttribute("notices", notices);
-        return "notice";
-    }
-    
- // 모든 공지사항을 JSON 형식으로 반환
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+ // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
+    @GetMapping(value = "api/notices", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Notice> getAllNotices() {
-        return adminService.getAllNotices();
+    public Map<String, Object> getNotices(@RequestParam(value = "postDate", required = false) String postDate,
+                                          @RequestParam(value = "title", required = false) String title,
+                                          @RequestParam(value = "content", required = false) String content,
+                                          @RequestParam(value = "page", defaultValue = "1") int page,
+                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+        List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
+        int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
+        int totalPages = (int) Math.ceil((double) totalNotices / size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("notices", notices);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalNotices", totalNotices);
+
+        return response;
     }
 
     // 특정 ID의 공지사항을 JSON 형식으로 반환
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "api/notices/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Notice getNoticeById(@PathVariable("id") Long id) {
         return adminService.getNoticeById(id);
     }
+    
+    @GetMapping("/notice")
+    public String getNotices(@RequestParam(value = "postDate", required = false) String postDate,
+                             @RequestParam(value = "title", required = false) String title,
+                             @RequestParam(value = "content", required = false) String content,
+                             @RequestParam(value = "page", defaultValue = "1") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
+                             Model model) {
+    	log.info(postDate);
+        List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
+        int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
+        int totalPages = (int) Math.ceil((double) totalNotices / size);
 
-    // 공지사항 목록 페이지로 이동
-    @GetMapping("/list")
-    public String showNoticeList(Model model) {
-        List<Notice> notices = adminService.getAllNotices();
         model.addAttribute("notices", notices);
-        return "notice/list"; // JSP 파일의 경로
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalNotices", totalNotices);
+
+        return "notice"; // JSP 파일의 경로
     }
 
-    // 공지사항 등록 폼 페이지로 이동
-    @GetMapping("/new")
-    public String showCreateNoticeForm(Model model) {
-        model.addAttribute("notice", new Notice());
-        return "notice/form"; // JSP 파일의 경로
-    }
 
-    // 새 공지사항 등록
-    @PostMapping
-    public String createNotice(@ModelAttribute Notice notice) {
-        adminService.createNotice(notice);
-        return "redirect:/notices/list";
-    }
-
-    // 공지사항 수정 폼 페이지로 이동
-    @GetMapping("/edit/{id}")
-    public String showEditNoticeForm(@PathVariable("id") Long id, Model model) {
-        Notice notice = adminService.getNoticeById(id);
-        model.addAttribute("notice", notice);
-        return "notice/edit"; // JSP 파일의 경로
-    }
-
-    // 공지사항 수정
-    @PostMapping("/edit/{id}")
-    public String updateNotice(@PathVariable("id") Long id, @ModelAttribute Notice notice) {
-        notice.setSeq(id);
-        adminService.updateNotice(notice);
-        return "redirect:/notices/list";
-    }
-
-    // 공지사항 삭제
-    @PostMapping("/delete/{id}")
-    public String deleteNotice(@PathVariable("id") Long id) {
-        adminService.deleteNotice(id);
-        return "redirect:/notices/list";
-    }
 
 }

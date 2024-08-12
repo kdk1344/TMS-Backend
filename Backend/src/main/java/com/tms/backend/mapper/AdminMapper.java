@@ -28,4 +28,6 @@ public interface AdminMapper {
     public void insertNotice(Notice notice);
     public void updateNotice(Notice notice);
     public void deleteNotice(Long id);
+    public List<Notice> searchNotices(String postDate,String title, String content, int offset, int size);
+    public int getTotalNoticesCount(String postDate, String title, String content);
 }
