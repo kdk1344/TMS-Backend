@@ -3,7 +3,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -48,9 +50,9 @@ public class AdminController {
     
     @GetMapping("/adminuser")
     public String UserPage(Criteria criteria, Model model) {
-    	log.info(adminService.getList(criteria));
-        model.addAttribute("userList", adminService.getList(criteria));
-        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
+//    	log.info(adminService.getList(criteria));
+//        model.addAttribute("userList", adminService.getList(criteria));
+//        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
         return "adminuser";
     }
     
@@ -116,20 +118,47 @@ public class AdminController {
     	return "test";
     }
     
-    @GetMapping(value="api/users", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @GetMapping(value="api/users", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public List<User> getUserList(
+//        @RequestParam(value = "page", defaultValue = "1") int page,
+//        @RequestParam(value = "userName", required = false) String userName,
+//        @RequestParam(value = "authorityName", required = false) String authorityName) {
+//
+//    	Criteria criteria = new Criteria();
+//        criteria.setPage(page);
+//        criteria.setPerPageNum(10);
+//        criteria.setuserName(userName);
+//        criteria.setauthorityName(authorityName);
+//
+//        return adminService.getList(criteria);
+//    }
+    
+    @GetMapping(value = "api/users", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<User> getUserList(
+    public Map<String, Object> getUserList(
         @RequestParam(value = "page", defaultValue = "1") int page,
         @RequestParam(value = "userName", required = false) String userName,
         @RequestParam(value = "authorityName", required = false) String authorityName) {
 
-    	Criteria criteria = new Criteria();
+        Criteria criteria = new Criteria();
         criteria.setPage(page);
         criteria.setPerPageNum(10);
         criteria.setuserName(userName);
         criteria.setauthorityName(authorityName);
 
-        return adminService.getList(criteria);
+        List<User> userList = adminService.getList(criteria);
+        log.info(userList);
+        int total = adminService.getTotal(criteria);
+        int totalPages = (int) Math.ceil((double) total / criteria.getPerPageNum());
+
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("userList", userList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalUsers", total);
+
+        return response;
     }
     
     // 전체 사용자 정보를 엑셀로 다운로드
