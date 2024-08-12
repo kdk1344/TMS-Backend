@@ -19,7 +19,7 @@
         VALUES (#{userID}, #{userName}, #{password},#{authorityCode}, #{authorityName})
     </insert>
     
-    <update id="updateUser" parameterType="com.tms.backend.vo.User">
+    <update id="updateUser" parameterType="User">
         UPDATE users
         SET userName = #{user.userName},
             Password = #{user.password},
@@ -68,28 +68,40 @@
         </if>
     </select>
     
-	
-	<resultMap id="fileAttachmentResultMap" type="FA">
-        <result property="type" column="TYPE" />
-        <id property="identifier" column="IDENTIFIER" />
-        <result property="seq" column="SEQ" />
-        <result property="storageLocation" column="STORAGE_LOCATION" />
-        <result property="fileName" column="FILE_NAME" />
+    <resultMap id="noticeResultMap" type="Notice">
+        <id property="seq" column="SEQ" />
+        <result property="postDate" column="POST_DATE" />
+        <result property="title" column="TITLE" />
+        <result property="content" column="CONTENT" />
         <result property="createdDate" column="CREATED_DATE" />
+        <result property="lastModifiedDate" column="LAST_MODIFIED_DATE" />
     </resultMap>
 
-    <select id="getAttachmentsByNoticeId" parameterType="long" resultMap="fileAttachmentResultMap">
-        SELECT * FROM file_attachments WHERE SEQ = #{seq}
+    <select id="getAllNotices" resultMap="noticeResultMap">
+        SELECT * FROM notices
     </select>
 
-    <insert id="insertFileAttachment" parameterType="FA">
-        INSERT INTO file_attachments (TYPE, IDENTIFIER, SEQ, STORAGE_LOCATION, FILE_NAME, CREATED_DATE)
-        VALUES (#{type}, #{identifier}, #{seq}, #{storageLocation}, #{fileName}, NOW())
+    <select id="getNoticeById" parameterType="long" resultMap="noticeResultMap">
+        SELECT * FROM notices WHERE SEQ = #{id}
+    </select>
+
+    <insert id="insertNotice" parameterType="Notice">
+        <selectKey keyProperty="seq" order="BEFORE" resultType="long">
+            SELECT nextval('notice_seq')
+        </selectKey>
+        INSERT INTO notices (SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE)
+        VALUES (#{seq}, #{postDate}, #{title}, #{content}, NOW(), NOW())
     </insert>
 
-    <delete id="deleteAttachmentsByNoticeId" parameterType="long">
-        DELETE FROM file_attachments WHERE SEQ = #{seq}
-    </delete>    
+    <update id="updateNotice" parameterType="Notice">
+        UPDATE notices
+        SET POST_DATE = #{postDate}, TITLE = #{title}, CONTENT = #{content}, LAST_MODIFIED_DATE = NOW()
+        WHERE SEQ = #{seq}
+    </update>
+
+    <delete id="deleteNotice" parameterType="long">
+        DELETE FROM notices WHERE SEQ = #{id}
+    </delete>
 
 
 	
