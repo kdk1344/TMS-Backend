@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 
@@ -23,11 +24,13 @@ public interface AdminMapper {
 	public int countUsers(Criteria criteria);
 	
 	//공지사항
-	public List<Notice> getAllNotices();
-    public Notice getNoticeById(Long id);
-    public void insertNotice(Notice notice);
-    public void updateNotice(Notice notice);
-    public void deleteNotice(Long id);
-    public List<Notice> searchNotices(String postDate,String title, String content, int offset, int size);
-    public int getTotalNoticesCount(String postDate, String title, String content);
+	public List<Notice> searchNotices(@Param("postDate") String postDate,
+            @Param("title") String title,
+            @Param("content") String content,
+            @Param("offset") int offset,
+            @Param("size") int size);
+	public int getTotalNoticesCount(@Param("postDate") String postDate,
+	          @Param("title") String title,
+	          @Param("content") String content);
+	public List<FileAttachment> getAttachmentsByNoticeId(@Param("id") Long id);
 }

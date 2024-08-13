@@ -82,7 +82,7 @@ public class AdminController {
         }
     }
     
-    @PostMapping(value= "idmodify" , produces = "application/json")
+    @PostMapping(value= "api/idmodify" , produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> idModify(@RequestBody User user) {
     	Map<String, Object> response = new HashMap<>();
@@ -232,11 +232,14 @@ public class AdminController {
         workbook.close();
     }
     
-    @PostMapping("/upload")
-    public String uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    @PostMapping(value = "api/upload", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    	Map<String, Object> response = new HashMap<>();
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "파일이 없습니다. 다시 시도해 주세요.");
-            return "redirect:/tms/adminuser";
+        	response.put("status", "failure");
+            response.put("message", "파일이 없습니다. 다시 시도해 주세요.");
+        	return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         try (InputStream inputStream = file.getInputStream()) {
@@ -260,14 +263,18 @@ public class AdminController {
 
             // 데이터베이스에 저장
             adminService.saveAll(users);
-            redirectAttributes.addFlashAttribute("message", "파일 업로드가 성공적으로 완료되었습니다!");
+            response.put("status", "success");
+            response.put("message", "파일 업로드가 성공적으로 완료되었습니다!");
+            response.put("totalUploaded", users.size());
 
         } catch (IOException e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("message", "파일 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
+            response.put("status", "error");
+            response.put("message", "파일 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return "redirect:/tms/adminuser";
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     
@@ -294,12 +301,7 @@ public class AdminController {
         return response;
     }
 
-    // 특정 ID의 공지사항을 JSON 형식으로 반환
-    @GetMapping(value = "api/notices/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Notice getNoticeById(@PathVariable("id") Long id) {
-        return adminService.getNoticeById(id);
-    }
+ 
     
     @GetMapping("/notice")
     public String getNotices(@RequestParam(value = "postDate", required = false) String postDate,

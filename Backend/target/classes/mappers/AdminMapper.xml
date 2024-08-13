@@ -69,55 +69,61 @@
     </select>
  
  
+
+    <resultMap id="NoticeResultMap" type="Notice">
+        <id column="SEQ" property="seq"/>
+        <result column="POST_DATE" property="postDate"/>
+        <result column="TITLE" property="title"/>
+        <result column="CONTENT" property="content"/>
+        <result column="CREATED_DATE" property="createdDate"/>
+        <result column="LAST_MODIFIED_DATE" property="lastModifiedDate"/>
+        <collection property="attachments" ofType="FA" resultMap="FileAttachmentResultMap"/>
+    </resultMap>
     
-    <resultMap id="noticeResultMap" type="Notice">
-        <id property="seq" column="SEQ" />
-        <result property="postDate" column="POST_DATE" />
-        <result property="title" column="TITLE" />
-        <result property="content" column="CONTENT" />
-        <result property="createdDate" column="CREATED_DATE" />
-        <result property="lastModifiedDate" column="LAST_MODIFIED_DATE" />
+    <resultMap id="FileAttachmentResultMap" type="FA">
+        <id column="IDENTIFIER" property="identifier"/>
+        <result column="TYPE" property="type"/>
+        <result column="STORAGE_LOCATION" property="storageLocation"/>
+        <result column="FILE_NAME" property="fileName"/>
+        <result column="CREATED_DATE" property="createdDate"/>
     </resultMap>
 
-    <select id="getAllNotices" resultMap="noticeResultMap">
-        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE FROM notices
-    </select>
-
-    <select id="getNoticeById" parameterType="long" resultMap="noticeResultMap">
-        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE FROM notices WHERE SEQ = #{id}
-    </select>
-
-    <insert id="insertNotice" parameterType="Notice">
-        <selectKey keyProperty="seq" order="BEFORE" resultType="long">
-            SELECT nextval('notice_seq')
-        </selectKey>
-        INSERT INTO notices (SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE)
-        VALUES (#{seq}, #{postDate}, #{title}, #{content}, NOW(), NOW())
-    </insert>
-
-    <update id="updateNotice" parameterType="Notice">
-        UPDATE notices
-        SET POST_DATE = #{postDate}, TITLE = #{title}, CONTENT = #{content}, LAST_MODIFIED_DATE = NOW()
-        WHERE SEQ = #{seq}
-    </update>
-
-    <delete id="deleteNotice" parameterType="long">
-        DELETE FROM notices WHERE SEQ = #{id}
-    </delete>
-
-    <select id="searchNotices" parameterType="map" resultMap="noticeResultMap">
-        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE FROM notices
-        WHERE (#{postDate} IS NULL OR POST_DATE = #{postDate})
-          AND (#{title} IS NULL OR TITLE LIKE CONCAT('%', #{title}, '%'))
-          AND (#{content} IS NULL OR CONTENT LIKE CONCAT('%', #{content}, '%'))
+    <select id="searchNotices" parameterType="map" resultMap="NoticeResultMap">
+        SELECT n.*, a.*
+        FROM notices n
+        LEFT JOIN file_attachments a ON n.SEQ = a.SEQ
+        WHERE 1=1
+        <if test="postDate != null and postDate != ''">
+            AND n.POST_DATE = #{postDate}
+        </if>
+        <if test="title != null and title != ''">
+            AND n.TITLE LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="content != null and content != ''">
+            AND n.CONTENT LIKE CONCAT('%', #{content}, '%')
+        </if>
+        ORDER BY n.SEQ
         LIMIT #{offset}, #{size}
     </select>
 
-    <select id="getTotalNoticesCount" parameterType="map" resultType="int">
+    <select id="getAttachmentsByNoticeId" resultMap="FileAttachmentResultMap">
+        SELECT IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE
+        FROM file_attachments
+        WHERE SEQ = #{seq}
+    </select>
+
+    <select id="getTotalNoticesCount" resultType="int">
         SELECT COUNT(*) FROM notices
-        WHERE (#{postDate} IS NULL OR POST_DATE = #{postDate})
-          AND (#{title} IS NULL OR TITLE LIKE CONCAT('%', #{title}, '%'))
-          AND (#{content} IS NULL OR CONTENT LIKE CONCAT('%', #{content}, '%'))
+        WHERE 1=1
+        <if test="postDate != null and postDate != ''">
+            AND POST_DATE = #{postDate}
+        </if>
+        <if test="title != null and title != ''">
+            AND TITLE LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="content != null and content != ''">
+            AND CONTENT LIKE CONCAT('%', #{content}, '%')
+        </if>
     </select>
 
 

@@ -41,6 +41,8 @@ public class AdminService {
 		adminmapper.insert(user);
 	}
     
+    
+    
     public void saveUser(User user) {
         adminmapper.insertUser(user);
     }
@@ -81,48 +83,15 @@ public class AdminService {
     }
     
     //// 공지사항 서비스
-    
-    public List<Notice> getAllNotices() {
-        return adminmapper.getAllNotices();
-    }
-
-    public Notice getNoticeById(Long id) {
-        Notice notice = adminmapper.getNoticeById(id);
-        if (notice != null) {
-            notice.setAttachments(fileAttachmentMapper.getAttachmentsByNoticeId(id));
-        }
-        return notice;
-    }
-
-    public void createNotice(Notice notice) {
-        adminmapper.insertNotice(notice);
-        if (notice.getAttachments() != null) {
-            for (FileAttachment attachment : notice.getAttachments()) {
-                attachment.setSeq(notice.getSeq());
-                fileAttachmentMapper.insertFileAttachment(attachment);
-            }
-        }
-    }
-
-    public void updateNotice(Notice notice) {
-        adminmapper.updateNotice(notice);
-        fileAttachmentMapper.deleteAttachmentsByNoticeId(notice.getSeq());
-        if (notice.getAttachments() != null) {
-            for (FileAttachment attachment : notice.getAttachments()) {
-                attachment.setSeq(notice.getSeq());
-                fileAttachmentMapper.insertFileAttachment(attachment);
-            }
-        }
-    }
-
-    public void deleteNotice(Long id) {
-        fileAttachmentMapper.deleteAttachmentsByNoticeId(id);
-        adminmapper.deleteNotice(id);
-    }
 
     public List<Notice> searchNotices(String postDate, String title, String content, int page, int size) {
         int offset = (page - 1) * size;
-        return adminmapper.searchNotices(postDate, title, content, offset, size);
+        List<Notice> notices = adminmapper.searchNotices(postDate, title, content, offset, size);
+        notices.forEach(notice -> {
+            List<FileAttachment> attachments = adminmapper.getAttachmentsByNoticeId(notice.getSeq());
+            notice.setAttachments(attachments);
+        });
+        return notices;
     }
 
     public int getTotalNoticesCount(String postDate, String title, String content) {
