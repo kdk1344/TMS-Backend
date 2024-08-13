@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -232,7 +233,7 @@ public class AdminController {
         workbook.close();
     }
     
-    @PostMapping(value = "api/upload", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "api/userupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
     	Map<String, Object> response = new HashMap<>();
@@ -267,6 +268,12 @@ public class AdminController {
             response.put("message", "파일 업로드가 성공적으로 완료되었습니다!");
             response.put("totalUploaded", users.size());
 
+        } catch (DuplicateKeyException e) {
+            // 중복된 키 오류 처리
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "중복된 사용자 ID가 발견되었습니다.");
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT); // 409 Conflict
         } catch (IOException e) {
             e.printStackTrace();
             response.put("status", "error");
@@ -299,6 +306,33 @@ public class AdminController {
         response.put("totalNotices", totalNotices);
 
         return response;
+    }
+    
+    
+    @PostMapping(value = "api/ntwrite", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> createNotice(
+    		@RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("postDate") String postDate,  // 사용자가 입력한 게시일자
+            @RequestParam("file") MultipartFile file) {
+
+        Notice notice = new Notice();
+        notice.setTitle(title);
+        notice.setContent(content);
+
+        List<MultipartFile> files = new ArrayList<>();
+        if (file != null && !file.isEmpty()) {
+            files.add(file);
+        }
+
+        adminService.createNotice(notice, files);
+
+        // 리다이렉션 속성 설정
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 등록되었습니다.");
+
+        // 등록 후 목록 페이지로 리다이렉트
+        return "redirect:/api/notices/list";
     }
 
  

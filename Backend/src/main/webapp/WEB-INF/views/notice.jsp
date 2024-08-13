@@ -25,7 +25,7 @@
 <h1>공지사항 목록</h1>
 
 <!-- 검색 폼 -->
-<form method="get" action="/admin/notice">
+<form method="get" action="/tms/notice">
     <input type="text" name="postDate" placeholder="게시일자" value="${param.postDate}" />
     <input type="text" name="title" placeholder="제목" value="${param.title}" />
     <input type="text" name="content" placeholder="내용" value="${param.content}" />
