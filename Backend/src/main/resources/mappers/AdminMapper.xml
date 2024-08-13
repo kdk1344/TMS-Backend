@@ -106,10 +106,10 @@
         LIMIT #{offset}, #{size}
     </select>
 
-    <select id="getAttachmentsByNoticeIdentifier" resultMap="FileAttachmentResultMap">
+    <select id="getAttachmentsByNoticeSEQ" resultMap="FileAttachmentResultMap">
 	    SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE
 	    FROM file_attachments
-	    WHERE IDENTIFIER = #{identifier}
+	    WHERE SEQ = #{seq}
 	</select>
 
     <select id="getTotalNoticesCount" resultType="int">
@@ -125,6 +125,23 @@
             AND CONTENT LIKE CONCAT('%', #{content}, '%')
         </if>
     </select>
+    
+    <select id="getNextSeqValue" statementType="CALLABLE">
+        CALL next_value('notice_sequence', #{seq, mode=OUT, jdbcType=INTEGER})
+    </select>
+    
+    <insert id="insertNotice" useGeneratedKeys="true" keyProperty="seq">
+    	<selectKey keyProperty="seq" resultType="int" order="BEFORE" statementType="CALLABLE">
+            {CALL next_value(#{seq, mode=OUT, jdbcType=INTEGER})}
+        </selectKey>
+        INSERT INTO notices (SEQ, POST_DATE, TITLE, CONTENT)
+        VALUES (#{seq}, #{postDate}, #{title}, #{content})
+    </insert>
+
+    <insert id="insertFileAttachment">
+        INSERT INTO file_attachments (IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE)
+        VALUES (#{identifier}, #{type}, #{storageLocation}, #{fileName}, NOW())
+    </insert>
 
 
 	

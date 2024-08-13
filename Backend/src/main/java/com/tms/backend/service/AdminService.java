@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.AdminMapper;
@@ -87,14 +88,30 @@ public class AdminService {
     public List<Notice> searchNotices(String postDate, String title, String content, int page, int size) {
         int offset = (page - 1) * size;
         List<Notice> notices = adminmapper.searchNotices(postDate, title, content, offset, size);
-        notices.forEach(notice -> {
-            List<FileAttachment> attachments = adminmapper.getAttachmentsByNoticeIdentifier(notice.getSeq());
-            notice.setAttachments(attachments);
-        });
         return notices;
     }
 
     public int getTotalNoticesCount(String postDate, String title, String content) {
         return adminmapper.getTotalNoticesCount(postDate, title, content);
     }
+    
+    public void createNotice(Notice notice, List<MultipartFile> files) {
+    	log.info(notice);
+        adminmapper.insertNotice(notice); // 공지사항 저장
+//        files.forEach(file -> {
+//            FileAttachment attachment = new FileAttachment();
+//            attachment.setSeq(seq);
+//            attachment.setIdentifier(notice.getSeq()); 
+//            attachment.setFileName(file.getOriginalFilename());
+//            attachment.setType(file.getContentType());
+//            attachment.setStorageLocation(storeFile(file)); 
+//            adminmapper.insertFileAttachment(attachment); 
+        }
+
+    private String storeFile(MultipartFile file) {
+        // 파일 저장 로직 구현
+        return "/path/to/storage/" + file.getOriginalFilename();
+    }
+    
+    
 }

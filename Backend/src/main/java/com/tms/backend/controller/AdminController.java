@@ -2,7 +2,9 @@ package com.tms.backend.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -240,12 +242,22 @@ public class AdminController {
         if (file.isEmpty()) {
         	response.put("status", "failure");
             response.put("message", "파일이 없습니다. 다시 시도해 주세요.");
-        	return new ResponseEntity<>(response, HttpStatus.OK);
+        	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
+            Row headerRow = sheet.getRow(0);
+            
+         // 예상하는 컬럼명 리스트
+            List<String> expectedHeaders = Arrays.asList("userID", "userName", "Password", "AuthorityCode", "AuthorityName");
+            if (!isHeaderValid(headerRow, expectedHeaders)) {
+                response.put("status", "error");
+                response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            
             List<User> users = new ArrayList<User>();
 
             // 첫 번째 행은 헤더이므로 건너뜁니다.
@@ -253,12 +265,20 @@ public class AdminController {
                 Row row = sheet.getRow(i);
                 if (row != null) {
                     User user = new User();
-                    user.setuserID(row.getCell(0).getStringCellValue());
-                    user.setuserName(row.getCell(1).getStringCellValue());
-                    user.setPassword(row.getCell(2).getStringCellValue());
-                    user.setauthorityCode((int)row.getCell(3).getNumericCellValue());
-                    user.setauthorityName(row.getCell(4).getStringCellValue());
-                    users.add(user);
+                    try {
+	                    user.setuserID(row.getCell(0).getStringCellValue());
+	                    user.setuserName(row.getCell(1).getStringCellValue());
+	                    user.setPassword(row.getCell(2).getStringCellValue());
+	                    user.setauthorityCode((int)row.getCell(3).getNumericCellValue());
+	                    user.setauthorityName(row.getCell(4).getStringCellValue());
+	                    users.add(user);
+                    } catch (Exception e) {
+                        // 형식 오류 또는 예상치 못한 컬럼 데이터 처리
+                        e.printStackTrace();
+                        response.put("status", "error");
+                        response.put("message", "파일의 데이터 형식이 올바르지 않습니다: 행 " + (i + 1));
+                        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                    }
                 }
             }
 
@@ -282,6 +302,16 @@ public class AdminController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
+    private boolean isHeaderValid(Row headerRow, List<String> expectedHeaders) {
+        for (int i = 0; i < expectedHeaders.size(); i++) {
+            Cell cell = headerRow.getCell(i);
+            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
     
     
@@ -312,14 +342,15 @@ public class AdminController {
     @PostMapping(value = "api/ntwrite", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> createNotice(
-    		@RequestParam("title") String title,
+            @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam("postDate") String postDate,  // 사용자가 입력한 게시일자
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("postDate") Date postDate,  // 사용자가 입력한 게시일자
+            @RequestParam(value = "file", required = false) MultipartFile file) {
 
         Notice notice = new Notice();
         notice.setTitle(title);
         notice.setContent(content);
+        notice.setPostDate(postDate); // 사용자가 입력한 게시일자 설정
 
         List<MultipartFile> files = new ArrayList<>();
         if (file != null && !file.isEmpty()) {
@@ -328,11 +359,12 @@ public class AdminController {
 
         adminService.createNotice(notice, files);
 
-        // 리다이렉션 속성 설정
-        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 등록되었습니다.");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "게시글이 성공적으로 등록되었습니다.");
+        response.put("seq", notice.getSeq());
+        response.put("postDate", notice.getPostDate());
 
-        // 등록 후 목록 페이지로 리다이렉트
-        return "redirect:/api/notices/list";
+        return ResponseEntity.ok(response);
     }
 
  
@@ -354,6 +386,36 @@ public class AdminController {
         model.addAttribute("totalNotices", totalNotices);
 
         return "notice"; // JSP 파일의 경로
+    }
+    
+    @PostMapping(value = "/ntwrite")
+    public String createNotice2(
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("postDate") Date postDate,  // 사용자가 입력한 게시일자
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            Model model) {
+
+    	Notice notice = new Notice();
+        notice.setTitle(title);
+        notice.setContent(content);
+        notice.setPostDate(postDate);
+        log.info("Notice creation started");
+
+        List<MultipartFile> files = new ArrayList<>();
+        if (file != null && !file.isEmpty()) {
+            files.add(file);
+            log.info("File attached: " + file.getOriginalFilename());
+        } else {
+            log.info("No file attached");
+        }
+
+        adminService.createNotice(notice, files);
+
+        model.addAttribute("message", "게시글이 성공적으로 등록되었습니다.");
+        model.addAttribute("notice", notice);
+
+        return "notice";
     }
 
 

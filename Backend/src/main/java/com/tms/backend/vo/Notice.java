@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class Notice {
-	private Long seq; // 공지사항의 고유 식별자
+	private int seq; // 공지사항의 고유 식별자
     private Date postDate; // 게시일자
     private String title; // 공지사항 제목
     private String content; // 공지사항 내용
@@ -16,11 +16,11 @@ public class Notice {
 
     // Getters and Setters
 
-    public Long getSeq() {
+    public int getSeq() {
         return seq;
     }
 
-    public void setSeq(Long seq) {
+    public void setSeq(int seq) {
         this.seq = seq;
     }
 

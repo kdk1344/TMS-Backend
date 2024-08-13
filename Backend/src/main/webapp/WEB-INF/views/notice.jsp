@@ -32,6 +32,18 @@
     <button type="submit">검색</button>
 </form>
 
+<form method="post" action="/tms/ntwrite" enctype="multipart/form-data">
+	<label for="postDate">게시일자:</label>
+    <input type="date" id="postDate" name="postDate"><br>
+    <label for="title">제목:</label>
+    <input type="text" id="title" name="title"><br>
+    <label for="content">내용:</label>
+    <textarea id="content" name="content"></textarea><br>
+    <label for="file">첨부파일:</label>
+    <input type="file" id="file" name="file"><br>
+    <button type="submit">등록</button>
+</form>
+
 <!-- 공지사항 테이블 -->
 <table>
     <thead>
@@ -57,6 +69,8 @@
         </c:forEach>
     </tbody>
 </table>
+
+
 
 <!-- 페이징 링크 -->
 <div>
