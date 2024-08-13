@@ -125,6 +125,9 @@
             <button id="deleteUserButton">삭제</button>
           </div>
           <div class="flex-box">
+            <!-- 파일 선택 input -->
+            <input type="file" id="uploadUserFileInput" name="file" accept=".xlsx, .xls" />
+
             <button id="uploadUserFileButton">파일 업로드</button>
             <button id="downloadUserFileButton">파일 다운로드</button>
           </div>

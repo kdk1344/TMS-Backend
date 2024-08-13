@@ -3,6 +3,8 @@ import { tmsFetch } from "./common.js";
 let currentPage = 1;
 
 // DOM 요소들
+const uploadUserFileInput = document.getElementById("uploadUserFileInput");
+const uploadUserFileButton = document.getElementById("uploadUserFileButton");
 const userRegisterForm = document.getElementById("userRegisterForm");
 const userEditForm = document.getElementById("userEditForm");
 const userFilterForm = document.getElementById("userFilterForm");
@@ -28,8 +30,25 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
-  // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
+  // 사용자 파일 업로드 버튼 클릭 이벤트 핸들러
+  if (uploadUserFileButton) {
+    uploadUserFileButton.addEventListener("click", () => {
+      if (uploadUserFileInput) {
+        uploadUserFileInput.click(); // 파일 선택 창 열기
+      } else {
+        console.error("File input element not found.");
+      }
+    });
+  }
+
+  // 사용자 파일 업로드 인풋 change 이벤트 핸들러
+  if (uploadUserFileInput) {
+    uploadUserFileInput.addEventListener("change", uploadUserFile);
+  }
+
+  // 사용자 테이블 클릭 이벤트 핸들러
   if (userTableBody) {
+    // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
     userTableBody.addEventListener("click", (event) => {
       const clickedElement = event.target;
 
@@ -241,12 +260,9 @@ async function registerUser(event) {
       alert(`사용자(ID: ${user.userID}) 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.USER_REGISTER); // 모달 닫기
-    } else {
-      alert("사용자 등록에 실패했습니다. 다시 시도해주세요.");
     }
   } catch (error) {
-    console.error("Error submitting user register form:", error);
-    alert("서버 오류가 발생했습니다.");
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 
@@ -275,12 +291,9 @@ async function editUser(event) {
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.USER_EDIT); // 모달 닫기
       location.reload(); // 페이지 새로고침
-    } else {
-      alert("사용자 수정에 실패했습니다. 다시 시도해주세요.");
     }
   } catch (error) {
-    console.error("Error submitting user edit form:", error);
-    alert("서버 오류가 발생했습니다.");
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 
@@ -317,11 +330,35 @@ async function deleteUser() {
     if (success) {
       alert(`사용자 삭제가 완료되었습니다.`);
       location.reload(); // 페이지 새로고침
-    } else {
-      alert("사용자 삭제에 실패했습니다. 다시 시도해주세요.");
     }
   } catch (error) {
-    console.error("Error deleting users:", error);
+    alert(error.message + "\n다시 시도해주세요.");
+  }
+}
+
+// 사용자 파일 업로드
+async function uploadUserFile() {
+  if (uploadUserFileInput.files.length <= 0) return;
+
+  const formData = new FormData();
+
+  // key 이름의 경우 서버와 협의
+  formData.append("file", uploadUserFileInput.files[0]);
+
+  try {
+    const response = await tmsFetch("/userupload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const success = response ? response.status === "success" : false;
+
+    if (success) {
+      alert("파일 업로드가 완료되었습니다.");
+      location.reload(); // 페이지 새로고침
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 

@@ -9,6 +9,13 @@ form button {
   width: fit-content;
 }
 
+/* 숨겨진 파일 입력 필드 */
+#uploadUserFileInput {
+  visibility: hidden; /* 요소를 보이지 않게 함 */
+  width: 0;
+  height: 0;
+}
+
 #userFilterForm {
   display: flex;
   justify-content: space-between;
