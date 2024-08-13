@@ -126,16 +126,9 @@
         </if>
     </select>
     
-    <select id="getNextSeqValue" statementType="CALLABLE">
-        CALL next_value('notice_sequence', #{seq, mode=OUT, jdbcType=INTEGER})
-    </select>
-    
     <insert id="insertNotice" useGeneratedKeys="true" keyProperty="seq">
-    	<selectKey keyProperty="seq" resultType="int" order="BEFORE" statementType="CALLABLE">
-            {CALL next_value(#{seq, mode=OUT, jdbcType=INTEGER})}
-        </selectKey>
-        INSERT INTO notices (SEQ, POST_DATE, TITLE, CONTENT)
-        VALUES (#{seq}, #{postDate}, #{title}, #{content})
+        INSERT INTO notices (POST_DATE, TITLE, CONTENT)
+        VALUES (#{postDate}, #{title}, #{content})
     </insert>
 
     <insert id="insertFileAttachment">

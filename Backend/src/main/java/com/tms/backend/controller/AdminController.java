@@ -269,9 +269,18 @@ public class AdminController {
 	                    user.setuserID(row.getCell(0).getStringCellValue());
 	                    user.setuserName(row.getCell(1).getStringCellValue());
 	                    user.setPassword(row.getCell(2).getStringCellValue());
-	                    user.setauthorityCode((int)row.getCell(3).getNumericCellValue());
-	                    user.setauthorityName(row.getCell(4).getStringCellValue());
-	                    users.add(user);
+	                    if (row.getCell(3) == null || row.getCell(3).getCellType() == CellType.BLANK) {
+                            // AuthorityCode가 비어있을 경우 서비스의 join 메서드로 향함
+	                    	user.setauthorityName(row.getCell(4).getStringCellValue());
+                            adminService.join(user);
+                        } else {
+                            user.setauthorityCode((int) row.getCell(3).getNumericCellValue());
+                            user.setauthorityName(row.getCell(4).getStringCellValue());
+    	                    users.add(user);
+                        }
+//	                    user.setauthorityCode((int)row.getCell(3).getNumericCellValue());
+//	                    user.setauthorityName(row.getCell(4).getStringCellValue());
+//	                    users.add(user);
                     } catch (Exception e) {
                         // 형식 오류 또는 예상치 못한 컬럼 데이터 처리
                         e.printStackTrace();
@@ -347,22 +356,26 @@ public class AdminController {
             @RequestParam("postDate") Date postDate,  // 사용자가 입력한 게시일자
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
-        Notice notice = new Notice();
+    	Notice notice = new Notice();
         notice.setTitle(title);
         notice.setContent(content);
-        notice.setPostDate(postDate); // 사용자가 입력한 게시일자 설정
+        notice.setPostDate(postDate);
 
         List<MultipartFile> files = new ArrayList<>();
         if (file != null && !file.isEmpty()) {
             files.add(file);
+            log.info("File attached: " + file.getOriginalFilename());
+        } else {
+            log.info("No file attached");
         }
 
         adminService.createNotice(notice, files);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "게시글이 성공적으로 등록되었습니다.");
-        response.put("seq", notice.getSeq());
-        response.put("postDate", notice.getPostDate());
+        response.put("notice", notice);
+        
+        log.info(notice);
 
         return ResponseEntity.ok(response);
     }
@@ -411,6 +424,7 @@ public class AdminController {
         }
 
         adminService.createNotice(notice, files);
+        log.info(notice);
 
         model.addAttribute("message", "게시글이 성공적으로 등록되었습니다.");
         model.addAttribute("notice", notice);
