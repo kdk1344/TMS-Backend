@@ -31,6 +31,12 @@ function setupEventListeners() {
   // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
   if (userTableBody) {
     userTableBody.addEventListener("click", (event) => {
+      const clickedElement = event.target;
+
+      if (clickedElement.type === "checkbox") {
+        return;
+      }
+
       const row = event.target.closest("tr");
 
       if (row) {
@@ -196,7 +202,7 @@ function loadUserDataFromRow(row) {
   const userAuthoritySelect = document.getElementById("authorityNameForEdit");
 
   for (let option of userAuthoritySelect.options) {
-    if (option.textContent.trim() === authorityName) {
+    if (option.value.trim() === authorityName) {
       option.selected = true;
       break;
     }
@@ -206,40 +212,7 @@ function loadUserDataFromRow(row) {
   document.getElementById("passwordForEdit").value = "";
 
   // 모달 열기
-  openModal("userEditModal");
-}
-
-// 사용자 수정
-async function editUser(event) {
-  event.preventDefault(); // 폼 제출 기본 동작 방지
-
-  // 사용자 정보 가져와서 폼에 넣기
-
-  const formData = new FormData(event.target);
-
-  // FormData 객체를 JSON 객체로 변환
-  const formDataObj = Object.fromEntries(formData.entries());
-
-  try {
-    const { user, status } = await tmsFetch("/idmodify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formDataObj),
-    });
-
-    const success = status === "success";
-
-    if (success) {
-      alert(`사용자(ID: ${user.userID}) 수정이 완료되었습니다.`);
-      event.target.reset(); // 폼 초기화
-      closeModal(); // 모달 닫기
-    } else {
-      alert("사용자 수정에 실패했습니다. 다시 시도해주세요.");
-    }
-  } catch (error) {
-    console.error("Error submitting user edit form:", error);
-    alert("서버 오류가 발생했습니다.");
-  }
+  openModal(MODAL_ID.USER_EDIT);
 }
 
 // 사용자 등록
@@ -273,6 +246,40 @@ async function registerUser(event) {
     }
   } catch (error) {
     console.error("Error submitting user register form:", error);
+    alert("서버 오류가 발생했습니다.");
+  }
+}
+
+// 사용자 수정
+async function editUser(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  // 사용자 정보 가져와서 폼에 넣기
+
+  const formData = new FormData(event.target);
+
+  // FormData 객체를 JSON 객체로 변환
+  const formDataObj = Object.fromEntries(formData.entries());
+
+  try {
+    const { user, status } = await tmsFetch("/idmodify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formDataObj),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`사용자(ID: ${user.userID}) 수정이 완료되었습니다.`);
+      event.target.reset(); // 폼 초기화
+      closeModal(MODAL_ID.USER_EDIT); // 모달 닫기
+      location.reload(); // 페이지 새로고침
+    } else {
+      alert("사용자 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  } catch (error) {
+    console.error("Error submitting user edit form:", error);
     alert("서버 오류가 발생했습니다.");
   }
 }

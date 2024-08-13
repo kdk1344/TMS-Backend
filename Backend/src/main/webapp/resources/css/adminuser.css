@@ -92,6 +92,8 @@ table {
   height: 70vh;
   border-collapse: collapse;
   margin-bottom: 20px;
+
+  cursor: pointer;
 }
 
 thead {
