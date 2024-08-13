@@ -21,16 +21,16 @@
     
     <update id="updateUser" parameterType="User">
         UPDATE users
-        SET userName = #{user.userName},
-            Password = #{user.password},
-            authorityName = #{user.authorityName},
-            authorityCode = CASE 
-                          WHEN #{user.authorityName} = 'type1' THEN 1
-                          WHEN #{user.authorityName} = 'type2' THEN 2
-                          WHEN #{user.authorityName} = 'type3' THEN 3
+        SET USER_NAME = #{userName},
+            PASSWORD = #{password},
+            AUTHORITY_NAME = #{authorityName},
+            AUTHORITY_CODE = CASE 
+                          WHEN #{authorityName} = 'type1' THEN 1
+                          WHEN #{authorityName} = 'type2' THEN 2
+                          WHEN #{authorityName} = 'type3' THEN 3
                           ELSE 0
                       END
-        WHERE UserID = #{user.userID}
+        WHERE User_ID = #{userID}
     </update>
     
     <delete id="deleteUser" parameterType="String">
@@ -106,11 +106,11 @@
         LIMIT #{offset}, #{size}
     </select>
 
-    <select id="getAttachmentsByNoticeId" resultMap="FileAttachmentResultMap">
-        SELECT IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE
-        FROM file_attachments
-        WHERE SEQ = #{seq}
-    </select>
+    <select id="getAttachmentsByNoticeIdentifier" resultMap="FileAttachmentResultMap">
+	    SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE
+	    FROM file_attachments
+	    WHERE IDENTIFIER = #{identifier}
+	</select>
 
     <select id="getTotalNoticesCount" resultType="int">
         SELECT COUNT(*) FROM notices

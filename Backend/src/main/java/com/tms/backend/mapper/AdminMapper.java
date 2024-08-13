@@ -32,5 +32,5 @@ public interface AdminMapper {
 	public int getTotalNoticesCount(@Param("postDate") String postDate,
 	          @Param("title") String title,
 	          @Param("content") String content);
-	public List<FileAttachment> getAttachmentsByNoticeId(@Param("id") Long id);
+	public List<FileAttachment> getAttachmentsByNoticeIdentifier(@Param("identifier") Long identifier);
 }

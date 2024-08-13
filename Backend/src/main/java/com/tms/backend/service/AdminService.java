@@ -88,7 +88,7 @@ public class AdminService {
         int offset = (page - 1) * size;
         List<Notice> notices = adminmapper.searchNotices(postDate, title, content, offset, size);
         notices.forEach(notice -> {
-            List<FileAttachment> attachments = adminmapper.getAttachmentsByNoticeId(notice.getSeq());
+            List<FileAttachment> attachments = adminmapper.getAttachmentsByNoticeIdentifier(notice.getSeq());
             notice.setAttachments(attachments);
         });
         return notices;

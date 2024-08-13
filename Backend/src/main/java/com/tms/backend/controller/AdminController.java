@@ -310,7 +310,6 @@ public class AdminController {
                              @RequestParam(value = "page", defaultValue = "1") int page,
                              @RequestParam(value = "size", defaultValue = "10") int size,
                              Model model) {
-    	log.info(postDate);
         List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
         int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
         int totalPages = (int) Math.ceil((double) totalNotices / size);
