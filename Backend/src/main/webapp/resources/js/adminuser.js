@@ -4,14 +4,21 @@ let currentPage = 1;
 
 // DOM 요소들
 const userRegisterForm = document.getElementById("userRegisterForm");
+const userEditForm = document.getElementById("userEditForm");
 const userFilterForm = document.getElementById("userFilterForm");
 const userTableBody = document.getElementById("userTableBody");
 const userPagination = document.getElementById("userPagination");
 const selectAllUserCheckbox = document.getElementById("selectAllUserCheckbox");
-const userRegisterModal = document.getElementById("userRegisterModal");
-const openModalButton = document.getElementById("openModalButton");
-const closeModalButton = document.getElementById("closeModalButton");
+const openUserRegisterModalButton = document.getElementById("openUserRegisterModalButton");
+const closeUserRegisterModalButton = document.getElementById("closeUserRegisterModalButton");
+const closeUserEditModalButton = document.getElementById("closeUserEditModalButton");
 const deleteUserButton = document.getElementById("deleteUserButton");
+
+// 모달 아이디
+const MODAL_ID = {
+  USER_REGISTER: "userRegisterModal",
+  USER_EDIT: "userEditModal",
+};
 
 // 초기화 함수
 function init() {
@@ -21,29 +28,61 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
-  if (userRegisterForm) {
-    userRegisterForm.addEventListener("submit", handleUserRegisterFormSubmit);
+  // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
+  if (userTableBody) {
+    userTableBody.addEventListener("click", (event) => {
+      const row = event.target.closest("tr");
+
+      if (row) {
+        loadUserDataFromRow(row);
+      }
+    });
   }
 
+  // 사용자 수정 폼 제출 이벤트 핸들러
+  if (userEditForm) {
+    userEditForm.addEventListener("submit", editUser);
+  }
+
+  // 사용자 등록 폼 제출 이벤트 핸들러
+  if (userRegisterForm) {
+    userRegisterForm.addEventListener("submit", registerUser);
+  }
+
+  // 사용자 필터 폼 제출 및 리셋 이벤트 핸들러
   if (userFilterForm) {
     userFilterForm.addEventListener("submit", submitUserFilter);
     userFilterForm.addEventListener("reset", resetUserFilter);
   }
 
+  // 사용자 삭제 버튼 클릭 이벤트 핸들러
+  if (deleteUserButton) {
+    deleteUserButton.addEventListener("click", deleteUser);
+  }
+
+  // 전체 선택 체크박스 클릭 이벤트 핸들러
   if (selectAllUserCheckbox) {
     selectAllUserCheckbox.addEventListener("click", toggleAllCheckboxes);
   }
 
-  if (openModalButton && closeModalButton) {
-    openModalButton.addEventListener("click", openModal);
-    closeModalButton.addEventListener("click", closeModal);
+  // 모달 열기 및 닫기 버튼 이벤트 핸들러
+  if (openUserRegisterModalButton && closeUserRegisterModalButton && closeUserEditModalButton) {
+    openUserRegisterModalButton.addEventListener("click", () => openModal(MODAL_ID.USER_REGISTER));
+    closeUserRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_REGISTER));
+    closeUserEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_EDIT));
   }
 
-  window.addEventListener("click", closeModalOnClickOutside);
+  // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
+  setupModalEventListeners();
+}
 
-  if (deleteUserButton) {
-    deleteUserButton.addEventListener("click", deleteUser);
-  }
+function setupModalEventListeners() {
+  const modals = [MODAL_ID.USER_REGISTER, MODAL_ID.USER_EDIT]; // 모든 모달 ID 배열
+
+  modals.forEach((modalId) => {
+    // 모달 외부 클릭 시 닫기 설정
+    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
+  });
 }
 
 /**
@@ -80,9 +119,9 @@ function displayUsers(users, totalPages) {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td><input type="checkbox" name="user" value="${user.userID}"></td>
-        <td>${user.userID}</td>
-        <td>${user.userName}</td>
-        <td>${user.authorityName}</td>
+        <td class="user-id">${user.userID}</td>
+        <td class="user-name">${user.userName}</td>
+        <td class="user-authority-name">${user.authorityName}</td>
       `;
       userTableBody.appendChild(row);
     });
@@ -144,8 +183,67 @@ function resetUserFilter() {
   this.reset(); // 폼 초기화
 }
 
+// HTML 요소에서 사용자 정보를 가져와서 사용자 수정 폼에 미리 채우기
+function loadUserDataFromRow(row) {
+  const userID = row.querySelector(".user-id").textContent.trim();
+  const userName = row.querySelector(".user-name").textContent.trim();
+  const authorityName = row.querySelector(".user-authority-name").textContent.trim();
+
+  // 폼에 사용자 정보 입력
+  document.getElementById("userIDForEdit").value = userID;
+  document.getElementById("userNameForEdit").value = userName;
+
+  const userAuthoritySelect = document.getElementById("authorityNameForEdit");
+
+  for (let option of userAuthoritySelect.options) {
+    if (option.textContent.trim() === authorityName) {
+      option.selected = true;
+      break;
+    }
+  }
+
+  // 비밀번호는 보안상 빈칸으로 둠
+  document.getElementById("passwordForEdit").value = "";
+
+  // 모달 열기
+  openModal("userEditModal");
+}
+
+// 사용자 수정
+async function editUser(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  // 사용자 정보 가져와서 폼에 넣기
+
+  const formData = new FormData(event.target);
+
+  // FormData 객체를 JSON 객체로 변환
+  const formDataObj = Object.fromEntries(formData.entries());
+
+  try {
+    const { user, status } = await tmsFetch("/idmodify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formDataObj),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`사용자(ID: ${user.userID}) 수정이 완료되었습니다.`);
+      event.target.reset(); // 폼 초기화
+      closeModal(); // 모달 닫기
+    } else {
+      alert("사용자 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  } catch (error) {
+    console.error("Error submitting user edit form:", error);
+    alert("서버 오류가 발생했습니다.");
+  }
+}
+
 // 사용자 등록
-async function handleUserRegisterFormSubmit(event) {
+async function registerUser(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
   const confirmed = confirm("사용자를 등록하시겠습니까?");
@@ -169,7 +267,7 @@ async function handleUserRegisterFormSubmit(event) {
     if (success) {
       alert(`사용자(ID: ${user.userID}) 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
-      closeModal(); // 모달 닫기
+      closeModal(MODAL_ID.USER_REGISTER); // 모달 닫기
     } else {
       alert("사용자 등록에 실패했습니다. 다시 시도해주세요.");
     }
@@ -221,23 +319,33 @@ async function deleteUser() {
 }
 
 // 모달 열기
-function openModal() {
-  if (userRegisterModal) {
-    userRegisterModal.style.display = "block";
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = "block";
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
   }
 }
 
 // 모달 닫기
-function closeModal() {
-  if (userRegisterModal) {
-    userRegisterModal.style.display = "none";
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = "none";
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
   }
 }
 
 // 모달 외부 클릭 시 닫기
-function closeModalOnClickOutside(event) {
-  if (userRegisterModal && event.target === userRegisterModal) {
-    closeModal();
+function closeModalOnClickOutside(event, modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal && event.target === modal) {
+    closeModal(modalId);
   }
 }
 

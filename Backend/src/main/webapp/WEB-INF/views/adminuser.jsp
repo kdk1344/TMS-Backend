@@ -16,11 +16,11 @@
         <h1>TMS</h1>
       </div>
       <div class="content">
-        <!-- Modal -->
+        <!-- Register Modal -->
         <div id="userRegisterModal" class="modal">
           <!-- Modal content -->
           <div class="modal-content">
-            <h2>사용자 등록/수정</h2>
+            <h2>사용자 등록</h2>
             <form id="userRegisterForm" class="modal-form">
               <div class="modal-form-group">
                 <label for="userID">아이디</label>
@@ -49,7 +49,46 @@
 
               <div class="flex-box">
                 <button type="submit">저장</button>
-                <button type="button" id="closeModalButton">닫기</button>
+                <button type="button" id="closeUserRegisterModalButton">닫기</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div id="userEditModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <h2>사용자 수정</h2>
+            <form id="userEditForm" class="modal-form">
+              <div class="modal-form-group">
+                <label for="userIDForEdit">아이디</label>
+                <input type="text" id="userIDForEdit" name="userID" readonly required />
+              </div>
+
+              <div class="modal-form-group">
+                <label for="userNameForEdit">사용자명</label>
+                <input type="text" id="userNameForEdit" name="userName" required />
+              </div>
+
+              <div class="modal-form-group">
+                <label for="passwordForEdit">비밀번호</label>
+                <input type="password" id="passwordForEdit" name="password" required autocomplete />
+              </div>
+
+              <div class="modal-form-group">
+                <label for="authorityNameForEdit">직무</label>
+                <select id="authorityNameForEdit" name="authorityName">
+                  <option value="type1">직무 1</option>
+                  <option value="type2">직무 2</option>
+                  <option value="type3">직무 3</option>
+                  <option value="type4">직무 4</option>
+                </select>
+              </div>
+
+              <div class="flex-box">
+                <button type="submit">저장</button>
+                <button type="button" id="closeUserEditModalButton">닫기</button>
               </div>
             </form>
           </div>
@@ -82,7 +121,7 @@
         <!-- 버튼 그룹 -->
         <div class="button-group">
           <div class="flex-box">
-            <button id="openModalButton">등록</button>
+            <button id="openUserRegisterModalButton">등록</button>
             <button id="deleteUserButton">삭제</button>
           </div>
           <div class="flex-box">

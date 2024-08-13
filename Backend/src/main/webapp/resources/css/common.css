@@ -60,6 +60,10 @@ input[type="checkbox"] {
   transform: scale(1.5); /* 1.5배 크기로 확대 */
 }
 
+input[readonly] {
+  cursor: default; /* 기본 커서로 설정 */
+}
+
 button:hover,
 button:focus {
   box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);

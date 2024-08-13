@@ -38,7 +38,7 @@ export async function fetchAPI(url, options) {
 
     if (isJsonType) return response.json();
 
-    return null;
+    return response;
   } catch (error) {
     console.error(error);
   }
