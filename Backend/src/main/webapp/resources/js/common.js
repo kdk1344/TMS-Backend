@@ -1,10 +1,11 @@
 /**
- * TMS서비스의 기본 URL을 추가하여 매번 기본 url을 작성하지 않도록 하기 위한 fetch 함수
+ * TMS 서비스의 기본 URL을 추가하여 매번 기본 URL을 작성하지 않도록 하기 위한 fetch 함수입니다.
+ *
  * @template T
- * @param {RequestInfo} url - The URL to fetch.
- * @param {RequestInit} [options] - Optional fetch options.
- * @returns {Promise<T|null>} The fetched data in JSON format, or null if not JSON.
- * @throws {Error} Throws a Error if the response status is an error or if fetching fails.
+ * @param {RequestInfo} url - 요청할 URL입니다.
+ * @param {RequestInit} [options] - 선택적인 fetch 옵션입니다. 예를 들어, method, headers, body 등을 설정할 수 있습니다.
+ * @returns {Promise<T>} - JSON 형식의 데이터를 반환하는 Promise입니다. 응답이 JSON 형식이 아니면 응답 객체를 반환합니다.
+ * @throws {Error} - 응답 상태 코드가 오류(예: 4xx 또는 5xx)를 나타내거나 fetch 작업이 실패한 경우 `Error`를 던집니다.
  */
 export async function tmsFetch(url, options) {
   const TMS_BASE_URL = "/tms/api";
@@ -13,12 +14,18 @@ export async function tmsFetch(url, options) {
 }
 
 /**
- * Fetches data from an API and handles different HTTP status errors.
+ * API에서 데이터를 가져오고 다양한 HTTP 상태 오류를 처리합니다.
+ *
  * @template T
- * @param {RequestInfo} url - The URL to fetch.
- * @param {RequestInit} [options] - Optional fetch options.
- * @returns {Promise<T|null>} The fetched data in JSON format, or null if not JSON.
- * @throws {Error} Throws a Error if the response status is an error or if fetching fails.
+ * @param {RequestInfo} url - 가져올 URL입니다. 문자열 또는 `Request` 객체일 수 있습니다.
+ * @param {RequestInit} [options] - 선택적으로 fetch 요청에 대한 옵션을 설정할 수 있습니다. 예: method, headers, body 등.
+ * @returns {Promise<T>} - JSON 형식의 데이터를 반환하는 Promise입니다. 응답이 JSON 형식이 아니면 응답 객체를 반환합니다.
+ * @throws {Error} - 응답 상태 코드가 오류(예: 4xx 또는 5xx)를 나타내거나 fetch 작업이 실패한 경우 `Error`를 던집니다.
+ *
+ * @example
+ * fetchAPI('/api/data', { method: 'GET' })
+ *   .then(data => console.log(data))
+ *   .catch(error => console.error(error));
  */
 export async function fetchAPI(url, options) {
   try {
@@ -41,5 +48,37 @@ export async function fetchAPI(url, options) {
     return response;
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+}
+
+// 모달 열기
+export function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = "block";
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+}
+
+// 모달 닫기
+export function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = "none";
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+}
+
+// 모달 외부 클릭 시 닫기
+export function closeModalOnClickOutside(event, modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal && event.target === modal) {
+    closeModal(modalId);
   }
 }

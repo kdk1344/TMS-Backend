@@ -1,15 +1,21 @@
-import { tmsFetch } from "./common.js";
+import { tmsFetch, openModal, closeModal, closeModalOnClickOutside } from "./common.js";
 
 let currentPage = 1;
 
 // DOM 요소들
+const uploadUserFileInput = document.getElementById("uploadUserFileInput");
+const uploadUserFileButton = document.getElementById("uploadUserFileButton");
+
 const userRegisterForm = document.getElementById("userRegisterForm");
 const userEditForm = document.getElementById("userEditForm");
 const userFilterForm = document.getElementById("userFilterForm");
+
 const userTableBody = document.getElementById("userTableBody");
 const userPagination = document.getElementById("userPagination");
 const selectAllUserCheckbox = document.getElementById("selectAllUserCheckbox");
+
 const openUserRegisterModalButton = document.getElementById("openUserRegisterModalButton");
+const openUserFileDownloadModalButton = document.getElementById("openUserFileDownloadModalButton");
 const closeUserRegisterModalButton = document.getElementById("closeUserRegisterModalButton");
 const closeUserEditModalButton = document.getElementById("closeUserEditModalButton");
 const deleteUserButton = document.getElementById("deleteUserButton");
@@ -18,6 +24,7 @@ const deleteUserButton = document.getElementById("deleteUserButton");
 const MODAL_ID = {
   USER_REGISTER: "userRegisterModal",
   USER_EDIT: "userEditModal",
+  USER_FILE_DOWNLOAD: "userFileDownloadModal",
 };
 
 // 초기화 함수
@@ -28,8 +35,25 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
-  // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
+  // 사용자 파일 업로드 버튼 클릭 이벤트 핸들러
+  if (uploadUserFileButton) {
+    uploadUserFileButton.addEventListener("click", () => {
+      if (uploadUserFileInput) {
+        uploadUserFileInput.click(); // 파일 선택 창 열기
+      } else {
+        console.error("File input element not found.");
+      }
+    });
+  }
+
+  // 사용자 파일 업로드 인풋 change 이벤트 핸들러
+  if (uploadUserFileInput) {
+    uploadUserFileInput.addEventListener("change", uploadUserFile);
+  }
+
+  // 사용자 테이블 클릭 이벤트 핸들러
   if (userTableBody) {
+    // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
     userTableBody.addEventListener("click", (event) => {
       const clickedElement = event.target;
 
@@ -72,9 +96,20 @@ function setupEventListeners() {
   }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러
-  if (openUserRegisterModalButton && closeUserRegisterModalButton && closeUserEditModalButton) {
+  if (
+    openUserRegisterModalButton &&
+    closeUserRegisterModalButton &&
+    openUserFileDownloadModalButton &&
+    closeUserEditModalButton
+  ) {
     openUserRegisterModalButton.addEventListener("click", () => openModal(MODAL_ID.USER_REGISTER));
     closeUserRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_REGISTER));
+
+    openUserFileDownloadModalButton.addEventListener("click", () => {
+      copyFilterValuesToDownloadForm(); // 사용자 필터링 값 복사
+      openModal(MODAL_ID.USER_FILE_DOWNLOAD); // 모달 열기
+    });
+
     closeUserEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_EDIT));
   }
 
@@ -83,7 +118,7 @@ function setupEventListeners() {
 }
 
 function setupModalEventListeners() {
-  const modals = [MODAL_ID.USER_REGISTER, MODAL_ID.USER_EDIT]; // 모든 모달 ID 배열
+  const modals = Object.values(MODAL_ID); // 모든 모달 ID 배열
 
   modals.forEach((modalId) => {
     // 모달 외부 클릭 시 닫기 설정
@@ -241,12 +276,9 @@ async function registerUser(event) {
       alert(`사용자(ID: ${user.userID}) 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.USER_REGISTER); // 모달 닫기
-    } else {
-      alert("사용자 등록에 실패했습니다. 다시 시도해주세요.");
     }
   } catch (error) {
-    console.error("Error submitting user register form:", error);
-    alert("서버 오류가 발생했습니다.");
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 
@@ -275,12 +307,9 @@ async function editUser(event) {
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.USER_EDIT); // 모달 닫기
       location.reload(); // 페이지 새로고침
-    } else {
-      alert("사용자 수정에 실패했습니다. 다시 시도해주세요.");
     }
   } catch (error) {
-    console.error("Error submitting user edit form:", error);
-    alert("서버 오류가 발생했습니다.");
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 
@@ -317,43 +346,47 @@ async function deleteUser() {
     if (success) {
       alert(`사용자 삭제가 완료되었습니다.`);
       location.reload(); // 페이지 새로고침
-    } else {
-      alert("사용자 삭제에 실패했습니다. 다시 시도해주세요.");
     }
   } catch (error) {
-    console.error("Error deleting users:", error);
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 
-// 모달 열기
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
+// 사용자 파일 업로드
+async function uploadUserFile() {
+  if (uploadUserFileInput.files.length <= 0) return;
 
-  if (modal) {
-    modal.style.display = "block";
-  } else {
-    console.error(`Modal with ID "${modalId}" not found.`);
+  const formData = new FormData();
+
+  // key 이름의 경우 서버와 협의
+  formData.append("file", uploadUserFileInput.files[0]);
+
+  try {
+    const response = await tmsFetch("/userupload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const success = response ? response.status === "success" : false;
+
+    if (success) {
+      alert("파일 업로드가 완료되었습니다.");
+      location.reload(); // 페이지 새로고침
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }
 
-// 모달 닫기
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
+// 사용자 필터링 폼의 값을 다운로드 폼으로 복사하는 함수
+function copyFilterValuesToDownloadForm() {
+  // 사용자 조회 필터링 폼의 값을 가져옴
+  const userName = document.getElementById("userNameForFilter").value;
+  const authorityName = document.getElementById("authorityNameForFilter").value;
 
-  if (modal) {
-    modal.style.display = "none";
-  } else {
-    console.error(`Modal with ID "${modalId}" not found.`);
-  }
-}
-
-// 모달 외부 클릭 시 닫기
-function closeModalOnClickOutside(event, modalId) {
-  const modal = document.getElementById(modalId);
-
-  if (modal && event.target === modal) {
-    closeModal(modalId);
-  }
+  // 숨겨진 다운로드 폼의 input 필드에 값을 설정
+  document.getElementById("downloadUserName").value = userName;
+  document.getElementById("downloadAuthorityName").value = authorityName;
 }
 
 // 초기 사용자 목록 로드

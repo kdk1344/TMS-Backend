@@ -94,6 +94,27 @@
           </div>
         </div>
 
+        <!-- File Download Modal -->
+        <div id="userFileDownloadModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <h2>엑셀 파일 다운로드</h2>
+            <div class="flex-box">
+              <form id="downloadAllUserForm" action="downloadAll" method="get">
+                <button type="submit" id="downloadAllUserButton">전체 사용자 목록 다운로드</button>
+              </form>
+
+              <form id="downloadFilteredUserForm" action="downloadFiltered" method="get" id="downloadFilteredForm">
+                <!-- 숨겨진 input 필드 -->
+                <input type="hidden" id="downloadUserName" name="userName" />
+                <input type="hidden" id="downloadAuthorityName" name="authorityName" />
+
+                <button type="submit" id="downloadFilteredUserButton">조회된 사용자 목록 다운로드</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
         <!-- 사용자 조회 필터링 폼 -->
         <form id="userFilterForm">
           <div class="filter-container">
@@ -125,8 +146,11 @@
             <button id="deleteUserButton">삭제</button>
           </div>
           <div class="flex-box">
+            <!-- 파일 선택 input -->
+            <input type="file" id="uploadUserFileInput" name="file" accept=".xlsx, .xls" />
+
             <button id="uploadUserFileButton">파일 업로드</button>
-            <button id="downloadUserFileButton">파일 다운로드</button>
+            <button id="openUserFileDownloadModalButton">파일 다운로드</button>
           </div>
         </div>
 

@@ -58,6 +58,8 @@ select {
 input[type="checkbox"] {
   width: fit-content;
   transform: scale(1.5); /* 1.5배 크기로 확대 */
+
+  cursor: pointer;
 }
 
 input[readonly] {
