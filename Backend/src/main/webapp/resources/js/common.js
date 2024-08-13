@@ -51,3 +51,34 @@ export async function fetchAPI(url, options) {
     throw error;
   }
 }
+
+// 모달 열기
+export function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = "block";
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+}
+
+// 모달 닫기
+export function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = "none";
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+}
+
+// 모달 외부 클릭 시 닫기
+export function closeModalOnClickOutside(event, modalId) {
+  const modal = document.getElementById(modalId);
+
+  if (modal && event.target === modal) {
+    closeModal(modalId);
+  }
+}

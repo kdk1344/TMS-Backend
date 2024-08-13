@@ -1,4 +1,4 @@
-import { tmsFetch } from "./common.js";
+import { tmsFetch, openModal, closeModal, closeModalOnClickOutside } from "./common.js";
 
 let currentPage = 1;
 
@@ -387,37 +387,6 @@ function copyFilterValuesToDownloadForm() {
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
   document.getElementById("downloadUserName").value = userName;
   document.getElementById("downloadAuthorityName").value = authorityName;
-}
-
-// 모달 열기
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-
-  if (modal) {
-    modal.style.display = "block";
-  } else {
-    console.error(`Modal with ID "${modalId}" not found.`);
-  }
-}
-
-// 모달 닫기
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-
-  if (modal) {
-    modal.style.display = "none";
-  } else {
-    console.error(`Modal with ID "${modalId}" not found.`);
-  }
-}
-
-// 모달 외부 클릭 시 닫기
-function closeModalOnClickOutside(event, modalId) {
-  const modal = document.getElementById(modalId);
-
-  if (modal && event.target === modal) {
-    closeModal(modalId);
-  }
 }
 
 // 초기 사용자 목록 로드
