@@ -5,13 +5,17 @@ let currentPage = 1;
 // DOM 요소들
 const uploadUserFileInput = document.getElementById("uploadUserFileInput");
 const uploadUserFileButton = document.getElementById("uploadUserFileButton");
+
 const userRegisterForm = document.getElementById("userRegisterForm");
 const userEditForm = document.getElementById("userEditForm");
 const userFilterForm = document.getElementById("userFilterForm");
+
 const userTableBody = document.getElementById("userTableBody");
 const userPagination = document.getElementById("userPagination");
 const selectAllUserCheckbox = document.getElementById("selectAllUserCheckbox");
+
 const openUserRegisterModalButton = document.getElementById("openUserRegisterModalButton");
+const openUserFileDownloadModalButton = document.getElementById("openUserFileDownloadModalButton");
 const closeUserRegisterModalButton = document.getElementById("closeUserRegisterModalButton");
 const closeUserEditModalButton = document.getElementById("closeUserEditModalButton");
 const deleteUserButton = document.getElementById("deleteUserButton");
@@ -20,6 +24,7 @@ const deleteUserButton = document.getElementById("deleteUserButton");
 const MODAL_ID = {
   USER_REGISTER: "userRegisterModal",
   USER_EDIT: "userEditModal",
+  USER_FILE_DOWNLOAD: "userFileDownloadModal",
 };
 
 // 초기화 함수
@@ -91,9 +96,20 @@ function setupEventListeners() {
   }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러
-  if (openUserRegisterModalButton && closeUserRegisterModalButton && closeUserEditModalButton) {
+  if (
+    openUserRegisterModalButton &&
+    closeUserRegisterModalButton &&
+    openUserFileDownloadModalButton &&
+    closeUserEditModalButton
+  ) {
     openUserRegisterModalButton.addEventListener("click", () => openModal(MODAL_ID.USER_REGISTER));
     closeUserRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_REGISTER));
+
+    openUserFileDownloadModalButton.addEventListener("click", () => {
+      copyFilterValuesToDownloadForm(); // 사용자 필터링 값 복사
+      openModal(MODAL_ID.USER_FILE_DOWNLOAD); // 모달 열기
+    });
+
     closeUserEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_EDIT));
   }
 
@@ -102,7 +118,7 @@ function setupEventListeners() {
 }
 
 function setupModalEventListeners() {
-  const modals = [MODAL_ID.USER_REGISTER, MODAL_ID.USER_EDIT]; // 모든 모달 ID 배열
+  const modals = Object.values(MODAL_ID); // 모든 모달 ID 배열
 
   modals.forEach((modalId) => {
     // 모달 외부 클릭 시 닫기 설정
@@ -360,6 +376,17 @@ async function uploadUserFile() {
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
   }
+}
+
+// 사용자 필터링 폼의 값을 다운로드 폼으로 복사하는 함수
+function copyFilterValuesToDownloadForm() {
+  // 사용자 조회 필터링 폼의 값을 가져옴
+  const userName = document.getElementById("userNameForFilter").value;
+  const authorityName = document.getElementById("authorityNameForFilter").value;
+
+  // 숨겨진 다운로드 폼의 input 필드에 값을 설정
+  document.getElementById("downloadUserName").value = userName;
+  document.getElementById("downloadAuthorityName").value = authorityName;
 }
 
 // 모달 열기
