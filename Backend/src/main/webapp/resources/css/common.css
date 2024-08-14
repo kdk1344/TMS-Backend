@@ -6,22 +6,47 @@
 
 /* 전역 접근 가능한 변수 정의 */
 :root {
-  --primary-color: #0751d1; /* 파란색 변수 */
+  --primary-color: #1554c2; /* 파란색 변수 */
   --secondary-color: #4472c4;
+  --background-color: #333;
+
+  --white: #ffffff; /* 흰색 */
+  --light-gray: #f5f5f5; /* 아주 연한 회색 */
+  --gray: #474747; /* 중간 회색 */
+  --dark-gray: #333333; /* 어두운 회색  */
+  --black: #000000; /* 검은색 */
 }
 
 body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
   background-color: white;
-  height: 100vh;
 
   font-family: "Malgun Gothic", "맑은 고딕", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 16px;
   color: black;
+}
+
+header .navigation {
+  list-style-type: none;
+}
+
+header .navigation ul {
+  display: flex;
+
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+header .navigation a {
+  text-decoration: none;
+  padding: 8px 16px;
+  display: block;
 }
 
 a {
@@ -77,14 +102,66 @@ button:focus {
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
   width: 100%;
+  height: 100%;
   padding: 16px;
-  background-color: #333;
+  background-color: var(--background-color);
 
   color: white;
+  font-size: 20px;
+  font-weight: 600;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 아래 방향으로 그림자 추가 */
+}
+
+.logo {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+/* 기본 스타일 */
+.menu-item {
+  position: relative; /* 서브 메뉴를 절대 위치로 설정하기 위해 부모 요소에 상대 위치를 설정 */
+}
+
+#sub-menu {
+  display: none; /* 기본적으로 서브 메뉴는 숨김 상태 */
+  position: absolute; /* 서브 메뉴를 상위 메뉴 아래에 표시 */
+  top: 100%; /* 상위 메뉴 바로 아래에 위치 */
+  left: 0; /* 상위 메뉴의 왼쪽 끝에 맞추기 */
+
+  border-radius: 8px;
+  background-color: var(--gray); /* 배경색 설정 */
+  margin: 0;
+  padding: 0;
+
+  font-size: 16px;
+
+  list-style: none;
+  z-index: 1000; /* 서브 메뉴가 상위 요소 위에 표시되도록 설정 */
+}
+
+#sub-menu li {
+  white-space: nowrap; /* 줄 바꿈 없음 */
+  overflow: hidden; /* 넘치는 텍스트를 숨김 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
+
+  padding: 4px;
+  border-radius: 8px;
+}
+
+#sub-menu li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 호버 시 서브 메뉴 표시 */
+.menu-item:hover #sub-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* 모달 배경 스타일 */

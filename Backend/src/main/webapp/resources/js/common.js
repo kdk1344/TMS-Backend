@@ -1,3 +1,84 @@
+// DOM 요소들
+
+// 메뉴 항목과 하위 항목들을 정의
+const menuData = [
+  {
+    name: "개발진행관리",
+    subMenu: [
+      { name: "프로그램 개발 진행현황", link: "/tms/devProgress" },
+      { name: "결함현황", link: "/tms/defectStatus" },
+    ],
+  },
+  {
+    name: "통합테스트 진행관리",
+    subMenu: [
+      { name: "통합테스트 진행현황", link: "/tms/testProgress" },
+      { name: "결함현황", link: "/tms/defectStatus" },
+    ],
+  },
+  {
+    name: "결함진행관리",
+    subMenu: [{ name: "결함현황", link: "/tms/defectStatus" }],
+  },
+  {
+    name: "관리자",
+    subMenu: [
+      { name: "사용자 조회", link: "/tms/adminUser" },
+      { name: "공통코드 조회", link: "/tms/commonCode" },
+      { name: "분류코드 조회", link: "/tms/categoryCode" },
+      { name: "공지사항 조회", link: "/tms/notice" },
+    ],
+  },
+];
+
+// 헤더를 렌더링하는 함수
+export function renderTMSHeader() {
+  const header = document.querySelector("header"); // 첫 번째 <header> 태그 선택
+  const menuList = menuData.map(generateMenuItem).join(""); // 전체 메뉴
+
+  if (header) {
+    header.innerHTML = `
+        <h1 class="logo">
+           TMS
+        </h1>
+        <nav class="navigation">
+            <ul>
+                ${menuList}
+            </ul>
+        </nav>
+    `;
+  }
+}
+
+// 메뉴 항목과 하위 메뉴를 렌더링하는 함수
+function generateMenuItem(item) {
+  // 서브 메뉴의 첫 번째 링크를 주요 링크로 설정
+  const mainLink = item.subMenu.length > 0 ? item.subMenu[0].link : "#";
+
+  // 하위 메뉴를 렌더링하는 함수
+  const subMenu =
+    item.subMenu.length > 0
+      ? `
+      <ul id="sub-menu">
+        ${item.subMenu
+          .map(
+            (subItem) => `
+          <li><a href="${subItem.link}">${subItem.name}</a></li>
+        `
+          )
+          .join("")}
+      </ul>
+    `
+      : "";
+
+  return `
+      <li class="menu-item">
+        <a href="${mainLink}" class="main-link">${item.name}</a>
+        ${subMenu}
+      </li>
+    `;
+}
+
 /**
  * TMS 서비스의 기본 URL을 추가하여 매번 기본 URL을 작성하지 않도록 하기 위한 fetch 함수입니다.
  *

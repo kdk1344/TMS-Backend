@@ -1,4 +1,4 @@
-import { tmsFetch, openModal, closeModal, closeModalOnClickOutside } from "./common.js";
+import { tmsFetch, openModal, closeModal, closeModalOnClickOutside, renderTMSHeader } from "./common.js";
 
 let currentPage = 1;
 
@@ -29,6 +29,7 @@ const MODAL_ID = {
 
 // 초기화 함수
 function init() {
+  renderTMSHeader();
   setupEventListeners();
   loadInitialUsers();
 }
