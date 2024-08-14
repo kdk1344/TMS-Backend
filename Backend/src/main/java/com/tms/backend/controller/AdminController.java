@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.File;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -34,6 +35,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
@@ -360,17 +362,40 @@ public class AdminController {
         notice.setTitle(title);
         notice.setContent(content);
         notice.setPostDate(postDate);
+        
+        adminService.createNotice(notice);
 
-        List<MultipartFile> files = new ArrayList<>();
+        List<FileAttachment> attachments = new ArrayList<>();
         if (file != null && !file.isEmpty()) {
-            files.add(file);
-            log.info("File attached: " + file.getOriginalFilename());
+            try {
+                // Step 2: 파일 저장 처리
+            	String storageLocation = "C:\\Users\\User\\Pictures\\" + file.getOriginalFilename();
+                File destinationFile = new File(storageLocation);
+                file.transferTo(destinationFile);
+
+                // Step 3: 파일 정보를 FileAttachment 객체로 생성
+                FileAttachment attachment = new FileAttachment();
+                attachment.setIdentifier(notice.getSeq()); // 공지사항 SEQ를 identifier로 설정
+                attachment.setType(getFileType(file.getContentType())); // 파일 타입 설정
+                attachment.setStorageLocation(storageLocation);
+                attachment.setFileName(file.getOriginalFilename());
+
+                // FileAttachment 객체를 attachments 리스트에 추가
+                attachments.add(attachment);
+
+                log.info("File attached: " + file.getOriginalFilename());
+            } catch (IOException e) {
+                log.error("File upload failed", e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } else {
             log.info("No file attached");
         }
 
-        adminService.createNotice(notice, files);
+        // Step 4: 파일 정보 저장
+        adminService.saveAttachments(attachments);
 
+        // Prepare JSON response
         Map<String, Object> response = new HashMap<>();
         response.put("message", "게시글이 성공적으로 등록되었습니다.");
         response.put("notice", notice);
@@ -378,6 +403,16 @@ public class AdminController {
         log.info(notice);
 
         return ResponseEntity.ok(response);
+    }
+    
+    private String getFileType(String contentType) {
+        if (contentType != null && contentType.startsWith("image/")) {
+            return "IMAGE";
+        } else if (contentType != null && contentType.startsWith("application/pdf")) {
+            return "DOCUMENT";
+        } else {
+            return "OTHER";
+        }
     }
 
  
@@ -413,23 +448,47 @@ public class AdminController {
         notice.setTitle(title);
         notice.setContent(content);
         notice.setPostDate(postDate);
-        log.info("Notice creation started");
 
-        List<MultipartFile> files = new ArrayList<>();
+     // Step 1: 공지사항을 먼저 저장하여 SEQ 값을 생성
+        adminService.createNotice(notice);
+
+        List<FileAttachment> attachments = new ArrayList<>();
         if (file != null && !file.isEmpty()) {
-            files.add(file);
-            log.info("File attached: " + file.getOriginalFilename());
+            try {
+                // Step 2: 파일 저장 처리
+                String storageLocation = "C:\\Users\\User\\Pictures\\" + file.getOriginalFilename();
+                File destinationFile = new File(storageLocation);
+                file.transferTo(destinationFile);
+
+                // Step 3: 파일 정보를 FileAttachment 객체로 생성
+                FileAttachment attachment = new FileAttachment();
+                attachment.setIdentifier(notice.getSeq()); // 공지사항 SEQ를 identifier로 설정
+                attachment.setType(getFileType(file.getContentType())); // 파일 타입 설정
+                attachment.setStorageLocation(storageLocation);
+                attachment.setFileName(file.getOriginalFilename());
+
+                // FileAttachment 객체를 attachments 리스트에 추가
+                attachments.add(attachment);
+
+                log.info("File attached: " + file.getOriginalFilename());
+            } catch (IOException e) {
+                log.error("File upload failed", e);
+                model.addAttribute("message", "파일 업로드 중 오류가 발생했습니다.");
+                return "error"; // 오류 발생 시 오류 페이지로 이동
+            }
         } else {
             log.info("No file attached");
         }
 
-        adminService.createNotice(notice, files);
-        log.info(notice);
+        // Step 4: 파일 정보 저장
+        adminService.saveAttachments(attachments);
 
+        // Model에 공지사항 정보 추가
         model.addAttribute("message", "게시글이 성공적으로 등록되었습니다.");
         model.addAttribute("notice", notice);
 
-        return "notice";
+
+        return "notice"; // notice.jsp 페이지로 이동
     }
 
 

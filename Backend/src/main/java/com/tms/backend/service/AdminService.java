@@ -95,22 +95,15 @@ public class AdminService {
         return adminmapper.getTotalNoticesCount(postDate, title, content);
     }
     
-    public void createNotice(Notice notice, List<MultipartFile> files) {
+    public void createNotice(Notice notice) {
     	log.info(notice);
         adminmapper.insertNotice(notice); // 공지사항 저장
-//        files.forEach(file -> {
-//            FileAttachment attachment = new FileAttachment();
-//            attachment.setSeq(seq);
-//            attachment.setIdentifier(notice.getSeq()); 
-//            attachment.setFileName(file.getOriginalFilename());
-//            attachment.setType(file.getContentType());
-//            attachment.setStorageLocation(storeFile(file)); 
-//            adminmapper.insertFileAttachment(attachment); 
         }
 
-    private String storeFile(MultipartFile file) {
-        // 파일 저장 로직 구현
-        return "/path/to/storage/" + file.getOriginalFilename();
+    public void saveAttachments(List<FileAttachment> attachments) {
+        for (FileAttachment attachment : attachments) {
+        	adminmapper.insertAttachment(attachment);
+        }
     }
     
     

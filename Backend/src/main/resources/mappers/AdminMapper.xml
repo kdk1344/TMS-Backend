@@ -131,9 +131,9 @@
         VALUES (#{postDate}, #{title}, #{content})
     </insert>
 
-    <insert id="insertFileAttachment">
-        INSERT INTO file_attachments (IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE)
-        VALUES (#{identifier}, #{type}, #{storageLocation}, #{fileName}, NOW())
+    <insert id="insertAttachment">
+        INSERT INTO file_attachments (IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME)
+        VALUES (#{identifier}, #{type}, #{storageLocation}, #{fileName})
     </insert>
 
 

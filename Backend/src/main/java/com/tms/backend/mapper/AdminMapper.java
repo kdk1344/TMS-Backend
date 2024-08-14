@@ -34,5 +34,5 @@ public interface AdminMapper {
 	          @Param("content") String content);
 	public List<FileAttachment> getAttachmentsByNoticeSEQ(@Param("seq") int seq);
 	public void insertNotice(Notice notice);
-    public void insertFileAttachment(FileAttachment attachment);
+    public void insertAttachment(FileAttachment attachment);
 }

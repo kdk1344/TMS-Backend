@@ -5,8 +5,8 @@ import java.util.Date;
 public class FileAttachment {
 	
 	private String type; // 파일의 구분 (예: 이미지, 문서)
-    private Long identifier; // 파일의 고유 식별자
-    private Long seq; // 공지사항의 SEQ와 연관
+    private Integer identifier; // 파일의 고유 식별자
+    private Integer seq; // 공지사항의 SEQ와 연관
     private String storageLocation; // 파일 저장 경로
     private String fileName; // 파일명
     private Date createdDate; // 파일 생성일시
@@ -21,19 +21,19 @@ public class FileAttachment {
         this.type = type;
     }
 
-    public Long getIdentifier() {
+    public Integer getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(Long identifier) {
+    public void setIdentifier(Integer identifier) {
         this.identifier = identifier;
     }
 
-    public Long getSeq() {
+    public Integer getSeq() {
         return seq;
     }
 
-    public void setSeq(Long seq) {
+    public void setSeq(Integer seq) {
         this.seq = seq;
     }
 
