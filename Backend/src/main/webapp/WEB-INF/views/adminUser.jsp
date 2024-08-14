@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="../../resources/css/adminUser.css" />
 
-    <title>System Administor</title>
+    <title>TMS</title>
     <script type="module" src="../../resources/js/adminUser.js"></script>
   </head>
 
