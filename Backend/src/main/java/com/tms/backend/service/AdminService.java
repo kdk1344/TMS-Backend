@@ -114,8 +114,22 @@ public class AdminService {
         }
     }
     
-    public void deleteAttachmentsByNoticeId(Integer identifier) {
-    	adminmapper.deleteAttachmentsByNoticeId(identifier);
+    public void deleteAttachmentsByNoticeId(Integer seq) {
+    	adminmapper.deleteAttachmentsByNoticeId(seq);
+    }
+    
+    public List<FileAttachment> getAttachments(Integer seq) {
+        return adminmapper.getAttachmentsByNoticeId(seq);
+    }
+    
+    public FileAttachment getAttachmentById(Integer seq) {
+        return adminmapper.getAttachmentById(seq);
+    }
+    
+    public void deleteNotice(Integer seq) {
+
+        // 공지사항 삭제
+        adminmapper.deleteNotice(seq);
     }
     
     

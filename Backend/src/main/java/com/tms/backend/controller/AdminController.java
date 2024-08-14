@@ -58,9 +58,9 @@ public class AdminController {
     
     @GetMapping("/adminUser")
     public String UserPage(Criteria criteria, Model model) {
-    	log.info(adminService.getList(criteria));
-        model.addAttribute("userList", adminService.getList(criteria));
-        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
+//    	log.info(adminService.getList(criteria));
+//        model.addAttribute("userList", adminService.getList(criteria));
+//        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
         return "adminUser";
     }
     

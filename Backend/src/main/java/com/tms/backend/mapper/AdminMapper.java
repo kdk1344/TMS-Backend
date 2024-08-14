@@ -37,5 +37,8 @@ public interface AdminMapper {
     public void insertAttachment(FileAttachment attachment);
     public Notice getNoticeById(Integer seq);
     public void updateNotice(Notice notice);
-    public void deleteAttachmentsByNoticeId(Integer identifier);
+    public void deleteAttachmentsByNoticeId(Integer seq);
+    public List<FileAttachment> getAttachmentsByNoticeId(Integer seq);
+    public FileAttachment getAttachmentById(Integer seq);
+    public void deleteNotice(Integer seq);
 }

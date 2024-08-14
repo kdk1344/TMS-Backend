@@ -138,7 +138,7 @@
     
     <!-- 특정 공지사항 조회 -->
     <select id="getNoticeById" resultType="Notice">
-        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE
+        SELECT SEQ, POST_DATE as postDate, TITLE, CONTENT, CREATED_DATE as createdDate, LAST_MODIFIED_DATE as lastModifiedDate
         FROM notices
         WHERE SEQ = #{seq}
     </select>
@@ -155,7 +155,25 @@
     
     <!-- 특정 공지사항의 첨부파일 삭제 -->
     <delete id="deleteAttachmentsByNoticeId">
-        DELETE FROM file_attachments WHERE IDENTIFIER = #{identifier}
+        DELETE FROM file_attachments WHERE SEQ = #{seq}
+    </delete>
+    
+    <select id="getAttachmentsByNoticeId" resultType="FA">
+        SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION as storageLocation, FILE_NAME as filename, CREATED_DATE as createdDate
+        FROM file_attachments
+        WHERE IDENTIFIER = #{seq}
+    </select>
+    
+    <!-- 특정 첨부파일 조회 -->
+    <select id="getAttachmentById" resultType="FA">
+        SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION as storageLocation, FILE_NAME as filename, CREATED_DATE as createdDate
+        FROM file_attachments
+        WHERE SEQ = #{seq}
+    </select>
+    
+    <!-- 공지사항 삭제 -->
+    <delete id="deleteNotice">
+        DELETE FROM notices WHERE SEQ = #{seq}
     </delete>
 
 
