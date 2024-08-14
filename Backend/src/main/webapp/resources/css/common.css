@@ -6,8 +6,8 @@
 
 /* 전역 접근 가능한 변수 정의 */
 :root {
-  --primary-color: #006eff; /* 파란색 변수 */
-  --secondary-color: #2ecc71;
+  --primary-color: #0751d1; /* 파란색 변수 */
+  --secondary-color: #4472c4;
 }
 
 body {

@@ -174,10 +174,6 @@
           <!-- 페이지네이션 버튼 동적으로 삽입 -->
         </div>
       </div>
-      <div class="footer">
-        <span>총회 리스팅 영역</span>
-      </div>
     </div>
   </body>
-  <script type="text/javasript"></script>
 </html>

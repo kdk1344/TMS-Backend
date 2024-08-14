@@ -179,13 +179,6 @@ td:first-child {
   color: white;
 }
 
-.footer {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-
 .flex-box {
   display: flex;
 
