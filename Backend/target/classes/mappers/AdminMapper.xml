@@ -135,6 +135,28 @@
         INSERT INTO file_attachments (IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME)
         VALUES (#{identifier}, #{type}, #{storageLocation}, #{fileName})
     </insert>
+    
+    <!-- 특정 공지사항 조회 -->
+    <select id="getNoticeById" resultType="Notice">
+        SELECT SEQ, POST_DATE, TITLE, CONTENT, CREATED_DATE, LAST_MODIFIED_DATE
+        FROM notices
+        WHERE SEQ = #{seq}
+    </select>
+
+    <!-- 공지사항 정보 수정 -->
+    <update id="updateNotice">
+        UPDATE notices
+        SET POST_DATE = #{postDate},
+            TITLE = #{title},
+            CONTENT = #{content},
+            LAST_MODIFIED_DATE = NOW()
+        WHERE SEQ = #{seq}
+    </update>
+    
+    <!-- 특정 공지사항의 첨부파일 삭제 -->
+    <delete id="deleteAttachmentsByNoticeId">
+        DELETE FROM file_attachments WHERE IDENTIFIER = #{identifier}
+    </delete>
 
 
 	

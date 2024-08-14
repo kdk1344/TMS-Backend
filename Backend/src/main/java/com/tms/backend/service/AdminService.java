@@ -99,11 +99,23 @@ public class AdminService {
     	log.info(notice);
         adminmapper.insertNotice(notice); // 공지사항 저장
         }
+    
+    public Notice getNoticeById(Integer seq) {
+        return adminmapper.getNoticeById(seq);
+    }
+    
+    public void updateNotice(Notice notice) {
+    	adminmapper.updateNotice(notice);
+    }
 
     public void saveAttachments(List<FileAttachment> attachments) {
         for (FileAttachment attachment : attachments) {
         	adminmapper.insertAttachment(attachment);
         }
+    }
+    
+    public void deleteAttachmentsByNoticeId(Integer identifier) {
+    	adminmapper.deleteAttachmentsByNoticeId(identifier);
     }
     
     
