@@ -20,9 +20,9 @@ form button {
   display: flex;
   justify-content: space-between;
 
-  border: 1px solid black;
+  border: 1px solid var(--light-gray);
   padding: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .form-group {
@@ -111,7 +111,7 @@ thead {
 table,
 th,
 td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-gray);
 }
 
 th,

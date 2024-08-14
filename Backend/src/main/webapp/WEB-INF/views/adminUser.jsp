@@ -14,6 +14,7 @@
     <header class="header">
       <!-- 공통 헤더 정보 동적으로 삽입-->
     </header>
+    <h1 class="page-title">사용자 조회</h1>
     <div class="content">
       <!-- Register Modal -->
       <div id="userRegisterModal" class="modal">
