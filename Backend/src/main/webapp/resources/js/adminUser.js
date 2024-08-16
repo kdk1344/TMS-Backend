@@ -205,7 +205,11 @@ function createPaginationButton(text, disabled, onClick, buttonType = "page") {
 // 페이지 변경
 function changePage(page) {
   currentPage = page;
-  getUsers({ page: currentPage });
+
+  const userName = document.getElementById("userNameForFilter").value.trim();
+  const authorityName = document.getElementById("authorityNameForFilter").value;
+
+  getUsers({ page: currentPage, userName, authorityName });
 }
 
 // 사용자 필터링
