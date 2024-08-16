@@ -1,9 +1,22 @@
-import { tmsFetch, openModal, closeModal, closeModalOnClickOutside, renderTMSHeader, convertDate } from "./common.js";
+import {
+  tmsFetch,
+  openModal,
+  closeModal,
+  closeModalOnClickOutside,
+  renderTMSHeader,
+  convertDate,
+  getCurrentDate,
+  updateFilePreview,
+} from "./common.js";
 
 let currentPage = 1;
 
 // DOM 요소들
 const noticeFilterForm = document.getElementById("noticeFilterForm");
+
+const noticeRegisterForm = document.getElementById("noticeRegisterForm");
+const fileSelectButtonForRegister = document.getElementById("fileSelectButtonForRegister");
+const fileInputForRegister = document.getElementById("fileInputForRegister");
 
 const noticeTableBody = document.getElementById("noticeTableBody");
 const noticePagination = document.getElementById("noticePagination");
@@ -70,9 +83,22 @@ function setupEventListeners() {
   //     noticeEditForm.addEventListener("submit", editNotice);
   //   }
 
-  // 공지사항 등록 폼 제출 이벤트 핸들러
+  // 공지사항 등록 폼 이벤트 핸들러
   if (noticeRegisterForm) {
-    // noticeRegisterForm.addEventListener("submit", registerNotice);
+    noticeRegisterForm.addEventListener("submit", registerNotice);
+
+    // 파일 선택 버튼 클릭 시 파일 입력 필드 클릭
+    fileSelectButtonForRegister.addEventListener("click", () => {
+      fileInputForRegister.click();
+    });
+
+    // 파일 입력 필드에서 파일이 선택되면 파일 목록 업데이트
+    fileInputForRegister.addEventListener("change", () => {
+      const fileInputId = "fileInputForRegister";
+      const fileListOutputId = "fileOutputForRegister";
+
+      updateFilePreview(fileInputId, fileListOutputId);
+    });
   }
 
   //   공지사항 필터 폼 제출 및 리셋 이벤트 핸들러
@@ -93,8 +119,17 @@ function setupEventListeners() {
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러
   if (openNoticeRegisterModalButton && closeNoticeRegisterModalButton) {
-    openNoticeRegisterModalButton.addEventListener("click", () => openModal(MODAL_ID.NOTICE_REGISTER));
-    closeNoticeRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.NOTICE_REGISTER));
+    openNoticeRegisterModalButton.addEventListener("click", () => {
+      // 현재 날짜를 입력 필드에 설정
+      noticeRegisterForm.elements["postDate"].value = getCurrentDate();
+
+      openModal(MODAL_ID.NOTICE_REGISTER);
+    });
+
+    closeNoticeRegisterModalButton.addEventListener("click", () => {
+      noticeRegisterForm.reset();
+      closeModal(MODAL_ID.NOTICE_REGISTER);
+    });
 
     // openNoticeFileDownloadModalButton.addEventListener("click", () => {
     //   copyFilterValuesToDownloadForm(); // 공지사항 필터링 값 복사
@@ -212,4 +247,42 @@ function submitNoticeFilter(event) {
 // 공지사항 필터 리셋
 function resetNoticeFilter() {
   this.reset(); // 폼 초기화
+}
+
+// 공지사항 등록
+async function registerNotice(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  const confirmed = confirm("공지사항을 등록하시겠습니까?");
+
+  if (!confirmed) return;
+
+  const formData = new FormData(event.target);
+
+  // // 첨부파일을 formData에 추가
+  // for (const file of fileInputForRegister.files) {
+  //   console.log(file.name);
+  //   formData.append("file", file);
+  // }
+
+  // FormData 객체를 JSON 객체로 변환
+  const formDataObj = Object.fromEntries(formData.entries());
+
+  try {
+    const { status } = await tmsFetch("/ntwrite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formDataObj),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`공지사항 등록이 완료되었습니다.`);
+      event.target.reset(); // 폼 초기화
+      closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
+  }
 }

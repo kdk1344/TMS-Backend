@@ -187,3 +187,21 @@ export function getCurrentDate() {
 
   return `${year}-${month}-${day}`; // yyyy-mm-dd 형식
 }
+
+// 파일 목록 프리뷰 업데이트 함수
+export function updateFilePreview(fileInputId, fileListOutputId) {
+  const fileInput = document.getElementById(fileInputId);
+  const fileListOutput = document.getElementById(fileListOutputId);
+
+  if (!fileInput || !fileListOutput) {
+    console.error("파일 입력 필드 또는 파일 목록 출력 요소를 찾을 수 없습니다.");
+    return;
+  }
+
+  const files = fileInput.files;
+  const fileNames = Array.from(files)
+    .map((file) => `<li>${file.name}</li>`)
+    .join("");
+
+  fileListOutput.innerHTML = `<ul>${fileNames}</ul>`;
+}

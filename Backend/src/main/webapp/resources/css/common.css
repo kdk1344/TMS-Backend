@@ -10,11 +10,13 @@
   --secondary-color: #4472c4;
   --background-color: #333;
 
-  --white: #ffffff; /* 흰색 */
-  --light-gray: #c0c0c0; /* 아주 연한 회색 */
-  --gray: #474747; /* 중간 회색 */
-  --dark-gray: #333333; /* 어두운 회색  */
-  --black: #000000; /* 검은색 */
+  --white: #ffffff;
+  --super-light-gray: #f5f5f5;
+  --extra-light-gray: #d4d4d4;
+  --light-gray: #c0c0c0;
+  --gray: #474747;
+  --dark-gray: #333333;
+  --black: #000000;
 }
 
 body {
@@ -109,6 +111,10 @@ button {
   font-family: inherit;
 }
 
+label {
+  white-space: nowrap;
+}
+
 input,
 select,
 textarea {
@@ -144,6 +150,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 input[readonly] {
   cursor: default; /* 기본 커서로 설정 */
+}
+
+textarea {
+  resize: none; /* 크기 조절을 완전히 막음 */
 }
 
 button:hover,
@@ -319,4 +329,45 @@ button:focus {
 .pagination button.active {
   background-color: var(--primary-color);
   color: white;
+}
+
+.hidden {
+  visibility: hidden; /* 요소를 보이지 않게 함 */
+  position: absolute; /* Remove from the normal flow */
+  left: -9999px; /* Move off-screen */
+  z-index: -1; /* Ensure it’s below other elements */
+}
+
+.file-button {
+  margin-bottom: 16px;
+  background-color: var(--extra-light-gray);
+
+  color: black;
+}
+
+.file-preview-container {
+  width: 100%;
+}
+
+.file-preview {
+  height: 150px;
+  overflow-y: auto;
+
+  border-radius: 4px;
+  background-color: var(--super-light-gray);
+}
+
+.file-preview ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 16px;
+}
+
+.file-preview li {
+  max-width: 310px;
+  text-overflow: ellipsis; /* 넘치는 텍스트를 말줄임표로 표시 */
+  overflow: hidden; /* 넘치는 텍스트를 숨김 */
+  white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
 }

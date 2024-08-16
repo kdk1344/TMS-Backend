@@ -1,27 +1,3 @@
-<!-- 
-<form method="get" action="/tms/notice">
-    <input type="text" name="postDate" placeholder="게시일자" value="${param.postDate}" />
-    <input type="text" name="title" placeholder="제목" value="${param.title}" />
-    <input type="text" name="content" placeholder="내용" value="${param.content}" />
-    <button type="submit">검색</button>
-</form> -->
-
-<!-- 공지사항 등록/수정 폼 -->
-<!-- <form id="noticeForm" method="post" action="/tms/ntwrite" enctype="multipart/form-data">
-    <input type="hidden" id="seq" name="seq" value="">
-    <input type="hidden" id="formAction" name="formAction" value="/tms/ntwrite">
-    <label for="postDate">게시일자:</label>
-    <input type="date" id="postDate" name="postDate"><br>
-    <label for="title">제목:</label>
-    <input type="text" id="title" name="title"><br>
-    <label for="content">내용:</label>
-    <textarea id="content" name="content"></textarea><br>
-    <label for="file">첨부파일:</label>
-    <input type="file" id="file" name="file" multiple onchange="renderFileList()"><br>
-    <ul id="fileList"></ul>
-    <button type="submit" id="formSubmit">등록</button>
-</form> -->
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -48,7 +24,7 @@
           <form id="noticeRegisterForm" class="modal-form">
             <div class="modal-form-group">
               <label for="postDateForRegister">게시일자</label>
-              <input type="date" id="postDateForRegister" name="postDate" required />
+              <input type="date" id="postDateForRegister" name="postDate" readonly />
             </div>
 
             <div class="modal-form-group">
@@ -59,6 +35,15 @@
             <div class="modal-form-group">
               <label for="contentForRegister">게시내용</label>
               <textarea id="contentForRegister" name="content" placeholder="내용을 입력해 주세요." required></textarea>
+            </div>
+
+            <div class="modal-form-group">
+              <label for="fileInputForRegister">첨부파일</label>
+              <div class="file-preview-container">
+                <button type="button" class="file-button" id="fileSelectButtonForRegister">파일 선택</button>
+                <input type="file" id="fileInputForRegister" class="hidden" name="file" multiple />
+                <div id="fileOutputForRegister" class="file-preview"></div>
+              </div>
             </div>
 
             <div class="flex-box">
@@ -105,7 +90,7 @@
         </div>
         <div class="flex-box">
           <!-- 파일 선택 input -->
-          <input type="file" id="uploadNoticeFileInput" name="file" accept=".xlsx, .xls" />
+          <input type="file" id="uploadNoticeFileInput" class="hidden" name="file" accept=".xlsx, .xls" />
 
           <button id="uploadNoticeFileButton">파일 업로드</button>
           <button id="openNoticeFileDownloadModalButton">파일 다운로드</button>
