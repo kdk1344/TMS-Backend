@@ -4,17 +4,11 @@
 const menuData = [
   {
     name: "개발진행관리",
-    subMenu: [
-      { name: "프로그램 개발 진행현황", link: "/tms/devProgress" },
-      { name: "결함현황", link: "/tms/defectStatus" },
-    ],
+    subMenu: [{ name: "프로그램 개발 진행현황", link: "/tms/devProgress" }],
   },
   {
-    name: "통합테스트 진행관리",
-    subMenu: [
-      { name: "통합테스트 진행현황", link: "/tms/testProgress" },
-      { name: "결함현황", link: "/tms/defectStatus" },
-    ],
+    name: "테스트 진행관리",
+    subMenu: [{ name: "테스트 진행현황", link: "/tms/testProgress" }],
   },
   {
     name: "결함진행관리",
@@ -23,10 +17,10 @@ const menuData = [
   {
     name: "관리자",
     subMenu: [
-      { name: "사용자 조회", link: "/tms/adminUser" },
-      { name: "공통코드 조회", link: "/tms/commonCode" },
-      { name: "분류코드 조회", link: "/tms/categoryCode" },
-      { name: "공지사항 조회", link: "/tms/notice" },
+      { name: "사용자 관리", link: "/tms/adminUser" },
+      { name: "공통코드 관리", link: "/tms/commonCode" },
+      { name: "분류코드 관리", link: "/tms/categoryCode" },
+      { name: "공지사항", link: "/tms/notice" },
     ],
   },
 ];
