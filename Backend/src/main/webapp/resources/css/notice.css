@@ -1,0 +1,51 @@
+#noticeFilterForm {
+  display: flex;
+  justify-content: space-between;
+
+  border: 1px solid var(--light-gray);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* 숨겨진 파일 입력 필드 */
+#uploadNoticeFileInput {
+  visibility: hidden; /* 요소를 보이지 않게 함 */
+  width: 0;
+  height: 0;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-group label {
+  display: inline-block;
+
+  font-weight: 600;
+  white-space: nowrap; /* 줄바꿈이 일어나지 않도록 설정 */
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+
+  margin-bottom: 16px;
+}
+
+.flex-box {
+  display: flex;
+
+  gap: 8px;
+}
