@@ -1,3 +1,10 @@
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+
+  margin-bottom: 24px;
+}
+
 #noticeFilterForm {
   display: flex;
   justify-content: space-between;
@@ -48,4 +55,33 @@
   display: flex;
 
   gap: 8px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  width: 400px;
+}
+
+.modal-form button {
+  width: 100%;
+}
+
+.modal-form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+
+  margin-bottom: 8px;
+}
+
+.modal-form-group label {
+  display: block;
+  width: 30%;
+
+  font-weight: 600;
 }

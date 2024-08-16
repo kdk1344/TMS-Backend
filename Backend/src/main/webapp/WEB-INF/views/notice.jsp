@@ -41,6 +41,33 @@
     <h1 class="page-title">공지사항 조회</h1>
     <div class="content">
       <!-- Register Modal -->
+      <div id="noticeRegisterModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <h2>공지사항 등록</h2>
+          <form id="noticeRegisterForm" class="modal-form">
+            <div class="modal-form-group">
+              <label for="postDateForRegister">게시일자</label>
+              <input type="date" id="postDateForRegister" name="postDate" required />
+            </div>
+
+            <div class="modal-form-group">
+              <label for="titleForRegister">제목</label>
+              <input type="text" id="titleForRegister" name="title" placeholder="제목을 입력해 주세요." required />
+            </div>
+
+            <div class="modal-form-group">
+              <label for="contentForRegister">게시내용</label>
+              <textarea id="contentForRegister" name="content" placeholder="내용을 입력해 주세요." required></textarea>
+            </div>
+
+            <div class="flex-box">
+              <button type="submit">저장</button>
+              <button type="button" id="closeNoticeRegisterModalButton">닫기</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <!-- Edit Modal -->
 
