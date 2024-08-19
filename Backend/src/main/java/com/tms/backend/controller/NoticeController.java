@@ -92,11 +92,12 @@ public class NoticeController {
         return response;
     }
     
-    @PostMapping(value = "api/ntwrite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "api/{boardType}write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> createNotice(
             @RequestPart("notice") @Valid Notice notice,
-            @RequestPart(value = "file", required = false) MultipartFile[] files) {
+            @RequestPart(value = "file", required = false) MultipartFile[] files,
+            @PathVariable("boardType") String boardType) {
 
         // 로그로 데이터 확인
         log.info("Title: " + notice.getTitle());
@@ -108,7 +109,7 @@ public class NoticeController {
         
         // 새로운 파일 업로드 처리
         if (files != null && files.length > 0) {
-            handleFileUpload(files, notice, "notice");
+            handleFileUpload(files, notice, boardType);
         }
 
         // 응답 생성
@@ -179,47 +180,87 @@ public class NoticeController {
 //        return ResponseEntity.ok(response);
 //    }
     
-    @PostMapping(value = "api/{boardType}/ntupdate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "api/{boardType}update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> updateNotice(
-            @RequestParam("seq") Integer seq,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("postDate") Date postDate,
-            @RequestParam(value = "file", required = false) MultipartFile[] files,
-            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
+            @RequestPart("notice") @Valid Notice notice,  // JSON 형식으로 공지사항 데이터를 받음
+            @RequestPart(value = "file", required = false) MultipartFile[] files,  // 파일
             @PathVariable("boardType") String boardType) {
 
         Map<String, Object> response = new HashMap<>();
 
-        Notice notice = adminService.getNoticeById(seq);
-        if (notice == null) {
+        // 공지사항 존재 여부 확인
+        Notice existingNotice = adminService.getNoticeById(notice.getSeq());
+        if (existingNotice == null) {
             response.put("message", "해당 공지사항이 존재하지 않습니다.");
             return ResponseEntity.status(404).body(response);
         }
 
-        notice.setTitle(title);
-        notice.setContent(content);
-        notice.setPostDate(postDate);
+        // 기존 공지사항 업데이트
+        existingNotice.setTitle(notice.getTitle());
+        existingNotice.setContent(notice.getContent());
+        existingNotice.setPostDate(notice.getPostDate());
+        
+        // 업데이트된 공지사항을 저장
+        adminService.updateNotice(existingNotice);
 
-        adminService.updateNotice(notice);
-
-        // 삭제할 파일이 있는 경우 삭제 처리
-        if (deleteFileSeqs != null && !deleteFileSeqs.isEmpty()) {
-            for (Integer fileSeq : deleteFileSeqs) {
-                adminService.deleteAttachmentsByNoticeId(fileSeq);
-            }
-        }
-
-        // 새로운 파일 업로드 처리
+        // 기존 첨부파일을 전부 삭제 후 새로운 파일을 업로드하는 방식
         if (files != null && files.length > 0) {
-            handleFileUpload(files, notice, boardType);
+            // 공지사항에 등록된 기존 첨부파일 전부 삭제
+            adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
+
+            // 새로운 파일 업로드 처리
+            handleFileUpload(files, existingNotice, boardType);
         }
 
+        // 응답 생성
         response.put("message", "게시글이 성공적으로 수정되었습니다.");
-        response.put("notice", notice);
+        response.put("notice", existingNotice);
 
         return ResponseEntity.ok(response);
     }
+    
+//    @PostMapping(value = "api/{boardType}/ntupdate", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Map<String, Object>> updateNotice(
+//            @RequestParam("seq") Integer seq,
+//            @RequestParam("title") String title,
+//            @RequestParam("content") String content,
+//            @RequestParam("postDate") Date postDate,
+//            @RequestParam(value = "file", required = false) MultipartFile[] files,
+//            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
+//            @PathVariable("boardType") String boardType) {
+//
+//        Map<String, Object> response = new HashMap<>();
+//
+//        Notice notice = adminService.getNoticeById(seq);
+//        if (notice == null) {
+//            response.put("message", "해당 공지사항이 존재하지 않습니다.");
+//            return ResponseEntity.status(404).body(response);
+//        }
+//
+//        notice.setTitle(title);
+//        notice.setContent(content);
+//        notice.setPostDate(postDate);
+//
+//        adminService.updateNotice(notice);
+//
+//        // 삭제할 파일이 있는 경우 삭제 처리
+//        if (deleteFileSeqs != null && !deleteFileSeqs.isEmpty()) {
+//            for (Integer fileSeq : deleteFileSeqs) {
+//                adminService.deleteAttachmentsByNoticeId(fileSeq);
+//            }
+//        }
+//
+//        // 새로운 파일 업로드 처리
+//        if (files != null && files.length > 0) {
+//            handleFileUpload(files, notice, boardType);
+//        }
+//
+//        response.put("message", "게시글이 성공적으로 수정되었습니다.");
+//        response.put("notice", notice);
+//
+//        return ResponseEntity.ok(response);
+//    }
     
     @GetMapping(value = "api/ntdetail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getNoticeDetail(@RequestParam("seq") Integer seq) {
