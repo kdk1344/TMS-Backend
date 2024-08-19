@@ -7,6 +7,8 @@ import {
   convertDate,
   getCurrentDate,
   updateFilePreview,
+  showSpinner,
+  hideSpinner,
 } from "./common.js";
 
 let currentPage = 1;
@@ -44,22 +46,6 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
-  // 공지사항 파일 업로드 버튼 클릭 이벤트 핸들러
-  //   if (uploadNoticeFileButton) {
-  //     uploadNoticeFileButton.addEventListener("click", () => {
-  //       if (uploadNoticeFileInput) {
-  //         uploadNoticeFileInput.click(); // 파일 선택 창 열기
-  //       } else {
-  //         console.error("File input element not found.");
-  //       }
-  //     });
-  //   }
-
-  // 공지사항 파일 업로드 인풋 change 이벤트 핸들러
-  //   if (uploadNoticeFileInput) {
-  //     uploadNoticeFileInput.addEventListener("change", uploadNoticeFile);
-  //   }
-
   // 공지사항 테이블 클릭 이벤트 핸들러
   //   if (noticeTableBody) {
   //     // 공지사항 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
@@ -157,10 +143,9 @@ function loadInitialNotices() {
   getNotices();
 }
 
-/** @todo 게시일자 쿼리파라미터 2개 받는 걸로 수정 필요 */
-async function getNotices({ page = 1, size = 10, postDate = "", title = "", content = "" } = {}) {
+async function getNotices({ page = 1, size = 10, startDate = "", endDate = "", title = "", content = "" } = {}) {
   try {
-    const query = new URLSearchParams({ page, size, postDate, title, content }).toString();
+    const query = new URLSearchParams({ page, size, startDate, endDate, title, content }).toString();
     const { totalPages, notices } = await tmsFetch(`/notices?${query}`);
 
     displayNotices(notices, totalPages);
@@ -174,15 +159,14 @@ function displayNotices(notices, totalPages) {
   if (noticeTableBody) {
     noticeTableBody.innerHTML = "";
 
-    /** @todo seq -> noticeID로 바꿔달라고 하기 */
-    /** 공지사항 조회 시 제목만 보이는 게 자연스러울 것 같음 -> 논의하기 */
     notices.forEach((notice) => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td><input type="checkbox" name="notice" value="${notice.seq}"></td>
+        <td class="notice-seq">${notice.seq}</td>
         <td class="notice-post-date">${convertDate(notice.postDate)}</td>
         <td class="notice-title">${notice.title}</td>
-        <td class="notice-content">${notice.content}</td>
+        <td class="notice-content ellipsis">${notice.content}</td>
       `;
       noticeTableBody.appendChild(row);
     });
@@ -225,23 +209,26 @@ function createPaginationButton(text, disabled, onClick, buttonType = "page") {
 function changePage(page) {
   currentPage = page;
 
+  const startDate = document.getElementById("startPostDateForFilter").value;
+  const endDate = document.getElementById("endPostDateForFilter").value;
   const title = document.getElementById("titleForFilter").value.trim();
   const content = document.getElementById("contentForFilter").value;
 
-  getNotices({ page: currentPage, title, content });
+  getNotices({ page: currentPage, startDate, endDate, title, content });
 }
 
 // 공지사항 필터링
 function submitNoticeFilter(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
-  /** @todo 게시일자 기준 필터링 추가 필요 */
+  const startDate = document.getElementById("startPostDateForFilter").value;
+  const endDate = document.getElementById("endPostDateForFilter").value;
   const title = document.getElementById("titleForFilter").value.trim();
   const content = document.getElementById("contentForFilter").value;
 
   // 페이지를 1로 초기화하고 getNotices 호출
   currentPage = 1;
-  getNotices({ page: currentPage, title, content });
+  getNotices({ page: currentPage, startDate, endDate, title, content });
 }
 
 // 공지사항 필터 리셋
@@ -250,39 +237,108 @@ function resetNoticeFilter() {
 }
 
 // 공지사항 등록
+// async function registerNotice(event) {
+//   event.preventDefault(); // 폼 제출 기본 동작 방지
+
+//   const confirmed = confirm("공지사항을 등록하시겠습니까?");
+
+//   if (!confirmed) return;
+
+//   const formData = new FormData(event.target);
+
+//   // 첨부파일을 formData에 추가
+//   // for (const file of fileInputForRegister.files) {
+//   //   console.log(file.name);
+//   //   formData.append("file", file);
+//   // }
+
+//   // FormData 객체를 JSON 객체로 변환
+//   // const formDataObj = Object.fromEntries(formData.entries());
+
+//   showSpinner();
+
+//   try {
+//     const { status } = await tmsFetch("/ntwrite", {
+//       method: "POST",
+//       body: formData,
+//     });
+
+//     const success = status === "success";
+
+//     if (success) {
+//       alert(`공지사항 등록이 완료되었습니다.`);
+//       event.target.reset(); // 폼 초기화
+//       closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
+//     }
+//   } catch (error) {
+//     alert(error.message + "\n다시 시도해주세요.");
+//   } finally {
+//     hideSpinner();
+//   }
+// }
+
 async function registerNotice(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
   const confirmed = confirm("공지사항을 등록하시겠습니까?");
-
   if (!confirmed) return;
 
+  // 기존 FormData 객체 생성
   const formData = new FormData(event.target);
 
-  // // 첨부파일을 formData에 추가
-  // for (const file of fileInputForRegister.files) {
-  //   console.log(file.name);
-  //   formData.append("file", file);
-  // }
+  // 새로운 FormData 객체 생성
+  const newFormData = new FormData();
 
-  // FormData 객체를 JSON 객체로 변환
-  const formDataObj = Object.fromEntries(formData.entries());
+  // 파일 추출
+  const file = formData.get("file");
+  if (file) {
+    // 파일을 제외한 나머지 데이터 추출
+    const entries = formData.entries();
+    const noticeData = {};
+
+    for (const [key, value] of entries) {
+      if (key !== "file") {
+        noticeData[key] = value;
+      }
+    }
+
+    // notice 데이터 추가
+    newFormData.append("notice", JSON.stringify(noticeData));
+    // 파일 추가
+    newFormData.append("file", file);
+  } else {
+    // 파일이 없는 경우에도 처리할 수 있도록
+    const entries = formData.entries();
+    const noticeData = {};
+
+    for (const [key, value] of entries) {
+      noticeData[key] = value;
+    }
+
+    newFormData.append("notice", JSON.stringify(noticeData));
+  }
+
+  showSpinner();
 
   try {
-    const { status } = await tmsFetch("/ntwrite", {
+    const response = await fetch("/ntwrite", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formDataObj),
+      body: newFormData, // 새로운 FormData 객체를 body로 설정
     });
 
-    const success = status === "success";
+    const result = await response.json(); // 서버 응답을 JSON으로 변환
+    const success = result.status === "success";
 
     if (success) {
       alert(`공지사항 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
+    } else {
+      throw new Error(result.message || "등록 실패");
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }

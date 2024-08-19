@@ -63,9 +63,9 @@
         <div class="filter-container">
           <div class="form-group">
             <label for="startPostDateForFilter">게시일자</label>
-            <input id="startPostDateForFilter" name="startPostDate" type="date" />
+            <input id="startPostDateForFilter" name="startDate" type="date" />
             <span>-</span>
-            <input id="endPostDateForFilter" name="endPostDate" type="date" />
+            <input id="endPostDateForFilter" name="endDate" type="date" />
           </div>
           <div class="form-group">
             <label for="titleForFilter">제목</label>
@@ -88,13 +88,6 @@
           <button id="openNoticeRegisterModalButton">등록</button>
           <button id="deleteNoticeButton">삭제</button>
         </div>
-        <div class="flex-box">
-          <!-- 파일 선택 input -->
-          <input type="file" id="uploadNoticeFileInput" class="hidden" name="file" accept=".xlsx, .xls" />
-
-          <button id="uploadNoticeFileButton">파일 업로드</button>
-          <button id="openNoticeFileDownloadModalButton">파일 다운로드</button>
-        </div>
       </div>
 
       <!-- 공지사항 목록 테이블 -->
@@ -102,9 +95,10 @@
         <thead>
           <tr>
             <th><input type="checkbox" id="selectAllNoticeCheckbox" /></th>
-            <th>게시일자</th>
-            <th>제목</th>
-            <th>게시내용</th>
+            <th class="notice-seq">번호</th>
+            <th class="notice-post-date">게시일자</th>
+            <th class="notice-title">제목</th>
+            <th class="notice-content">게시내용</th>
           </tr>
         </thead>
         <tbody id="noticeTableBody">
