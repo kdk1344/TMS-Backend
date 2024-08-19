@@ -92,7 +92,7 @@ public class NoticeController {
         return response;
     }
     
-    @PostMapping(value = "api/ntwrite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "api/ntwrite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> createNotice(@Valid @RequestPart("notice") Notice notice,  // 유효성 검사를 위한 @Valid
             @RequestPart(value = "file", required = false) MultipartFile[] files) {
@@ -263,7 +263,7 @@ public class NoticeController {
     }
     
     @DeleteMapping(value = "api/ntdelete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> deleteNotice(@RequestParam("seqs") List<Integer> seqs) {
+    public ResponseEntity<Map<String, Object>> deleteNotice(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
 
         // 공지사항 존재 여부 확인
