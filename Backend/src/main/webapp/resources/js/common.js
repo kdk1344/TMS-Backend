@@ -160,7 +160,14 @@ export function closeModalOnClickOutside(event, modalId) {
   const modal = document.getElementById(modalId);
 
   if (modal && event.target === modal) {
-    closeModal(modalId);
+    // 모달 내부에 폼이 있는 경우 폼 리셋
+    const form = modal.querySelector("form");
+
+    if (form) {
+      form.reset(); // 폼 리셋
+    }
+
+    closeModal(modalId); // 모달 닫기
   }
 }
 

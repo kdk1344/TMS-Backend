@@ -19,6 +19,7 @@ const noticeFilterForm = document.getElementById("noticeFilterForm");
 const noticeRegisterForm = document.getElementById("noticeRegisterForm");
 const fileSelectButtonForRegister = document.getElementById("fileSelectButtonForRegister");
 const fileInputForRegister = document.getElementById("fileInputForRegister");
+const fileOutputForRegister = document.getElementById("fileOutputForRegister");
 
 const noticeTableBody = document.getElementById("noticeTableBody");
 const noticePagination = document.getElementById("noticePagination");
@@ -115,13 +116,9 @@ function setupEventListeners() {
 
     closeNoticeRegisterModalButton.addEventListener("click", () => {
       noticeRegisterForm.reset();
+      fileOutputForRegister.innerHTML = ""; // 첨부파일 프리뷰 비우기
       closeModal(MODAL_ID.NOTICE_REGISTER);
     });
-
-    // openNoticeFileDownloadModalButton.addEventListener("click", () => {
-    //   copyFilterValuesToDownloadForm(); // 공지사항 필터링 값 복사
-    //   openModal(MODAL_ID.NOTICE_FILE_DOWNLOAD); // 모달 열기
-    // });
 
     // closeNoticeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.NOTICE_EDIT));
   }
@@ -135,7 +132,11 @@ function setupModalEventListeners() {
 
   modals.forEach((modalId) => {
     // 모달 외부 클릭 시 닫기 설정
-    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
+    window.addEventListener("click", (event) => {
+      if (fileOutputForRegister) fileOutputForRegister.innerHTML = ""; // 첨부파일 프리뷰 비우기
+
+      closeModalOnClickOutside(event, modalId);
+    });
   });
 }
 
