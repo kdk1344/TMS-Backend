@@ -94,7 +94,8 @@ public class NoticeController {
     
     @PostMapping(value = "api/ntwrite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> createNotice(@Valid @RequestPart("notice") Notice notice,  // 유효성 검사를 위한 @Valid
+    public ResponseEntity<Map<String, Object>> createNotice(
+            @RequestPart("notice") @Valid Notice notice,
             @RequestPart(value = "file", required = false) MultipartFile[] files) {
 
         // 로그로 데이터 확인
@@ -278,7 +279,8 @@ public class NoticeController {
         for (Integer seq : seqs) {
             adminService.deleteNotice(seq);
         }
-
+        
+        response.put("status", "success");
         response.put("message", "공지사항이 성공적으로 삭제되었습니다.");
         return ResponseEntity.ok(response);
     }
