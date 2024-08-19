@@ -292,7 +292,10 @@ public class NoticeController {
         for (MultipartFile file : files) {
 	        if (file != null && !file.isEmpty()) {
 	            try {
-	                String storageLocation = getStorageLocation(boardType, file.getOriginalFilename());
+	            	String fileType = getFileType(file.getContentType());
+	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename());
+	                log.info(storageLocation);
+	                
 	
 	                File destinationFile = new File(storageLocation);
 	                file.transferTo(destinationFile);
@@ -319,14 +322,30 @@ public class NoticeController {
     
     private String getStorageLocation(String fileType, String fileName) {
         String baseDir = "C:\\Users\\User\\Desktop\\TMS_DEV\\";
+        String storageLocation;
         switch (fileType) {
-            case "IMAGE":
-                return baseDir + "images/" + fileName;
-            case "DOCUMENT":
-                return baseDir + "documents/" + fileName;
-            default:
-                return baseDir + "others/" + fileName;
-        }
+        case "IMAGE":
+            storageLocation = baseDir + "images/";
+            break;
+        case "DOCUMENT":
+            storageLocation = baseDir + "documents/";
+            break;
+        default:
+            storageLocation = baseDir + "others/";
+            break;
+            }
+
+	    // 디렉토리가 존재하지 않으면 생성
+	    File directory = new File(storageLocation);
+	    if (!directory.exists()) {
+	        if (directory.mkdirs()) {
+	            System.out.println("디렉토리가 생성되었습니다: " + storageLocation);
+	        } else {
+	            System.out.println("디렉토리 생성에 실패했습니다: " + storageLocation);
+	        }
+	        }
+
+    return storageLocation + fileName;
     }
     
     
