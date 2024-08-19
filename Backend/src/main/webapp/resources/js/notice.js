@@ -238,46 +238,6 @@ function resetNoticeFilter() {
 }
 
 // 공지사항 등록
-// async function registerNotice(event) {
-//   event.preventDefault(); // 폼 제출 기본 동작 방지
-
-//   const confirmed = confirm("공지사항을 등록하시겠습니까?");
-
-//   if (!confirmed) return;
-
-//   const formData = new FormData(event.target);
-
-//   // 첨부파일을 formData에 추가
-//   // for (const file of fileInputForRegister.files) {
-//   //   console.log(file.name);
-//   //   formData.append("file", file);
-//   // }
-
-//   // FormData 객체를 JSON 객체로 변환
-//   // const formDataObj = Object.fromEntries(formData.entries());
-
-//   showSpinner();
-
-//   try {
-//     const { status } = await tmsFetch("/ntwrite", {
-//       method: "POST",
-//       body: formData,
-//     });
-
-//     const success = status === "success";
-
-//     if (success) {
-//       alert(`공지사항 등록이 완료되었습니다.`);
-//       event.target.reset(); // 폼 초기화
-//       closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
-//     }
-//   } catch (error) {
-//     alert(error.message + "\n다시 시도해주세요.");
-//   } finally {
-//     hideSpinner();
-//   }
-// }
-
 async function registerNotice(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
@@ -290,52 +250,40 @@ async function registerNotice(event) {
   // 새로운 FormData 객체 생성
   const newFormData = new FormData();
 
-  // 파일 추출
-  const file = formData.get("file");
-  if (file) {
-    // 파일을 제외한 나머지 데이터 추출
-    const entries = formData.entries();
-    const noticeData = {};
+  // 파일 추출 (다중 파일 지원)
+  const files = formData.getAll("file"); // 다중 파일을 배열로 가져오기
 
-    for (const [key, value] of entries) {
-      if (key !== "file") {
-        noticeData[key] = value;
-      }
-    }
+  // 파일을 제외한 나머지 데이터 추출
+  const noticeData = {};
 
-    // notice 데이터 추가
-    newFormData.append("notice", JSON.stringify(noticeData));
-    // 파일 추가
-    newFormData.append("file", file);
-  } else {
-    // 파일이 없는 경우에도 처리할 수 있도록
-    const entries = formData.entries();
-    const noticeData = {};
-
-    for (const [key, value] of entries) {
+  formData.forEach((value, key) => {
+    if (key !== "file") {
       noticeData[key] = value;
     }
+  });
 
-    newFormData.append("notice", JSON.stringify(noticeData));
-  }
+  // notice 데이터 추가 (JSON 형태로 묶기)
+  newFormData.append("notice", new Blob([JSON.stringify(noticeData)], { type: "application/json" }));
+
+  // 파일 추가
+  files.forEach((file) => {
+    newFormData.append("file", file); // Blob으로 감싸지 않고 File 객체 그대로 추가
+  });
 
   showSpinner();
 
   try {
-    const response = await tmsFetch("/ntwrite", {
+    const { status } = await tmsFetch("/ntwrite", {
       method: "POST",
-      body: newFormData, // 새로운 FormData 객체를 body로 설정
+      body: newFormData,
     });
 
-    const result = await response.json(); // 서버 응답을 JSON으로 변환
-    const success = result.status === "success";
+    const success = status === "success";
 
     if (success) {
       alert(`공지사항 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
-    } else {
-      throw new Error(result.message || "등록 실패");
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
