@@ -92,7 +92,7 @@ public class NoticeController {
         return response;
     }
     
-    @PostMapping(value = "api/ntwrite", produces = "application/json")
+    @PostMapping(value = "api/ntwrite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> createNotice(@Valid @RequestPart("notice") Notice notice,  // 유효성 검사를 위한 @Valid
             @RequestPart(value = "file", required = false) MultipartFile[] files) {
@@ -263,17 +263,21 @@ public class NoticeController {
     }
     
     @DeleteMapping(value = "api/ntdelete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> deleteNotice(@RequestParam("seq") Integer seq) {
+    public ResponseEntity<Map<String, Object>> deleteNotice(@RequestParam("seqs") List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
 
         // 공지사항 존재 여부 확인
-        if (adminService.getNoticeById(seq) == null) {
-            response.put("message", "해당 공지사항이 존재하지 않습니다.");
-            return ResponseEntity.status(404).body(response);
+        for (Integer seq : seqs) {
+            if (adminService.getNoticeById(seq) == null) {
+                response.put("message", "게시글 중 하나가 존재하지 않습니다. SEQ: " + seq);
+                return ResponseEntity.status(404).body(response);
+            }
         }
 
         // 공지사항 삭제
-        adminService.deleteNotice(seq);
+        for (Integer seq : seqs) {
+            adminService.deleteNotice(seq);
+        }
 
         response.put("message", "공지사항이 성공적으로 삭제되었습니다.");
         return ResponseEntity.ok(response);
