@@ -50,6 +50,22 @@ h2 {
   gap: 8px;
 }
 
+.notice-seq {
+  width: 55px;
+
+  text-align: center;
+}
+
+.notice-post-date {
+  width: 108px;
+
+  text-align: center;
+}
+
+.notice-content {
+  max-width: 600px;
+}
+
 .modal-form {
   display: flex;
   flex-direction: column;

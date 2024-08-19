@@ -1,4 +1,10 @@
-// DOM 요소들
+// DOM 요소
+const spinner = document.getElementById("spinner");
+
+// 페이지 로딩 시
+document.addEventListener("DOMContentLoaded", () => {
+  hideSpinner();
+});
 
 // 메뉴 항목과 하위 항목들을 정의
 const menuData = [
@@ -198,4 +204,14 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     .join("");
 
   fileListOutput.innerHTML = `<ul>${fileNames}</ul>`;
+}
+
+// 로딩 스피너 표시
+export function showSpinner() {
+  spinner.style.display = "flex";
+}
+
+// 로딩 스피너 숨기기
+export function hideSpinner() {
+  spinner.style.display = "none";
 }
