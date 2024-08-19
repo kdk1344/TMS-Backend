@@ -93,8 +93,12 @@
         FROM notices n
         LEFT JOIN file_attachments a ON n.SEQ = a.SEQ
         WHERE 1=1
-        <if test="postDate != null and postDate != ''">
-            AND n.POST_DATE = #{postDate}
+         <!-- 시작일과 종료일에 따른 POST_DATE 범위 검색 -->
+        <if test="startDate != null and startDate != ''">
+            AND n.POST_DATE &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND n.POST_DATE &lt;= #{endDate}
         </if>
         <if test="title != null and title != ''">
             AND n.TITLE LIKE CONCAT('%', #{title}, '%')
@@ -115,8 +119,12 @@
     <select id="getTotalNoticesCount" resultType="int">
         SELECT COUNT(*) FROM notices
         WHERE 1=1
-        <if test="postDate != null and postDate != ''">
-            AND POST_DATE = #{postDate}
+        <!-- 시작일과 종료일에 따른 POST_DATE 범위 검색 -->
+        <if test="startDate != null and startDate != ''">
+            AND POST_DATE &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND POST_DATE &lt;= #{endDate}
         </if>
         <if test="title != null and title != ''">
             AND TITLE LIKE CONCAT('%', #{title}, '%')

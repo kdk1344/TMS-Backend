@@ -24,14 +24,16 @@ public interface AdminMapper {
 	public int countUsers(Criteria criteria);
 	
 	//공지사항
-	public List<Notice> searchNotices(@Param("postDate") String postDate,
+	public List<Notice> searchNotices(@Param("startDate") String postDate,
+			@Param("endDate") String endDate,
             @Param("title") String title,
             @Param("content") String content,
             @Param("offset") int offset,
             @Param("size") int size);
-	public int getTotalNoticesCount(@Param("postDate") String postDate,
-	          @Param("title") String title,
-	          @Param("content") String content);
+	public int getTotalNoticesCount(@Param("startDate") String postDate,
+			@Param("endDate") String endDate,
+	        @Param("title") String title,
+	        @Param("content") String content);
 	public List<FileAttachment> getAttachmentsByNoticeSEQ(@Param("seq") int seq);
 	public void insertNotice(Notice notice);
     public void insertAttachment(FileAttachment attachment);

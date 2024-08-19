@@ -63,18 +63,21 @@ public class NoticeController {
 
     ////공지사항 Controller
     
- // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
+	 // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
     @GetMapping(value = "api/notices", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getNotices(@RequestParam(value = "postDate", required = false) String postDate,
+    public Map<String, Object> getNotices(@RequestParam(value = "startDate", required = false) String startDate,
+                                          @RequestParam(value = "endDate", required = false) String endDate,
                                           @RequestParam(value = "title", required = false) String title,
                                           @RequestParam(value = "content", required = false) String content,
                                           @RequestParam(value = "page", defaultValue = "1") int page,
                                           @RequestParam(value = "size", defaultValue = "10") int size) {
-        List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
-        int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
+        // 공지사항 조회
+        List<Notice> notices = adminService.searchNotices(startDate, endDate, title, content, page, size);
+        int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
         int totalPages = (int) Math.ceil((double) totalNotices / size);
 
+        // 응답 생성
         Map<String, Object> response = new HashMap<>();
         response.put("notices", notices);
         response.put("currentPage", page);
@@ -275,20 +278,21 @@ public class NoticeController {
  
     
     @GetMapping("/notice")
-    public String getNotices(@RequestParam(value = "postDate", required = false) String postDate,
-                             @RequestParam(value = "title", required = false) String title,
-                             @RequestParam(value = "content", required = false) String content,
-                             @RequestParam(value = "page", defaultValue = "1") int page,
-                             @RequestParam(value = "size", defaultValue = "10") int size,
+    public String getNotices(@RequestParam(value = "startDate", required = false) String startDate,
+				            @RequestParam(value = "endDate", required = false) String endDate,
+				            @RequestParam(value = "title", required = false) String title,
+				            @RequestParam(value = "content", required = false) String content,
+				            @RequestParam(value = "page", defaultValue = "1") int page,
+				            @RequestParam(value = "size", defaultValue = "10") int size,
                              Model model) {
-        List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
-        int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
-        int totalPages = (int) Math.ceil((double) totalNotices / size);
-
-        model.addAttribute("notices", notices);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("totalNotices", totalNotices);
+//        List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
+//        int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
+//        int totalPages = (int) Math.ceil((double) totalNotices / size);
+//
+//        model.addAttribute("notices", notices);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", totalPages);
+//        model.addAttribute("totalNotices", totalNotices);
 
         return "notice"; // JSP 파일의 경로
     }

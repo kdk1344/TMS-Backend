@@ -85,14 +85,14 @@ public class AdminService {
     
     //// 공지사항 서비스
 
-    public List<Notice> searchNotices(String postDate, String title, String content, int page, int size) {
+    public List<Notice> searchNotices(String startDate, String endDate, String title, String content, int page, int size) {
         int offset = (page - 1) * size;
-        List<Notice> notices = adminmapper.searchNotices(postDate, title, content, offset, size);
+        List<Notice> notices = adminmapper.searchNotices(startDate, endDate, title, content, offset, size);
         return notices;
     }
 
-    public int getTotalNoticesCount(String postDate, String title, String content) {
-        return adminmapper.getTotalNoticesCount(postDate, title, content);
+    public int getTotalNoticesCount(String startDate, String endDate, String title, String content) {
+        return adminmapper.getTotalNoticesCount(startDate, endDate, title, content);
     }
     
     public void createNotice(Notice notice) {
