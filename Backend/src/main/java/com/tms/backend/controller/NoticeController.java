@@ -21,6 +21,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -87,31 +92,84 @@ public class NoticeController {
         return response;
     }
     
-    
-    @PostMapping(value = "api/ntwrite", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "api/ntwrite", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> createNotice(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("postDate") Date postDate,  // 사용자가 입력한 게시일자
-            @RequestParam(value = "file", required = false) MultipartFile[] files) {
+    public ResponseEntity<Map<String, Object>> createNotice(@Valid @RequestBody Notice notice) {
 
-    	Notice notice = new Notice();
-        notice.setTitle(title);
-        notice.setContent(content);
-        notice.setPostDate(postDate);
-        
+        // 로그로 데이터 확인
+        log.info("Title: " + notice.getTitle());
+        log.info("Content: " + notice.getContent());
+        log.info("Post Date: " + notice.getPostDate());
+
+        // Notice 객체를 데이터베이스에 저장
         adminService.createNotice(notice);
-        handleFileUpload(files, notice);
 
+        // 응답 생성
         Map<String, Object> response = new HashMap<>();
         response.put("message", "게시글이 성공적으로 등록되었습니다.");
         response.put("notice", notice);
-        
-        log.info(notice);
 
         return ResponseEntity.ok(response);
     }
+    
+ // 유효성 검사 실패 시 발생하는 예외 처리
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Invalid input data");
+        response.put("errors", ex.getConstraintViolations());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Invalid input data");
+
+        // 각 필드의 오류 메시지를 담는 Map
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+        );
+        response.put("errors", errors);
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    
+    
+//    @PostMapping(value = "api/ntwrite", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> createNotice(
+//            @RequestParam(value = "title" , required = false) String title, // 필수 파라미터
+//            @RequestParam(value = "content" , required = false) String content, // 필수 파라미터
+//            @RequestParam("postDate") Date postDate,  // 자동 입력 일자
+//            @RequestParam(value = "file", required = false) MultipartFile[] files) {
+//    	
+//    	// 로그로 데이터 확인
+//        log.info("Title: " + title);
+//        log.info("Content: " + content);
+//        log.info("Post Date: " + postDate);
+//
+//    	Notice notice = new Notice();
+//        notice.setTitle(title);
+//        notice.setContent(content);
+//        notice.setPostDate(postDate);
+//        
+//        adminService.createNotice(notice);
+//        
+//        //파일 업로드 처리
+//        handleFileUpload(files, notice);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("message", "게시글이 성공적으로 등록되었습니다.");
+//        response.put("notice", notice);
+//        
+//        log.info(notice);
+//
+//        return ResponseEntity.ok(response);
+//    }
     
     @PostMapping(value = "api/ntupdate", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> updateNotice(
