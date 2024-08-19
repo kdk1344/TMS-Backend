@@ -330,6 +330,27 @@ public class NoticeController {
     
     private void handleFileUpload(MultipartFile[] files, Notice notice, String boardType) {
         List<FileAttachment> attachments = new ArrayList<>();
+        
+        // boardType에 따라 boardTypeNumber 설정
+        Integer boardTypeNumber;
+        switch (boardType) {
+            case "devProgress":
+                boardTypeNumber = 1;
+                break;
+            case "testProgress":
+                boardTypeNumber = 2;
+                break;
+            case "defect":
+                boardTypeNumber = 3;
+                break;
+            case "nt":
+                boardTypeNumber = 4;
+                break;
+            default:
+                boardTypeNumber = 0; // 기본값 (알 수 없는 boardType)
+                break;
+        }
+        
         for (MultipartFile file : files) {
 	        if (file != null && !file.isEmpty()) {
 	            try {
@@ -343,7 +364,7 @@ public class NoticeController {
 	
 	                FileAttachment attachment = new FileAttachment();
 	                attachment.setIdentifier(notice.getSeq());
-	                attachment.setType(boardType);
+	                attachment.setType(boardTypeNumber);
 	                attachment.setStorageLocation(storageLocation);
 	                attachment.setFileName(file.getOriginalFilename());
 	
