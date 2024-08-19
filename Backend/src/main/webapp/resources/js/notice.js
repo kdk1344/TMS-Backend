@@ -321,7 +321,7 @@ async function registerNotice(event) {
   showSpinner();
 
   try {
-    const response = await fetch("/ntwrite", {
+    const response = await tmsFetch("/ntwrite", {
       method: "POST",
       body: newFormData, // 새로운 FormData 객체를 body로 설정
     });
