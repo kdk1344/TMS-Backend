@@ -94,7 +94,8 @@ public class NoticeController {
     
     @PostMapping(value = "api/ntwrite", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> createNotice(@Valid @RequestBody Notice notice) {
+    public ResponseEntity<Map<String, Object>> createNotice(@Valid @RequestPart("notice") Notice notice,  // 유효성 검사를 위한 @Valid
+            @RequestPart(value = "file", required = false) MultipartFile[] files) {
 
         // 로그로 데이터 확인
         log.info("Title: " + notice.getTitle());
@@ -103,9 +104,15 @@ public class NoticeController {
 
         // Notice 객체를 데이터베이스에 저장
         adminService.createNotice(notice);
+        
+        // 새로운 파일 업로드 처리
+        if (files != null && files.length > 0) {
+            handleFileUpload(files, notice, "notice");
+        }
 
         // 응답 생성
         Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
         response.put("message", "게시글이 성공적으로 등록되었습니다.");
         response.put("notice", notice);
 
@@ -171,14 +178,15 @@ public class NoticeController {
 //        return ResponseEntity.ok(response);
 //    }
     
-    @PostMapping(value = "api/ntupdate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "api/{boardType}/ntupdate", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> updateNotice(
             @RequestParam("seq") Integer seq,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("postDate") Date postDate,
             @RequestParam(value = "file", required = false) MultipartFile[] files,
-            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs) {
+            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
+            @PathVariable("boardType") String boardType) {
 
         Map<String, Object> response = new HashMap<>();
 
@@ -203,7 +211,7 @@ public class NoticeController {
 
         // 새로운 파일 업로드 처리
         if (files != null && files.length > 0) {
-            handleFileUpload(files, notice);
+            handleFileUpload(files, notice, boardType);
         }
 
         response.put("message", "게시글이 성공적으로 수정되었습니다.");
@@ -273,20 +281,19 @@ public class NoticeController {
     
     
     
-    private void handleFileUpload(MultipartFile[] files, Notice notice) {
+    private void handleFileUpload(MultipartFile[] files, Notice notice, String boardType) {
         List<FileAttachment> attachments = new ArrayList<>();
         for (MultipartFile file : files) {
 	        if (file != null && !file.isEmpty()) {
 	            try {
-	                String fileType = getFileType(file.getContentType());
-	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename());
+	                String storageLocation = getStorageLocation(boardType, file.getOriginalFilename());
 	
 	                File destinationFile = new File(storageLocation);
 	                file.transferTo(destinationFile);
 	
 	                FileAttachment attachment = new FileAttachment();
 	                attachment.setIdentifier(notice.getSeq());
-	                attachment.setType(fileType);
+	                attachment.setType(boardType);
 	                attachment.setStorageLocation(storageLocation);
 	                attachment.setFileName(file.getOriginalFilename());
 	
@@ -355,67 +362,67 @@ public class NoticeController {
         return "notice"; // JSP 파일의 경로
     }
     
-    @PostMapping(value = "/ntwrite")
-    public String createNotice(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("postDate") Date postDate,
-            @RequestParam(value = "file", required = false) MultipartFile[] files,
-            Model model) {
+//    @PostMapping(value = "/ntwrite")
+//    public String createNotice(
+//            @RequestParam("title") String title,
+//            @RequestParam("content") String content,
+//            @RequestParam("postDate") Date postDate,
+//            @RequestParam(value = "file", required = false) MultipartFile[] files,
+//            Model model) {
+//
+//        Notice notice = new Notice();
+//        notice.setTitle(title);
+//        notice.setContent(content);
+//        notice.setPostDate(postDate);
+//
+//        adminService.createNotice(notice);
+//
+//        handleFileUpload(files, notice);
+//
+//        model.addAttribute("message", "게시글이 성공적으로 등록되었습니다.");
+//        model.addAttribute("notice", notice);
+//
+//        return "notice";  // notice.jsp 페이지로 이동
+//    }
 
-        Notice notice = new Notice();
-        notice.setTitle(title);
-        notice.setContent(content);
-        notice.setPostDate(postDate);
-
-        adminService.createNotice(notice);
-
-        handleFileUpload(files, notice);
-
-        model.addAttribute("message", "게시글이 성공적으로 등록되었습니다.");
-        model.addAttribute("notice", notice);
-
-        return "notice";  // notice.jsp 페이지로 이동
-    }
-
-    @PostMapping(value = "/ntupdate")
-    public String updateNotice(
-            @RequestParam("seq") Integer seq,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("postDate") Date postDate,
-            @RequestParam(value = "file", required = false) MultipartFile[] files,
-            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
-            Model model) {
-
-        Notice notice = adminService.getNoticeById(seq);
-        if (notice == null) {
-            model.addAttribute("message", "해당 공지사항이 존재하지 않습니다.");
-            return "error";  // 에러 페이지로 이동
-        }
-
-        notice.setTitle(title);
-        notice.setContent(content);
-        notice.setPostDate(postDate);
-
-        adminService.updateNotice(notice);
-        
-     // 삭제할 파일이 있는 경우 삭제 처리
-        if (deleteFileSeqs != null && !deleteFileSeqs.isEmpty()) {
-            for (Integer fileSeq : deleteFileSeqs) {
-                adminService.deleteAttachmentsByNoticeId(fileSeq);
-            }
-        }
-
-        if (files != null && files.length > 0) {
-            handleFileUpload(files, notice);
-        }
-
-        model.addAttribute("message", "게시글이 성공적으로 수정되었습니다.");
-        model.addAttribute("notice", notice);
-
-        return "notice";  // notice.jsp 페이지로 이동
-    }
+//    @PostMapping(value = "/ntupdate")
+//    public String updateNotice(
+//            @RequestParam("seq") Integer seq,
+//            @RequestParam("title") String title,
+//            @RequestParam("content") String content,
+//            @RequestParam("postDate") Date postDate,
+//            @RequestParam(value = "file", required = false) MultipartFile[] files,
+//            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
+//            Model model) {
+//
+//        Notice notice = adminService.getNoticeById(seq);
+//        if (notice == null) {
+//            model.addAttribute("message", "해당 공지사항이 존재하지 않습니다.");
+//            return "error";  // 에러 페이지로 이동
+//        }
+//
+//        notice.setTitle(title);
+//        notice.setContent(content);
+//        notice.setPostDate(postDate);
+//
+//        adminService.updateNotice(notice);
+//        
+//     // 삭제할 파일이 있는 경우 삭제 처리
+//        if (deleteFileSeqs != null && !deleteFileSeqs.isEmpty()) {
+//            for (Integer fileSeq : deleteFileSeqs) {
+//                adminService.deleteAttachmentsByNoticeId(fileSeq);
+//            }
+//        }
+//
+//        if (files != null && files.length > 0) {
+//            handleFileUpload(files, notice, boardType);
+//        }
+//
+//        model.addAttribute("message", "게시글이 성공적으로 수정되었습니다.");
+//        model.addAttribute("notice", notice);
+//
+//        return "notice";  // notice.jsp 페이지로 이동
+//    }
     
     // 공지사항 상세보기 기능
     @GetMapping("/ntdetail")

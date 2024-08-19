@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class FileAttachment {
 	
-	private String type; // 파일의 구분 (예: 이미지, 문서)
+	private String type; // 파일의 저장 게시판
     private Integer identifier; // 파일의 고유 식별자
     private Integer seq; // 공지사항의 SEQ와 연관
     private String storageLocation; // 파일 저장 경로
