@@ -23,6 +23,7 @@ const fileInputForRegister = document.getElementById("fileInputForRegister");
 const noticeTableBody = document.getElementById("noticeTableBody");
 const noticePagination = document.getElementById("noticePagination");
 const selectAllNoticeCheckbox = document.getElementById("selectAllNoticeCheckbox");
+const deleteNoticeButton = document.getElementById("deleteNoticeButton");
 
 const openNoticeRegisterModalButton = document.getElementById("openNoticeRegisterModalButton");
 const closeNoticeRegisterModalButton = document.getElementById("closeNoticeRegisterModalButton");
@@ -94,14 +95,14 @@ function setupEventListeners() {
   }
 
   // 공지사항 삭제 버튼 클릭 이벤트 핸들러
-  //   if (deleteNoticeButton) {
-  //     deleteNoticeButton.addEventListener("click", deleteNotice);
-  //   }
+  if (deleteNoticeButton) {
+    deleteNoticeButton.addEventListener("click", deleteNotice);
+  }
 
   // 전체 선택 체크박스 클릭 이벤트 핸들러
-  //   if (selectAllNoticeCheckbox) {
-  //     selectAllNoticeCheckbox.addEventListener("click", toggleAllCheckboxes);
-  //   }
+  if (selectAllNoticeCheckbox) {
+    selectAllNoticeCheckbox.addEventListener("click", toggleAllCheckboxes);
+  }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러
   if (openNoticeRegisterModalButton && closeNoticeRegisterModalButton) {
@@ -335,6 +336,49 @@ async function registerNotice(event) {
       closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
     } else {
       throw new Error(result.message || "등록 실패");
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
+  }
+}
+
+// 체크박스 전체 선택/해제
+function toggleAllCheckboxes() {
+  const checkboxes = document.querySelectorAll('input[name="notice"]');
+  checkboxes.forEach((checkbox) => (checkbox.checked = selectAllNoticeCheckbox.checked));
+}
+
+// 공지사항 삭제
+async function deleteNotice() {
+  try {
+    const confirmed = confirm("공지사항을 삭제하시겠습니까?");
+
+    if (!confirmed) return;
+
+    const selectedNoticeIDs = Array.from(document.querySelectorAll('input[name="notice"]:checked')).map(
+      (checkbox) => checkbox.value
+    );
+
+    if (selectedNoticeIDs.length === 0) {
+      alert("삭제할 공지사항을 선택해주세요.");
+      return;
+    }
+
+    showSpinner();
+
+    const { status } = await tmsFetch("/ntdelete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(selectedNoticeIDs),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`공지사항 삭제가 완료되었습니다.`);
+      location.reload(); // 페이지 새로고침
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
