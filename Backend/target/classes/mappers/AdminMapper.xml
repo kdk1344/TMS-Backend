@@ -109,7 +109,7 @@
         <if test="content != null and content != ''">
             AND n.CONTENT LIKE CONCAT('%', #{content}, '%')
         </if>
-        ORDER BY n.SEQ
+        ORDER BY n.CREATED_DATE DESC, n.SEQ DESC
         LIMIT #{offset}, #{size}
     </select>
 
@@ -263,6 +263,94 @@
 	        #{code}
 	    </foreach>
 	</delete>
+	
+	
+	
+	<!-- 분류코드 mapper.xml -->
+	
+	<!-- 카테고리 코드 추가 -->
+    <insert id="insertCategoryCode">
+        INSERT INTO category_codes (Stage_Type, Code, Code_Name)
+        VALUES (#{stageType}, #{code}, #{codeName})
+    </insert>
+    
+    <!-- 상위 대분류 코드 가져오기 -->
+    <select id="getParentCode" parameterType="String" resultType="String">
+        SELECT Code
+        FROM category_codes
+        WHERE Stage_Type = '대' AND Code = #{parentCode}
+    </select>
+
+    <!-- 카테고리 코드 수정 -->
+    <update id="updateCategoryCode">
+        UPDATE category_codes
+        SET Stage_Type = #{stageType}, Code_Name = #{codeName}
+        WHERE Code = #{code}
+    </update>
+
+    <!-- 카테고리 코드 삭제 -->
+    <delete id="deleteCategoryCodes">
+        DELETE FROM category_codes
+        WHERE Code IN
+        <foreach item="code" collection="array" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!-- 카테고리 코드 검색 및 페이징 조회 -->
+    <select id="searchCategoryCodes" resultType="categoryCode">
+        SELECT Stage_Type as StageType, Code, Code_Name as CodeName
+        FROM category_codes
+        WHERE 1=1
+        <if test="stageType != null and stageType != ''">
+            AND Stage_Type = #{stageType}
+        </if>
+        <if test="code != null and code != ''">
+            AND Code LIKE CONCAT('%', #{code}, '%')
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- 총 카테고리 코드 수 조회 -->
+    <select id="getTotalCategoryCodeCount" resultType="int">
+        SELECT COUNT(*)
+        FROM category_codes
+        WHERE 1=1
+        <if test="stageType != null and stageType != ''">
+            AND Stage_Type = #{stageType}
+        </if>
+        <if test="code != null and code != ''">
+            AND Code LIKE CONCAT('%', #{code}, '%')
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+    </select>
+
+    <!-- 모든 카테고리 코드 가져오기 -->
+    <select id="getAllCategoryCodes" resultType="categoryCode">
+        SELECT Stage_Type as StageType, Code, Code_Name as CodeName
+        FROM category_codes
+    </select>
+
+    <!-- 필터링된 카테고리 코드 가져오기 -->
+    <select id="getFilteredCategoryCodes" resultType="categoryCode">
+        SELECT Stage_Type as StageType, Code, Code_Name as CodeName
+        FROM category_codes
+        WHERE 1=1
+        <if test="stageType != null and stageType != ''">
+            AND Stage_Type = #{stageType}
+        </if>
+        <if test="code != null and code != ''">
+            AND Code LIKE CONCAT('%', #{code}, '%')
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+    </select>
 
 	
 </mapper>

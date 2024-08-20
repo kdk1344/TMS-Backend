@@ -11,6 +11,7 @@ import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
+import com.tms.backend.vo.categoryCode;
 
 import lombok.extern.log4j.Log4j;
 
@@ -45,7 +46,7 @@ public interface AdminMapper {
     public FileAttachment getAttachmentById(Integer seq);
     public void deleteNotice(Integer seq);
     
-    //공통코드
+    //공통코드 mapper
     public List<CommonCode> searchCommonCodes(@Param("parentCode") String parentCode, 
             @Param("code") String code, 
             @Param("codeName") String codeName, 
@@ -64,4 +65,22 @@ public interface AdminMapper {
     public int updateCommonCode(CommonCode commonCode);
     public int deleteCommonCode(String[] codeList);
     
+    
+    // 분류코드 mapper
+    public void insertCategoryCode(categoryCode categoryCode);
+    public String getParentCode(String parentCode);
+    public int updateCategoryCode(categoryCode categoryCode);
+    public int deleteCategoryCodes(String[] codeList);
+    public List<categoryCode> searchCategoryCodes(@Param("stageType") String stageType, 
+	                                              @Param("code") String code, 
+	                                              @Param("codeName") String codeName, 
+	                                              @Param("offset") int offset, 
+	                                              @Param("size") int size);
+    public int getTotalCategoryCodeCount(@Param("stageType") String stageType,
+    									 @Param("code") String code,
+    									 @Param("codeName") String codeName);
+    public List<categoryCode> getAllCategoryCodes();
+    public List<categoryCode> getFilteredCategoryCodes(@Param("stageType") String stageType, 
+                                                	   @Param("code") String code, 
+                                                	   @Param("codeName") String codeName);
 }

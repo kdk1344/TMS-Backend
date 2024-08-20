@@ -19,6 +19,7 @@ import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
+import com.tms.backend.vo.categoryCode;
 
 import lombok.extern.log4j.Log4j;
 
@@ -134,8 +135,9 @@ public class AdminService {
     }
     
     
+    //공통 코드 Service
     
-    //공통 코드
+    
     public List<CommonCode> searchCommonCodes(String parentCode, String code, String codeName, int page, int size) {
         int offset = (page - 1) * size;
         return adminmapper.searchCommonCodes(parentCode, code, codeName, offset, size);
@@ -175,6 +177,54 @@ public class AdminService {
     }
     
     
+    // 분류코드 Service
     
+    // 카테고리 코드 추가
+    public void addCategoryCode(categoryCode categoryCode) {
+        adminmapper.insertCategoryCode(categoryCode);
+    }
+    
+ // 상위 대분류 코드 가져오기
+    public String getParentCode(String parentCode) {
+        return adminmapper.getParentCode(parentCode);
+    }
+
+    // 카테고리 코드 수정
+    public boolean updateCategoryCode(categoryCode categoryCode) {
+        return adminmapper.updateCategoryCode(categoryCode) > 0;
+    }
+
+    // 카테고리 코드 삭제
+    public boolean deleteCategoryCode(String[] codeList) {
+        return adminmapper.deleteCategoryCodes(codeList) > 0;
+    }
+
+    // 카테고리 코드 조회
+    public List<categoryCode> searchCategoryCodes(String stageType, String code, String codeName, int page, int size) {
+        int offset = (page - 1) * size;
+        return adminmapper.searchCategoryCodes(stageType, code, codeName, offset, size);
+    }
+
+    // 총 카테고리 코드 수 조회
+    public int getTotalCategoryCodeCount(String stageType, String code, String codeName) {
+        return adminmapper.getTotalCategoryCodeCount(stageType, code, codeName);
+    }
+
+    // 모든 카테고리 코드 가져오기
+    public List<categoryCode> getAllCategoryCodes() {
+        return adminmapper.getAllCategoryCodes();
+    }
+
+    // 필터링된 카테고리 코드 가져오기
+    public List<categoryCode> getFilteredCategoryCodes(String stageType, String code, String codeName) {
+        return adminmapper.getFilteredCategoryCodes(stageType, code, codeName);
+    }
+
+    // 카테고리 코드 일괄 저장
+    public void saveAllCategoryCodes(List<categoryCode> categoryCodes) {
+        for (categoryCode categoryCode : categoryCodes) {
+            adminmapper.insertCategoryCode(categoryCode);
+        }
+    }
     
 }
