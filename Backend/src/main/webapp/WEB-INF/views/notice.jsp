@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="../../resources/css/notice.css" />
 
-    <title>TMS</title>
+    <title>TMS 공지사항</title>
     <script type="module" src="../../resources/js/notice.js"></script>
   </head>
 
@@ -14,8 +14,10 @@
     <header class="header">
       <!-- 공통 헤더 정보 동적으로 삽입-->
     </header>
-    <h1 class="page-title">공지사항</h1>
-    <div class="content">
+
+    <main class="content">
+      <h1 class="page-title">공지사항</h1>
+
       <!-- Register Modal -->
       <div id="noticeRegisterModal" class="modal">
         <!-- Modal content -->
@@ -53,10 +55,6 @@
           </form>
         </div>
       </div>
-
-      <!-- Edit Modal -->
-
-      <!-- File Download Modal -->
 
       <!-- 공지사항 조회 필터링 폼 -->
       <form id="noticeFilterForm">
@@ -110,6 +108,6 @@
       <div id="noticePagination" class="pagination">
         <!-- 페이지네이션 버튼 동적으로 삽입 -->
       </div>
-    </div>
+    </main>
   </body>
 </html>
