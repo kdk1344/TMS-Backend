@@ -49,27 +49,22 @@ function init() {
 // 이벤트 핸들러 설정
 function setupEventListeners() {
   // 공지사항 테이블 클릭 이벤트 핸들러
-  //   if (noticeTableBody) {
-  //     // 공지사항 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
-  //     noticeTableBody.addEventListener("click", (event) => {
-  //       const clickedElement = event.target;
+  if (noticeTableBody) {
+    noticeTableBody.addEventListener("click", (event) => {
+      const clickedElement = event.target;
 
-  //       if (clickedElement.type === "checkbox") {
-  //         return;
-  //       }
+      if (clickedElement.type === "checkbox") {
+        return;
+      }
 
-  //       const row = event.target.closest("tr");
+      const row = event.target.closest("tr");
 
-  //       if (row) {
-  //         loadNoticeDataFromRow(row);
-  //       }
-  //     });
-  //   }
-
-  // 공지사항 수정 폼 제출 이벤트 핸들러
-  //   if (noticeEditForm) {
-  //     noticeEditForm.addEventListener("submit", editNotice);
-  //   }
+      if (row) {
+        const noticeID = row.querySelector(".notice-seq").textContent.trim();
+        window.location.href = `/tms/ntdetail?seq=${noticeID}`;
+      }
+    });
+  }
 
   // 공지사항 등록 폼 이벤트 핸들러
   if (noticeRegisterForm) {
@@ -119,8 +114,6 @@ function setupEventListeners() {
       fileOutputForRegister.innerHTML = ""; // 첨부파일 프리뷰 비우기
       closeModal(MODAL_ID.NOTICE_REGISTER);
     });
-
-    // closeNoticeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.NOTICE_EDIT));
   }
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
