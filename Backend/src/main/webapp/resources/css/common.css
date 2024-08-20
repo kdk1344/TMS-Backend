@@ -381,10 +381,35 @@ button:focus {
 }
 
 .file-preview li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-preview .file-name {
   max-width: 310px;
   text-overflow: ellipsis; /* 넘치는 텍스트를 말줄임표로 표시 */
   overflow: hidden; /* 넘치는 텍스트를 숨김 */
   white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+}
+
+.file-remove-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 8px;
+  padding: 2px;
+
+  color: black;
+  white-space: nowrap;
+}
+
+.file-remove-button:hover {
+  box-shadow: none;
 }
 
 /* 로딩 스피너 오버레이 스타일 */

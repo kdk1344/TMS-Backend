@@ -150,6 +150,14 @@ export function closeModal(modalId) {
 
   if (modal) {
     modal.style.display = "none";
+
+    const form = modal.querySelector("form");
+    const filePreview = modal.querySelector(".file-preview");
+
+    if (form) form.reset(); // 모달 내부 폼이 있는 경우 폼 리셋
+
+    /** @note file-preview라는 클래스명을 첨부파일 프리뷰 요소에 넣어야 함  */
+    if (filePreview) filePreview.innerHTML = ""; // file-preview 요소 리셋
   } else {
     console.error(`Modal with ID "${modalId}" not found.`);
   }
@@ -160,13 +168,6 @@ export function closeModalOnClickOutside(event, modalId) {
   const modal = document.getElementById(modalId);
 
   if (modal && event.target === modal) {
-    // 모달 내부에 폼이 있는 경우 폼 리셋
-    const form = modal.querySelector("form");
-
-    if (form) {
-      form.reset(); // 폼 리셋
-    }
-
     closeModal(modalId); // 모달 닫기
   }
 }
@@ -205,12 +206,55 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     return;
   }
 
-  const files = fileInput.files;
-  const fileNames = Array.from(files)
-    .map((file) => `<li>${file.name}</li>`)
-    .join("");
+  const files = Array.from(fileInput.files);
 
-  fileListOutput.innerHTML = `<ul>${fileNames}</ul>`;
+  // 파일 목록을 포함할 <ul> 요소 생성
+  const fileList = document.createElement("ul");
+
+  files.forEach((file, index) => {
+    // 파일 항목을 포함할 <li> 요소 생성
+    const fileItem = document.createElement("li");
+
+    // 파일 이름 표시
+    const fileName = document.createElement("span");
+    fileName.textContent = file.name;
+    fileName.classList.add("file-name");
+
+    // 삭제 버튼 생성
+    const removeButton = document.createElement("button");
+    removeButton.textContent = "삭제";
+    removeButton.classList.add("file-remove-button");
+
+    // 삭제 버튼 클릭 이벤트
+    removeButton.addEventListener("click", () => {
+      removeFile(index, fileInputId, fileListOutputId);
+    });
+
+    // 파일 항목에 파일 이름과 삭제 버튼 추가
+    fileItem.appendChild(fileName);
+    fileItem.appendChild(removeButton);
+
+    // <li> 요소를 <ul> 요소에 추가
+    fileList.appendChild(fileItem);
+  });
+
+  // <ul> 요소를 파일 목록 출력 요소에 추가
+  fileListOutput.replaceChildren(fileList);
+}
+
+// 파일 제거 함수
+export function removeFile(index, fileInputId, fileListOutputId) {
+  const fileInput = document.getElementById(fileInputId);
+
+  const dt = new DataTransfer();
+
+  Array.from(fileInput.files)
+    .filter((_, i) => i !== index) // 해당 인덱스의 파일을 제외한 나머지 파일들을 다시 추가
+    .forEach((file) => dt.items.add(file));
+
+  fileInput.files = dt.files; // fileInput의 파일 목록을 업데이트
+
+  updateFilePreview(fileInputId, fileListOutputId); // 미리보기 업데이트
 }
 
 // 로딩 스피너 표시

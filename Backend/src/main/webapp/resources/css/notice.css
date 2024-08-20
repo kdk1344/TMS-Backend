@@ -96,3 +96,8 @@ h2 {
 .modal-form-group textarea {
   min-height: 300px;
 }
+
+#noticeRegisterForm .file-remove-button {
+  width: 30px;
+  height: auto;
+}

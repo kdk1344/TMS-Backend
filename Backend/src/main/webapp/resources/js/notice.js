@@ -132,11 +132,7 @@ function setupModalEventListeners() {
 
   modals.forEach((modalId) => {
     // 모달 외부 클릭 시 닫기 설정
-    window.addEventListener("click", (event) => {
-      if (fileOutputForRegister) fileOutputForRegister.innerHTML = ""; // 첨부파일 프리뷰 비우기
-
-      closeModalOnClickOutside(event, modalId);
-    });
+    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
   });
 }
 
