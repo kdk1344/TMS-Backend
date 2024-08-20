@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
@@ -43,4 +44,24 @@ public interface AdminMapper {
     public List<FileAttachment> getAttachmentsByNoticeId(Integer seq);
     public FileAttachment getAttachmentById(Integer seq);
     public void deleteNotice(Integer seq);
+    
+    //공통코드
+    public List<CommonCode> searchCommonCodes(@Param("parentCode") Character parentCode, 
+            @Param("code") Character code, 
+            @Param("codeName") String codeName, 
+            @Param("offset") int offset, 
+            @Param("size") int size);
+	public int getTotalCommonCodeCount(@Param("parentCode") Character parentCode, 
+	     @Param("code") Character code, 
+	     @Param("codeName") String codeName);
+	public List<CommonCode> getAllCommonCodes();
+	// 필터링된 공통코드 조회
+    public List<CommonCode> getFilteredCommonCodes(@Param("parentCode") Character parentCode, 
+    										@Param("code") Character code, 
+                                            @Param("codeName") String codeName);
+	// 공통코드 삽입
+	public void insertCommonCode(CommonCode commonCode);
+    public int updateCommonCode(CommonCode commonCode);
+    public int deleteCommonCode(String[] codeList);
+    
 }

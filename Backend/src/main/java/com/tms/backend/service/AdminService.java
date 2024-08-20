@@ -14,6 +14,7 @@ import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.AdminMapper;
 import com.tms.backend.mapper.FileAttachmentMapper;
 import com.tms.backend.mapper.UserMapper;
+import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
@@ -131,6 +132,49 @@ public class AdminService {
         // 공지사항 삭제
         adminmapper.deleteNotice(seq);
     }
+    
+    
+    
+    //공통 코드
+    public List<CommonCode> searchCommonCodes(Character parentCode, Character code, String codeName, int page, int size) {
+        int offset = (page - 1) * size;
+        return adminmapper.searchCommonCodes(parentCode, code, codeName, offset, size);
+    }
+
+    public int getTotalCommonCodeCount(Character parentCode, Character code, String codeName) {
+        return adminmapper.getTotalCommonCodeCount(parentCode, code, codeName);
+    }
+    
+    // 전체 공통코드 조회
+    public List<CommonCode> getAllCommonCodes() {
+        return adminmapper.getAllCommonCodes();
+    }
+
+    // 필터링된 공통코드 조회
+    public List<CommonCode> getFilteredCommonCodes(Character parentCode, Character code, String codeName) {
+        return adminmapper.getFilteredCommonCodes(parentCode, code, codeName);
+    }
+    
+ // 공통코드 삽입
+    public void saveAllCommonCodes(List<CommonCode> commonCodes) {
+        for (CommonCode commonCode : commonCodes) {
+            adminmapper.insertCommonCode(commonCode);
+        }
+    }
+    
+    public void addCommonCode(CommonCode commonCode) {
+        adminmapper.insertCommonCode(commonCode);
+    }
+
+    public boolean updateCommonCode(CommonCode commonCode) {
+        return adminmapper.updateCommonCode(commonCode) > 0;
+    }
+
+    public boolean deleteCommonCode(String[] codeList) {
+        return adminmapper.deleteCommonCode(codeList) > 0;
+    }
+    
+    
     
     
 }

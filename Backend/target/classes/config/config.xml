@@ -10,6 +10,7 @@
 		<typeAlias type="com.tms.backend.vo.Criteria" alias="Criteria"/>
 		<typeAlias type="com.tms.backend.vo.Notice" alias="Notice"/>
 		<typeAlias type="com.tms.backend.vo.FileAttachment" alias="FA"/>
+		<typeAlias type="com.tms.backend.vo.CommonCode" alias="CommonCode"/>
 	</typeAliases>
 
 </configuration>

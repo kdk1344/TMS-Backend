@@ -69,7 +69,10 @@
     </select>
  
  
-
+	
+	
+	<!-- 공지사항 mapper.xml-->
+	
     <resultMap id="NoticeResultMap" type="Notice">
         <id column="SEQ" property="seq"/>
         <result column="POST_DATE" property="postDate"/>
@@ -183,7 +186,83 @@
     <delete id="deleteNotice">
         DELETE FROM notices WHERE SEQ = #{seq}
     </delete>
+    
+    
+    
+    
+    
+    <!-- 공통코드 mapper.xml-->
+	
+	<select id="searchCommonCodes" parameterType="map" resultType="CommonCode">
+        SELECT Parent_Code as parentCode, Code, Code_Name as codeName
+        FROM common_codes
+        WHERE 1=1
+        <if test="parentCode != null">
+            AND Parent_Code = #{parentCode}
+        </if>
+        <if test="code != null">
+            AND Code = #{code}
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+        LIMIT #{offset}, #{size}
+    </select>
 
+    <select id="getTotalCommonCodeCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM common_codes
+        WHERE 1=1
+        <if test="parentCode != null">
+            AND ParentCode = #{parentCode}
+        </if>
+        <if test="code != null">
+            AND Code = #{code}
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND CodeName LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+    </select>
+    
+    <!-- 전체 공통코드 조회 -->
+    <select id="getAllCommonCodes" resultType="CommonCode">
+        SELECT Parent_Code as parentCode, Code, Code_Name as codeName
+        FROM common_codes
+    </select>
+    
+    <!-- 필터링된 공통코드 조회 -->
+    <select id="getFilteredCommonCodes" resultType="CommonCode">
+        SELECT Parent_Code as parentCode, Code, Code_Name as codeName
+        FROM common_codes
+        WHERE 1=1
+        <if test="parentCode != null">
+            AND Parent_Code = #{parentCode}
+        </if>
+        <if test="code != null">
+            AND Code = #{code}
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+    </select>
+    
+    <insert id="insertCommonCode" parameterType="CommonCode">
+	    INSERT INTO common_codes (Parent_Code, Code, Code_Name)
+	    VALUES (#{parentCode}, #{code}, #{codeName})
+	</insert>
+	
+	<update id="updateCommonCode" parameterType="CommonCode">
+	    UPDATE common_codes
+	    SET Code_Name = #{codeName}
+	    WHERE Parent_Code = #{parentCode} AND Code = #{code}
+	</update>
+	
+	<delete id="deleteCommonCode" parameterType="String">
+	    DELETE FROM common_codes WHERE Code IN 
+	    <foreach item="code" collection="codeList" open="(" separator="," close=")">
+	        #{code}
+	    </foreach>
+	</delete>
 
 	
 </mapper>
