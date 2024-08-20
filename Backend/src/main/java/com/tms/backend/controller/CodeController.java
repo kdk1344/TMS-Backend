@@ -57,8 +57,8 @@ public class CodeController {
 	private UserService userService;
 	
 	@GetMapping("/commonCode")
-    public String commonCodePage(@RequestParam(value = "parentCode", required = false) Character parentCode,
-	          @RequestParam(value = "code", required = false) Character code,
+    public String commonCodePage(@RequestParam(value = "parentCode", required = false) String parentCode,
+	          @RequestParam(value = "code", required = false) String code,
 	          @RequestParam(value = "codeName", required = false) String codeName,
 	          @RequestParam(value = "page", defaultValue = "1") int page,
 	          @RequestParam(value = "size", defaultValue = "10") int size,
@@ -154,8 +154,8 @@ public class CodeController {
    
     @GetMapping(value = "api/commonCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getCommonCodes(@RequestParam(value = "parentCode", required = false) Character parentCode,
-									          @RequestParam(value = "code", required = false) Character code,
+    public Map<String, Object> getCommonCodes(@RequestParam(value = "parentCode", required = false) String parentCode,
+									          @RequestParam(value = "code", required = false) String code,
 									          @RequestParam(value = "codeName", required = false) String codeName,
 									          @RequestParam(value = "page", defaultValue = "1") int page,
 									          @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -184,8 +184,8 @@ public class CodeController {
     // Á¶È¸µÈ »ç¿ëÀÚ Á¤º¸¸¦ ¿¢¼¿·Î ´Ù¿î·Îµå
     @GetMapping("/downloadFilteredcc")
     public void downloadFilteredcc(
-    		@RequestParam(value = "parentCode", required = false) Character parentCode,
-            @RequestParam(value = "code", required = false) Character code,
+    		@RequestParam(value = "parentCode", required = false) String parentCode,
+            @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "codeName", required = false) String codeName,
             HttpServletResponse response) throws IOException {
 
@@ -250,8 +250,8 @@ public class CodeController {
                 if (row != null) {
                 	CommonCode commonCode = new CommonCode();
                     try {
-                        commonCode.setParentCode(row.getCell(0).getStringCellValue().charAt(0));  // Ã¹ ¹øÂ° ¼¿ (ParentCode)
-                        commonCode.setCode(row.getCell(1).getStringCellValue().charAt(0));       // µÎ ¹øÂ° ¼¿ (Code)
+                        commonCode.setParentCode(row.getCell(0).getStringCellValue());  // Ã¹ ¹øÂ° ¼¿ (ParentCode)
+                        commonCode.setCode(row.getCell(1).getStringCellValue());       // µÎ ¹øÂ° ¼¿ (Code)
                         commonCode.setCodeName(row.getCell(2).getStringCellValue());             // ¼¼ ¹øÂ° ¼¿ (CodeName)
                         commonCodes.add(commonCode);
                     } catch (Exception e) {

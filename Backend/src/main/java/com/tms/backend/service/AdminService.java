@@ -136,12 +136,12 @@ public class AdminService {
     
     
     //공통 코드
-    public List<CommonCode> searchCommonCodes(Character parentCode, Character code, String codeName, int page, int size) {
+    public List<CommonCode> searchCommonCodes(String parentCode, String code, String codeName, int page, int size) {
         int offset = (page - 1) * size;
         return adminmapper.searchCommonCodes(parentCode, code, codeName, offset, size);
     }
 
-    public int getTotalCommonCodeCount(Character parentCode, Character code, String codeName) {
+    public int getTotalCommonCodeCount(String parentCode, String code, String codeName) {
         return adminmapper.getTotalCommonCodeCount(parentCode, code, codeName);
     }
     
@@ -151,7 +151,7 @@ public class AdminService {
     }
 
     // 필터링된 공통코드 조회
-    public List<CommonCode> getFilteredCommonCodes(Character parentCode, Character code, String codeName) {
+    public List<CommonCode> getFilteredCommonCodes(String parentCode, String code, String codeName) {
         return adminmapper.getFilteredCommonCodes(parentCode, code, codeName);
     }
     

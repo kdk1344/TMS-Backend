@@ -9,26 +9,26 @@ import javax.validation.constraints.Size;
 
 @Data
 public class CommonCode {
-	private Character ParentCode;
-    private Character Code; 
+	private String ParentCode;
+    private String Code; 
     private String CodeName; 
 
 
     // Getter นื Setter for ParentCode
-    public Character getParentCode() {
+    public String getParentCode() {
         return ParentCode;
     }
 
-    public void setParentCode(Character parentCode) {
+    public void setParentCode(String parentCode) {
         this.ParentCode = parentCode;
     }
 
     // Getter นื Setter for Code
-    public Character getCode() {
+    public String getCode() {
         return Code;
     }
 
-    public void setCode(Character code) {
+    public void setCode(String code) {
         this.Code = code;
     }
 

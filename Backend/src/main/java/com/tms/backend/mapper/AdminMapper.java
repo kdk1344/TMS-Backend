@@ -46,18 +46,18 @@ public interface AdminMapper {
     public void deleteNotice(Integer seq);
     
     //공통코드
-    public List<CommonCode> searchCommonCodes(@Param("parentCode") Character parentCode, 
-            @Param("code") Character code, 
+    public List<CommonCode> searchCommonCodes(@Param("parentCode") String parentCode, 
+            @Param("code") String code, 
             @Param("codeName") String codeName, 
             @Param("offset") int offset, 
             @Param("size") int size);
-	public int getTotalCommonCodeCount(@Param("parentCode") Character parentCode, 
-	     @Param("code") Character code, 
+	public int getTotalCommonCodeCount(@Param("parentCode") String parentCode, 
+	     @Param("code") String code, 
 	     @Param("codeName") String codeName);
 	public List<CommonCode> getAllCommonCodes();
 	// 필터링된 공통코드 조회
-    public List<CommonCode> getFilteredCommonCodes(@Param("parentCode") Character parentCode, 
-    										@Param("code") Character code, 
+    public List<CommonCode> getFilteredCommonCodes(@Param("parentCode") String parentCode, 
+    										@Param("code") String code, 
                                             @Param("codeName") String codeName);
 	// 공통코드 삽입
 	public void insertCommonCode(CommonCode commonCode);
