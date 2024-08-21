@@ -37,7 +37,9 @@
         <div class="notice-field">
           <dt>첨부파일</dt>
           <dd>
-            <ul id="notice-attachments"></ul>
+            <ul id="notice-attachments">
+              <!-- 정보 동적으로 삽입-->
+            </ul>
           </dd>
         </div>
       </dl>
