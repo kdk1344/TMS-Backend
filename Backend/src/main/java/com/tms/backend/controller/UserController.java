@@ -1,14 +1,21 @@
 package com.tms.backend.controller;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.UserService;
@@ -43,25 +50,62 @@ public class UserController {
         return "pdpc";
     }
 
-    @PostMapping("/login")
-	public String login(@RequestParam(value="userID", required=false) String userID, HttpServletRequest req, @RequestParam("password") String password) throws Exception{
-		HttpSession session = req.getSession();
-		log.info(userID + " "+password);
-		User check = userService.authenticateUser(userID, password);
-		if(check != null) {
-				log.info("로그인 성공");
-		        // 사용자 ID 세션에 저장
-		        session.setAttribute("id", check.getuserID());
-		        // 사용자 권한 코드 세션에 저장
-		        session.setAttribute("authorityCode", check.getauthorityCode());
-		        // 대시보드로 리다이렉트
-				return "redirect:/tms/dashboard";}
-		else {
-				session.setAttribute("error", "Invalid userID or password.");
-				log.info("failcheck2!!");
-				return "redirect:/tms/login";
-			}
-		}
+//    @PostMapping("/login")
+//	public String login(@RequestParam(value="userID", required=false) String userID, HttpServletRequest req, @RequestParam("password") String password) throws Exception{
+//		HttpSession session = req.getSession();
+//		log.info(userID + " "+password);
+//		User check = userService.authenticateUser(userID, password);
+//		if(check != null) {
+//				log.info("로그인 성공");
+//		        // 사용자 ID 세션에 저장
+//		        session.setAttribute("id", check.getuserID());
+//		        // 사용자 권한 코드 세션에 저장
+//		        session.setAttribute("authorityCode", check.getauthorityCode());
+//		        // 대시보드로 리다이렉트
+//				return "redirect:/tms/dashboard";}
+//		else {
+//				session.setAttribute("error", "Invalid userID or password.");
+//				log.info("failcheck2!!");
+//				return "redirect:/tms/login";
+//			}
+//		}
+    
+    @PostMapping(value = "api/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> login(@RequestParam(value="userID", required=false) String userID, 
+                                                     @RequestParam("password") String password, 
+                                                     HttpServletRequest req) throws Exception {
+        
+    	Map<String, Object> response = new HashMap<>();
+        HttpSession session = req.getSession();
+        log.info("로그인 시도: " + userID + " " + password);
+        
+        User check = userService.authenticateUser(userID, password);
+        
+        if (check != null) {
+            log.info("로그인 성공");
+            
+            // 사용자 ID와 권한 코드를 세션에 저장
+            session.setAttribute("id", check.getuserID());
+            session.setAttribute("authorityCode", check.getauthorityCode());
+            
+            // 성공 응답 생성
+            response.put("status", "success");
+            response.put("message", "로그인 성공");
+            response.put("userID", check.getuserID());
+            response.put("authorityCode", check.getauthorityCode());
+            
+            return ResponseEntity.ok(response); // 200 OK
+        } else {
+            log.info("로그인 실패");
+            
+            // 실패 응답 생성
+            response.put("status", "error");
+            response.put("message", "Invalid userID or password.");
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response); // 401 Unauthorized
+        }
+    }
     
 
 }
