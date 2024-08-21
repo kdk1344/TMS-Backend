@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.http.HttpHeaders;
+import java.nio.file.Files;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,39 +148,6 @@ public class NoticeController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     
-    
-//    @PostMapping(value = "api/ntwrite", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> createNotice(
-//            @RequestParam(value = "title" , required = false) String title, // 필수 파라미터
-//            @RequestParam(value = "content" , required = false) String content, // 필수 파라미터
-//            @RequestParam("postDate") Date postDate,  // 자동 입력 일자
-//            @RequestParam(value = "file", required = false) MultipartFile[] files) {
-//    	
-//    	// 로그로 데이터 확인
-//        log.info("Title: " + title);
-//        log.info("Content: " + content);
-//        log.info("Post Date: " + postDate);
-//
-//    	Notice notice = new Notice();
-//        notice.setTitle(title);
-//        notice.setContent(content);
-//        notice.setPostDate(postDate);
-//        
-//        adminService.createNotice(notice);
-//        
-//        //파일 업로드 처리
-//        handleFileUpload(files, notice);
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", "게시글이 성공적으로 등록되었습니다.");
-//        response.put("notice", notice);
-//        
-//        log.info(notice);
-//
-//        return ResponseEntity.ok(response);
-//    }
-    
     @PostMapping(value = "api/{boardType}update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateNotice(
@@ -220,48 +188,6 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
     
-//    @PostMapping(value = "api/{boardType}/ntupdate", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Map<String, Object>> updateNotice(
-//            @RequestParam("seq") Integer seq,
-//            @RequestParam("title") String title,
-//            @RequestParam("content") String content,
-//            @RequestParam("postDate") Date postDate,
-//            @RequestParam(value = "file", required = false) MultipartFile[] files,
-//            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
-//            @PathVariable("boardType") String boardType) {
-//
-//        Map<String, Object> response = new HashMap<>();
-//
-//        Notice notice = adminService.getNoticeById(seq);
-//        if (notice == null) {
-//            response.put("message", "해당 공지사항이 존재하지 않습니다.");
-//            return ResponseEntity.status(404).body(response);
-//        }
-//
-//        notice.setTitle(title);
-//        notice.setContent(content);
-//        notice.setPostDate(postDate);
-//
-//        adminService.updateNotice(notice);
-//
-//        // 삭제할 파일이 있는 경우 삭제 처리
-//        if (deleteFileSeqs != null && !deleteFileSeqs.isEmpty()) {
-//            for (Integer fileSeq : deleteFileSeqs) {
-//                adminService.deleteAttachmentsByNoticeId(fileSeq);
-//            }
-//        }
-//
-//        // 새로운 파일 업로드 처리
-//        if (files != null && files.length > 0) {
-//            handleFileUpload(files, notice, boardType);
-//        }
-//
-//        response.put("message", "게시글이 성공적으로 수정되었습니다.");
-//        response.put("notice", notice);
-//
-//        return ResponseEntity.ok(response);
-//    }
-    
     @GetMapping(value = "api/ntdetail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getNoticeDetail(@RequestParam("seq") Integer seq) {
         Map<String, Object> response = new HashMap<>();
@@ -281,19 +207,27 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/downloadAttachment")
+    @GetMapping("api/downloadAttachment")
     public ResponseEntity<InputStreamResource> downloadAttachment(@RequestParam("seq") Integer seq) throws IOException {
-        FileAttachment attachment = adminService.getAttachmentById(seq);
+    	// 첨부파일 정보 조회
+    	FileAttachment attachment = adminService.getAttachmentById(seq);
         if (attachment == null) {
             return ResponseEntity.notFound().build();
         }
-
+        
+        // 파일 경로 확인
         File file = new File(attachment.getStorageLocation());
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
         }
 
         String encodedFileName = encodeFileName(attachment.getFileName());
+        
+     // 파일의 MIME 타입 확인
+        String contentType = Files.probeContentType(file.toPath());
+        if (contentType == null) {
+            contentType = "application/octet-stream";  // MIME 타입을 찾지 못한 경우 기본 바이너리로 처리
+        }
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
@@ -355,6 +289,7 @@ public class NoticeController {
 	        if (file != null && !file.isEmpty()) {
 	            try {
 	            	String fileType = getFileType(file.getContentType());
+	            	log.info(fileType);
 	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename());
 	                log.info(storageLocation);
 	                
@@ -426,7 +361,7 @@ public class NoticeController {
     }
     
     
-// 테스트 용도
+// 페이지
  
     
     @GetMapping("/notice")
@@ -437,114 +372,45 @@ public class NoticeController {
 				            @RequestParam(value = "page", defaultValue = "1") int page,
 				            @RequestParam(value = "size", defaultValue = "10") int size,
                              Model model) {
-//        List<Notice> notices = adminService.searchNotices(postDate, title, content, page, size);
-//        int totalNotices = adminService.getTotalNoticesCount(postDate, title, content);
-//        int totalPages = (int) Math.ceil((double) totalNotices / size);
-//
-//        model.addAttribute("notices", notices);
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", totalPages);
-//        model.addAttribute("totalNotices", totalNotices);
-
         return "notice"; // JSP 파일의 경로
     }
-    
-//    @PostMapping(value = "/ntwrite")
-//    public String createNotice(
-//            @RequestParam("title") String title,
-//            @RequestParam("content") String content,
-//            @RequestParam("postDate") Date postDate,
-//            @RequestParam(value = "file", required = false) MultipartFile[] files,
-//            Model model) {
-//
-//        Notice notice = new Notice();
-//        notice.setTitle(title);
-//        notice.setContent(content);
-//        notice.setPostDate(postDate);
-//
-//        adminService.createNotice(notice);
-//
-//        handleFileUpload(files, notice);
-//
-//        model.addAttribute("message", "게시글이 성공적으로 등록되었습니다.");
-//        model.addAttribute("notice", notice);
-//
-//        return "notice";  // notice.jsp 페이지로 이동
-//    }
-
-//    @PostMapping(value = "/ntupdate")
-//    public String updateNotice(
-//            @RequestParam("seq") Integer seq,
-//            @RequestParam("title") String title,
-//            @RequestParam("content") String content,
-//            @RequestParam("postDate") Date postDate,
-//            @RequestParam(value = "file", required = false) MultipartFile[] files,
-//            @RequestParam(value = "deleteFileSeqs", required = false) List<Integer> deleteFileSeqs,
-//            Model model) {
-//
-//        Notice notice = adminService.getNoticeById(seq);
-//        if (notice == null) {
-//            model.addAttribute("message", "해당 공지사항이 존재하지 않습니다.");
-//            return "error";  // 에러 페이지로 이동
-//        }
-//
-//        notice.setTitle(title);
-//        notice.setContent(content);
-//        notice.setPostDate(postDate);
-//
-//        adminService.updateNotice(notice);
-//        
-//     // 삭제할 파일이 있는 경우 삭제 처리
-//        if (deleteFileSeqs != null && !deleteFileSeqs.isEmpty()) {
-//            for (Integer fileSeq : deleteFileSeqs) {
-//                adminService.deleteAttachmentsByNoticeId(fileSeq);
-//            }
-//        }
-//
-//        if (files != null && files.length > 0) {
-//            handleFileUpload(files, notice, boardType);
-//        }
-//
-//        model.addAttribute("message", "게시글이 성공적으로 수정되었습니다.");
-//        model.addAttribute("notice", notice);
-//
-//        return "notice";  // notice.jsp 페이지로 이동
-//    }
+ 
     
     // 공지사항 상세보기 기능
     @GetMapping("/ntdetail")
     public String getNoticeDetail2(@RequestParam("seq") Integer seq, Model model) {
+    	// 공지사항 조회
         Notice notice = adminService.getNoticeById(seq);
+
+        // 공지사항이 존재하지 않는 경우 처리
         if (notice == null) {
             model.addAttribute("message", "해당 공지사항이 존재하지 않습니다.");
-            return "error";  // 에러 페이지로 이동
+            return "error"; // 에러 페이지로 이동
         }
+
+        // 첨부파일 리스트 조회 및 설정
         List<FileAttachment> attachments = adminService.getAttachments(seq);
         log.info(attachments);
+        log.info(seq);
         notice.setAttachments(attachments);
-        
         log.info(notice);
+        
 
+        // 모델에 공지사항 및 첨부파일 리스트 추가
         model.addAttribute("notice", notice);
+        model.addAttribute("attachments", attachments);
+    	
         return "noticeDetail";  // noticeDetail.jsp 페이지로 이동
     }
     
-    @PostMapping("/ntdelete")
-    public String deleteNotice2(@RequestParam("seq") Integer seq, Model model) {
-        // 공지사항 존재 여부 확인
-        if (adminService.getNoticeById(seq) == null) {
-            model.addAttribute("message", "해당 공지사항이 존재하지 않습니다.");
-            return "error";  // 에러 페이지로 이동
-        }
 
-        // 공지사항 삭제
-        adminService.deleteNotice(seq);
-
-        // 성공 메시지와 함께 목록 페이지로 리다이렉트
-        model.addAttribute("message", "공지사항이 성공적으로 삭제되었습니다.");
-        return "redirect:/tms/notice";  // 공지사항 목록 페이지로 리다이렉트
-    }
-    
+//    <c:forEach var="attachment" items="${attachments}">
+//    <li>
+//        <a href="${pageContext.request.contextPath}/downloadAttachment?seq=${attachment.seq}">
+//            ${attachment.fileName}
+//        </a>
+//    </li>
+//</c:forEach>
 
 
 

@@ -52,6 +52,8 @@ public class AdminService {
     
     @Transactional
     public boolean updateUser(User user) {
+    	String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         return adminmapper.updateUser(user) > 0;
     }
     

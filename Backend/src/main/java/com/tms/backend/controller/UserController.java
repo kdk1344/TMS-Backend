@@ -33,6 +33,11 @@ public class UserController {
         return "login";
     }
     
+    @GetMapping("/dashboard")
+    public String dashboardPage() {
+        return "dashboard";
+    }
+    
     @GetMapping("/pdpc")
     public String PdpcPage() {
         return "pdpc";
@@ -44,8 +49,12 @@ public class UserController {
 		log.info(userID + " "+password);
 		User check = userService.authenticateUser(userID, password);
 		if(check != null) {
-				log.info("check1");
-				session.setAttribute("id", check.getuserID());
+				log.info("로그인 성공");
+		        // 사용자 ID 세션에 저장
+		        session.setAttribute("id", check.getuserID());
+		        // 사용자 권한 코드 세션에 저장
+		        session.setAttribute("authorityCode", check.getauthorityCode());
+		        // 대시보드로 리다이렉트
 				return "redirect:/tms/dashboard";}
 		else {
 				session.setAttribute("error", "Invalid userID or password.");
