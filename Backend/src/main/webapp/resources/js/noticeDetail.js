@@ -9,6 +9,7 @@ import {
   updateFilePreview,
   showSpinner,
   hideSpinner,
+  downloadFile,
 } from "./common.js";
 
 // DOM 요소들
@@ -64,9 +65,12 @@ function displayNoticeDetail(noticeDetail, attachments) {
       const link = document.createElement("a");
 
       // 다운로드 링크 설정
-      link.href = `/download/${encodeURIComponent(attachment.fileId)}`;
+      link.href = "#";
       link.textContent = attachment.fileName;
-      link.download = attachment.fileName; // 파일 이름과 확장자 설정
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        downloadFile(attachment.seq); // 클릭 시 파일 다운로드 시작
+      });
 
       listItem.appendChild(link);
       attachmentsList.appendChild(listItem);

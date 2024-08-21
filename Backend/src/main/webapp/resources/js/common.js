@@ -257,6 +257,49 @@ export function removeFile(index, fileInputId, fileListOutputId) {
   updateFilePreview(fileInputId, fileListOutputId); // 미리보기 업데이트
 }
 
+// 파일 다운로드 함수
+export async function downloadFile(fileID) {
+  try {
+    showSpinner();
+
+    // 서버에서 파일을 다운로드하기 위해 요청을 보냄
+    const response = await tmsFetch(`/downloadAttachment?seq=${fileID}`);
+
+    // 응답을 Blob 형식으로 변환
+    const blob = await response.blob();
+
+    // Blob을 URL 객체로 변환
+    const url = window.URL.createObjectURL(blob);
+
+    // 다운로드를 트리거할 <a> 태그를 동적으로 생성
+    const a = document.createElement("a");
+
+    // 생성한 <a> 태그의 href 속성을 Blob URL로 설정
+    a.href = url;
+
+    // 응답의 Content-Disposition 헤더에서 파일 이름 추출 후 설정
+    a.download = decodeURIComponent(
+      response.headers.get("Content-Disposition").split("filename=")[1].replace(/"/g, "")
+    );
+
+    // <a> 태그를 문서의 body에 추가
+    document.body.appendChild(a);
+
+    // <a> 태그를 클릭하여 파일 다운로드를 시작
+    a.click();
+
+    // <a> 태그를 문서에서 제거
+    a.remove();
+
+    // 생성한 URL 객체를 해제하여 메모리 누수 방지
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
+  }
+}
+
 // 로딩 스피너 표시
 export function showSpinner() {
   spinner.style.display = "flex";
