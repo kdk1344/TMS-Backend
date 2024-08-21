@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -98,7 +100,23 @@ public class NoticeController {
     public ResponseEntity<Map<String, Object>> createNotice(
             @RequestPart("notice") @Valid Notice notice,
             @RequestPart(value = "file", required = false) MultipartFile[] files,
-            @PathVariable("boardType") String boardType) {
+            @PathVariable("boardType") String boardType,
+            HttpServletRequest request) {
+    	
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 403 Forbidden 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+        }
 
         // 로그로 데이터 확인
         log.info("Title: " + notice.getTitle());
@@ -145,7 +163,9 @@ public class NoticeController {
         );
         response.put("errors", errors);
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON) // 응답 형식을 명시적으로 JSON으로 설정
+                .body(response);
     }
     
     @PostMapping(value = "api/{boardType}update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

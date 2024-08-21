@@ -131,6 +131,7 @@
                 }
             } 
         %>
+        <a href="/tms/logout">로그아웃</a>
     </div>
 </header>
 

@@ -49,26 +49,49 @@ public class UserController {
     public String PdpcPage() {
         return "pdpc";
     }
+    
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        // 세션 무효화
+        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
 
-//    @PostMapping("/login")
-//	public String login(@RequestParam(value="userID", required=false) String userID, HttpServletRequest req, @RequestParam("password") String password) throws Exception{
-//		HttpSession session = req.getSession();
-//		log.info(userID + " "+password);
-//		User check = userService.authenticateUser(userID, password);
-//		if(check != null) {
-//				log.info("로그인 성공");
-//		        // 사용자 ID 세션에 저장
-//		        session.setAttribute("id", check.getuserID());
-//		        // 사용자 권한 코드 세션에 저장
-//		        session.setAttribute("authorityCode", check.getauthorityCode());
-//		        // 대시보드로 리다이렉트
-//				return "redirect:/tms/dashboard";}
-//		else {
-//				session.setAttribute("error", "Invalid userID or password.");
-//				log.info("failcheck2!!");
-//				return "redirect:/tms/login";
-//			}
-//		}
+        // 로그아웃 후 로그인 페이지로 리다이렉트
+        return "redirect:/tms/login";
+    }
+    
+    
+    
+    @GetMapping("/checkSession")
+    public ResponseEntity<Void> checkSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("id") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 세션이 유효하지 않음
+        }
+        return ResponseEntity.ok().build(); // 세션이 유효함
+    }
+
+    @PostMapping("/login")
+	public String login(@RequestParam(value="userID", required=false) String userID, HttpServletRequest req, @RequestParam("password") String password) throws Exception{
+		HttpSession session = req.getSession();
+		log.info(userID + " "+password);
+		User check = userService.authenticateUser(userID, password);
+		if(check != null) {
+				log.info("로그인 성공");
+		        // 사용자 ID 세션에 저장
+		        session.setAttribute("id", check.getuserID());
+		        // 사용자 권한 코드 세션에 저장
+		        session.setAttribute("authorityCode", check.getauthorityCode());
+		        // 대시보드로 리다이렉트
+				return "redirect:/tms/dashboard";}
+		else {
+				session.setAttribute("error", "Invalid userID or password.");
+				log.info("failcheck2!!");
+				return "redirect:/tms/login";
+			}
+		}
     
     @PostMapping(value = "api/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

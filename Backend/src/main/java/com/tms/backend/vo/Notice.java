@@ -15,6 +15,7 @@ public class Notice {
     @Size(max = 100, message = "Title must not exceed 100 characters")
     private String title; // 공지사항 제목
     @NotBlank(message = "Title is required")
+    @Size(max = 10000, message = "Title must not exceed 10000 characters")
     private String content; // 공지사항 내용
     private Date createdDate; // 최초 생성일시
     private Date lastModifiedDate; // 최종 변경일시
