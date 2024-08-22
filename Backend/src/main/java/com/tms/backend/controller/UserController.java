@@ -95,7 +95,8 @@ public class UserController {
         return "redirect:/tms/login";
     }
     
-    @GetMapping("api/checkSession")
+    @GetMapping(value = "/checkSession", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> checkSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
         Map<String, Object> response = new HashMap<>();
