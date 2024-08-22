@@ -21,7 +21,7 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="userID">아이디</label>
-          <input type="text" id="userID" name="userID" placeholder="아이디" required />
+          <input type="text" id="userID" name="userID" placeholder="아이디" required autofocus />
         </div>
         <div class="form-group">
           <label for="password">비밀번호</label>

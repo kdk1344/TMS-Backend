@@ -203,6 +203,7 @@ button:focus {
 
 .header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
 
   width: 100%;
@@ -218,9 +219,21 @@ button:focus {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 아래 방향으로 그림자 추가 */
 }
 
+.navigation-box {
+  display: flex;
+  align-items: center;
+}
+
 .logo {
   display: inline-block;
   margin-right: 20px;
+}
+
+#logoutButton {
+  background-color: transparent;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
 .ellipsis {

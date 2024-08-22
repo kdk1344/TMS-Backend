@@ -1,6 +1,4 @@
-import {
-  renderTMSHeader,
-} from "./common.js";
+import { renderTMSHeader } from "./common.js";
 
 // DOM 요소들
 

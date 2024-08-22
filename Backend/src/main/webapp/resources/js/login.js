@@ -34,12 +34,9 @@ async function login(event) {
     });
 
     const success = response.status === "success";
-
-    if (success) {
-        window.location.href = "/tms/dashboard"; // 대시보드로 이동
-    }
+    if (success) window.location.href = "/tms/dashboard"; // 대시보드로 이동
   } catch (error) {
-    alert(error.message + "\n다시 시도해주세요.");
+    alert(error.message);
   } finally {
     hideSpinner();
   }

@@ -1,10 +1,13 @@
 // DOM 요소
 const spinner = document.getElementById("spinner");
 
-// 페이지 로딩 시
-document.addEventListener("DOMContentLoaded", () => {
+// 문서 로드 시 초기화
+document.addEventListener("DOMContentLoaded", init);
+
+// 초기화 함수
+function init() {
   hideSpinner();
-});
+}
 
 // 메뉴 항목과 하위 항목들을 정의
 const menuData = [
@@ -32,12 +35,14 @@ const menuData = [
 ];
 
 // 헤더를 렌더링하는 함수
-export function renderTMSHeader() {
+export async function renderTMSHeader() {
+  const userInfoHTML = await getUserInfoHTML();
   const header = document.querySelector("header"); // 첫 번째 <header> 태그 선택
   const menuList = menuData.map(generateMenuItem).join(""); // 전체 메뉴
 
   if (header) {
     header.innerHTML = `
+      <div class="navigation-box">
         <h1 class="logo">
            <a href="/tms/dashboard">TMS</a>
         </h1>
@@ -46,7 +51,33 @@ export function renderTMSHeader() {
                 ${menuList}
             </ul>
         </nav>
+      </div>
+      ${userInfoHTML} <!-- 사용자 정보를 헤더에 추가 -->
     `;
+
+    if (userInfoHTML) {
+      const logoutButton = document.getElementById("logoutButton");
+
+      logoutButton.addEventListener("click", logout); // 로그아웃 버튼 클릭 이벤트 핸들러
+    }
+  }
+}
+
+// 사용자 정보 HTML을 반환하는 함수
+async function getUserInfoHTML() {
+  const { isLogin, userID, authrityCode } = await checkSession();
+
+  if (isLogin) {
+    return `
+        <div id="userInfoBox">
+          <span>${userID}님</span>
+          <button type="button" id="logoutButton" onclick="logout">로그아웃</button>
+        </div>
+      `;
+  } else {
+    alert("로그인이 필요합니다.");
+    window.location.href = "/tms/login"; // 로그인 페이지로 이동
+    return "";
   }
 }
 
@@ -77,6 +108,15 @@ function generateMenuItem(item) {
         ${subMenu}
       </li>
     `;
+}
+
+// Error 객체를 확장하여 상태 코드를 추가
+class TMSError extends Error {
+  constructor(message, statusCode) {
+    super(message); // 부모 클래스의 생성자를 호출하여 메시지를 설정
+    this.statusCode = statusCode; // 상태 코드를 추가 속성으로 설정
+    this.name = this.constructor.name; // 오류 이름을 설정
+  }
 }
 
 /**
@@ -113,12 +153,15 @@ export async function fetchAPI(url, options) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      if (response.status >= 500) throw new Error("[Error 500] 서버에 문제가 생겼습니다.");
-      if (response.status === 401) throw new Error("[Error 401] 아이디와 비밀번호를 확인해주세요.");
-      if (response.status === 403) throw new Error("[Error 403] 접근 권한이 없습니다.");
-      if (response.status === 404) throw new Error("[Error 404] 요청하신 페이지를 찾을 수 없습니다.");
-      if (response.status === 409) throw new Error("[Error 409] 기존 리소스와 충돌이 발생했습니다.(ex. 중복 아이디)");
-      if (response.status >= 400) throw new Error("[Error] 유효하지 않은 요청입니다.");
+      const statusCode = response.status;
+
+      if (statusCode >= 500) throw new TMSError("[Error 500] 서버에 문제가 생겼습니다.", statusCode);
+      if (statusCode === 401) throw new TMSError("[Error 401] 아이디와 비밀번호를 확인해주세요.", statusCode);
+      if (statusCode === 403) throw new TMSError("[Error 403] 접근 권한이 없습니다.", statusCode);
+      if (statusCode === 404) throw new TMSError("[Error 404] 요청하신 페이지를 찾을 수 없습니다.", statusCode);
+      if (statusCode === 409)
+        throw new TMSError("[Error 409] 기존 리소스와 충돌이 발생했습니다.(ex. 중복 아이디)", statusCode);
+      if (statusCode >= 400) throw new TMSError("[Error] 유효하지 않은 요청입니다.", statusCode);
     }
 
     const contentType = response.headers.get("content-type");
@@ -130,6 +173,31 @@ export async function fetchAPI(url, options) {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+// 사용자 로그인 상태 확인하는 함수
+export async function checkSession() {
+  try {
+    const response = await tmsFetch("/checkSession");
+    const isLogin = response.status === "success";
+
+    if (isLogin) return { isLogin, userID: response.userID, authrityCode: response.authrityCode };
+  } catch (error) {
+    if (error.statusCode === 401) return { isLogin: false, userID: null, authrityCode: null };
+    else alert(error.message);
+  }
+}
+
+// 로그아웃 함수
+export async function logout() {
+  try {
+    const response = await tmsFetch("/logout");
+    const isSuccess = response.status === "success";
+
+    if (isSuccess) window.location.href = "/tms/login"; // 로그아웃 후 로그인 페이지로 이동
+  } catch (error) {
+    alert(error.message);
   }
 }
 
