@@ -96,12 +96,26 @@ public class UserController {
     }
     
     @GetMapping("api/checkSession")
-    public ResponseEntity<Void> checkSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ResponseEntity<Map<String, Object>> checkSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        Map<String, Object> response = new HashMap<>();
+        
         if (session == null || session.getAttribute("id") == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 세션이 유효하지 않음
+            response.put("status", "error");
+            response.put("message", "권한이 없습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
-        return ResponseEntity.ok().build(); // 세션이 유효함
+
+        // 세션에서 ID와 권한 코드 가져오기
+        String userID = (String) session.getAttribute("id");
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 클라이언트에 사용자 정보 전송
+        response.put("status", "success");
+        response.put("userID", userID);
+        response.put("authorityCode", authorityCode);
+        
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
