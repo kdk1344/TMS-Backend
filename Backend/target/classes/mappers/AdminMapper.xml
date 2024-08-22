@@ -275,6 +275,13 @@
 	    </foreach>
 	</delete>
 	
+	<!-- 대분류 코드만 가져오기 -->
+    <select id="getParentCommonCodes" resultType="String">
+        SELECT CODE, Code_Name as CodeName
+        FROM common_codes 
+        WHERE PARENT_CODE = '00'
+    </select>
+	
 	
 	
 	<!-- 분류코드 mapper.xml -->
@@ -361,6 +368,13 @@
         <if test="codeName != null and codeName != ''">
             AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
         </if>
+    </select>
+    
+    <!-- 대분류 코드만 가져오기 -->
+    <select id="getParentCategoryCodes" resultType="String">
+        SELECT CODE, Code_Name as CodeName
+        FROM category_codes 
+        WHERE Stage_Type = '대'
     </select>
 
 	

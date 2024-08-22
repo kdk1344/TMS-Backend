@@ -177,6 +177,27 @@ public class CodeController {
         return response;
     }
     
+    @GetMapping(value = "api/ccparentCode", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getParentCommonCodes() {
+    	Map<String, Object> response = new HashMap<>();
+        
+        // CategoryService를 통해 대분류 코드를 조회
+        List<String> parentCodes = adminService.getParentCommonCodes();
+
+        // 응답 데이터 생성
+        if (parentCodes != null && !parentCodes.isEmpty()) {
+            response.put("status", "success");
+            response.put("parentCodes", parentCodes);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "No parent codes found.");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+    
     // 전체 정보를 엑셀로 다운로드
     @GetMapping("/downloadAllcc")
     public void downloadAllcc(HttpServletResponse response) throws IOException {
@@ -343,7 +364,7 @@ public class CodeController {
         	
         	 // StageType에 따른 코드 처리
             if ("중".equals(categoryCode.getStageType())) {
-                // 상위 대분류 코드를 가져온다 (예: 가장 최근 등록된 대분류 코드)
+                // 상위 대분류 코드를 가져온다
             	String parentCode = adminService.getParentCode(categoryCode.getParentCode());
 
             	if (parentCode == null) {
@@ -461,6 +482,27 @@ public class CodeController {
         response.put("totalCategoryCodes", totalCategoryCodes);
 
         return response;
+    }
+    
+    @GetMapping(value = "api/ctparentCode", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getParentCategoryCodes() {
+    	Map<String, Object> response = new HashMap<>();
+        
+        // CategoryService를 통해 대분류 코드를 조회
+        List<String> parentCodes = adminService.getParentCategoryCodes();
+
+        // 응답 데이터 생성
+        if (parentCodes != null && !parentCodes.isEmpty()) {
+            response.put("status", "success");
+            response.put("parentCodes", parentCodes);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "No parent codes found.");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
     }
     
     // 전체 categoryCode 정보를 엑셀로 다운로드

@@ -8,6 +8,8 @@ import java.net.URLEncoder;
 import java.net.http.HttpHeaders;
 import java.nio.file.Files;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,6 +82,24 @@ public class NoticeController {
                                           @RequestParam(value = "content", required = false) String content,
                                           @RequestParam(value = "page", defaultValue = "1") int page,
                                           @RequestParam(value = "size", defaultValue = "10") int size) {
+    	// 날짜 형식 설정 (yyyy-MM-dd)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // 오늘 날짜 계산
+        LocalDate today = LocalDate.now();
+
+        // startDate와 endDate 기본값 설정: 오늘 날짜와 30일 전
+        LocalDate defaultEndDate = today;
+        LocalDate defaultStartDate = today.minusDays(30);
+
+        // 파라미터가 없을 경우 기본값 사용
+        if (startDate == null || startDate.isEmpty()) {
+            startDate = defaultStartDate.format(formatter);
+        }
+        if (endDate == null || endDate.isEmpty()) {
+            endDate = defaultEndDate.format(formatter);
+        }
+    	
         // 공지사항 조회
         List<Notice> notices = adminService.searchNotices(startDate, endDate, title, content, page, size);
         int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);

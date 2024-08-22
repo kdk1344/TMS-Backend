@@ -183,6 +183,12 @@ public class AdminService {
         return adminmapper.deleteCommonCode(codeList) > 0;
     }
     
+ // 대분류 코드 조회 서비스
+    public List<String> getParentCommonCodes() {
+        return adminmapper.getParentCommonCodes();
+    }
+    
+    
     
     // 분류코드 Service
     
@@ -232,6 +238,11 @@ public class AdminService {
         for (categoryCode categoryCode : categoryCodes) {
             adminmapper.insertCategoryCode(categoryCode);
         }
+    }
+    
+ // 대분류 코드 조회 서비스
+    public List<String> getParentCategoryCodes() {
+        return adminmapper.getParentCategoryCodes();
     }
     
 }
