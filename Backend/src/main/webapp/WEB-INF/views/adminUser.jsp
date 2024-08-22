@@ -157,19 +157,21 @@
       </div>
 
       <!-- 사용자 목록 테이블 -->
-      <table id="userTable">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAllUserCheckbox" /></th>
-            <th>아이디</th>
-            <th>이름</th>
-            <th>직무</th>
-          </tr>
-        </thead>
-        <tbody id="userTableBody">
-          <!-- 사용자 정보 동적으로 삽입-->
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table id="userTable">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAllUserCheckbox" /></th>
+              <th>아이디</th>
+              <th>이름</th>
+              <th>직무</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <!-- 사용자 정보 동적으로 삽입-->
+          </tbody>
+        </table>
+      </div>
 
       <!-- 페이지네이션 -->
       <div id="userPagination" class="pagination">

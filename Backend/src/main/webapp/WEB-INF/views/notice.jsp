@@ -31,12 +31,25 @@
 
             <div class="modal-form-group">
               <label for="titleForRegister">제목</label>
-              <input type="text" id="titleForRegister" name="title" placeholder="제목을 입력해 주세요." required />
+              <input
+                type="text"
+                id="titleForRegister"
+                name="title"
+                placeholder="제목을 입력해 주세요."
+                required
+                maxlength="100"
+              />
             </div>
 
             <div class="modal-form-group">
               <label for="contentForRegister">게시내용</label>
-              <textarea id="contentForRegister" name="content" placeholder="내용을 입력해 주세요." required></textarea>
+              <textarea
+                id="contentForRegister"
+                name="content"
+                placeholder="내용을 입력해 주세요."
+                required
+                maxlength="10000"
+              ></textarea>
             </div>
 
             <div class="modal-form-group">
@@ -89,20 +102,22 @@
       </div>
 
       <!-- 공지사항 목록 테이블 -->
-      <table id="noticeTable">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAllNoticeCheckbox" /></th>
-            <th class="notice-seq">번호</th>
-            <th class="notice-post-date">게시일자</th>
-            <th class="notice-title">제목</th>
-            <th class="notice-content">게시내용</th>
-          </tr>
-        </thead>
-        <tbody id="noticeTableBody">
-          <!-- 공지사항 정보 동적으로 삽입-->
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table id="noticeTable">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAllNoticeCheckbox" /></th>
+              <th class="notice-seq">번호</th>
+              <th class="notice-post-date">게시일자</th>
+              <th class="notice-title">제목</th>
+              <th class="notice-content">게시내용</th>
+            </tr>
+          </thead>
+          <tbody id="noticeTableBody">
+            <!-- 공지사항 정보 동적으로 삽입-->
+          </tbody>
+        </table>
+      </div>
 
       <!-- 페이지네이션 -->
       <div id="noticePagination" class="pagination">

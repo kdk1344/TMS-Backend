@@ -19,6 +19,21 @@
   --black: #000000;
 }
 
+/* Webkit 기반 브라우저 (Chrome, Safari) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* IE 및 Edge */
+body {
+  -ms-overflow-style: none;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -51,12 +66,16 @@ header .navigation a {
   display: block;
 }
 
+.table-container {
+  height: 65vh;
+}
+
 /* 테이블 스타일 */
 table {
   table-layout: fixed;
 
   width: 100%;
-  height: 70vh;
+
   border-collapse: collapse;
   margin-bottom: 20px;
 
@@ -81,6 +100,14 @@ td {
 
 th {
   text-align: center;
+}
+
+/* 각 테이블 행의 높이 설정 */
+td {
+  height: 56px;
+  overflow: hidden; /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 표시 */
+  white-space: nowrap; /* 내용이 줄 바꿈 없이 한 줄로 유지 */
 }
 
 td {

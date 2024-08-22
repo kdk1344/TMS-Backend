@@ -257,16 +257,13 @@ export function removeFile(index, fileInputId, fileListOutputId) {
   updateFilePreview(fileInputId, fileListOutputId); // 미리보기 업데이트
 }
 
-// 파일 다운로드 함수
+// 파일을 다운로드하는 함수
 export async function downloadFile(fileID) {
   try {
     showSpinner();
 
-    // 서버에서 파일을 다운로드하기 위해 요청을 보냄
-    const response = await tmsFetch(`/downloadAttachment?seq=${fileID}`);
-
-    // 응답을 Blob 형식으로 변환
-    const blob = await response.blob();
+    // getFile 함수를 호출하여 파일 데이터를 가져옴
+    const { blob, fileName } = await getFile(fileID);
 
     // Blob을 URL 객체로 변환
     const url = window.URL.createObjectURL(blob);
@@ -277,10 +274,8 @@ export async function downloadFile(fileID) {
     // 생성한 <a> 태그의 href 속성을 Blob URL로 설정
     a.href = url;
 
-    // 응답의 Content-Disposition 헤더에서 파일 이름 추출 후 설정
-    a.download = decodeURIComponent(
-      response.headers.get("Content-Disposition").split("filename=")[1].replace(/"/g, "")
-    );
+    // 파일 이름을 설정
+    a.download = fileName;
 
     // <a> 태그를 문서의 body에 추가
     document.body.appendChild(a);
@@ -297,6 +292,63 @@ export async function downloadFile(fileID) {
     alert(error.message + "\n다시 시도해주세요.");
   } finally {
     hideSpinner();
+  }
+}
+
+// 서버에서 파일을 가져오는 함수
+export async function getFile(fileID) {
+  // 서버에서 파일을 다운로드하기 위해 요청을 보냄
+  const response = await tmsFetch(`/downloadAttachment?seq=${fileID}`);
+
+  // 응답을 Blob 형식으로 변환
+  const blob = await response.blob();
+
+  // 응답의 Content-Disposition 헤더에서 파일 이름을 추출
+  const fileName = decodeURIComponent(
+    response.headers.get("Content-Disposition").split("filename=")[1].replace(/"/g, "")
+  );
+
+  return { blob, fileName };
+}
+
+// 파일 ID를 기반으로 서버에서 파일을 가져와 파일 입력 필드에 추가
+export async function loadFilesToInput(fileInputID, fileIDs) {
+  const fileInput = document.getElementById(fileInputID);
+
+  if (!fileInput) {
+    console.error(`파일 입력 필드 (${fileInputID})를 찾을 수 없습니다.`);
+    return;
+  }
+
+  // DataTransfer 객체를 사용하여 파일 목록을 업데이트
+  const dataTransfer = new DataTransfer();
+
+  try {
+    // 모든 파일을 비동기적으로 가져오고, 결과를 배열로 저장
+    const files = await Promise.all(
+      fileIDs.map(async (fileID) => {
+        try {
+          const { blob, fileName } = await getFile(fileID); // getFile 함수로 파일을 가져옴
+
+          return new File([blob], fileName); // Blob과 파일 이름으로 File 객체 생성
+        } catch (error) {
+          console.error(`파일 ID ${fileID}를 가져오는 데 실패했습니다:`, error);
+          return null; // 실패한 파일은 null로 반환
+        }
+      })
+    );
+
+    // null이 아닌 파일만 DataTransfer 객체에 추가
+    files.forEach((file) => {
+      if (file) {
+        dataTransfer.items.add(file);
+      }
+    });
+
+    // 파일 입력 필드에 파일 목록 설정
+    fileInput.files = dataTransfer.files;
+  } catch (error) {
+    console.error(error.message);
   }
 }
 

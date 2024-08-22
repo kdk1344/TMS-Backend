@@ -1,3 +1,16 @@
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+
+  margin-bottom: 24px;
+}
+
+.flex-box {
+  display: flex;
+
+  gap: 8px;
+}
+
 .notice-detail-container {
   background-color: #fff;
   padding: 20px;
@@ -7,29 +20,26 @@
   margin: 0 auto;
 }
 
-.notice-detail-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-/* 정의 목록 스타일 */
-.notice-details {
-  margin-bottom: 20px;
-}
-
 .notice-field {
   display: flex;
-  margin-bottom: 15px;
+
+  margin-bottom: 20px;
 }
 
 .notice-field dt {
-  font-weight: bold;
-  width: 100px;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+
+  width: 100px;
+
+  font-weight: bold;
 }
 
 .notice-field dd {
+  padding: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--light-gray);
   margin-left: 10px;
   flex-grow: 1;
 }
@@ -40,22 +50,49 @@
 }
 
 .notice-buttons {
-  text-align: center;
+  display: flex;
+  justify-content: end;
+  gap: 20px;
 }
 
-.notice-buttons button {
-  padding: 10px 20px;
-  margin: 0 5px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+#noticeContent {
+  height: 39vh;
+
+  overflow-y: auto;
 }
 
-.notice-buttons button:hover,
-.notice-buttons button:focus {
-  background-color: #0056b3;
-  outline: none;
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  width: calc(100vh * 0.7);
+}
+
+.modal-form button {
+  width: 100%;
+}
+
+.modal-form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+}
+
+.modal-form-group label {
+  display: block;
+  width: 30%;
+
+  font-weight: 600;
+}
+
+.modal-form-group textarea {
+  min-height: 300px;
+}
+
+#noticeEditForm .file-remove-button {
+  width: 30px;
+  height: auto;
 }

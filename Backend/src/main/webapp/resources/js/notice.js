@@ -32,8 +32,6 @@ const closeNoticeRegisterModalButton = document.getElementById("closeNoticeRegis
 // 모달 아이디
 const MODAL_ID = {
   NOTICE_REGISTER: "noticeRegisterModal",
-  NOTICE_EDIT: "noticeEditModal",
-  NOTICE_FILE_DOWNLOAD: "noticeFileDownloadModal",
 };
 
 // 문서 로드 시 초기화
@@ -274,6 +272,7 @@ async function registerNotice(event) {
       alert(`공지사항 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.NOTICE_REGISTER); // 모달 닫기
+      location.reload(); // 페이지 새로고침
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
