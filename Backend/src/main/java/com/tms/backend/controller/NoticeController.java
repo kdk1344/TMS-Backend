@@ -279,20 +279,20 @@ public class NoticeController {
     public ResponseEntity<Map<String, Object>> deleteNotice(@RequestBody List<Integer> seqs,
             HttpServletRequest request) {
     	
-    	// 세션에서 authorityCode 가져오기
-        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
-        if (session == null || session.getAttribute("authorityCode") == null) {
-            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
-        }
-
-        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
-
-        // 권한 확인: 1, 2, 3번 권한만 허용
-        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
-            // 권한이 없는 경우 403 Forbidden 반환
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
-        }
+//    	// 세션에서 authorityCode 가져오기
+//        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+//        if (session == null || session.getAttribute("authorityCode") == null) {
+//            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+//        }
+//
+//        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+//
+//        // 권한 확인: 1, 2, 3번 권한만 허용
+//        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+//            // 권한이 없는 경우 403 Forbidden 반환
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+//        }
         
         Map<String, Object> response = new HashMap<>();
 
