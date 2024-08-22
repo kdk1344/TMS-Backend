@@ -95,7 +95,26 @@ public class UserController {
         return "redirect:/tms/login";
     }
     
-    @GetMapping(value = "/checkSession", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "api/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> APIlogout(HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        // 세션 무효화
+        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+            response.put("status", "success");
+            response.put("message", "로그아웃 성공");
+        } else {
+            response.put("status", "error");
+            response.put("message", "세션이 존재하지 않습니다.");
+        }
+
+        return ResponseEntity.ok(response); // JSON 형식의 응답 반환
+    }
+    
+    @GetMapping(value = "api/checkSession", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> checkSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음

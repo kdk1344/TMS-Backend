@@ -45,7 +45,7 @@
 		      <dd>
 		        <ul id="nt-attachments">
 		          <c:forEach var="attachment" items="${latestNotice.attachments}">
-		            <li><a href="tms/downloadAttachment?seq=${attachment.seq}">${attachment.fileName}</a></li>
+		            <li><a href="/tms/downloadAttachment?seq=${attachment.seq}">${attachment.fileName}</a></li>
 		          </c:forEach>
 		        </ul>
 		      </dd>
@@ -66,10 +66,26 @@
         <tbody id="noticeTableBody">
           <c:forEach var="notice" items="${notices}">
                 <tr>
-                    <td>${notice.seq}</td>
-                    <td><fmt:formatDate value="${notice.postDate}" pattern="yyyy-MM-dd" /></td>
-                    <td>${notice.title}</td>
-                    <td class="notice-contents">${notice.content}</td>
+                    <td>
+	                    <a href="/tms/ntdetail?seq=${notice.seq}">
+	                        ${notice.seq}
+	                    </a>
+	                </td>
+                    <td>
+	                    <a href="/tms/ntdetail?seq=${notice.seq}">
+	                        <fmt:formatDate value="${notice.postDate}" pattern="yyyy-MM-dd" />
+	                    </a>
+	                </td>
+                    <td>
+                    	<a href="/tms/ntdetail?seq=${notice.seq}">
+                        ${notice.title}
+                    	</a>
+                    </td>
+                    <td class="notice-contents">
+	                    <a href="/tms/ntdetail?seq=${notice.seq}">
+	                        ${notice.content}
+	                    </a>
+	                </td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -110,5 +126,5 @@
 		  window.onload = function() {
 		    truncateTextByClass("notice-contents", 50); // 최대 50글자까지만 표시
 		  };
-	</script>
+  </script>
 </html>

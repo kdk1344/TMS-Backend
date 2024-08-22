@@ -21,7 +21,6 @@ main.content {
 
 .main-display dl {
     width: 100%;
-    max-width: 700px;
 }
 
 .main-display .nt-field {
@@ -43,7 +42,9 @@ main.content {
 	border: 1px solid var(--light-gray);
 	margin-left: 10px;
 	flex-grow: 1;
-	word-wrap: break-word;
+	min-width : 0;
+	flex-basis : 0;
+	word-wrap: break-word;]
 }
 
 .nt-field .notice-content {
@@ -51,6 +52,7 @@ main.content {
     word-wrap: break-word;
     text-align :left;
 	overflow-y : auto;
+	max-width : 100%;
 }
 
 /* Notice Table */

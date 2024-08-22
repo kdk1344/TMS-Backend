@@ -275,6 +275,30 @@ public class NoticeController {
                 .body(resource);
     }
     
+    //JSON 비전송용 첨부파일 다운로드
+    @GetMapping("/downloadAttachment")
+    public ResponseEntity<InputStreamResource> downloadAttachments(@RequestParam("seq") Integer seq) throws IOException {
+        FileAttachment attachment = adminService.getAttachmentById(seq);
+        if (attachment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        File file = new File(attachment.getStorageLocation());
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String encodedFileName = encodeFileName(attachment.getFileName());
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(file.length())
+                .body(resource);
+    }
+    
     @DeleteMapping(value = "api/ntdelete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> deleteNotice(@RequestBody List<Integer> seqs,
             HttpServletRequest request) {
