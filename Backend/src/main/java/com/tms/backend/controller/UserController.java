@@ -1,5 +1,6 @@
 package com.tms.backend.controller;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tms.backend.service.AdminService;
 import com.tms.backend.service.UserService;
+import com.tms.backend.vo.FileAttachment;
+import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
@@ -33,6 +37,9 @@ public class UserController {
 	
 	@Autowired
     private UserService userService;
+	
+	@Autowired
+	private AdminService adminService;
 	// 12345
 
     @GetMapping("/login")
@@ -41,8 +48,28 @@ public class UserController {
     }
     
     @GetMapping("/dashboard")
-    public String dashboardPage() {
-        return "dashboard";
+    public String getDashboard(@RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "content", required = false) String content,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    		,Model model) {
+    	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size);
+    	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
+        int totalPages = (int) Math.ceil((double) totalNotices / size);
+        Notice latestNotice = adminService.getLatestNotice();
+        
+        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq());
+        latestNotice.setAttachments(attachments);
+
+        model.addAttribute("notices", noticeList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalNotices", totalNotices);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("latestNotice", latestNotice);
+        
+        return  "dashboard";
     }
     
     @GetMapping("/pdpc")

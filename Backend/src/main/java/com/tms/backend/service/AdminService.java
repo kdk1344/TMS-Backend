@@ -99,6 +99,10 @@ public class AdminService {
         return adminmapper.getTotalNoticesCount(startDate, endDate, title, content);
     }
     
+    public Notice getLatestNotice() {
+        return adminmapper.getLatestNotice();
+    }
+    
     public void createNotice(Notice notice) {
     	log.info(notice);
         adminmapper.insertNotice(notice); // 공지사항 저장
@@ -119,6 +123,7 @@ public class AdminService {
     }
     
     public void deleteAttachmentsByNoticeId(Integer seq) {
+    	log.info("삭제 진행중");
     	adminmapper.deleteAttachmentsByNoticeId(seq);
     }
     

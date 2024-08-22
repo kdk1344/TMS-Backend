@@ -36,6 +36,7 @@ public interface AdminMapper {
 			@Param("endDate") String endDate,
 	        @Param("title") String title,
 	        @Param("content") String content);
+	public Notice getLatestNotice();
 	public List<FileAttachment> getAttachmentsByNoticeSEQ(@Param("seq") int seq);
 	public void insertNotice(Notice notice);
     public void insertAttachment(FileAttachment attachment);

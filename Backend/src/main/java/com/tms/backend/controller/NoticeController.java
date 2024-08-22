@@ -103,20 +103,20 @@ public class NoticeController {
             @PathVariable("boardType") String boardType,
             HttpServletRequest request) {
     	
-    	// 세션에서 authorityCode 가져오기
-        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
-        if (session == null || session.getAttribute("authorityCode") == null) {
-            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
-        }
-
-        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
-
-        // 권한 확인: 1, 2, 3번 권한만 허용
-        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
-            // 권한이 없는 경우 403 Forbidden 반환
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
-        }
+//    	// 세션에서 authorityCode 가져오기
+//        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+//        if (session == null || session.getAttribute("authorityCode") == null) {
+//            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+//        }
+//
+//        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+//
+//        // 권한 확인: 1, 2, 3번 권한만 허용
+//        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+//            // 권한이 없는 경우 403 Forbidden 반환
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+//        }
 
         // 로그로 데이터 확인
         log.info("Title: " + notice.getTitle());
@@ -140,40 +140,56 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
     
- // 유효성 검사 실패 시 발생하는 예외 처리
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Invalid input data");
-        response.put("errors", ex.getConstraintViolations());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Invalid input data");
-
-        // 각 필드의 오류 메시지를 담는 Map
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-        );
-        response.put("errors", errors);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON) // 응답 형식을 명시적으로 JSON으로 설정
-                .body(response);
-    }
+// // 유효성 검사 실패 시 발생하는 예외 처리
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("message", "Invalid input data");
+//        response.put("errors", ex.getConstraintViolations());
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("message", "Invalid input data");
+//
+//        // 각 필드의 오류 메시지를 담는 Map
+//        Map<String, String> errors = new HashMap<>();
+//        ex.getBindingResult().getFieldErrors().forEach(error ->
+//                errors.put(error.getField(), error.getDefaultMessage())
+//        );
+//        response.put("errors", errors);
+//
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                .contentType(MediaType.APPLICATION_JSON) // 응답 형식을 명시적으로 JSON으로 설정
+//                .body(response);
+//    }
     
     @PostMapping(value = "api/{boardType}update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateNotice(
             @RequestPart("notice") @Valid Notice notice,  // JSON 형식으로 공지사항 데이터를 받음
             @RequestPart(value = "file", required = false) MultipartFile[] files,  // 파일
-            @PathVariable("boardType") String boardType) {
+            @PathVariable("boardType") String boardType,
+            HttpServletRequest request) {
+    	
+//    	// 세션에서 authorityCode 가져오기
+//        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+//        if (session == null || session.getAttribute("authorityCode") == null) {
+//            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+//        }
+//
+//        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+//
+//        // 권한 확인: 1, 2, 3번 권한만 허용
+//        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+//            // 권한이 없는 경우 403 Forbidden 반환
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+//        }
 
         Map<String, Object> response = new HashMap<>();
 
@@ -188,20 +204,21 @@ public class NoticeController {
         existingNotice.setTitle(notice.getTitle());
         existingNotice.setContent(notice.getContent());
         existingNotice.setPostDate(notice.getPostDate());
+
+        // 공지사항에 등록된 기존 첨부파일 전부 삭제
+        adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
+
+        // 새로운 파일 업로드 처리
+        handleFileUpload(files, existingNotice, boardType);
         
+        log.info("check "+existingNotice);
+
         // 업데이트된 공지사항을 저장
         adminService.updateNotice(existingNotice);
-
-        // 기존 첨부파일을 전부 삭제 후 새로운 파일을 업로드하는 방식
-        if (files != null && files.length > 0) {
-            // 공지사항에 등록된 기존 첨부파일 전부 삭제
-            adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
-
-            // 새로운 파일 업로드 처리
-            handleFileUpload(files, existingNotice, boardType);
-        }
+        
 
         // 응답 생성
+        response.put("status", "success");
         response.put("message", "게시글이 성공적으로 수정되었습니다.");
         response.put("notice", existingNotice);
 
@@ -259,7 +276,24 @@ public class NoticeController {
     }
     
     @DeleteMapping(value = "api/ntdelete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> deleteNotice(@RequestBody List<Integer> seqs) {
+    public ResponseEntity<Map<String, Object>> deleteNotice(@RequestBody List<Integer> seqs,
+            HttpServletRequest request) {
+    	
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 403 Forbidden 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+        }
+        
         Map<String, Object> response = new HashMap<>();
 
         // 공지사항 존재 여부 확인

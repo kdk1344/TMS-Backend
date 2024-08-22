@@ -141,6 +141,13 @@
         </if>
     </select>
     
+    <select id="getLatestNotice" resultMap="NoticeResultMap">
+	    SELECT *
+	    FROM notices
+	    ORDER BY CREATED_DATE DESC
+	    LIMIT 1
+	</select>
+    
     <insert id="insertNotice" useGeneratedKeys="true" keyProperty="seq">
         INSERT INTO notices (POST_DATE, TITLE, CONTENT)
         VALUES (#{postDate}, #{title}, #{content})
@@ -170,7 +177,7 @@
     
     <!-- 특정 공지사항의 첨부파일 삭제 -->
     <delete id="deleteAttachmentsByNoticeId">
-        DELETE FROM file_attachments WHERE SEQ = #{seq}
+        DELETE FROM file_attachments WHERE IDENTIFIER = #{seq}
     </delete>
     
     <select id="getAttachmentsByNoticeId" resultType="FA">

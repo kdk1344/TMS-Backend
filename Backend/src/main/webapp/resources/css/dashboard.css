@@ -1,0 +1,113 @@
+/* Main Content Styles */
+main.content {
+    padding: 20px;
+}
+
+.page-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Main Display Section (for the notice details) */
+.main-display {
+    background-color: #4574b6;
+    padding: 50px 20px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 300px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    overflow-y: auto;
+}
+
+.main-display dl {
+    width: 100%;
+    max-width: 700px;
+}
+
+.main-display .nt-field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 5px;
+}
+
+.main-display .nt-field dt {
+    font-weight: bold;
+    color: #ddd;
+}
+
+.main-display .nt-field dd {
+    margin-left: 10px;
+    color: #fff;
+}
+
+.nt-field .notice-content {
+    height:100px;
+    word-wrap: break-word;
+    text-align :left;
+}
+
+/* Notice Table */
+#noticeTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#noticeTable th,
+#noticeTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.notice-seq {
+  width: 55px;
+
+  text-align: center;
+}
+
+.notice-post-date {
+  width: 108px;
+
+  text-align: center;
+}
+
+.notice-content {
+  max-width: 600px;
+}
+
+
+
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.pagination span, strong,
+.pagination a {
+    padding: 10px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.pagination .active {
+    background-color: #0056b3;
+}

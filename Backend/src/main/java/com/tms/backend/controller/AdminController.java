@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.tms.backend.exception.ForbiddenException;
+import com.tms.backend.exception.UnauthorizedException;
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.Criteria;
@@ -67,7 +70,24 @@ public class AdminController {
     
     @PostMapping(value= "api/join", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> join(@RequestBody User user,
+            HttpServletRequest request) {
+    	
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 403 Forbidden 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+        }
+        
         Map<String, Object> response = new HashMap<>();
         try {
             adminService.join(user);  // join 메서드에서 성공 시 예외를 발생시키지 않음
@@ -89,7 +109,24 @@ public class AdminController {
     
     @PostMapping(value= "api/idmodify" , produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> idModify(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> idModify(@RequestBody User user,
+            HttpServletRequest request) {
+    	
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 403 Forbidden 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+        }
+        
     	Map<String, Object> response = new HashMap<>();
         try {
             boolean success = adminService.updateUser(user);
@@ -113,7 +150,24 @@ public class AdminController {
     
     @DeleteMapping(value= "api/deleteuser", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> deleteUsers(@RequestBody List<String> IDList) {
+    public ResponseEntity<Map<String, Object>> deleteUsers(@RequestBody List<String> IDList,
+            HttpServletRequest request) {
+    	
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 403 Forbidden 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+        }
+        
     	Map<String, Object> response = new HashMap<>();
         try {
             boolean success = adminService.deleteUser(IDList.toArray(new String[0]));
@@ -133,26 +187,6 @@ public class AdminController {
             response.put("message", "Error occurred while deleting users.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-    
-    @GetMapping("test")
-    public String TestPage(@RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "userName", required = false) String userName,
-            @RequestParam(value = "authorityName", required = false) String authorityName,
-            Model model) {
-
-        Criteria criteria = new Criteria();
-        criteria.setPage(page);
-        criteria.setuserName(userName);
-        criteria.setauthorityName(authorityName);
-
-        List<User> userList = adminService.getList(criteria);
-        int total = adminService.getTotal(criteria);
-        log.info(userList);
-
-        model.addAttribute("userList", userList);
-        model.addAttribute("pageDTO", new PageDTO(total, criteria));
-    	return "test";
     }
     
     @GetMapping(value = "api/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -184,19 +218,54 @@ public class AdminController {
     
     // 전체 사용자 정보를 엑셀로 다운로드
     @GetMapping("/downloadAll")
-    public void downloadAllUsers(HttpServletResponse response) throws IOException {
+    public String downloadAllUsers(HttpServletResponse response,HttpServletRequest request) throws IOException {
+
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 예외 발생
+        	return "redirect:/tms/login"; // 로그인 페이지로 리다이렉트
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+        	log.info(authorityCode);
+            // 권한이 없는 경우 예외 발생
+        	return "redirect:/tms/adminUser"; // 관리자 페이지로 이동
+        }
         List<User> userList = userService.getAllUser();
         log.info("check");
         log.info(userList);
         exportToExcel(response, userList, "all_users.xlsx");
+        return null;
     }
+    
+
 
     // 조회된 사용자 정보를 엑셀로 다운로드
     @GetMapping("/downloadFiltered")
-    public void downloadFilteredUsers(
+    public String downloadFilteredUsers(
             @RequestParam(value = "userName", required = false) String userName,
             @RequestParam(value = "authorityName", required = false) String authorityName,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response,
+            HttpServletRequest request) throws IOException {
+
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 예외 발생
+        	return "redirect:/tms/login"; // 로그인 페이지로 리다이렉트
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 예외 발생
+        	return "redirect:/tms/adminUser"; // 관리자 페이지로 이동
+        }
 
         Criteria criteria = new Criteria();
         criteria.setuserName(userName);
@@ -204,6 +273,7 @@ public class AdminController {
 
         List<User> filteredUserList = userService.getFilteredUsers(criteria);
         exportToExcel(response, filteredUserList, "filtered_users.xlsx");
+        return null;
     }
 
     // 엑셀 파일로 데이터를 내보내는 메서드
@@ -239,7 +309,24 @@ public class AdminController {
     
     @PostMapping(value = "api/userupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Map<String, Object>> uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+    	
+    	// 세션에서 authorityCode 가져오기
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        if (session == null || session.getAttribute("authorityCode") == null) {
+            // 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+        }
+
+        Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+
+        // 권한 확인: 1, 2, 3번 권한만 허용
+        if (authorityCode != 1 && authorityCode != 2 && authorityCode != 3) {
+            // 권한이 없는 경우 403 Forbidden 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
+        }
+        
     	Map<String, Object> response = new HashMap<>();
         if (file.isEmpty()) {
         	response.put("status", "failure");
