@@ -3,7 +3,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,8 @@ public class UserController {
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "5") int size
-    		,Model model) {
+    		,Model model,
+    		HttpSession session) {
     	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size);
     	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
         int totalPages = (int) Math.ceil((double) totalNotices / size);
@@ -69,6 +72,8 @@ public class UserController {
         model.addAttribute("totalNotices", totalNotices);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("latestNotice", latestNotice);
+        
+        log.info("Session ID after login: " + session.getId());
         
         return  "dashboard";
     }
@@ -89,8 +94,6 @@ public class UserController {
         // 로그아웃 후 로그인 페이지로 리다이렉트
         return "redirect:/tms/login";
     }
-    
-    
     
     @GetMapping("api/checkSession")
     public ResponseEntity<Void> checkSession(HttpServletRequest request) {
@@ -124,7 +127,8 @@ public class UserController {
     @PostMapping(value = "api/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest,
-                                                     HttpServletRequest req) throws Exception {
+                                                     HttpServletRequest req,
+                                                     HttpServletResponse res) throws Exception {
         
     	Map<String, Object> response = new HashMap<>();
         HttpSession session = req.getSession();
@@ -140,13 +144,25 @@ public class UserController {
             log.info("로그인 성공");
             
             // 사용자 ID와 권한 코드를 세션에 저장
-            session.setAttribute("id", check.getuserID());
+            session.setAttribute("id", loginRequest.get("userID"));
             session.setAttribute("authorityCode", check.getauthorityCode());
+            
+            log.info("Logged in user ID: " + loginRequest.get("userID"));
+            
+            log.info("Logged in user ID: " + check.getauthorityCode());
+            
+            // 세션 ID를 쿠키로 저장
+            Cookie sessionCookie = new Cookie("TMSESSIONID", session.getId());
+            sessionCookie.setHttpOnly(true);  // XSS 공격 방지
+            sessionCookie.setSecure(true);    // HTTPS에서만 사용
+            sessionCookie.setPath("/");       // 애플리케이션 전체에서 사용 가능
+            sessionCookie.setMaxAge(60 * 30); // 쿠키 유효 기간: 30분
+            res.addCookie(sessionCookie);
             
             // 성공 응답 생성
             response.put("status", "success");
             response.put("message", "로그인 성공");
-            response.put("userID", check.getuserID());
+            response.put("userID", loginRequest.get("userID"));
             response.put("authorityCode", check.getauthorityCode());
             
             return ResponseEntity.ok(response); // 200 OK
