@@ -20,6 +20,9 @@ const closeUserRegisterModalButton = document.getElementById("closeUserRegisterM
 const closeUserEditModalButton = document.getElementById("closeUserEditModalButton");
 const deleteUserButton = document.getElementById("deleteUserButton");
 
+// 문서 로드 시 초기화
+document.addEventListener("DOMContentLoaded", init);
+
 // 모달 아이디
 const MODAL_ID = {
   USER_REGISTER: "userRegisterModal",
@@ -398,6 +401,3 @@ function copyFilterValuesToDownloadForm() {
 function loadInitialUsers() {
   getUsers();
 }
-
-// 문서 로드 시 초기화
-document.addEventListener("DOMContentLoaded", init);
