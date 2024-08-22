@@ -92,7 +92,7 @@ public class UserController {
     
     
     
-    @GetMapping("/checkSession")
+    @GetMapping("api/checkSession")
     public ResponseEntity<Void> checkSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("id") == null) {
