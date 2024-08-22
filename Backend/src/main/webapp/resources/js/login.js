@@ -36,7 +36,6 @@ async function login(event) {
     const success = response.status === "success";
 
     if (success) {
-      console.info(`사용자(ID: ${response.userID}) 로그인 성공`);
       window.location.href = "/tms/dashboard"; // 대시보드로 이동
     }
   } catch (error) {
