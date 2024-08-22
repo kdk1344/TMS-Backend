@@ -39,7 +39,7 @@ export function renderTMSHeader() {
   if (header) {
     header.innerHTML = `
         <h1 class="logo">
-           TMS
+           <a href="/tms/dashboard">TMS</a>
         </h1>
         <nav class="navigation">
             <ul>
