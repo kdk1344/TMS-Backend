@@ -420,6 +420,25 @@ export async function loadFilesToInput(fileInputID, fileIDs) {
   }
 }
 
+// 날짜 필드를 초기화하는 함수
+export function initializeDateFields(startDateInputId, endDateInputId) {
+  const startDateInput = document.getElementById(startDateInputId);
+  const endDateInput = document.getElementById(endDateInputId);
+
+  // 오늘 날짜
+  const today = new Date();
+  const todayString = today.toISOString().split("T")[0];
+
+  // 오늘로부터 30일 전
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(today.getDate() - 30);
+  const thirtyDaysAgoString = thirtyDaysAgo.toISOString().split("T")[0];
+
+  // 기본값 설정
+  startDateInput.value = thirtyDaysAgoString;
+  endDateInput.value = todayString;
+}
+
 // 로딩 스피너 표시
 export function showSpinner() {
   spinner.style.display = "flex";

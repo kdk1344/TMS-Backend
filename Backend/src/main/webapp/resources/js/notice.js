@@ -9,6 +9,7 @@ import {
   updateFilePreview,
   showSpinner,
   hideSpinner,
+  initializeDateFields,
 } from "./common.js";
 
 let currentPage = 1;
@@ -42,6 +43,7 @@ function init() {
   renderTMSHeader();
   setupEventListeners();
   loadInitialNotices();
+  initializeDateFields("startPostDateForFilter", "endPostDateForFilter");
 }
 
 // 이벤트 핸들러 설정
