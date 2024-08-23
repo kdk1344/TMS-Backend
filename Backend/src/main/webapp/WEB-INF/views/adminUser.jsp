@@ -42,10 +42,14 @@
             <div class="modal-form-group">
               <label for="authorityName">직무</label>
               <select id="authorityName" name="authorityName">
-                <option value="type1">직무 1</option>
-                <option value="type2">직무 2</option>
-                <option value="type3">직무 3</option>
-                <option value="type4">직무 4</option>
+                <option value="01">관리자</option>
+                <option value="02">PM,사업/품질</option>
+                <option value="03">테스트관리자</option>
+                <option value="04">PL</option>
+                <option value="05">개발자</option>
+                <option value="06">테스터</option>
+                <option value="07">고객 IT 담당자</option>
+                <option value="08">고객 현업 담당자</option>
               </select>
             </div>
 
@@ -81,10 +85,14 @@
             <div class="modal-form-group">
               <label for="authorityNameForEdit">직무</label>
               <select id="authorityNameForEdit" name="authorityName">
-                <option value="type1">직무 1</option>
-                <option value="type2">직무 2</option>
-                <option value="type3">직무 3</option>
-                <option value="type4">직무 4</option>
+                <option value="01">관리자</option>
+                <option value="02">PM,사업/품질</option>
+                <option value="03">테스트관리자</option>
+                <option value="04">PL</option>
+                <option value="05">개발자</option>
+                <option value="06">테스터</option>
+                <option value="07">고객 IT 담당자</option>
+                <option value="08">고객 현업 담당자</option>
               </select>
             </div>
 
@@ -128,10 +136,14 @@
             <label for="authorityNameForFilter">직무</label>
             <select id="authorityNameForFilter" name="authorityName">
               <option value="">전체</option>
-              <option value="type1">직무 1</option>
-              <option value="type2">직무 2</option>
-              <option value="type3">직무 3</option>
-              <option value="type4">직무 4</option>
+              <option value="관리자">관리자</option>
+              <option value="PM,사업/품질">PM,사업/품질</option>
+              <option value="테스트관리자">테스트관리자</option>
+              <option value="PL">PL</option>
+              <option value="개발자">개발자</option>
+              <option value="테스터">테스터</option>
+              <option value="고객 IT 담당자">고객 IT 담당자</option>
+              <option value="고객 현업 담당자">고객 현업 담당자</option>
             </select>
           </div>
         </div>
