@@ -12,6 +12,7 @@
 		<typeAlias type="com.tms.backend.vo.FileAttachment" alias="FA"/>
 		<typeAlias type="com.tms.backend.vo.CommonCode" alias="CommonCode"/>
 		<typeAlias type="com.tms.backend.vo.categoryCode" alias="categoryCode"/>
+		<typeAlias type="com.tms.backend.vo.Defect" alias="Defect"/>
 	</typeAliases>
 
 </configuration>

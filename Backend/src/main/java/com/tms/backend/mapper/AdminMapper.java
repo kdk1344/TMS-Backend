@@ -65,7 +65,7 @@ public interface AdminMapper {
 	public void insertCommonCode(CommonCode commonCode);
     public int updateCommonCode(CommonCode commonCode);
     public int deleteCommonCode(String[] codeList);
-    public List<String> getParentCommonCodes();
+    public List<CommonCode> getParentCommonCodes();
     public List<CommonCode> findSubCodesByParentCode(String parentCode);
     
     

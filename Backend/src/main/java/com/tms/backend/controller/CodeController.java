@@ -72,14 +72,6 @@ public class CodeController {
 			int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
 			int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
 			
-			log.info(codeName);
-	        log.info(commonCodes);
-	        log.info(page);
-	        log.info(size);
-	        log.info("parentCode"+parentCode);
-	        log.info("Code"+code);
-			
-			
 			// 응답 생성
 			model.addAttribute("commonCodes", commonCodes);
 	        model.addAttribute("currentPage", page);
@@ -168,12 +160,7 @@ public class CodeController {
 									          @RequestParam(value = "size", defaultValue = "10") int size) {
 		// CommonCode 조회
         List<CommonCode> commonCodes = adminService.searchCommonCodes(parentCode, code, codeName, page, size);
-        log.info(codeName);
-        log.info(commonCodes);
-        log.info(page);
-        log.info(size);
-        log.info("parentCode"+parentCode+"parentCode");
-        log.info("Code"+code+"Code");
+        
         int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
         int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
 
@@ -193,7 +180,9 @@ public class CodeController {
     	Map<String, Object> response = new HashMap<>();
         
         // CategoryService를 통해 대분류 코드를 조회
-        List<String> parentCodes = adminService.getParentCommonCodes();
+        List<CommonCode> parentCodes = adminService.getParentCommonCodes();
+        
+        log.info("확인중" + parentCodes);
 
         // 응답 데이터 생성
         if (parentCodes != null && !parentCodes.isEmpty()) {

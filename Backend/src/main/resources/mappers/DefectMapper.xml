@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- user-mapper.xml -->
+<mapper namespace="com.tms.backend.mapper.DefectMapper">
+    <select id="searchDefects" parameterType="map" resultType="Defect">
+	    SELECT * 
+	    FROM DEFECT
+	    WHERE 1=1
+	    <if test="testCategory != null and testCategory != ''">
+	        AND TEST_CATEGORY = #{testCategory}
+	    </if>
+	    <if test="taskCategory != null and taskCategory != ''">
+	        AND TASK_CATEGORY = #{taskCategory}
+	    </if>
+	    <if test="taskSubCategory != null and taskSubCategory != ''">
+	        AND TASK_SUB_CATEGORY = #{taskSubCategory}
+	    </if>
+	    <if test="defectSeverity != null and defectSeverity != ''">
+	        AND DEFECT_SEVERITY = #{defectSeverity}
+	    </if>
+	    <if test="defectNumber != null and defectNumber != ''">
+	        AND DEFECT_SEQ = #{defectNumber}
+	    </if>
+	    <if test="defectRegistrar != null and defectRegistrar != ''">
+	        AND DEFECT_REGISTRAR = #{defectRegistrar}
+	    </if>
+	    <if test="defectHandler != null and defectHandler != ''">
+	        AND DEFECT_HANDLER = #{defectHandler}
+	    </if>
+	    <if test="defectStatus != null and defectStatus != ''">
+	        AND DEFECT_STATUS = #{defectStatus}
+	    </if>
+	    ORDER BY DEFECT_SEQ DESC
+	    LIMIT #{offset}, #{size}
+	</select>
+	
+	<select id="countDefects" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM DEFECT
+	    WHERE 1=1
+	    <if test="testCategory != null and testCategory != ''">
+	        AND TEST_CATEGORY = #{testCategory}
+	    </if>
+	    <if test="taskCategory != null and taskCategory != ''">
+	        AND TASK_CATEGORY = #{taskCategory}
+	    </if>
+	    <!-- 나머지 필터 조건들 동일하게 적용 -->
+	</select>
+
+	
+</mapper>

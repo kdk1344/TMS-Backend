@@ -185,7 +185,7 @@ public class AdminService {
     }
     
     // 대분류 코드 조회 서비스
-    public List<String> getParentCommonCodes() {
+    public List<CommonCode> getParentCommonCodes() {
         return adminmapper.getParentCommonCodes();
     }
     

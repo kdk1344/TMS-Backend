@@ -12,9 +12,18 @@ public class CommonCode {
 	private String ParentCode;
     private String Code; 
     private String CodeName; 
+    private Integer seq;
 
 
     // Getter นื Setter for ParentCode
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
+    }
+    
     public String getParentCode() {
         return ParentCode;
     }

@@ -205,19 +205,27 @@
     <!-- 공통코드 mapper.xml-->
 	
 	<select id="searchCommonCodes" parameterType="map" resultType="CommonCode">
-        SELECT Parent_Code as parentCode, Code, Code_Name as codeName
-        FROM common_codes
-        WHERE 1=1
-        <if test="parentCode != null and parentCode != ''">
-            AND Parent_Code = #{parentCode}
-        </if>
-        <if test="code != null and code != ''">
-            AND Code = #{code}
-        </if>
-        <if test="codeName != null and codeName != ''">
-            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
-        </if>
-        LIMIT #{offset}, #{size}
+        SELECT 
+	        cc.Parent_Code as parentCode, 
+	        cc.Code, 
+	        cc.Code_Name as codeName, 
+	        pc.Code_Name as parentCodeName
+	    FROM 
+	        common_codes cc
+	    LEFT JOIN 
+	        common_codes pc ON cc.Parent_Code = pc.Code
+	    WHERE 
+	        1=1
+	    <if test="parentCode != null and parentCode != ''">
+	        AND cc.Parent_Code = #{parentCode}
+	    </if>
+	    <if test="code != null and code != ''">
+	        AND cc.Code = #{code}
+	    </if>
+	    <if test="codeName != null and codeName != ''">
+	        AND cc.Code_Name LIKE CONCAT('%', #{codeName}, '%')
+	    </if>
+	    LIMIT #{offset}, #{size}
     </select>
 
     <select id="getTotalCommonCodeCount" parameterType="map" resultType="int">
@@ -276,7 +284,7 @@
 	</delete>
 	
 	<!-- 대분류 코드만 가져오기 -->
-    <select id="getParentCommonCodes" resultType="String">
+    <select id="getParentCommonCodes" resultType="CommonCode">
         SELECT CODE, Code_Name as CodeName
         FROM common_codes 
         WHERE PARENT_CODE = '00'
