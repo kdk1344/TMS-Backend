@@ -439,6 +439,13 @@ export function initializeDateFields(startDateInputId, endDateInputId) {
   endDateInput.value = todayString;
 }
 
+// 로그인 확인 후 로그인 된 상태면 HOME으로 보내는 함수
+export async function redirectHomeOnLogin() {
+  const { isLogin } = await checkSession();
+
+  if (isLogin) window.location.href = "/tms/dashboard";
+}
+
 // 로딩 스피너 표시
 export function showSpinner() {
   spinner.style.display = "flex";

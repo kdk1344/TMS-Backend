@@ -1,4 +1,4 @@
-import { tmsFetch, showSpinner, hideSpinner } from "./common.js";
+import { tmsFetch, showSpinner, hideSpinner, redirectHomeOnLogin } from "./common.js";
 
 // DOM 요소
 const loginForm = document.getElementById("loginForm");
@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
 function init() {
+  redirectHomeOnLogin();
   setupEventListeners();
 }
 
