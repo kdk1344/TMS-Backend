@@ -72,9 +72,13 @@ public class CodeController {
 			int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
 			int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
 			
-			log.info("commonCodes: " + commonCodes);
-			log.info("totalPages: " + totalPages);
-			log.info("currentPage: " + page);
+			log.info(codeName);
+	        log.info(commonCodes);
+	        log.info(page);
+	        log.info(size);
+	        log.info("parentCode"+parentCode);
+	        log.info("Code"+code);
+			
 			
 			// 응답 생성
 			model.addAttribute("commonCodes", commonCodes);
@@ -164,6 +168,12 @@ public class CodeController {
 									          @RequestParam(value = "size", defaultValue = "10") int size) {
 		// CommonCode 조회
         List<CommonCode> commonCodes = adminService.searchCommonCodes(parentCode, code, codeName, page, size);
+        log.info(codeName);
+        log.info(commonCodes);
+        log.info(page);
+        log.info(size);
+        log.info("parentCode"+parentCode+"parentCode");
+        log.info("Code"+code+"Code");
         int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
         int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
 

@@ -147,6 +147,7 @@ public class AdminService {
     
     public List<CommonCode> searchCommonCodes(String parentCode, String code, String codeName, int page, int size) {
         int offset = (page - 1) * size;
+        log.info(offset);
         return adminmapper.searchCommonCodes(parentCode, code, codeName, offset, size);
     }
 
