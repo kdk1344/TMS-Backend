@@ -43,7 +43,7 @@ form button {
   justify-content: space-between;
   align-items: center;
 
-  gap: 16px;
+  width: 50%;
 }
 
 .modal-form {
@@ -52,10 +52,6 @@ form button {
   gap: 28px;
 
   width: 400px;
-}
-
-.modal-form button {
-  width: 100%;
 }
 
 .modal-form-group {
