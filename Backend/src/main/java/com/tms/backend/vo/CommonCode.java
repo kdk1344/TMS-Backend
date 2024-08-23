@@ -12,6 +12,7 @@ public class CommonCode {
 	private String ParentCode;
     private String Code; 
     private String CodeName; 
+    private String parentCodeName;
     private Integer seq;
 
 
@@ -30,6 +31,14 @@ public class CommonCode {
 
     public void setParentCode(String parentCode) {
         this.ParentCode = parentCode;
+    }
+    
+    public String getparentCodeName() {
+        return parentCodeName;
+    }
+
+    public void setParentCodeName(String parentCodeName) {
+        this.parentCodeName = parentCodeName;
     }
 
     // Getter นื Setter for Code

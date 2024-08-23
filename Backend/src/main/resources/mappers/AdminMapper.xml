@@ -292,7 +292,7 @@
     
     <!-- 상위 코드에 따른 하위 코드 목록을 조회하는 쿼리 -->
     <select id="findSubCodesByParentCode" resultType="CommonCode" parameterType="string">
-        SELECT Parent_Code as parentCode, Code_Name as CodeName
+        SELECT Code, Code_Name as CodeName
         FROM common_codes
         WHERE parent_code = #{parentCode}
     </select>
