@@ -126,10 +126,6 @@
             <label for="parentCodeForFilter">상위코드</label>
             <select id="parentCodeForFilter" name="parentCode">
               <option value="">전체</option>
-              <option value="type1">상위코드 1</option>
-              <option value="type2">상위코드 2</option>
-              <option value="type3">상위코드 3</option>
-              <option value="type4">상위코드 4</option>
             </select>
           </div>
 
@@ -137,10 +133,6 @@
             <label for="codeForFilter">코드</label>
             <select id="codeForFilter" name="code">
               <option value="">전체</option>
-              <option value="type1">코드 1</option>
-              <option value="type2">코드 2</option>
-              <option value="type3">코드 3</option>
-              <option value="type4">코드 4</option>
             </select>
           </div>
 
