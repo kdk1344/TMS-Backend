@@ -10,13 +10,13 @@ form button {
 }
 
 /* 숨겨진 파일 입력 필드 */
-#uploadUserFileInput {
+#uploadCommonCodeFileInput {
   visibility: hidden; /* 요소를 보이지 않게 함 */
   width: 0;
   height: 0;
 }
 
-#userFilterForm {
+#commonCodeFilterForm {
   display: flex;
   justify-content: space-between;
 
@@ -35,7 +35,6 @@ form button {
 .form-group label {
   display: block;
   white-space: nowrap;
-
   font-weight: 600;
 }
 
