@@ -49,9 +49,9 @@
               </select>
             </div>
 
-            <div class="flex-box">
-              <button type="submit">저장</button>
-              <button type="button" id="closeUserRegisterModalButton">닫기</button>
+            <div class="flex-box justify-end">
+              <button type="button" id="closeUserRegisterModalButton" class="cancel-button">취소</button>
+              <button type="submit" class="save-button">저장</button>
             </div>
           </form>
         </div>
@@ -88,9 +88,9 @@
               </select>
             </div>
 
-            <div class="flex-box">
-              <button type="submit">저장</button>
-              <button type="button" id="closeUserEditModalButton">닫기</button>
+            <div class="flex-box justify-end">
+              <button type="button" id="closeUserEditModalButton" class="cancel-button">취소</button>
+              <button type="submit" class="save-button">저장</button>
             </div>
           </form>
         </div>
@@ -100,10 +100,10 @@
       <div id="userFileDownloadModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-          <h2>엑셀 파일 다운로드</h2>
+          <h2>엑셀 다운로드</h2>
           <div class="flex-box">
             <form id="downloadAllUserForm" action="downloadAll" method="get">
-              <button type="submit" id="downloadAllUserButton">전체 사용자 목록 다운로드</button>
+              <button type="submit" id="downloadAllUserButton" class="excel-button">전체자료 다운로드</button>
             </form>
 
             <form id="downloadFilteredUserForm" action="downloadFiltered" method="get" id="downloadFilteredForm">
@@ -111,7 +111,7 @@
               <input type="hidden" id="downloadUserName" name="userName" />
               <input type="hidden" id="downloadAuthorityName" name="authorityName" />
 
-              <button type="submit" id="downloadFilteredUserButton">조회된 사용자 목록 다운로드</button>
+              <button type="submit" id="downloadFilteredUserButton" class="excel-button">조회결과 다운로드</button>
             </form>
           </div>
         </div>
@@ -135,9 +135,9 @@
             </select>
           </div>
         </div>
-        <div class="flex-box">
+        <div class="flex-box align-end">
           <button type="submit" id="searchUserButton">조회</button>
-          <button type="reset" id="resetButton">초기화</button>
+          <button type="reset" id="resetButton" class="reset-button">초기화</button>
         </div>
       </form>
 
@@ -145,14 +145,14 @@
       <div class="button-group">
         <div class="flex-box">
           <button id="openUserRegisterModalButton">등록</button>
-          <button id="deleteUserButton">삭제</button>
+          <button id="deleteUserButton" class="delete-button">삭제</button>
         </div>
         <div class="flex-box">
           <!-- 파일 선택 input -->
           <input type="file" id="uploadUserFileInput" name="file" accept=".xlsx, .xls" />
 
-          <button id="uploadUserFileButton">파일 업로드</button>
-          <button id="openUserFileDownloadModalButton">파일 다운로드</button>
+          <button id="uploadUserFileButton" class="excel-button">엑셀 업로드</button>
+          <button id="openUserFileDownloadModalButton" class="excel-button">엑셀 다운로드</button>
         </div>
       </div>
 

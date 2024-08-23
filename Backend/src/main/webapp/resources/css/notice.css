@@ -14,19 +14,24 @@ h2 {
   margin-bottom: 16px;
 }
 
+#titleForFilter,
+#contentForFilter {
+  width: 200px;
+}
+
 .filter-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  gap: 16px;
+  width: 70%;
 }
 
 .form-group {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .form-group label {
@@ -72,10 +77,6 @@ h2 {
   gap: 28px;
 
   width: calc(100vh * 0.7);
-}
-
-.modal-form button {
-  width: 100%;
 }
 
 .modal-form-group {

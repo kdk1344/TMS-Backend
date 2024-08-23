@@ -61,9 +61,9 @@
               </div>
             </div>
 
-            <div class="flex-box">
-              <button type="submit">저장</button>
-              <button type="button" id="closeNoticeRegisterModalButton">닫기</button>
+            <div class="flex-box justify-end">
+              <button type="button" id="closeNoticeRegisterModalButton" class="cancel-button">취소</button>
+              <button type="submit" class="save-button">저장</button>
             </div>
           </form>
         </div>
@@ -87,9 +87,9 @@
             <input type="text" id="contentForFilter" name="content" />
           </div>
         </div>
-        <div class="flex-box">
+        <div class="flex-box align-end">
           <button type="submit" id="searchNoticeButton">조회</button>
-          <button type="reset" id="resetButton">초기화</button>
+          <button type="reset" id="resetButton" class="reset-button">초기화</button>
         </div>
       </form>
 
@@ -97,7 +97,7 @@
       <div class="button-group">
         <div class="flex-box">
           <button id="openNoticeRegisterModalButton">등록</button>
-          <button id="deleteNoticeButton">삭제</button>
+          <button id="deleteNoticeButton" class="delete-button">삭제</button>
         </div>
       </div>
 

@@ -10,13 +10,17 @@
   --secondary-color: #4472c4;
   --background-color: #333;
 
-  --white: #ffffff;
+  --white: #ffffff; /*취소, 업로드, 다운로드 버튼 색 */
   --super-light-gray: #f5f5f5;
   --extra-light-gray: #d4d4d4;
   --light-gray: #c0c0c0;
-  --gray: #474747;
-  --dark-gray: #333333;
+  --gray: #7f7f7f; /*초기화, 목록 버튼 색*/
+  --dark-gray: #474747;
+  --extra-dark-gray: #333333;
+  --super-dark-gray: #333f50; /* 삭제, 저장 버튼 색*/
   --black: #000000;
+
+  --extra-dark-green: #385723; /* 결함등록 버튼 색*/
 }
 
 /* Webkit 기반 브라우저 (Chrome, Safari) */
@@ -83,6 +87,7 @@ table {
 }
 
 thead {
+  background-color: var(--super-light-gray);
   font-weight: 700;
 }
 
@@ -134,6 +139,9 @@ a {
 button {
   cursor: pointer;
 
+  min-width: 72px;
+  height: fit-content;
+
   padding: 8px 16px;
   outline: none;
   border: none;
@@ -156,7 +164,7 @@ select,
 textarea {
   width: 100%;
 
-  padding: 16px;
+  padding: 12px;
 
   border: 1px solid black;
   border-radius: 4px;
@@ -254,7 +262,7 @@ button:focus {
   left: 0; /* 상위 메뉴의 왼쪽 끝에 맞추기 */
 
   border-radius: 8px;
-  background-color: var(--gray); /* 배경색 설정 */
+  background-color: var(--dark-gray); /* 배경색 설정 */
   margin: 0;
   padding: 0;
 
@@ -352,6 +360,7 @@ button:focus {
   align-items: center;
 
   width: 30px;
+  min-width: fit-content;
   height: 30px;
 
   border: none;
@@ -484,4 +493,46 @@ button:focus {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.justify-end {
+  justify-content: end;
+}
+
+.align-end {
+  align-items: end;
+}
+
+.delete-button {
+  background-color: var(--super-dark-gray);
+}
+
+.save-button {
+  background-color: var(--super-dark-gray);
+}
+
+.reset-button {
+  background-color: var(--gray);
+}
+
+.list-button {
+  background-color: var(--gray);
+}
+
+.register-defect-button {
+  background-color: var(--extra-dark-green);
+}
+
+.cancel-button {
+  background-color: var(--white);
+  border: 1px solid var(--gray);
+
+  color: var(--black);
+}
+
+.excel-button {
+  background-color: var(--white);
+  border: 1px solid var(--gray);
+
+  color: var(--black);
 }
