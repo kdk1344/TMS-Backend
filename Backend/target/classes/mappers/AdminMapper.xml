@@ -224,10 +224,10 @@
         SELECT COUNT(*)
         FROM common_codes
         WHERE 1=1
-        <if test="parentCode != null">
+        <if test="parentCode != null and parentCode != ''">
             AND Parent_Code = #{parentCode}
         </if>
-        <if test="code != null">
+        <if test="code != null and code != ''">
             AND Code = #{code}
         </if>
         <if test="codeName != null and codeName != ''">
@@ -246,10 +246,10 @@
         SELECT Parent_Code as parentCode, Code, Code_Name as codeName
         FROM common_codes
         WHERE 1=1
-        <if test="parentCode != null">
+        <if test="parentCode != null and parentCode != ''">
             AND Parent_Code = #{parentCode}
         </if>
-        <if test="code != null">
+        <if test="code != null and code != ''">
             AND Code = #{code}
         </if>
         <if test="codeName != null and codeName != ''">
