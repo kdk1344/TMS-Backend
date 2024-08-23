@@ -66,6 +66,7 @@ public interface AdminMapper {
     public int updateCommonCode(CommonCode commonCode);
     public int deleteCommonCode(String[] codeList);
     public List<String> getParentCommonCodes();
+    public List<CommonCode> findSubCodesByParentCode(String parentCode);
     
     
     // 분류코드 mapper
@@ -86,4 +87,5 @@ public interface AdminMapper {
                                                 	   @Param("code") String code, 
                                                 	   @Param("codeName") String codeName);
     public List<String> getParentCategoryCodes();
+    public List<categoryCode> findMiddleCodesByParentCode(String parentCode);
 }

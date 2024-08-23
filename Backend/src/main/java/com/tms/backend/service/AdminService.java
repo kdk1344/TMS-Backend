@@ -183,10 +183,15 @@ public class AdminService {
         return adminmapper.deleteCommonCode(codeList) > 0;
     }
     
- // 대분류 코드 조회 서비스
+    // 대분류 코드 조회 서비스
     public List<String> getParentCommonCodes() {
         return adminmapper.getParentCommonCodes();
     }
+    
+    public List<CommonCode> getCCCode(String parentCode) {
+        return adminmapper.findSubCodesByParentCode(parentCode);
+    }
+    
     
     
     
@@ -240,9 +245,13 @@ public class AdminService {
         }
     }
     
- // 대분류 코드 조회 서비스
+    // 대분류 코드 조회 서비스
     public List<String> getParentCategoryCodes() {
         return adminmapper.getParentCategoryCodes();
+    }
+    
+    public List<categoryCode> getCTCode(String parentCode) {
+        return adminmapper.findMiddleCodesByParentCode(parentCode);
     }
     
 }

@@ -225,13 +225,13 @@
         FROM common_codes
         WHERE 1=1
         <if test="parentCode != null">
-            AND ParentCode = #{parentCode}
+            AND Parent_Code = #{parentCode}
         </if>
         <if test="code != null">
             AND Code = #{code}
         </if>
         <if test="codeName != null and codeName != ''">
-            AND CodeName LIKE CONCAT('%', #{codeName}, '%')
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
         </if>
     </select>
     
@@ -281,6 +281,15 @@
         FROM common_codes 
         WHERE PARENT_CODE = '00'
     </select>
+    
+    <!-- 상위 코드에 따른 하위 코드 목록을 조회하는 쿼리 -->
+    <select id="findSubCodesByParentCode" resultType="CommonCode" parameterType="string">
+        SELECT Parent_Code as parentCode, Code_Name as CodeName
+        FROM common_codes
+        WHERE parent_code = #{parentCode}
+    </select>
+    
+    
 	
 	
 	
@@ -375,6 +384,13 @@
         SELECT CODE, Code_Name as CodeName
         FROM category_codes 
         WHERE Stage_Type = '대'
+    </select>
+    
+      <!-- 상위 코드에 따른 하위 코드 목록을 조회하는 쿼리 -->
+    <select id="findMiddleCodesByParentCode" resultType="categoryCode" parameterType="string">
+        SELECT Code, Code_Name as CodeName
+        FROM category_codes 
+        WHERE parent_code = #{parentCode}
     </select>
 
 	

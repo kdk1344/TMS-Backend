@@ -198,6 +198,27 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
     
+    @GetMapping(value = "api/cccode", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCCCommonCodes(@RequestParam("parentCode") String parentCode) {
+        List<CommonCode> CCCodes = adminService.getCCCode(parentCode);
+    	Map<String, Object> response = new HashMap<>();
+        
+    	 // 하위 코드가 없으면 204 상태와 함께 빈 배열 반환
+        if (CCCodes.isEmpty()) {
+            response.put("status", "no_content");
+            response.put("message", "No CCCodes found for the provided parentCode");
+            response.put("CCCodes", CCCodes);
+            return ResponseEntity.status(204).body(response);
+        }
+
+        // 하위 코드 목록 반환
+        response.put("status", "success");
+        response.put("message", "CCCodes retrieved successfully");
+        response.put("CCCodes", CCCodes);
+        return ResponseEntity.ok(response); // 200 OK 상태 반환
+    }
+    
     // 전체 정보를 엑셀로 다운로드
     @GetMapping("/downloadAllcc")
     public void downloadAllcc(HttpServletResponse response) throws IOException {
@@ -503,6 +524,27 @@ public class CodeController {
 
         // 조회된 결과를 반환
         return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping(value = "api/ctcode", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCTCategoryCodes(@RequestParam("parentCode") String parentCode) {
+        List<categoryCode> CTCodes = adminService.getCTCode(parentCode);
+    	Map<String, Object> response = new HashMap<>();
+        
+    	 // 하위 코드가 없으면 204 상태와 함께 빈 배열 반환
+        if (CTCodes.isEmpty()) {
+            response.put("status", "no_content");
+            response.put("message", "No CTCodes found for the provided parentCode");
+            response.put("CTCodes", CTCodes);
+            return ResponseEntity.status(204).body(response);
+        }
+
+        // 하위 코드 목록 반환
+        response.put("status", "success");
+        response.put("message", "CTCodes retrieved successfully");
+        response.put("CTCodes", CTCodes);
+        return ResponseEntity.ok(response); // 200 OK 상태 반환
     }
     
     // 전체 categoryCode 정보를 엑셀로 다운로드
