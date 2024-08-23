@@ -67,7 +67,7 @@ header .navigation a {
 }
 
 .table-container {
-  height: 65vh;
+  min-height: 65vh;
 }
 
 /* 테이블 스타일 */
