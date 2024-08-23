@@ -46,6 +46,11 @@ form button {
   width: 50%;
 }
 
+.filter-container select,
+.filter-container input {
+  min-width: 160px;
+}
+
 .modal-form {
   display: flex;
   flex-direction: column;
