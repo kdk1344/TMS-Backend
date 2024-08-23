@@ -151,6 +151,8 @@ async function getCCParentCodes() {
 // 코드 목록 조회
 async function getCCCodes(parentCode = "") {
   try {
+    if (parentCode === "") return [];
+
     const query = new URLSearchParams({ parentCode }).toString();
     const { CCCodes = [] } = await tmsFetch(`/cccode?${query}`);
 
@@ -169,8 +171,8 @@ async function initializeParentCodes() {
   parentCodes.forEach((parentCode) => {
     const option = document.createElement("option");
 
-    option.value = parentCode.value;
-    option.textContent = parentCode.name;
+    option.value = parentCode.code;
+    option.textContent = parentCode.codeName;
     parentCodeSelect.appendChild(option);
   });
 }
@@ -180,12 +182,15 @@ async function initializeChildCodes(selectedParentCode) {
   const { codes } = await getCCCodes(selectedParentCode);
   const codeSelect = document.getElementById("codeForFilter");
 
+  // 기존 옵션 초기화하고 "전체" 옵션은 남겨두기
+  codeSelect.innerHTML = '<option value="">전체</option>';
+
   // 새 옵션 생성 및 추가
   codes.forEach((code) => {
     const option = document.createElement("option");
 
-    option.value = code.value;
-    option.textContent = code.name;
+    option.value = code.code;
+    option.textContent = code.codeName;
     codeSelect.appendChild(option);
   });
 }
@@ -216,8 +221,8 @@ async function getCommonCodes({ page = 1, parentCode = "", code = "", codeName =
 }
 
 // 공통코드 목록 테이블 렌더링
-async function renderCommonCodes() {
-  const { commonCodes, totalPages } = await getCommonCodes();
+async function renderCommonCodes({ page = 1, parentCode = "", code = "", codeName = "" } = {}) {
+  const { commonCodes, totalPages } = await getCommonCodes({ page, parentCode, code, codeName });
 
   if (commonCodeTableBody) {
     commonCodeTableBody.innerHTML = "";
@@ -228,7 +233,7 @@ async function renderCommonCodes() {
       row.innerHTML = `
         <td><input type="checkbox" name="commonCode" value="${commonCode.parentCode + commonCode.code}"></td>
         <td class="parent-code">${commonCode.parentCode}</td>
-        <td class="parent-code-name">${commonCode.parentCodeName}</td>
+        <td class="parent-code-name">${commonCode.parentCodeName === null ? "코드그룹" : commonCode.parentCodeName}</td>
         <td class="code">${commonCode.code}</td>
         <td class="code-name">${commonCode.codeName}</td>
       `;
@@ -277,21 +282,21 @@ function changePage(page) {
   const code = document.getElementById("codeForFilter").value;
   const codeName = document.getElementById("codeNameForFilter").value.trim();
 
-  getCommonCodes({ page: currentPage, parentCode, code, codeName });
+  renderCommonCodes({ page: currentPage, parentCode, code, codeName });
 }
 
 // 공통코드 필터링
 function submitCommonCodeFilter(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
-  // 페이지를 1로 초기화하고 getCommonCodes 호출
+  // 페이지를 1로 초기화하고 renderCommonCodes 호출
   currentPage = 1;
 
   const parentCode = document.getElementById("parentCodeForFilter").value;
   const code = document.getElementById("codeForFilter").value;
   const codeName = document.getElementById("codeNameForFilter").value.trim();
 
-  getCommonCodes({ page: currentPage, parentCode, code, codeName });
+  renderCommonCodes({ page: currentPage, parentCode, code, codeName });
 }
 
 // 공통코드 필터 리셋
