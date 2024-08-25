@@ -64,16 +64,17 @@ public interface AdminMapper {
 	// 공통코드 삽입
 	public void insertCommonCode(CommonCode commonCode);
     public int updateCommonCode(CommonCode commonCode);
-    public int deleteCommonCode(String[] codeList);
+    public void deleteCommonCode(String seq);
     public List<CommonCode> getParentCommonCodes();
     public List<CommonCode> findSubCodesByParentCode(String parentCode);
+    public String searchParentCodeName(String parentCode);
     
     
     // 분류코드 mapper
     public void insertCategoryCode(categoryCode categoryCode);
     public String getParentCode(String parentCode);
     public int updateCategoryCode(categoryCode categoryCode);
-    public int deleteCategoryCodes(String[] codeList);
+    public void deleteCategoryCodes(String code);
     public List<categoryCode> searchCategoryCodes(@Param("stageType") String stageType, 
 	                                              @Param("code") String code, 
 	                                              @Param("codeName") String codeName, 
@@ -86,6 +87,6 @@ public interface AdminMapper {
     public List<categoryCode> getFilteredCategoryCodes(@Param("stageType") String stageType, 
                                                 	   @Param("code") String code, 
                                                 	   @Param("codeName") String codeName);
-    public List<String> getParentCategoryCodes();
+    public List<categoryCode> getParentCategoryCodes();
     public List<categoryCode> findMiddleCodesByParentCode(String parentCode);
 }

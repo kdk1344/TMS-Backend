@@ -13,15 +13,15 @@ public class CommonCode {
     private String Code; 
     private String CodeName; 
     private String parentCodeName;
-    private Integer seq;
+    private String seq;
 
 
     // Getter นื Setter for ParentCode
-    public Integer getSeq() {
+    public String getSeq() {
         return seq;
     }
 
-    public void setSeq(Integer seq) {
+    public void setSeq(String seq) {
         this.seq = seq;
     }
     

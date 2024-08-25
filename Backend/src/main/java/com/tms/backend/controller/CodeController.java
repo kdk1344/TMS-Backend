@@ -129,26 +129,18 @@ public class CodeController {
     
     @DeleteMapping(value= "api/deletecc", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> deletecc(@RequestBody List<String> codeList) {
+    public ResponseEntity<Map<String, Object>> deletecc(@RequestBody List<String> seqs) {
         Map<String, Object> response = new HashMap<>();
-        try {
-            boolean success = adminService.deleteCommonCode(codeList.toArray(new String[0]));  // 공통코드 삭제
 
-            if (success) {
-                response.put("status", "success");
-                response.put("message", "CommonCodes deleted successfully!");
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            } else {
-                response.put("status", "failure");
-                response.put("message", "Error deleting common codes.");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("status", "error");
-            response.put("message", "Error occurred while deleting common codes.");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        // CommonCode 삭제
+        for (String seq : seqs) {
+            adminService.deleteCommonCode(seq);
         }
+        
+        response.put("status", "success");
+        response.put("message", "공통코드가 성공적으로 삭제되었습니다.");
+        return ResponseEntity.ok(response);
+        
     }
    
     @GetMapping(value = "api/commonCode", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -161,8 +153,22 @@ public class CodeController {
 		// CommonCode 조회
         List<CommonCode> commonCodes = adminService.searchCommonCodes(parentCode, code, codeName, page, size);
         
+        // parentCode 설정
+        for (CommonCode commonCode : commonCodes) {
+        	String parentCodeName = adminService.searchParentCodeName(commonCode.getParentCode());
+        	commonCode.setParentCodeName(parentCodeName);
+        }
+        
+        // parentCode와 code를 합쳐서 seq 값으로 설정
+        for (CommonCode commonCode : commonCodes) {
+            String seq = commonCode.getParentCode() + commonCode.getCode();
+            commonCode.setSeq(seq);
+        }
+        
         int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
         int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
+        
+        log.info(commonCodes);
 
         // 응답 생성
         Map<String, Object> response = new HashMap<>();
@@ -338,12 +344,6 @@ public class CodeController {
         return true;
     }
     
-    
-    
-    
-    
-    
-    
     // 분류코드 Controller
     
     @GetMapping("/categoryCode")
@@ -462,25 +462,17 @@ public class CodeController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deletecat(@RequestBody List<String> codeList) {
         Map<String, Object> response = new HashMap<>();
-        try {
-            boolean success = adminService.deleteCategoryCode(codeList.toArray(new String[0]));  // categoryCode 삭제
-
-            if (success) {
-                response.put("status", "success");
-                response.put("message", "CategoryCodes deleted successfully!");
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            } else {
-                response.put("status", "failure");
-                response.put("message", "Error deleting category codes.");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("status", "error");
-            response.put("message", "Error occurred while deleting category codes.");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        
+        // CategoryCode 삭제
+        for (String code : codeList) {
+            adminService.deleteCategoryCode(code);
         }
+        
+        response.put("status", "success");
+        response.put("message", "분류코드가 성공적으로 삭제되었습니다.");
+        return ResponseEntity.ok(response);
     }
+    
    
     @GetMapping(value = "api/categoryCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -510,7 +502,7 @@ public class CodeController {
     	Map<String, Object> response = new HashMap<>();
         
         // CategoryService를 통해 대분류 코드를 조회
-        List<String> parentCodes = adminService.getParentCategoryCodes();
+        List<categoryCode> parentCodes = adminService.getParentCategoryCodes();
 
         // 응답 데이터 생성
         if (parentCodes != null && !parentCodes.isEmpty()) {

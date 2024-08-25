@@ -205,29 +205,27 @@
     <!-- 공통코드 mapper.xml-->
 	
 	<select id="searchCommonCodes" parameterType="map" resultType="CommonCode">
-        SELECT 
-	        cc.Parent_Code as parentCode, 
-	        cc.Code, 
-	        cc.Code_Name as codeName, 
-	        pc.Code_Name as parentCodeName
-	    FROM 
-	        common_codes cc
-	    LEFT JOIN 
-	        common_codes pc ON cc.Parent_Code = pc.Code
-	    WHERE 
-	        1=1
-	    <if test="parentCode != null and parentCode != ''">
-	        AND cc.Parent_Code = #{parentCode}
-	    </if>
-	    <if test="code != null and code != ''">
-	        AND cc.Code = #{code}
-	    </if>
-	    <if test="codeName != null and codeName != ''">
-	        AND cc.Code_Name LIKE CONCAT('%', #{codeName}, '%')
-	    </if>
-	    LIMIT #{offset}, #{size}
+        SELECT Parent_Code as parentCode, Code, Code_Name as codeName
+        FROM common_codes
+        WHERE 1=1
+        <if test="parentCode != null and parentCode != ''">
+            AND Parent_Code = #{parentCode}
+        </if>
+        <if test="code != null and code != ''">
+            AND Code = #{code}
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+        LIMIT #{offset}, #{size}
     </select>
-
+    
+    <select id="searchParentCodeName" resultType="String">
+        SELECT DISTINCT Code_Name as parentCodeName
+        FROM common_codes 
+        WHERE CODE = #{parentCode} AND Parent_Code = '00'
+    </select>
+   
     <select id="getTotalCommonCodeCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM common_codes
@@ -277,10 +275,7 @@
 	</update>
 	
 	<delete id="deleteCommonCode" parameterType="String">
-	    DELETE FROM common_codes WHERE Code IN 
-	    <foreach item="code" collection="codeList" open="(" separator="," close=")">
-	        #{code}
-	    </foreach>
+		DELETE FROM common_codes WHERE CONCAT(Parent_Code, Code) = #{seq}
 	</delete>
 	
 	<!-- 대분류 코드만 가져오기 -->
@@ -325,11 +320,7 @@
 
     <!-- 카테고리 코드 삭제 -->
     <delete id="deleteCategoryCodes">
-        DELETE FROM category_codes
-        WHERE Code IN
-        <foreach item="code" collection="array" open="(" separator="," close=")">
-            #{code}
-        </foreach>
+    	DELETE FROM category_codes WHERE Code = #{code}
     </delete>
 
     <!-- 카테고리 코드 검색 및 페이징 조회 -->
@@ -388,7 +379,7 @@
     </select>
     
     <!-- 대분류 코드만 가져오기 -->
-    <select id="getParentCategoryCodes" resultType="String">
+    <select id="getParentCategoryCodes" resultType="categoryCode">
         SELECT CODE, Code_Name as CodeName
         FROM category_codes 
         WHERE Stage_Type = '대'

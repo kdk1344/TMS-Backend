@@ -180,8 +180,8 @@ public class AdminService {
         return adminmapper.updateCommonCode(commonCode) > 0;
     }
 
-    public boolean deleteCommonCode(String[] codeList) {
-        return adminmapper.deleteCommonCode(codeList) > 0;
+    public void deleteCommonCode(String seq) {
+    	adminmapper.deleteCommonCode(seq);
     }
     
     // 대분류 코드 조회 서비스
@@ -193,6 +193,10 @@ public class AdminService {
         return adminmapper.findSubCodesByParentCode(parentCode);
     }
     
+    public String searchParentCodeName(String parentCode) {
+        return adminmapper.searchParentCodeName(parentCode);
+    }
+        
     
     
     
@@ -214,8 +218,8 @@ public class AdminService {
     }
 
     // 카테고리 코드 삭제
-    public boolean deleteCategoryCode(String[] codeList) {
-        return adminmapper.deleteCategoryCodes(codeList) > 0;
+    public void deleteCategoryCode(String code) {
+    	adminmapper.deleteCategoryCodes(code);
     }
 
     // 카테고리 코드 조회
@@ -247,7 +251,7 @@ public class AdminService {
     }
     
     // 대분류 코드 조회 서비스
-    public List<String> getParentCategoryCodes() {
+    public List<categoryCode> getParentCategoryCodes() {
         return adminmapper.getParentCategoryCodes();
     }
     

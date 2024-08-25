@@ -13,19 +13,9 @@ public class categoryCode {
     private String Code; 
     private String CodeName;
     private String parentCode;  // 상위 대분류 코드 필드 (DB에 저장되지 않음)
-    private Integer seq;
 
 
-    // Getter 및 Setter for StageType
-    
-    public Integer getSeq() {
-        return seq;
-    }
-
-    public void setSeq(Integer seq) {
-        this.seq = seq;
-    }
-    
+    // Getter 및 Setter for StageType    
     public String getStageType() {
         return StageType;
     }
