@@ -68,27 +68,29 @@ function setupEventListeners() {
   // 공통코드 테이블 클릭 이벤트 핸들러
   if (commonCodeTableBody) {
     // 공통코드 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
-    // commonCodeTableBody.addEventListener("click", (event) => {
-    //   const clickedElement = event.target;
-    //   if (clickedElement.type === "checkbox") {
-    //     return;
-    //   }
-    //   const row = event.target.closest("tr");
-    //   if (row) {
-    //     loadCommonCodeDataFromRow(row);
-    //   }
-    // });
+    commonCodeTableBody.addEventListener("click", (event) => {
+      const clickedElement = event.target;
+      if (clickedElement.type === "checkbox") {
+        return;
+      }
+
+      const row = event.target.closest("tr");
+
+      if (row) {
+        loadCommonCodeDataFromRow(row);
+      }
+    });
+  }
+
+  // 공통코드 등록 폼 제출 이벤트 핸들러
+  if (commonCodeRegisterForm) {
+    commonCodeRegisterForm.addEventListener("submit", registerCommonCode);
   }
 
   // 공통코드 수정 폼 제출 이벤트 핸들러
-  // if (commonCodeEditForm) {
-  //   commonCodeEditForm.addEventListener("submit", editCommonCode);
-  // }
-
-  // 공통코드 등록 폼 제출 이벤트 핸들러
-  // if (commonCodeRegisterForm) {
-  //   commonCodeRegisterForm.addEventListener("submit", registerCommonCode);
-  // }
+  if (commonCodeEditForm) {
+    commonCodeEditForm.addEventListener("submit", editCommonCode);
+  }
 
   // 공통코드 필터 폼 제출 및 리셋 이벤트 핸들러
   if (commonCodeFilterForm) {
@@ -97,9 +99,9 @@ function setupEventListeners() {
   }
 
   // 공통코드 삭제 버튼 클릭 이벤트 핸들러
-  // if (deleteCommonCodeButton) {
-  //   deleteCommonCodeButton.addEventListener("click", deleteCommonCode);
-  // }
+  if (deleteCommonCodeButton) {
+    deleteCommonCodeButton.addEventListener("click", deleteCommonCode);
+  }
 
   // 전체 선택 체크박스 클릭 이벤트 핸들러
   if (selectAllCommonCodeCheckbox) {
@@ -107,22 +109,25 @@ function setupEventListeners() {
   }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러
-  // if (
-  //   openCommonCodeRegisterModalButton &&
-  //   closeCommonCodeRegisterModalButton &&
-  //   openCommonCodeFileDownloadModalButton &&
-  //   closeCommonCodeEditModalButton
-  // ) {
-  //   openCommonCodeRegisterModalButton.addEventListener("click", () => openModal(MODAL_ID.COMMON_CODE_REGISTER));
-  //   closeCommonCodeRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_REGISTER));
+  if (
+    openCommonCodeRegisterModalButton &&
+    closeCommonCodeRegisterModalButton &&
+    openCommonCodeFileDownloadModalButton &&
+    closeCommonCodeEditModalButton
+  ) {
+    openCommonCodeRegisterModalButton.addEventListener("click", () => {
+      initializeParentCodes("parentCodeForRegister");
+      openModal(MODAL_ID.COMMON_CODE_REGISTER);
+    });
+    closeCommonCodeRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_REGISTER));
 
-  //   openCommonCodeFileDownloadModalButton.addEventListener("click", () => {
-  //     copyFilterValuesToDownloadForm(); // 공통코드 필터링 값 복사
-  //     openModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD); // 모달 열기
-  //   });
+    // openCommonCodeFileDownloadModalButton.addEventListener("click", () => {
+    //   copyFilterValuesToDownloadForm(); // 공통코드 필터링 값 복사
+    //   openModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD); // 모달 열기
+    // });
 
-  //   closeCommonCodeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_EDIT));
-  // }
+    closeCommonCodeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_EDIT));
+  }
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
   setupModalEventListeners();
@@ -163,9 +168,18 @@ async function getCCCodes(parentCode = "") {
 }
 
 // 상위코드 목록을 가져와 select 요소에 옵션을 설정하는 함수
-async function initializeParentCodes() {
+async function initializeParentCodes(selectElementId) {
   const { parentCodes } = await getCCParentCodes();
-  const parentCodeSelect = document.getElementById("parentCodeForFilter");
+  const parentCodeSelect = document.getElementById(selectElementId);
+
+  // 기존 옵션을 모두 삭제하고, 기본값이 되는 옵션은 따로 저장
+  const defaultOption = parentCodeSelect.querySelector("option[selected]");
+  parentCodeSelect.innerHTML = ""; // 기존 옵션들 삭제
+
+  // 기본값 옵션을 다시 추가
+  if (defaultOption) {
+    parentCodeSelect.appendChild(defaultOption);
+  }
 
   // 새 옵션 생성 및 추가
   parentCodes.forEach((parentCode) => {
@@ -229,9 +243,9 @@ async function renderCommonCodes({ page = 1, parentCode = "", code = "", codeNam
 
     commonCodes.forEach((commonCode) => {
       const row = document.createElement("tr");
-      /** @todo seq, id 같은 구분값이 필요함 */
+
       row.innerHTML = `
-        <td><input type="checkbox" name="commonCode" value="${commonCode.parentCode + commonCode.code}"></td>
+        <td><input class="common-code-id-input" type="checkbox" name="commonCode" value="${commonCode.seq}"></td>
         <td class="parent-code">${commonCode.parentCode}</td>
         <td class="parent-code-name">${commonCode.parentCodeName === null ? "코드그룹" : commonCode.parentCodeName}</td>
         <td class="code">${commonCode.code}</td>
@@ -305,26 +319,32 @@ function resetCommonCodeFilter() {
 }
 
 // HTML 요소에서 공통코드 정보를 가져와서 공통코드 수정 폼에 미리 채우기
-function loadCommonCodeDataFromRow(row) {
-  const commonCodeID = row.querySelector(".commonCode-id").textContent.trim();
-  const commonCodeName = row.querySelector(".commonCode-name").textContent.trim();
-  const authorityName = row.querySelector(".commonCode-authority-name").textContent.trim();
+async function loadCommonCodeDataFromRow(row) {
+  const commonCodeID = row.querySelector(".common-code-id-input").value;
+  const code = row.querySelector(".code").textContent.trim();
+  const codeName = row.querySelector(".code-name").textContent.trim();
+  const parentCode = row.querySelector(".parent-code").textContent.trim();
+
+  // 폼에 id값 넣기
+  commonCodeEditForm.setAttribute("data-id", commonCodeID);
 
   // 폼에 공통코드 정보 입력
-  document.getElementById("commonCodeIDForEdit").value = commonCodeID;
-  document.getElementById("commonCodeNameForEdit").value = commonCodeName;
+  document.getElementById("codeForEdit").value = code;
+  document.getElementById("codeNameForEdit").value = codeName;
 
-  const commonCodeAuthoritySelect = document.getElementById("authorityNameForEdit");
+  const parentCodeSelectId = "parentCodeForEdit";
+  const parentCodeSelect = document.getElementById(parentCodeSelectId);
 
-  for (let option of commonCodeAuthoritySelect.options) {
-    if (option.value.trim() === authorityName) {
+  await initializeParentCodes(parentCodeSelectId);
+
+  for (let option of parentCodeSelect.options) option.selected = false; // 초기화
+
+  for (let option of parentCodeSelect.options) {
+    if (option.value === parentCode) {
       option.selected = true;
       break;
     }
   }
-
-  // 비밀번호는 보안상 빈칸으로 둠
-  document.getElementById("passwordForEdit").value = "";
 
   // 모달 열기
   openModal(MODAL_ID.COMMON_CODE_EDIT);
@@ -344,7 +364,7 @@ async function registerCommonCode(event) {
   const formDataObj = Object.fromEntries(formData.entries());
 
   try {
-    const { commonCode, status } = await tmsFetch("/join", {
+    const { commonCode, status } = await tmsFetch("/ccwrite", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formDataObj),
@@ -353,9 +373,10 @@ async function registerCommonCode(event) {
     const success = status === "success";
 
     if (success) {
-      alert(`공통코드(ID: ${commonCode.commonCodeID}) 등록이 완료되었습니다.`);
+      alert(`공통코드(코드명: ${commonCode.codeName}) 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.COMMON_CODE_REGISTER); // 모달 닫기
+      window.location.reload();
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
@@ -366,12 +387,14 @@ async function registerCommonCode(event) {
 async function editCommonCode(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
-  // 공통코드 정보 가져와서 폼에 넣기
-
   const formData = new FormData(event.target);
 
   // FormData 객체를 JSON 객체로 변환
   const formDataObj = Object.fromEntries(formData.entries());
+
+  // 공통코드 id값 꺼내기
+  const commonCodeID = commonCodeEditForm.getAttribute("data-id");
+  formDataObj.seq = commonCodeID;
 
   try {
     const { commonCode, status } = await tmsFetch("/idmodify", {
@@ -471,6 +494,6 @@ function copyFilterValuesToDownloadForm() {
 
 // 초기 공통코드 목록 로드
 function loadInitialCommonCodes() {
-  initializeParentCodes();
-  renderCommonCodes();
+  initializeParentCodes("parentCodeForFilter"); // 필터링 폼 select 요소에 상위코드 render
+  renderCommonCodes(); // 공통코드 목록 render
 }

@@ -25,28 +25,29 @@
           <h2>공통코드 등록</h2>
           <form id="commonCodeRegisterForm" class="modal-form">
             <div class="modal-form-group">
-              <label for="commonCodeID">아이디</label>
-              <input type="text" id="commonCodeID" name="commonCodeID" placeholder="수정 시 변경불가" required />
-            </div>
-
-            <div class="modal-form-group">
-              <label for="commonCodeName">공통코드명</label>
-              <input type="text" id="commonCodeName" name="commonCodeName" required />
-            </div>
-
-            <div class="modal-form-group">
-              <label for="password">비밀번호</label>
-              <input type="password" id="password" name="password" required autocomplete />
-            </div>
-
-            <div class="modal-form-group">
-              <label for="authorityName">직무</label>
-              <select id="authorityName" name="authorityName">
-                <option value="type1">직무 1</option>
-                <option value="type2">직무 2</option>
-                <option value="type3">직무 3</option>
-                <option value="type4">직무 4</option>
+              <label for="parentCodeForRegister">상위코드</label>
+              <select id="parentCodeForRegister" name="parentCode">
+                <option value="00" selected>상위코드 등록</option>
+                <!-- 상위코드 목록 동적 삽입 -->
               </select>
+            </div>
+
+            <div class="modal-form-group">
+              <label for="codeForRegister">코드</label>
+              <input
+                type="text"
+                id="codeForRegister"
+                name="code"
+                placeholder="숫자 2자리 입력(추후 변경불가)"
+                required
+                pattern="\d{2}"
+                maxlength="2"
+              />
+            </div>
+
+            <div class="modal-form-group">
+              <label for="codeNameForRegister">코드명</label>
+              <input type="text" id="codeNameForRegister" name="codeName" required />
             </div>
 
             <div class="flex-box justify-end">
@@ -64,28 +65,21 @@
           <h2>공통코드 수정</h2>
           <form id="commonCodeEditForm" class="modal-form">
             <div class="modal-form-group">
-              <label for="commonCodeIDForEdit">아이디</label>
-              <input type="text" id="commonCodeIDForEdit" name="commonCodeID" readonly required />
-            </div>
-
-            <div class="modal-form-group">
-              <label for="commonCodeNameForEdit">공통코드명</label>
-              <input type="text" id="commonCodeNameForEdit" name="commonCodeName" required />
-            </div>
-
-            <div class="modal-form-group">
-              <label for="passwordForEdit">비밀번호</label>
-              <input type="password" id="passwordForEdit" name="password" required autocomplete />
-            </div>
-
-            <div class="modal-form-group">
-              <label for="authorityNameForEdit">직무</label>
-              <select id="authorityNameForEdit" name="authorityName">
-                <option value="type1">직무 1</option>
-                <option value="type2">직무 2</option>
-                <option value="type3">직무 3</option>
-                <option value="type4">직무 4</option>
+              <label for="parentCodeForEdit">상위코드</label>
+              <select id="parentCodeForEdit" name="parentCode">
+                <option value="00" selected>상위코드 등록</option>
+                <!-- 상위코드 목록 동적 삽입 -->
               </select>
+            </div>
+
+            <div class="modal-form-group">
+              <label for="codeForEdit">코드</label>
+              <input type="text" id="codeForEdit" name="code" required readonly />
+            </div>
+
+            <div class="modal-form-group">
+              <label for="codeNameForEdit">코드명</label>
+              <input type="text" id="codeNameForEdit" name="codeName" required />
             </div>
 
             <div class="flex-box justify-end">
@@ -125,19 +119,19 @@
           <div class="form-group">
             <label for="parentCodeForFilter">상위코드</label>
             <select id="parentCodeForFilter" name="parentCode">
-              <option value="">전체</option>
+              <option value="" selected>전체</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="codeForFilter">코드</label>
             <select id="codeForFilter" name="code">
-              <option value="">전체</option>
+              <option value="" selected>전체</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="codeName">코드명</label>
+            <label for="codeNameForFilter">코드명</label>
             <input type="text" id="codeNameForFilter" name="codeName" placeholder="코드명을 입력하세요" />
           </div>
         </div>
