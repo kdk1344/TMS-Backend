@@ -361,6 +361,8 @@ async function registerCommonCode(event) {
   const formDataObj = Object.fromEntries(formData.entries());
 
   try {
+    showSpinner();
+
     const { commonCode, status } = await tmsFetch("/ccwrite", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -377,6 +379,8 @@ async function registerCommonCode(event) {
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }
 
@@ -394,6 +398,7 @@ async function editCommonCode(event) {
   formDataObj.seq = commonCodeID;
 
   try {
+    showSpinner();
     const { commonCode, status } = await tmsFetch("/ccmodify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -410,6 +415,8 @@ async function editCommonCode(event) {
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }
 
@@ -435,6 +442,8 @@ async function deleteCommonCode() {
       return;
     }
 
+    showSpinner();
+
     const { status } = await tmsFetch("/deletecc", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -449,6 +458,8 @@ async function deleteCommonCode() {
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }
 
@@ -473,7 +484,7 @@ async function uploadCommonCodeFile() {
 
     if (success) {
       alert("파일 업로드가 완료되었습니다.");
-      // location.reload(); // 페이지 새로고침
+      location.reload(); // 페이지 새로고침
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");

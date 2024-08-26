@@ -101,7 +101,9 @@
           <h2>엑셀 다운로드</h2>
           <div class="flex-box">
             <form id="downloadAllCommonCodeForm" action="downloadAllcc" method="get">
-              <button type="submit" id="downloadAllCommonCodeButton" class="excel-button">전체자료 다운로드</button>
+              <button type="submit" id="downloadAllCommonCodeButton" class="excel-button">
+                <img src="../../resources/images/download_icon.png" />전체자료 다운로드
+              </button>
             </form>
 
             <form
@@ -116,6 +118,7 @@
               <input type="hidden" id="codeNameForDownload" name="codeName" />
 
               <button type="submit" id="downloadFilteredCommonCodeButton" class="excel-button">
+                <img src="../../resources/images/download_icon.png" />
                 조회결과 다운로드
               </button>
             </form>
@@ -161,8 +164,12 @@
           <!-- 파일 선택 input -->
           <input type="file" id="uploadCommonCodeFileInput" name="file" accept=".xlsx, .xls" />
 
-          <button id="uploadCommonCodeFileButton" class="excel-button">엑셀 업로드</button>
-          <button id="openCommonCodeFileDownloadModalButton" class="excel-button">엑셀 다운로드</button>
+          <button id="uploadCommonCodeFileButton" class="excel-button">
+            <img src="../../resources/images/upload_icon.png" />엑셀 업로드
+          </button>
+          <button id="openCommonCodeFileDownloadModalButton" class="excel-button">
+            <img src="../../resources/images/download_icon.png" />엑셀 다운로드
+          </button>
         </div>
       </div>
 
