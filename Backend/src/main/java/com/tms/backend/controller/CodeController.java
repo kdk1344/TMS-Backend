@@ -106,6 +106,7 @@ public class CodeController {
     @PostMapping(value= "api/ccmodify" , produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> ccModify(@RequestBody CommonCode commonCode) {
+    	log.info("commonCode"+commonCode);
         Map<String, Object> response = new HashMap<>();
         try {
         	String Seq = commonCode.getSeq();
@@ -113,6 +114,7 @@ public class CodeController {
         	String code = Seq.substring(2, 4);
         	commonCode.setParentCode(parentCode);
         	commonCode.setCode(code);
+        	log.info("commonCode"+commonCode);
             boolean success = adminService.updateCommonCode(commonCode);  // 공통코드 수정
             if (success) {
                 response.put("status", "success");
@@ -305,9 +307,25 @@ public class CodeController {
                 if (row != null) {
                 	CommonCode commonCode = new CommonCode();
                     try {
-                        commonCode.setParentCode(row.getCell(0).getStringCellValue());  // 첫 번째 셀 (ParentCode)
-                        commonCode.setCode(row.getCell(1).getStringCellValue());       // 두 번째 셀 (Code)
-                        commonCode.setCodeName(row.getCell(2).getStringCellValue());             // 세 번째 셀 (CodeName)
+                    	// ParentCode 처리
+                        if (row.getCell(0).getCellType() == CellType.NUMERIC) {
+                        	String parentCode = String.format("%02d", (int) row.getCell(0).getNumericCellValue());
+                            commonCode.setParentCode(parentCode);  // 숫자를 2자리 문자열로 변환
+                        } else {
+                            commonCode.setParentCode(row.getCell(0).getStringCellValue());
+                        }
+
+                        // Code 처리
+                        if (row.getCell(1).getCellType() == CellType.NUMERIC) {
+                        	String code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
+                            commonCode.setCode(code);  // 숫자를 문자열로 변환
+                        } else {
+                            commonCode.setCode(row.getCell(1).getStringCellValue());
+                        }
+
+                        // CodeName은 기본적으로 문자열로 처리
+                        commonCode.setCodeName(row.getCell(2).getStringCellValue());
+
                         commonCodes.add(commonCode);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -619,7 +637,20 @@ public class CodeController {
                 if (row != null) {
                     categoryCode categoryCode = new categoryCode();
                     try {
-                        categoryCode.setStageType(row.getCell(0).getStringCellValue());  // 첫 번째 셀 (StageType)
+                    	categoryCode.setStageType(row.getCell(0).getStringCellValue());  // 첫 번째 셀 (StageType)
+                        // Code 처리
+                        if (row.getCell(1).getCellType() == CellType.NUMERIC) {
+                        	if ("대".equals(categoryCode.getStageType())) {
+	                        	String code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
+	                        	categoryCode.setCode(code);  // 숫자를 문자열로 변환
+                        	}
+                        	else {
+	                    		String code = String.format("%04d", (int) row.getCell(1).getNumericCellValue());
+	                        	categoryCode.setCode(code);  // 숫자를 문자열로 변환
+                        	}
+                        } else {
+                        	categoryCode.setCode(row.getCell(1).getStringCellValue());
+                        }                        
                         categoryCode.setCode(row.getCell(1).getStringCellValue());       // 두 번째 셀 (Code)
                         categoryCode.setCodeName(row.getCell(2).getStringCellValue());   // 세 번째 셀 (CodeName)
                         categoryCodes.add(categoryCode);
@@ -716,6 +747,7 @@ public class CodeController {
             return "categoryCodeForm"; // 오류 시 다시 폼 페이지로 이동
         }
     }
+
     
 
 

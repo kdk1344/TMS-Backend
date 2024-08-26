@@ -85,6 +85,9 @@ public class devProgressController {
 	            majorCategory, subCategory, programType, programName, regStatus, developer,
 	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, custItMgr, custBusiMgr, page, size
 	    );
+	    
+	    List<User> developers = adminService.findDevlopers();
+	    log.info("개발자 목록"+developers);
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
 	            majorCategory, subCategory, programType, programName, regStatus, developer,

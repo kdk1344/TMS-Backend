@@ -77,11 +77,9 @@
     </select>
     
     <select id="findDevlopers" resultType="User">
-    	SELECT * FROM Users
-		WHERE 1=1
-        <if test="authorityName != null and authorityName != ''">
-            AND AUTHORITY_NAME = '개발자'
-        </if>
+    	SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName
+    	FROM Users
+		WHERE AUTHORITY_NAME = '개발자'
     </select>
  
  
