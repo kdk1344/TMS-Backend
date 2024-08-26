@@ -463,6 +463,15 @@ export function setupPagination({ paginationElementId, totalPages, currentPage, 
   if (paginationContainer) {
     paginationContainer.innerHTML = ""; // 기존 내용 지우기
 
+    // '처음' 버튼
+    createPaginationButton({
+      container: paginationContainer,
+      text: "<<",
+      disabled: currentPage <= 1,
+      onClick: () => changePage(1),
+      buttonType: "first",
+    });
+
     // 이전 버튼
     createPaginationButton({
       container: paginationContainer,
@@ -473,7 +482,29 @@ export function setupPagination({ paginationElementId, totalPages, currentPage, 
     });
 
     // 페이지 버튼들
-    for (let i = 1; i <= totalPages; i++) {
+    const MAX_BUTTON_NUM = 10; // 최대 페이지 버튼 수
+
+    let startPage = 1;
+    let endPage = totalPages;
+
+    // 총 페이지가 MAX_BUTTOM_NUM 보다 많은 경우
+    if (totalPages > MAX_BUTTON_NUM) {
+      if (currentPage <= MAX_BUTTON_NUM) {
+        // 현재 페이지가 시작 부분 근처에 있는 경우
+        startPage = 1;
+        endPage = MAX_BUTTON_NUM;
+      } else if (currentPage + MAX_BUTTON_NUM >= totalPages) {
+        // 현재 페이지가 끝 부분 근처에 있는 경우
+        startPage = totalPages - MAX_BUTTON_NUM + 1;
+        endPage = totalPages;
+      } else {
+        // 현재 페이지가 중간에 위치한 경우
+        startPage = currentPage - MAX_BUTTON_NUM;
+        endPage = currentPage + MAX_BUTTON_NUM;
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
       createPaginationButton({
         container: paginationContainer,
         text: i,
@@ -489,6 +520,15 @@ export function setupPagination({ paginationElementId, totalPages, currentPage, 
       disabled: currentPage >= totalPages,
       onClick: () => changePage(currentPage + 1),
       buttonType: "next",
+    });
+
+    // '끝' 버튼
+    createPaginationButton({
+      container: paginationContainer,
+      text: ">>",
+      disabled: currentPage >= totalPages,
+      onClick: () => changePage(totalPages),
+      buttonType: "last",
     });
   }
 }
