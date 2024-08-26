@@ -108,6 +108,11 @@ public class CodeController {
     public ResponseEntity<Map<String, Object>> ccModify(@RequestBody CommonCode commonCode) {
         Map<String, Object> response = new HashMap<>();
         try {
+        	String Seq = commonCode.getSeq();
+        	String parentCode = Seq.substring(0, 2);
+        	String code = Seq.substring(2, 4);
+        	commonCode.setParentCode(parentCode);
+        	commonCode.setCode(code);
             boolean success = adminService.updateCommonCode(commonCode);  // 공통코드 수정
             if (success) {
                 response.put("status", "success");

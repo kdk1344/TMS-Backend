@@ -13,6 +13,7 @@
 		<typeAlias type="com.tms.backend.vo.CommonCode" alias="CommonCode"/>
 		<typeAlias type="com.tms.backend.vo.categoryCode" alias="categoryCode"/>
 		<typeAlias type="com.tms.backend.vo.Defect" alias="Defect"/>
+		<typeAlias type="com.tms.backend.vo.devProgress" alias="devProgress"/>
 	</typeAliases>
 
 </configuration>

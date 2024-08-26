@@ -29,10 +29,14 @@
             PASSWORD = #{password},
             AUTHORITY_NAME = #{authorityName},
             AUTHORITY_CODE = CASE 
-                          WHEN #{authorityName} = 'type1' THEN 1
-                          WHEN #{authorityName} = 'type2' THEN 2
-                          WHEN #{authorityName} = 'type3' THEN 3
-                          ELSE 0
+                          WHEN #{authorityName} = '관리자' THEN 1
+			              WHEN #{authorityName} = 'PM,사업/품질' THEN 2
+			              WHEN #{authorityName} = '테스트관리자' THEN 3
+			              WHEN #{authorityName} = 'PL' THEN 4
+			              WHEN #{authorityName} = '개발자' THEN 5
+			              WHEN #{authorityName} = '테스터' THEN 6
+			              WHEN #{authorityName} = '고객 IT 담당자' THEN 7
+			              WHEN #{authorityName} = '고객 현업 담당자' THEN 8
                       END
         WHERE User_ID = #{userID}
     </update>
@@ -69,6 +73,14 @@
         </if>
         <if test="authorityName != null and authorityName != ''">
             AND AUTHORITY_NAME = #{authorityName}
+        </if>
+    </select>
+    
+    <select id="findDevlopers" resultType="User">
+    	SELECT * FROM Users
+		WHERE 1=1
+        <if test="authorityName != null and authorityName != ''">
+            AND AUTHORITY_NAME = '개발자'
         </if>
     </select>
  

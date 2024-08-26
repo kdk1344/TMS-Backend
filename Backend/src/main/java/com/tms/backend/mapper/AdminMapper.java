@@ -24,6 +24,7 @@ public interface AdminMapper {
     void deleteUser(String[] ids);
     public List<User> findAll(Criteria criteria);
 	public int countUsers(Criteria criteria);
+	public List<User> findDevlopers();
 	
 	//공지사항
 	public List<Notice> searchNotices(@Param("startDate") String postDate,

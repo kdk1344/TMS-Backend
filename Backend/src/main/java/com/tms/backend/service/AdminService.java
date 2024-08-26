@@ -76,7 +76,7 @@ public class AdminService {
 		return adminmapper.findAll(criteria);
 	}
     
- // 여러 사용자 정보를 데이터베이스에 저장
+    // 여러 사용자 정보를 데이터베이스에 저장
     public void saveAll(List<User> users) {
         for (User user : users) {
         	log.info(user);
@@ -85,6 +85,10 @@ public class AdminService {
         	user.setPassword(encodedPassword);
             adminmapper.insertUser(user);
         }
+    }
+    
+    public List<User> findDevlopers() {
+    	return adminmapper.findDevlopers();
     }
     
     //// 공지사항 서비스
