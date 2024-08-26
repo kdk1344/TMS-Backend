@@ -100,14 +100,20 @@
         <div class="modal-content">
           <h2>엑셀 다운로드</h2>
           <div class="flex-box">
-            <form id="downloadAllCommonCodeForm" action="downloadAll" method="get">
+            <form id="downloadAllCommonCodeForm" action="downloadAllcc" method="get">
               <button type="submit" id="downloadAllCommonCodeButton" class="excel-button">전체자료 다운로드</button>
             </form>
 
-            <form id="downloadFilteredCommonCodeForm" action="downloadFiltered" method="get" id="downloadFilteredForm">
+            <form
+              id="downloadFilteredCommonCodeForm"
+              action="downloadFilteredcc"
+              method="get"
+              id="downloadFilteredForm"
+            >
               <!-- 숨겨진 input 필드 -->
-              <input type="hidden" id="downloadcommonCodeName" name="commonCodeName" />
-              <input type="hidden" id="downloadAuthorityName" name="authorityName" />
+              <input type="hidden" id="parentCodeForDownload" name="parentCode" />
+              <input type="hidden" id="codeForDownload" name="code" />
+              <input type="hidden" id="codeNameForDownload" name="codeName" />
 
               <button type="submit" id="downloadFilteredCommonCodeButton" class="excel-button">
                 조회결과 다운로드
@@ -185,75 +191,3 @@
     </main>
   </body>
 </html>
-
-<!-- 공통코드 검색 폼 -->
-<!-- <form method="get" action="/tms/commonCode">
-    <input type="text" name="parentCode" placeholder="ParentCode" value="${param.parentCode}" />
-    <input type="text" name="code" placeholder="Code" value="${param.code}" />
-    <input type="text" name="codeName" placeholder="CodeName" value="${param.codeName}" />
-    <button type="submit">검색</button>
-</form> -->
-
-<!-- 공통코드 등록 폼 -->
-<!-- <h2>공통코드 등록</h2>
-<form method="post" action="/tms/api/ccwrite">
-    <label for="parentCode">ParentCode:</label>
-    <input type="text" id="parentCode" name="parentCode" required><br>
-    
-    <label for="code">Code:</label>
-    <input type="text" id="code" name="code" required><br>
-    
-    <label for="codeName">CodeName:</label>
-    <input type="text" id="codeName" name="codeName" required><br>
-    
-    <button type="submit">등록</button>
-</form> -->
-
-<!-- 공통코드 테이블 -->
-<!-- <table>
-    <thead>
-        <tr>
-            <th>ParentCode</th>
-            <th>Code</th>
-            <th>CodeName</th>
-        </tr>
-    </thead>
-    <tbody>
-        <c:forEach var="commonCode" items="${commonCodes}">
-            <tr>
-                <td>${commonCode.parentCode}</td>
-                <td>${commonCode.code}</td>
-                <td>${commonCode.codeName}</td>
-            </tr>
-        </c:forEach>
-        <c:if test="${empty commonCodes}">
-            <tr>
-                <td colspan="3">조회된 공통코드가 없습니다.</td>
-            </tr>
-        </c:if>
-    </tbody>
-</table> -->
-
-<!-- 페이징 처리 -->
-<!-- <div>
-    <c:forEach var="i" begin="1" end="${totalPages}">
-        <c:choose>
-            <c:when test="${i == currentPage}">
-                <strong>${i}</strong>
-            </c:when>
-            <c:otherwise>
-                <a href="?page=${i}&size=${size}&parentCode=${param.parentCode}&code=${param.code}&codeName=${param.codeName}">
-                    ${i}
-                </a>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-</div> -->
-
-<!-- 엑셀 다운로드 -->
-<!-- <h2>엑셀 다운로드</h2>
-<a href="/tms/downloadAllcc">전체 공통코드 다운로드</a><br>
-<a href="/tms/downloadFilteredcc?parentCode=${param.parentCode}&code=${param.code}&codeName=${param.codeName}">검색된 공통코드 다운로드</a>
-
-</body>
-</html> -->

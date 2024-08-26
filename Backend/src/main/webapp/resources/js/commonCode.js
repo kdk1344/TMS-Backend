@@ -1,4 +1,12 @@
-import { tmsFetch, openModal, closeModal, closeModalOnClickOutside, renderTMSHeader } from "./common.js";
+import {
+  tmsFetch,
+  openModal,
+  closeModal,
+  closeModalOnClickOutside,
+  renderTMSHeader,
+  showSpinner,
+  hideSpinner,
+} from "./common.js";
 
 let currentPage = 1;
 
@@ -50,20 +58,20 @@ function setupEventListeners() {
   }
 
   // 공통코드 파일 업로드 버튼 클릭 이벤트 핸들러
-  // if (uploadCommonCodeFileButton) {
-  //   uploadCommonCodeFileButton.addEventListener("click", () => {
-  //     if (uploadCommonCodeFileInput) {
-  //       uploadCommonCodeFileInput.click(); // 파일 선택 창 열기
-  //     } else {
-  //       console.error("File input element not found.");
-  //     }
-  //   });
-  // }
+  if (uploadCommonCodeFileButton) {
+    uploadCommonCodeFileButton.addEventListener("click", () => {
+      if (uploadCommonCodeFileInput) {
+        uploadCommonCodeFileInput.click(); // 파일 선택 창 열기
+      } else {
+        console.error("File input element not found.");
+      }
+    });
+  }
 
   // 공통코드 파일 업로드 인풋 change 이벤트 핸들러
-  // if (uploadCommonCodeFileInput) {
-  //   uploadCommonCodeFileInput.addEventListener("change", uploadCommonCodeFile);
-  // }
+  if (uploadCommonCodeFileInput) {
+    uploadCommonCodeFileInput.addEventListener("change", uploadCommonCodeFile);
+  }
 
   // 공통코드 테이블 클릭 이벤트 핸들러
   if (commonCodeTableBody) {
@@ -121,10 +129,10 @@ function setupEventListeners() {
     });
     closeCommonCodeRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_REGISTER));
 
-    // openCommonCodeFileDownloadModalButton.addEventListener("click", () => {
-    //   copyFilterValuesToDownloadForm(); // 공통코드 필터링 값 복사
-    //   openModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD); // 모달 열기
-    // });
+    openCommonCodeFileDownloadModalButton.addEventListener("click", () => {
+      copyFilterValuesToDownloadForm(); // 공통코드 필터링 값 복사
+      openModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD); // 모달 열기
+    });
 
     closeCommonCodeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_EDIT));
   }
@@ -454,6 +462,8 @@ async function uploadCommonCodeFile() {
   formData.append("file", uploadCommonCodeFileInput.files[0]);
 
   try {
+    showSpinner();
+
     const response = await tmsFetch("/ccupload", {
       method: "POST",
       body: formData,
@@ -463,22 +473,26 @@ async function uploadCommonCodeFile() {
 
     if (success) {
       alert("파일 업로드가 완료되었습니다.");
-      location.reload(); // 페이지 새로고침
+      // location.reload(); // 페이지 새로고침
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }
 
 // 공통코드 필터링 폼의 값을 다운로드 폼으로 복사하는 함수
 function copyFilterValuesToDownloadForm() {
   // 공통코드 조회 필터링 폼의 값을 가져옴
-  const commonCodeName = document.getElementById("commonCodeNameForFilter").value;
-  const authorityName = document.getElementById("authorityNameForFilter").value;
+  const parentCode = document.getElementById("parentCodeForFilter").value;
+  const code = document.getElementById("codeForFilter").value;
+  const codeName = document.getElementById("codeNameForFilter").value;
 
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
-  document.getElementById("downloadCommonCodeName").value = commonCodeName;
-  document.getElementById("downloadAuthorityName").value = authorityName;
+  document.getElementById("parentCodeForDownload").value = parentCode;
+  document.getElementById("codeForDownload").value = code;
+  document.getElementById("codeNameForDownload").value = codeName;
 }
 
 // 초기 공통코드 목록 로드
