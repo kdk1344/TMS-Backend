@@ -96,7 +96,7 @@
 
       <!-- 버튼 그룹 -->
       <div class="notice-buttons">
-        <button id="openNoticeEditModalButton" type="button" class="save-button">저장</button>
+        <button id="openNoticeEditModalButton" type="button" class="save-button">수정</button>
         <button id="deleteNoticeButton" type="button" class="delete-button">삭제</button>
         <button id="goNoticeListButton" type="button" class="list-button">목록</button>
       </div>
