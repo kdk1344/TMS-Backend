@@ -455,3 +455,55 @@ export function showSpinner() {
 export function hideSpinner() {
   spinner.style.display = "none";
 }
+
+// 페이지네이션 설정
+export function setupPagination({ paginationElementId, totalPages, currentPage, changePage }) {
+  const paginationContainer = document.getElementById(paginationElementId);
+
+  if (paginationContainer) {
+    paginationContainer.innerHTML = ""; // 기존 내용 지우기
+
+    // 이전 버튼
+    createPaginationButton({
+      container: paginationContainer,
+      text: "<",
+      disabled: currentPage <= 1,
+      onClick: () => changePage(currentPage - 1),
+      buttonType: "prev",
+    });
+
+    // 페이지 버튼들
+    for (let i = 1; i <= totalPages; i++) {
+      createPaginationButton({
+        container: paginationContainer,
+        text: i,
+        disabled: i === currentPage,
+        onClick: () => changePage(i),
+      });
+    }
+
+    // 다음 버튼
+    createPaginationButton({
+      container: paginationContainer,
+      text: ">",
+      disabled: currentPage >= totalPages,
+      onClick: () => changePage(currentPage + 1),
+      buttonType: "next",
+    });
+  }
+}
+
+// 페이지 버튼 생성
+export function createPaginationButton({ container, text, disabled, onClick, buttonType = "page" }) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  button.disabled = disabled;
+
+  // buttonType에 따라 클래스 추가
+  if (buttonType === "page") {
+    button.classList.toggle("active", disabled); // 현재 페이지 표시할 클래스 추가
+  }
+
+  button.addEventListener("click", onClick);
+  container.appendChild(button);
+}

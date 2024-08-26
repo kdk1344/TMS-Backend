@@ -6,6 +6,7 @@ import {
   renderTMSHeader,
   showSpinner,
   hideSpinner,
+  setupPagination,
 } from "./common.js";
 
 let currentPage = 1;
@@ -21,7 +22,6 @@ const commonCodeFilterForm = document.getElementById("commonCodeFilterForm");
 const parentCodeSelect = document.getElementById("parentCodeForFilter");
 
 const commonCodeTableBody = document.getElementById("commonCodeTableBody");
-const commonCodePagination = document.getElementById("commonCodePagination");
 const selectAllCommonCodeCheckbox = document.getElementById("selectAllCommonCodeCheckbox");
 
 const openCommonCodeRegisterModalButton = document.getElementById("openCommonCodeRegisterModalButton");
@@ -201,11 +201,14 @@ async function initializeParentCodes(selectElementId) {
 
 // 상위코드 선택 시, 코드 목록을 가져와 select 요소에 옵션을 설정하는 함수
 async function initializeChildCodes(selectedParentCode) {
-  const { codes } = await getCCCodes(selectedParentCode);
   const codeSelect = document.getElementById("codeForFilter");
 
   // 기존 옵션 초기화하고 "전체" 옵션은 남겨두기
   codeSelect.innerHTML = '<option value="">전체</option>';
+
+  if (selectedParentCode === "") return; // 상위코드 '전체'를 선택한 경우
+
+  const { codes } = await getCCCodes(selectedParentCode);
 
   // 새 옵션 생성 및 추가
   codes.forEach((code) => {
@@ -262,38 +265,8 @@ async function renderCommonCodes({ page = 1, parentCode = "", code = "", codeNam
       commonCodeTableBody.appendChild(row);
     });
 
-    setupPagination(totalPages);
+    setupPagination({ paginationElementId: "commonCodePagination", totalPages, currentPage, changePage });
   }
-}
-
-// 페이지네이션 설정
-function setupPagination(totalPages) {
-  if (commonCodePagination) {
-    commonCodePagination.innerHTML = "";
-
-    createPaginationButton("<", currentPage <= 1, () => changePage(currentPage - 1), "prev");
-
-    for (let i = 1; i <= totalPages; i++) {
-      createPaginationButton(i, i === currentPage, () => changePage(i));
-    }
-
-    createPaginationButton(">", currentPage >= totalPages, () => changePage(currentPage + 1), "next");
-  }
-}
-
-// 페이지 버튼 생성
-function createPaginationButton(text, disabled, onClick, buttonType = "page") {
-  const button = document.createElement("button");
-  button.textContent = text;
-  button.disabled = disabled;
-
-  // buttonType에 따라 클래스 추가
-  if (buttonType === "page") {
-    button.classList.toggle("active", disabled); // 현재 페이지 표시할 클래스 추가
-  }
-
-  button.addEventListener("click", onClick);
-  commonCodePagination.appendChild(button);
 }
 
 // 페이지 변경
