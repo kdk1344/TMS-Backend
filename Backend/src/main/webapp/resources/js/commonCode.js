@@ -408,7 +408,7 @@ async function editCommonCode(event) {
     const success = status === "success";
 
     if (success) {
-      alert(`공통코드(ID: ${commonCode.codeName}) 수정이 완료되었습니다.`);
+      alert(`공통코드(코드명: ${commonCode.codeName}) 수정이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.COMMON_CODE_EDIT); // 모달 닫기
       location.reload(); // 페이지 새로고침
