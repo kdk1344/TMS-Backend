@@ -489,18 +489,16 @@ export function setupPagination({ paginationElementId, totalPages, currentPage, 
 
     // 총 페이지가 MAX_BUTTOM_NUM 보다 많은 경우
     if (totalPages > MAX_BUTTON_NUM) {
+      // 현재 페이지가 시작 부분 근처에 있는 경우
       if (currentPage <= MAX_BUTTON_NUM) {
-        // 현재 페이지가 시작 부분 근처에 있는 경우
         startPage = 1;
         endPage = MAX_BUTTON_NUM;
-      } else if (currentPage + MAX_BUTTON_NUM >= totalPages) {
-        // 현재 페이지가 끝 부분 근처에 있는 경우
-        startPage = totalPages - MAX_BUTTON_NUM + 1;
-        endPage = totalPages;
       } else {
-        // 현재 페이지가 중간에 위치한 경우
-        startPage = currentPage - MAX_BUTTON_NUM;
-        endPage = currentPage + MAX_BUTTON_NUM;
+        // startPage를 1, 11, 21... 이런 식으로 설정
+        startPage = Math.floor((currentPage - 1) / MAX_BUTTON_NUM) * MAX_BUTTON_NUM + 1;
+
+        // endPage를 설정
+        endPage = Math.min(startPage + MAX_BUTTON_NUM - 1, totalPages);
       }
     }
 
