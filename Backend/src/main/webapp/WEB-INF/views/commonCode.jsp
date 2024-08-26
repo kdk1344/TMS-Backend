@@ -47,7 +47,13 @@
 
             <div class="modal-form-group">
               <label for="codeNameForRegister">코드명</label>
-              <input type="text" id="codeNameForRegister" name="codeName" required />
+              <input
+                type="text"
+                id="codeNameForRegister"
+                name="codeName"
+                required
+                placeholder="코드명을 입력해주세요"
+              />
             </div>
 
             <div class="flex-box justify-end">
@@ -66,15 +72,13 @@
           <form id="commonCodeEditForm" class="modal-form">
             <div class="modal-form-group">
               <label for="parentCodeForEdit">상위코드</label>
-              <select id="parentCodeForEdit" name="parentCode">
-                <option value="00" selected>상위코드 등록</option>
-                <!-- 상위코드 목록 동적 삽입 -->
-              </select>
+              <span id="parentCodeForEdit"></span>
+              <span id="parentCodeNameForEdit"></span>
             </div>
 
             <div class="modal-form-group">
               <label for="codeForEdit">코드</label>
-              <input type="text" id="codeForEdit" name="code" required readonly />
+              <span id="codeForEdit"></span>
             </div>
 
             <div class="modal-form-group">

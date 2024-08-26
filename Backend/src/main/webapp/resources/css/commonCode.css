@@ -61,7 +61,6 @@ form button {
 
 .modal-form-group {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
   width: 100%;
@@ -69,9 +68,14 @@ form button {
 
 .modal-form-group label {
   display: block;
-  width: 30%;
+  width: 80px;
 
   font-weight: 600;
+}
+
+.modal-form-group input,
+.modal-form-group select {
+  flex: 1;
 }
 
 .button-group {

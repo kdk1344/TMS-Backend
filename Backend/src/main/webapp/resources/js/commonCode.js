@@ -324,27 +324,16 @@ async function loadCommonCodeDataFromRow(row) {
   const code = row.querySelector(".code").textContent.trim();
   const codeName = row.querySelector(".code-name").textContent.trim();
   const parentCode = row.querySelector(".parent-code").textContent.trim();
+  const parentCodeName = row.querySelector(".parent-code-name").textContent.trim();
 
   // 폼에 id값 넣기
   commonCodeEditForm.setAttribute("data-id", commonCodeID);
 
   // 폼에 공통코드 정보 입력
-  document.getElementById("codeForEdit").value = code;
+  document.getElementById("parentCodeForEdit").textContent = parentCode;
+  document.getElementById("parentCodeNameForEdit").textContent = parentCodeName;
+  document.getElementById("codeForEdit").textContent = code;
   document.getElementById("codeNameForEdit").value = codeName;
-
-  const parentCodeSelectId = "parentCodeForEdit";
-  const parentCodeSelect = document.getElementById(parentCodeSelectId);
-
-  await initializeParentCodes(parentCodeSelectId);
-
-  for (let option of parentCodeSelect.options) option.selected = false; // 초기화
-
-  for (let option of parentCodeSelect.options) {
-    if (option.value === parentCode) {
-      option.selected = true;
-      break;
-    }
-  }
 
   // 모달 열기
   openModal(MODAL_ID.COMMON_CODE_EDIT);
@@ -397,7 +386,7 @@ async function editCommonCode(event) {
   formDataObj.seq = commonCodeID;
 
   try {
-    const { commonCode, status } = await tmsFetch("/idmodify", {
+    const { commonCode, status } = await tmsFetch("/ccmodify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formDataObj),
@@ -406,7 +395,7 @@ async function editCommonCode(event) {
     const success = status === "success";
 
     if (success) {
-      alert(`공통코드(ID: ${commonCode.commonCodeID}) 수정이 완료되었습니다.`);
+      alert(`공통코드(ID: ${commonCode.codeName}) 수정이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.COMMON_CODE_EDIT); // 모달 닫기
       location.reload(); // 페이지 새로고침
