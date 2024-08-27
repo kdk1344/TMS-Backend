@@ -10,6 +10,7 @@ import {
   showSpinner,
   hideSpinner,
   initializeDateFields,
+  setupPagination,
 } from "./common.js";
 
 let currentPage = 1;
@@ -23,7 +24,6 @@ const fileInputForRegister = document.getElementById("fileInputForRegister");
 const fileOutputForRegister = document.getElementById("fileOutputForRegister");
 
 const noticeTableBody = document.getElementById("noticeTableBody");
-const noticePagination = document.getElementById("noticePagination");
 const selectAllNoticeCheckbox = document.getElementById("selectAllNoticeCheckbox");
 const deleteNoticeButton = document.getElementById("deleteNoticeButton");
 
@@ -162,38 +162,8 @@ function displayNotices(notices, totalPages) {
       noticeTableBody.appendChild(row);
     });
 
-    setupPagination(totalPages);
+    setupPagination({ paginationElementId: "noticePagination", totalPages, currentPage, changePage });
   }
-}
-
-// 페이지네이션 설정
-function setupPagination(totalPages) {
-  if (noticePagination) {
-    noticePagination.innerHTML = "";
-
-    createPaginationButton("<", currentPage <= 1, () => changePage(currentPage - 1), "prev");
-
-    for (let i = 1; i <= totalPages; i++) {
-      createPaginationButton(i, i === currentPage, () => changePage(i));
-    }
-
-    createPaginationButton(">", currentPage >= totalPages, () => changePage(currentPage + 1), "next");
-  }
-}
-
-// 페이지 버튼 생성
-function createPaginationButton(text, disabled, onClick, buttonType = "page") {
-  const button = document.createElement("button");
-  button.textContent = text;
-  button.disabled = disabled;
-
-  // buttonType에 따라 클래스 추가
-  if (buttonType === "page") {
-    button.classList.toggle("active", disabled); // 현재 페이지 표시할 클래스 추가
-  }
-
-  button.addEventListener("click", onClick);
-  noticePagination.appendChild(button);
 }
 
 // 페이지 변경
