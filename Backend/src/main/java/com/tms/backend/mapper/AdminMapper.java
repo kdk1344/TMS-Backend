@@ -77,6 +77,7 @@ public interface AdminMapper {
     public String getParentCode(String parentCode);
     public int updateCategoryCode(categoryCode categoryCode);
     public void deleteCategoryCodes(String code);
+    public int checkChildCodesExist2(String code);
     public List<categoryCode> searchCategoryCodes(@Param("parentCode") String parentCode, 
 	                                              @Param("code") String code, 
 	                                              @Param("codeName") String codeName, 

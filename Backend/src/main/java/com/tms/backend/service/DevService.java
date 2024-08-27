@@ -35,24 +35,24 @@ public class DevService {
     private DevMapper devMapper;
 
 	public List<devProgress> searchDevProgress(String majorCategory, String subCategory, String programType, 
-	            String programName, String regStatus, String developer, 
+	            String programName, String programId, String regStatus, String developer, 
 	            String devStatus, String actualStartDate, String actualEndDate, 
-	            String pl, String thirdPartyTestMgr, String custItMgr, 
-	            String custBusiMgr, int page, int size) {
+	            String pl, String thirdPartyTestMgr, String ItMgr, 
+	            String BusiMgr, int page, int size) {
 		int offset = (page - 1) * size;
-		return devMapper.searchDevProgress(majorCategory, subCategory, programType, programName,
+		return devMapper.searchDevProgress(majorCategory, subCategory, programType, programName, programId,
 		regStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
-		thirdPartyTestMgr, custItMgr, custBusiMgr, offset, size);
+		thirdPartyTestMgr, ItMgr, BusiMgr, offset, size);
 	}
 	
 	public int getTotalDevProgressCount(String majorCategory, String subCategory, String programType, 
-	     String programName, String regStatus, String developer, 
+	     String programName, String programId, String regStatus, String developer, 
 	     String devStatus, String actualStartDate, String actualEndDate, 
-	     String pl, String thirdPartyTestMgr, String custItMgr, 
-	     String custBusiMgr) {
-		return devMapper.getTotalDevProgressCount(majorCategory, subCategory, programType, programName,
+	     String pl, String thirdPartyTestMgr, String ItMgr, 
+	     String BusiMgr) {
+		return devMapper.getTotalDevProgressCount(majorCategory, subCategory, programType, programName, programId,
 		regStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
-		thirdPartyTestMgr, custItMgr, custBusiMgr);
+		thirdPartyTestMgr, ItMgr, BusiMgr);
 	}
 	
 	public void deleteDevProgress(String seq) {

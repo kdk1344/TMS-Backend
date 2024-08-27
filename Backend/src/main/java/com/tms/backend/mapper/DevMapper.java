@@ -26,6 +26,7 @@ public interface DevMapper {
             @Param("subCategory") String subCategory,
             @Param("programType") String programType,
             @Param("programName") String programName,
+            @Param("programId") String programId,
             @Param("regStatus") String regStatus,
             @Param("developer") String developer,
             @Param("devStatus") String devStatus,
@@ -33,8 +34,8 @@ public interface DevMapper {
             @Param("actualEndDate") String actualEndDate,
             @Param("pl") String pl,
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr,
-            @Param("custItMgr") String custItMgr,
-            @Param("custBusiMgr") String custBusiMgr,
+            @Param("ItMgr") String ItMgr,
+            @Param("BusiMgr") String BusiMgr,
             @Param("offset") int offset,
             @Param("size") int size
     );
@@ -45,6 +46,7 @@ public interface DevMapper {
             @Param("subCategory") String subCategory,
             @Param("programType") String programType,
             @Param("programName") String programName,
+            @Param("programId") String programId,
             @Param("regStatus") String regStatus,
             @Param("developer") String developer,
             @Param("devStatus") String devStatus,
@@ -52,8 +54,8 @@ public interface DevMapper {
             @Param("actualEndDate") String actualEndDate,
             @Param("pl") String pl,
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr,
-            @Param("custItMgr") String custItMgr,
-            @Param("custBusiMgr") String custBusiMgr
+            @Param("ItMgr") String ItMgr,
+            @Param("BusiMgr") String BusiMgr
     );
     public void deleteDevProgress(String seq);
 }

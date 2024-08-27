@@ -419,6 +419,13 @@
         FROM category_codes 
         WHERE SUBSTRING(Code, 1, 2) = #{parentcode} and LENGTH(Code) = 4
     </select>
+    
+    <!-- 상위 코드에 따른 하위 코드 갯수 확인 -->
+	<select id="checkChildCodesExist2" parameterType="String" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM category_codes 
+	    WHERE SUBSTRING(Code, 1, 2) = #{code}
+	</select>
 
 	
 </mapper>

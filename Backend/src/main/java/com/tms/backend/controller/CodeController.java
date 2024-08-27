@@ -500,6 +500,17 @@ public class CodeController {
         
         // CategoryCode 삭제
         for (String code : codeList) {
+        	String parentCode = code.substring(0, 2);
+        	String subcode = code.substring(2, 4);
+        	if (code.length() == 2) {
+        		int child = adminService.checkChildCodesExist2(code);
+        		log.info("child:"+child);
+        		if (child > 0 ) {
+        			response.put("status", "failure");
+                    response.put("message", "하위 코드가 존재합니다. 하위 코드를 미리 삭제해주세요.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        	}
+        }
             adminService.deleteCategoryCode(code);
         }
         
@@ -584,12 +595,14 @@ public class CodeController {
     // 조회된 categoryCode 정보를 엑셀로 다운로드
     @GetMapping("/catdownloadFiltered")
     public void downloadFilteredcat(
-            @RequestParam(value = "stageType", required = false) String stageType,
+            @RequestParam(value = "parentCode", required = false) String parentCode,
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "codeName", required = false) String codeName,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
             HttpServletResponse response) throws IOException {
 
-        List<categoryCode> filteredCategoryCodeList = adminService.getFilteredCategoryCodes(stageType, code, codeName);
+    	List<categoryCode> filteredCategoryCodeList = adminService.searchCategoryCodes(parentCode, code, codeName, page, size);
         catexportToExcel(response, filteredCategoryCodeList, "filtered_category_codes.xlsx");
     }
 

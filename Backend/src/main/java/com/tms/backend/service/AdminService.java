@@ -230,6 +230,10 @@ public class AdminService {
     public void deleteCategoryCode(String code) {
     	adminmapper.deleteCategoryCodes(code);
     }
+    
+    public int checkChildCodesExist2(String code) {
+    	return adminmapper.checkChildCodesExist2(code);
+    }
 
     // 카테고리 코드 조회
     public List<categoryCode> searchCategoryCodes(String parentCode, String code, String codeName, int page, int size) {

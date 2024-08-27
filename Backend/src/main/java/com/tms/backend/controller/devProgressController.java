@@ -70,6 +70,7 @@ public class devProgressController {
 	        @RequestParam(value = "subCategory", required = false) String subCategory,
 	        @RequestParam(value = "programType", required = false) String programType,
 	        @RequestParam(value = "programName", required = false) String programName,
+	        @RequestParam(value = "programId", required = false) String programId,
 	        @RequestParam(value = "regStatus", required = false) String regStatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
@@ -77,24 +78,24 @@ public class devProgressController {
 	        @RequestParam(value = "actualEndDate", required = false) String actualEndDate,
 	        @RequestParam(value = "pl", required = false) String pl,
 	        @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
-	        @RequestParam(value = "custItMgr", required = false) String custItMgr,
-	        @RequestParam(value = "custBusiMgr", required = false) String custBusiMgr,
+	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
+	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "10") int size,
 	        Model model) {
 
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName, regStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, custItMgr, custBusiMgr, page, size
+	            majorCategory, subCategory, programType, programName,programId, regStatus, developer,
+	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 	    
 	    List<User> developers = adminService.findDevlopers();
 	    log.info("개발자 목록"+developers);
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
-	            majorCategory, subCategory, programType, programName, regStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, custItMgr, custBusiMgr
+	            majorCategory, subCategory, programType, programName,programId, regStatus, developer,
+	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
 	    );
 
 	    int totalPages = (int) Math.ceil((double) totalDevProgress / size);
@@ -118,6 +119,7 @@ public class devProgressController {
 	        @RequestParam(value = "subCategory", required = false) String subCategory,
 	        @RequestParam(value = "programType", required = false) String programType,
 	        @RequestParam(value = "programName", required = false) String programName,
+	        @RequestParam(value = "programId", required = false) String programId,
 	        @RequestParam(value = "regStatus", required = false) String regStatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
@@ -125,21 +127,21 @@ public class devProgressController {
 	        @RequestParam(value = "actualEndDate", required = false) String actualEndDate,
 	        @RequestParam(value = "pl", required = false) String pl,
 	        @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
-	        @RequestParam(value = "custItMgr", required = false) String custItMgr,
-	        @RequestParam(value = "custBusiMgr", required = false) String custBusiMgr,
+	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
+	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "10") int size,
 	        Model model) {
 
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName, regStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, custItMgr, custBusiMgr, page, size
+	            majorCategory, subCategory, programType, programName, programId, regStatus, developer,
+	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
-	            majorCategory, subCategory, programType, programName, regStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, custItMgr, custBusiMgr
+	            majorCategory, subCategory, programType, programName, programId, regStatus, developer,
+	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
 	    );
 
 	    int totalPages = (int) Math.ceil((double) totalDevProgress / size);
