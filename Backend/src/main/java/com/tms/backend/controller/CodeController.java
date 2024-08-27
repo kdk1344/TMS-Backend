@@ -143,8 +143,10 @@ public class CodeController {
         for (String seq : seqs) {
         	String parentCode = seq.substring(0, 2);
         	String code = seq.substring(2, 4);
+        	log.info(parentCode);
         	if (parentCode == "00") {
         		int child = adminService.checkChildCodesExist(code);
+        		log.info(child);
         		if (child > 0 ) {
         			response.put("status", "failure");
                     response.put("message", "하위 코드가 존재합니다. 하위 코드를 미리 삭제해주세요.");

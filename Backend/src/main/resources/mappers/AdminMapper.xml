@@ -406,7 +406,7 @@
     <select id="findMiddleCodesByParentCode" resultType="categoryCode" parameterType="string">
         SELECT Code, Code_Name as CodeName
         FROM category_codes 
-        WHERE SUBSTRING(Code, 1, 2) = '11' and LENGTH(Code) = 4
+        WHERE SUBSTRING(Code, 1, 2) = #{parentcode} and LENGTH(Code) = 4
     </select>
 
 	
