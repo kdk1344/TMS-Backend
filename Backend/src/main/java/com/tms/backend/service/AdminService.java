@@ -188,6 +188,10 @@ public class AdminService {
     	adminmapper.deleteCommonCode(seq);
     }
     
+    public int checkChildCodesExist(String code) {
+    	return adminmapper.checkChildCodesExist(code);
+    }
+    
     // 대분류 코드 조회 서비스
     public List<CommonCode> getParentCommonCodes() {
         return adminmapper.getParentCommonCodes();

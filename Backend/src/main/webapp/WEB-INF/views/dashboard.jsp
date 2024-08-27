@@ -93,14 +93,31 @@
 
       <!-- 페이지네이션 -->
       <div id="noticePagination" class="pagination">
-	    <c:if test="${startPage > 1}">
-	        <a href="?page=${startPage - 1}&size=${size}">&laquo; Prev</a>
-	    </c:if>
+	    <!-- 첫 페이지로 이동하는 << 링크 -->
+	    <c:choose>
+	        <c:when test="${currentPage > 1}">
+	            <a href="?page=1&size=${size}">&lt;&lt;</a>
+	        </c:when>
+	        <c:otherwise>
+	            <span class="disabled">&lt;&lt;</span>
+	        </c:otherwise>
+	    </c:choose>
 	
+	    <!-- 이전 페이지로 이동하는 < 링크 -->
+	    <c:choose>
+	        <c:when test="${currentPage > 1}">
+	            <a href="?page=${currentPage - 1}&size=${size}">&lt;</a>
+	        </c:when>
+	        <c:otherwise>
+	            <span class="disabled">&lt;</span>
+	        </c:otherwise>
+	    </c:choose>
+	
+	    <!-- 페이지 번호 출력 -->
 	    <c:forEach begin="${startPage}" end="${endPage}" var="i">
 	        <c:choose>
 	            <c:when test="${i == currentPage}">
-	                <strong>${i}</strong>
+	                <strong class="active">${i}</strong>
 	            </c:when>
 	            <c:otherwise>
 	                <a href="?page=${i}&size=${size}">${i}</a>
@@ -108,9 +125,25 @@
 	        </c:choose>
 	    </c:forEach>
 	
-	    <c:if test="${endPage < totalPages}">
-	        <a href="?page=${endPage + 1}&size=${size}">Next &raquo;</a>
-	    </c:if>
+	    <!-- 다음 페이지로 이동하는 > 링크 -->
+	    <c:choose>
+	        <c:when test="${currentPage < totalPages}">
+	            <a href="?page=${currentPage + 1}&size=${size}">&gt;</a>
+	        </c:when>
+	        <c:otherwise>
+	            <span class="disabled">&gt;</span>
+	        </c:otherwise>
+	    </c:choose>
+	
+	    <!-- 마지막 페이지로 이동하는 >> 링크 -->
+	    <c:choose>
+	        <c:when test="${currentPage < totalPages}">
+	            <a href="?page=${totalPages}&size=${size}">&gt;&gt;</a>
+	        </c:when>
+	        <c:otherwise>
+	            <span class="disabled">&gt;&gt;</span>
+	        </c:otherwise>
+	    </c:choose>
 	</div>
       
     </main>

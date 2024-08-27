@@ -141,6 +141,16 @@ public class CodeController {
 
         // CommonCode 삭제
         for (String seq : seqs) {
+        	String parentCode = seq.substring(0, 2);
+        	String code = seq.substring(2, 4);
+        	if (parentCode == "00") {
+        		int child = adminService.checkChildCodesExist(code);
+        		if (child > 0 ) {
+        			response.put("status", "failure");
+                    response.put("message", "하위 코드가 존재합니다. 하위 코드를 미리 삭제해주세요.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        		}
+        	}
             adminService.deleteCommonCode(seq);
         }
         
@@ -544,6 +554,7 @@ public class CodeController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCTCategoryCodes(@RequestParam("parentCode") String parentCode) {
         List<categoryCode> CTCodes = adminService.getCTCode(parentCode);
+        log.info("CTCODE" + CTCodes);
     	Map<String, Object> response = new HashMap<>();
         
     	 // 하위 코드가 없으면 204 상태와 함께 빈 배열 반환

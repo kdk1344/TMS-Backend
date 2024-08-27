@@ -108,8 +108,16 @@ main.content {
     margin: 0 5px;
     text-decoration: none;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .pagination .active {
     background-color: #0056b3;
+    color : white;
+    border-radius: 4px;
+}
+
+.pagination .disabled{
+	color: darkgray;
+	font-weight: normal;
 }

@@ -288,6 +288,13 @@
 		DELETE FROM common_codes WHERE CONCAT(Parent_Code, Code) = #{seq}
 	</delete>
 	
+	<!-- 상위 코드에 따른 하위 코드 갯수 확인 -->
+	<select id="checkChildCodesExist" parameterType="String" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM common_codes 
+	    WHERE parent_code = #{code}
+	</select>
+	
 	<!-- 대분류 코드만 가져오기 -->
     <select id="getParentCommonCodes" resultType="CommonCode">
         SELECT CODE, Code_Name as CodeName
@@ -399,7 +406,7 @@
     <select id="findMiddleCodesByParentCode" resultType="categoryCode" parameterType="string">
         SELECT Code, Code_Name as CodeName
         FROM category_codes 
-        WHERE parent_code = #{parentCode}
+        WHERE SUBSTRING(Code, 1, 2) = '11' and LENGTH(Code) = 4
     </select>
 
 	

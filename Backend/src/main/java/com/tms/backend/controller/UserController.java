@@ -62,16 +62,36 @@ public class UserController {
     	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size);
     	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
         int totalPages = (int) Math.ceil((double) totalNotices / size);
-        Notice latestNotice = adminService.getLatestNotice();
         
+     // 페이지네이션 그룹 설정 (한 그룹에 10페이지씩)
+        int pageGroupSize = 10;
+        int startPage = (page - 1) / pageGroupSize * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+        
+        // 이전, 다음 페이지 그룹이 있는지 확인
+        boolean hasPrevPageGroup = startPage > 1;
+        boolean hasNextPageGroup = endPage < totalPages;
+
+        // 이전, 다음 그룹의 시작 페이지
+        int prevPageGroupStart = startPage - pageGroupSize;
+        int nextPageGroupStart = startPage + pageGroupSize;
+        
+        Notice latestNotice = adminService.getLatestNotice();
         List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq());
         latestNotice.setAttachments(attachments);
 
+        // 모델에 데이터 추가
         model.addAttribute("notices", noticeList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalNotices", totalNotices);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("latestNotice", latestNotice);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("hasPrevPageGroup", hasPrevPageGroup);
+        model.addAttribute("hasNextPageGroup", hasNextPageGroup);
+        model.addAttribute("prevPageGroupStart", prevPageGroupStart);
+        model.addAttribute("nextPageGroupStart", nextPageGroupStart);
         
         log.info("Session ID after login: " + session.getId());
         
