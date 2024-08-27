@@ -31,6 +31,7 @@ const openCategoryCodeRegisterModalButton = document.getElementById("openCategor
 const openCategoryCodeFileDownloadModalButton = document.getElementById("openCategoryCodeFileDownloadModalButton");
 const closeCategoryCodeRegisterModalButton = document.getElementById("closeCategoryCodeRegisterModalButton");
 const closeCategoryCodeEditModalButton = document.getElementById("closeCategoryCodeEditModalButton");
+const closeCategoryCodeFileDownloadModalButton = document.getElementById("closeCategoryCodeFileDownloadModalButton");
 const deleteCategoryCodeButton = document.getElementById("deleteCategoryCodeButton");
 
 // 문서 로드 시 초기화
@@ -38,9 +39,9 @@ document.addEventListener("DOMContentLoaded", init);
 
 // 모달 아이디
 const MODAL_ID = {
-  COMMON_CODE_REGISTER: "categoryCodeRegisterModal",
-  COMMON_CODE_EDIT: "categoryCodeEditModal",
-  COMMON_CODE_FILE_DOWNLOAD: "categoryCodeFileDownloadModal",
+  CATEGORY_CODE_REGISTER: "categoryCodeRegisterModal",
+  CATEGORY_CODE_EDIT: "categoryCodeEditModal",
+  CATEGORY_CODE_FILE_DOWNLOAD: "categoryCodeFileDownloadModal",
 };
 
 // 초기화 함수
@@ -147,19 +148,24 @@ function setupEventListeners() {
     openCategoryCodeRegisterModalButton &&
     closeCategoryCodeRegisterModalButton &&
     openCategoryCodeFileDownloadModalButton &&
-    closeCategoryCodeEditModalButton
+    closeCategoryCodeEditModalButton &&
+    closeCategoryCodeFileDownloadModalButton
   ) {
     openCategoryCodeRegisterModalButton.addEventListener("click", () => {
-      openModal(MODAL_ID.COMMON_CODE_REGISTER);
+      openModal(MODAL_ID.CATEGORY_CODE_REGISTER);
     });
-    closeCategoryCodeRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_REGISTER));
+    closeCategoryCodeRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.CATEGORY_CODE_REGISTER));
 
     openCategoryCodeFileDownloadModalButton.addEventListener("click", () => {
       copyFilterValuesToDownloadForm(); // 분류코드 필터링 값 복사
-      openModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD); // 모달 열기
+      openModal(MODAL_ID.CATEGORY_CODE_FILE_DOWNLOAD); // 모달 열기
     });
 
-    closeCategoryCodeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_EDIT));
+    closeCategoryCodeFileDownloadModalButton.addEventListener("click", () =>
+      closeModal(MODAL_ID.CATEGORY_CODE_FILE_DOWNLOAD)
+    );
+
+    closeCategoryCodeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.CATEGORY_CODE_EDIT));
   }
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
@@ -335,7 +341,7 @@ async function loadCategoryCodeDataFromRow(row) {
   document.getElementById("codeNameForEdit").value = codeName;
 
   // 모달 열기
-  openModal(MODAL_ID.COMMON_CODE_EDIT);
+  openModal(MODAL_ID.CATEGORY_CODE_EDIT);
 }
 
 // 분류코드 등록
@@ -365,7 +371,7 @@ async function registerCategoryCode(event) {
     if (success) {
       alert(`분류코드(코드명: ${categoryCode.codeName}) 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
-      closeModal(MODAL_ID.COMMON_CODE_REGISTER); // 모달 닫기
+      closeModal(MODAL_ID.CATEGORY_CODE_REGISTER); // 모달 닫기
       window.location.reload();
     }
   } catch (error) {
@@ -402,7 +408,7 @@ async function editCategoryCode(event) {
     if (success) {
       alert(`분류코드(코드명: ${categoryCode.codeName}) 수정이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
-      closeModal(MODAL_ID.COMMON_CODE_EDIT); // 모달 닫기
+      closeModal(MODAL_ID.CATEGORY_CODE_EDIT); // 모달 닫기
       location.reload(); // 페이지 새로고침
     }
   } catch (error) {

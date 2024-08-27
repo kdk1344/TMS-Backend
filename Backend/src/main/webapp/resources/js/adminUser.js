@@ -22,6 +22,7 @@ const selectAllUserCheckbox = document.getElementById("selectAllUserCheckbox");
 
 const openUserRegisterModalButton = document.getElementById("openUserRegisterModalButton");
 const openUserFileDownloadModalButton = document.getElementById("openUserFileDownloadModalButton");
+const closeUserFileDownloadModalButton = document.getElementById("closeUserFileDownloadModalButton");
 const closeUserRegisterModalButton = document.getElementById("closeUserRegisterModalButton");
 const closeUserEditModalButton = document.getElementById("closeUserEditModalButton");
 const deleteUserButton = document.getElementById("deleteUserButton");
@@ -110,7 +111,8 @@ function setupEventListeners() {
     openUserRegisterModalButton &&
     closeUserRegisterModalButton &&
     openUserFileDownloadModalButton &&
-    closeUserEditModalButton
+    closeUserEditModalButton &&
+    closeUserFileDownloadModalButton
   ) {
     openUserRegisterModalButton.addEventListener("click", () => openModal(MODAL_ID.USER_REGISTER));
     closeUserRegisterModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_REGISTER));
@@ -119,6 +121,8 @@ function setupEventListeners() {
       copyFilterValuesToDownloadForm(); // 사용자 필터링 값 복사
       openModal(MODAL_ID.USER_FILE_DOWNLOAD); // 모달 열기
     });
+
+    closeUserFileDownloadModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_FILE_DOWNLOAD));
 
     closeUserEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.USER_EDIT));
   }

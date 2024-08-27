@@ -499,6 +499,10 @@ button:focus {
   justify-content: end;
 }
 
+.align-center {
+  align-items: center;
+}
+
 .align-end {
   align-items: end;
 }
@@ -546,4 +550,14 @@ button:focus {
   width: 16px;
   height: 16px;
   vertical-align: middle;
+}
+
+.download-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  margin-bottom: 24px;
+
+  white-space: nowrap;
 }

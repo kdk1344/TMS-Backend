@@ -109,14 +109,21 @@
         <!-- Modal content -->
         <div class="modal-content">
           <h2>엑셀 다운로드</h2>
-          <div class="flex-box">
-            <form id="downloadAllUserForm" action="downloadAll" method="get">
+          <div class="download-box">
+            <form id="downloadAllUserForm" action="downloadAll" method="get" class="flex-box align-center">
               <button type="submit" id="downloadAllUserButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />전체자료 다운로드
               </button>
+              전체 데이터를 주별로 다운로드 받아 실적 집계로 활용
             </form>
 
-            <form id="downloadFilteredUserForm" action="downloadFiltered" method="get" id="downloadFilteredForm">
+            <form
+              id="downloadFilteredUserForm"
+              action="downloadFiltered"
+              method="get"
+              id="downloadFilteredForm"
+              class="flex-box align-center"
+            >
               <!-- 숨겨진 input 필드 -->
               <input type="hidden" id="downloadUserName" name="userName" />
               <input type="hidden" id="downloadAuthorityName" name="authorityName" />
@@ -124,7 +131,11 @@
               <button type="submit" id="downloadFilteredUserButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />조회결과 다운로드
               </button>
+              조회조건에 의한 결과만 다운로드
             </form>
+          </div>
+          <div class="flex-box justify-end">
+            <button type="button" class="cancel-button" id="closeUserFileDownloadModalButton">닫기</button>
           </div>
         </div>
       </div>

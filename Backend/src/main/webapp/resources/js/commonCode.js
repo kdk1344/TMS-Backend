@@ -26,6 +26,7 @@ const selectAllCommonCodeCheckbox = document.getElementById("selectAllCommonCode
 
 const openCommonCodeRegisterModalButton = document.getElementById("openCommonCodeRegisterModalButton");
 const openCommonCodeFileDownloadModalButton = document.getElementById("openCommonCodeFileDownloadModalButton");
+const closeCommonCodeFileDownloadModalButton = document.getElementById("closeCommonCodeFileDownloadModalButton");
 const closeCommonCodeRegisterModalButton = document.getElementById("closeCommonCodeRegisterModalButton");
 const closeCommonCodeEditModalButton = document.getElementById("closeCommonCodeEditModalButton");
 const deleteCommonCodeButton = document.getElementById("deleteCommonCodeButton");
@@ -121,7 +122,8 @@ function setupEventListeners() {
     openCommonCodeRegisterModalButton &&
     closeCommonCodeRegisterModalButton &&
     openCommonCodeFileDownloadModalButton &&
-    closeCommonCodeEditModalButton
+    closeCommonCodeEditModalButton &&
+    closeCommonCodeFileDownloadModalButton
   ) {
     openCommonCodeRegisterModalButton.addEventListener("click", () => {
       initializeParentCodes("parentCodeForRegister");
@@ -133,6 +135,10 @@ function setupEventListeners() {
       copyFilterValuesToDownloadForm(); // 공통코드 필터링 값 복사
       openModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD); // 모달 열기
     });
+
+    closeCommonCodeFileDownloadModalButton.addEventListener("click", () =>
+      closeModal(MODAL_ID.COMMON_CODE_FILE_DOWNLOAD)
+    );
 
     closeCommonCodeEditModalButton.addEventListener("click", () => closeModal(MODAL_ID.COMMON_CODE_EDIT));
   }
