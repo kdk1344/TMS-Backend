@@ -144,9 +144,9 @@ public class CodeController {
         	String parentCode = seq.substring(0, 2);
         	String code = seq.substring(2, 4);
         	log.info(parentCode);
-        	if (parentCode == "00") {
+        	if (parentCode.equals("00")) {
         		int child = adminService.checkChildCodesExist(code);
-        		log.info(child);
+        		log.info("child:"+child);
         		if (child > 0 ) {
         			response.put("status", "failure");
                     response.put("message", "하위 코드가 존재합니다. 하위 코드를 미리 삭제해주세요.");
@@ -508,21 +508,21 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
     
-   
     @GetMapping(value = "api/categoryCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getCategoryCodes(@RequestParam(value = "stageType", required = false) String stageType,
+    public Map<String, Object> getCategoryCodes(@RequestParam(value = "parentCode", required = false) String parentCode,
                                                 @RequestParam(value = "code", required = false) String code,
                                                 @RequestParam(value = "codeName", required = false) String codeName,
                                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
-        // categoryCode 조회
-        List<categoryCode> categoryCodes = adminService.searchCategoryCodes(stageType, code, codeName, page, size);
-        int totalCategoryCodes = adminService.getTotalCategoryCodeCount(stageType, code, codeName);
+    	Map<String, Object> response = new HashMap<>();
+    	
+    	// categoryCode 조회
+        List<categoryCode> categoryCodes = adminService.searchCategoryCodes(parentCode, code, codeName, page, size);
+        int totalCategoryCodes = adminService.getTotalCategoryCodeCount(parentCode, code, codeName);
         int totalPages = (int) Math.ceil((double) totalCategoryCodes / size);
 
         // 응답 생성
-        Map<String, Object> response = new HashMap<>();
         response.put("categoryCodes", categoryCodes);
         response.put("currentPage", page);
         response.put("totalPages", totalPages);

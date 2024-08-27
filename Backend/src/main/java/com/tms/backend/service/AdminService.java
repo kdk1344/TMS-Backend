@@ -2,6 +2,7 @@
 package com.tms.backend.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -231,14 +232,14 @@ public class AdminService {
     }
 
     // 카테고리 코드 조회
-    public List<categoryCode> searchCategoryCodes(String stageType, String code, String codeName, int page, int size) {
+    public List<categoryCode> searchCategoryCodes(String parentCode, String code, String codeName, int page, int size) {
         int offset = (page - 1) * size;
-        return adminmapper.searchCategoryCodes(stageType, code, codeName, offset, size);
+        return adminmapper.searchCategoryCodes(parentCode, code, codeName, offset, size);
     }
 
     // 총 카테고리 코드 수 조회
-    public int getTotalCategoryCodeCount(String stageType, String code, String codeName) {
-        return adminmapper.getTotalCategoryCodeCount(stageType, code, codeName);
+    public int getTotalCategoryCodeCount(String parentCode, String code, String codeName) {
+        return adminmapper.getTotalCategoryCodeCount(parentCode, code, codeName);
     }
 
     // 모든 카테고리 코드 가져오기

@@ -77,12 +77,12 @@ public interface AdminMapper {
     public String getParentCode(String parentCode);
     public int updateCategoryCode(categoryCode categoryCode);
     public void deleteCategoryCodes(String code);
-    public List<categoryCode> searchCategoryCodes(@Param("stageType") String stageType, 
+    public List<categoryCode> searchCategoryCodes(@Param("parentCode") String parentCode, 
 	                                              @Param("code") String code, 
 	                                              @Param("codeName") String codeName, 
 	                                              @Param("offset") int offset, 
 	                                              @Param("size") int size);
-    public int getTotalCategoryCodeCount(@Param("stageType") String stageType,
+    public int getTotalCategoryCodeCount(@Param("parentCode") String parentCode,
     									 @Param("code") String code,
     									 @Param("codeName") String codeName);
     public List<categoryCode> getAllCategoryCodes();

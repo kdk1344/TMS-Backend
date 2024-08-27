@@ -345,12 +345,15 @@
         SELECT Stage_Type as StageType, Code, Code_Name as CodeName
         FROM category_codes
         WHERE 1=1
-        <if test="stageType != null and stageType != ''">
-            AND Stage_Type = #{stageType}
-        </if>
-        <if test="code != null and code != ''">
-            AND Code LIKE CONCAT('%', #{code}, '%')
-        </if>
+        <!-- parentCode가 있을 경우: 해당 parentCode로 시작하는 하위 4자리 코드 조회 -->
+	    <if test="parentCode != null and parentCode != ''">
+	        AND Code LIKE CONCAT(#{parentCode}, '%')
+	    </if>
+        <!-- code가 있을 경우: parentCode가 반드시 있어야 함 -->
+	    <if test="code != null and code != '' and parentCode != null and parentCode != ''">
+	        AND LENGTH(Code) = 4
+	        AND Code = #{code}
+	    </if>
         <if test="codeName != null and codeName != ''">
             AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
         </if>
@@ -362,15 +365,23 @@
         SELECT COUNT(*)
         FROM category_codes
         WHERE 1=1
-        <if test="stageType != null and stageType != ''">
-            AND Stage_Type = #{stageType}
-        </if>
-        <if test="code != null and code != ''">
-            AND Code LIKE CONCAT('%', #{code}, '%')
-        </if>
-        <if test="codeName != null and codeName != ''">
-            AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
-        </if>
+        <!-- parentCode가 있을 경우 2자리 코드 조회 -->
+	    <if test="parentCode != null and parentCode != ''">
+	        AND LENGTH(Code) = 2
+	        AND Code = #{parentCode}
+	    </if>
+	    
+	    <!-- code가 있을 경우, parentCode가 반드시 있어야 함 -->
+	    <if test="code != null and code != '' and parentCode != null and parentCode != ''">
+	        AND LENGTH(Code) = 4
+	        AND Code LIKE CONCAT(#{parentCode}, '%')  <!-- parentCode가 앞부분 -->
+	        AND Code = #{code}
+	    </if>
+	
+	    <!-- 코드명 필터링 -->
+	    <if test="codeName != null and codeName != ''">
+	        AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
+	    </if>
     </select>
 
     <!-- 모든 카테고리 코드 가져오기 -->
