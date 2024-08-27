@@ -481,7 +481,7 @@ public class CodeController {
         }
     }
 
-    @DeleteMapping(value= "api/deletecat", produces = "application/json")
+    @DeleteMapping(value= "api/catdelete", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deletecat(@RequestBody List<String> codeList) {
         Map<String, Object> response = new HashMap<>();
@@ -519,7 +519,7 @@ public class CodeController {
         return response;
     }
     
-    @GetMapping(value = "api/ctparentCode", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "api/catparentCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getParentCategoryCodes() {
     	Map<String, Object> response = new HashMap<>();
@@ -540,7 +540,7 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
     
-    @GetMapping(value = "api/ctcode", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "api/catcode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCTCategoryCodes(@RequestParam("parentCode") String parentCode) {
         List<categoryCode> CTCodes = adminService.getCTCode(parentCode);
@@ -562,14 +562,14 @@ public class CodeController {
     }
     
     // 전체 categoryCode 정보를 엑셀로 다운로드
-    @GetMapping("/downloadAllcat")
+    @GetMapping("/catdownloadAll")
     public void downloadAllcat(HttpServletResponse response) throws IOException {
         List<categoryCode> categoryCodeList = adminService.getAllCategoryCodes();
         catexportToExcel(response, categoryCodeList, "all_category_codes.xlsx");
     }
 
     // 조회된 categoryCode 정보를 엑셀로 다운로드
-    @GetMapping("/downloadFilteredcat")
+    @GetMapping("/catdownloadFiltered")
     public void downloadFilteredcat(
             @RequestParam(value = "stageType", required = false) String stageType,
             @RequestParam(value = "code", required = false) String code,
@@ -694,59 +694,6 @@ public class CodeController {
         return true;
     }
     
-    //test
-    
- // 카테고리 코드 등록
-    @PostMapping(value = "catwrite")
-    public String catWrite(categoryCode categoryCode, Model model) {
-        try {
-        	// 입력된 코드가 2자리 이상이면 오류 메시지 추가
-            if (categoryCode.getCode().length() > 2) {
-                model.addAttribute("status", "failure");
-                model.addAttribute("message", "코드는 2자리 이하로 입력해야 합니다.");
-                log.info("실패앳");
-                return "categoryCodeForm"; // 오류 시 다시 폼 페이지로 이동
-            }
-        	
-        	
-            // StageType에 따른 코드 처리
-            if ("중".equals(categoryCode.getStageType())) {
-                // DB에서 입력한 상위 대분류 코드 조회
-                String parentCode = adminService.getParentCode(categoryCode.getParentCode());
-                log.info(parentCode);
-
-                if (parentCode == null) {
-                    model.addAttribute("status", "failure");
-                    model.addAttribute("message", "상위 대분류 코드를 찾을 수 없습니다.");
-                    return "categoryCodeForm"; // 오류 시 다시 폼 페이지로 이동
-                }
-
-                // 중분류 코드와 상위 대분류 코드를 결합하여 최종 코드 생성
-                categoryCode.setCode(parentCode + categoryCode.getCode());
-                log.info(categoryCode.getCode());
-            }
-
-            // 최종적으로 생성된 코드만 DB에 저장 (parentCode는 저장하지 않음)
-            adminService.addCategoryCode(categoryCode);
-
-            // 성공 응답 생성
-            model.addAttribute("status", "success");
-            model.addAttribute("message", "카테고리 코드가 성공적으로 등록되었습니다.");
-            model.addAttribute("categoryCode", categoryCode);
-
-            return "categoryCode"; // 성공 시 성공 페이지로 이동
-
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("status", "failure");
-            model.addAttribute("message", e.getMessage());
-            return "categoryCodeForm"; // 오류 시 다시 폼 페이지로 이동
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("status", "error");
-            model.addAttribute("message", "카테고리 코드 등록 중 오류가 발생했습니다.");
-            return "categoryCodeForm"; // 오류 시 다시 폼 페이지로 이동
-        }
-    }
 
     
 

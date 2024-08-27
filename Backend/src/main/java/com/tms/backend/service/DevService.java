@@ -39,10 +39,10 @@ public class DevService {
 	            String devStatus, String actualStartDate, String actualEndDate, 
 	            String pl, String thirdPartyTestMgr, String custItMgr, 
 	            String custBusiMgr, int page, int size) {
-	int offset = (page - 1) * size;
-	return devMapper.searchDevProgress(majorCategory, subCategory, programType, programName,
-	regStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
-	thirdPartyTestMgr, custItMgr, custBusiMgr, offset, size);
+		int offset = (page - 1) * size;
+		return devMapper.searchDevProgress(majorCategory, subCategory, programType, programName,
+		regStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
+		thirdPartyTestMgr, custItMgr, custBusiMgr, offset, size);
 	}
 	
 	public int getTotalDevProgressCount(String majorCategory, String subCategory, String programType, 
@@ -50,10 +50,15 @@ public class DevService {
 	     String devStatus, String actualStartDate, String actualEndDate, 
 	     String pl, String thirdPartyTestMgr, String custItMgr, 
 	     String custBusiMgr) {
-	return devMapper.getTotalDevProgressCount(majorCategory, subCategory, programType, programName,
-	regStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
-	thirdPartyTestMgr, custItMgr, custBusiMgr);
+		return devMapper.getTotalDevProgressCount(majorCategory, subCategory, programType, programName,
+		regStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
+		thirdPartyTestMgr, custItMgr, custBusiMgr);
 	}
+	
+	public void deleteDevProgress(String seq) {
+		devMapper.deleteDevProgress(seq);
+    }
+	
 	
 	
 

@@ -55,4 +55,5 @@ public interface DevMapper {
             @Param("custItMgr") String custItMgr,
             @Param("custBusiMgr") String custBusiMgr
     );
+    public void deleteDevProgress(String seq);
 }

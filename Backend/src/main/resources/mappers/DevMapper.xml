@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- user-mapper.xml -->
+<!-- Dev-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.DevMapper">
     <select id="searchDevProgress" parameterType="map" resultType="devProgress">
 	    SELECT 
@@ -55,8 +55,47 @@
 	    SELECT COUNT(*)
 	    FROM DEV_PROGRESS
 	    WHERE 1=1
-	    <!-- 동일한 조건을 여기에 적용 -->
+	    <if test="majorCategory != null and majorCategory != ''">
+	        AND MAJOR_CATEGORY = #{majorCategory}
+	    </if>
+	    <if test="subCategory != null and subCategory != ''">
+	        AND SUB_CATEGORY = #{subCategory}
+	    </if>
+	    <if test="programType != null and programType != ''">
+	        AND PROGRAM_TYPE = #{programType}
+	    </if>
+	    <if test="programName != null and programName != ''">
+	        AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
+	    </if>
+	    <if test="regStatus != null and regStatus != ''">
+	        AND REG_STATUS = #{regStatus}
+	    </if>
+	    <if test="developer != null and developer != ''">
+	        AND DEVELOPER = #{developer}
+	    </if>
+	    <if test="devStatus != null and devStatus != ''">
+	        AND DEV_STATUS = #{devStatus}
+	    </if>
+	    <if test="actualStartDate != null and actualEndDate != null">
+	        AND ACTUAL_START_DATE BETWEEN #{actualStartDate} AND #{actualEndDate}
+	    </if>
+	    <if test="pl != null and pl != ''">
+	        AND PL = #{pl}
+	    </if>
+	    <if test="thirdPartyTestMgr != null and thirdPartyTestMgr != ''">
+	        AND THIRD_PARTY_TEST_MGR = #{thirdPartyTestMgr}
+	    </if>
+	    <if test="custItMgr != null and custItMgr != ''">
+	        AND CUST_IT_MGR = #{custItMgr}
+	    </if>
+	    <if test="custBusiMgr != null and custBusiMgr != ''">
+	        AND CUST_BUSI_MGR = #{custBusiMgr}
+	    </if>
 	</select>
+	
+	<delete id="deleteCommonCode" parameterType="String">
+		DELETE FROM DEV_PROGRESS WHERE SEQ = #{seq}
+	</delete>
 
 	
 </mapper>

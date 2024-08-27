@@ -93,17 +93,25 @@
 
       <!-- 페이지네이션 -->
       <div id="noticePagination" class="pagination">
-      	<c:forEach var="i" begin="1" end="${totalPages}">
-            <c:choose>
-                <c:when test="${i == currentPage}">
-                    <strong>${i}</strong>
-                </c:when>
-                <c:otherwise>
-                    <a href="?page=${i}&size=${size}">${i}</a>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
-      </div>
+	    <c:if test="${startPage > 1}">
+	        <a href="?page=${startPage - 1}&size=${size}">&laquo; Prev</a>
+	    </c:if>
+	
+	    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+	        <c:choose>
+	            <c:when test="${i == currentPage}">
+	                <strong>${i}</strong>
+	            </c:when>
+	            <c:otherwise>
+	                <a href="?page=${i}&size=${size}">${i}</a>
+	            </c:otherwise>
+	        </c:choose>
+	    </c:forEach>
+	
+	    <c:if test="${endPage < totalPages}">
+	        <a href="?page=${endPage + 1}&size=${size}">Next &raquo;</a>
+	    </c:if>
+	</div>
       
     </main>
   </body>
@@ -126,5 +134,7 @@
 		  window.onload = function() {
 		    truncateTextByClass("notice-contents", 50); // 최대 50글자까지만 표시
 		  };
+		  
+		  function 
   </script>
 </html>
