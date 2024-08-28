@@ -264,6 +264,9 @@ export function getCurrentDate() {
   return `${year}-${month}-${day}`; // yyyy-mm-dd 형식
 }
 
+// 파일 목록을 메모리에서 관리할 배열
+const fileListStore = new Map();
+
 // 파일 목록 프리뷰 업데이트 함수
 export function updateFilePreview(fileInputId, fileListOutputId) {
   const fileInput = document.getElementById(fileInputId);
@@ -274,13 +277,13 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     return;
   }
 
-  const files = Array.from(fileInput.files);
-
   // 파일 목록을 포함할 <ul> 요소 생성
   const fileList = document.createElement("ul");
 
-  files.forEach((file, index) => {
-    // 파일 항목을 포함할 <li> 요소 생성
+  const files = Array.from(fileInput.files);
+
+  // 저장된 파일 목록을 순회하며 <li> 요소 생성
+  files.forEach((file, _) => {
     const fileItem = document.createElement("li");
 
     // 파일 이름 표시
@@ -295,7 +298,7 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
 
     // 삭제 버튼 클릭 이벤트
     removeButton.addEventListener("click", () => {
-      removeFile(index, fileInputId, fileListOutputId);
+      removeFile(file.name, fileInputId, fileListOutputId);
     });
 
     // 파일 항목에 파일 이름과 삭제 버튼 추가
@@ -310,14 +313,40 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
   fileListOutput.replaceChildren(fileList);
 }
 
-// 파일 제거 함수
-export function removeFile(index, fileInputId, fileListOutputId) {
+// 파일 추가 함수
+export function addFiles(fileInputId) {
   const fileInput = document.getElementById(fileInputId);
 
+  // 새로 선택된 파일들을 가져옴
+  const newFiles = Array.from(fileInput.files);
+
+  // 새로 선택된 파일들을 fileListStore에 추가
+  newFiles.forEach((file) => {
+    fileListStore.set(file.name, file);
+  });
+
+  // 새로운 파일들을 저장하기 위한 DataTransfer 객체 생성
+  const dt = new DataTransfer();
+
+  // fileListStore에 있는 파일들을 DataTransfer 객체에 추가
+  fileListStore.forEach((file) => dt.items.add(file));
+
+  // 파일 입력 필드의 파일 목록을 DataTransfer 객체의 파일로 업데이트
+  fileInput.files = dt.files;
+}
+
+// 파일 제거 함수
+export function removeFile(fileName, fileInputId, fileListOutputId) {
+  const fileInput = document.getElementById(fileInputId);
+
+  // 기존 파일 목록에서 삭제
+  fileListStore.delete(fileName);
+
+  // DataTransfer 객체를 사용하여 새로운 파일 목록 생성
   const dt = new DataTransfer();
 
   Array.from(fileInput.files)
-    .filter((_, i) => i !== index) // 해당 인덱스의 파일을 제외한 나머지 파일들을 다시 추가
+    .filter((file) => file.name !== fileName) // 삭제할 파일을 제외
     .forEach((file) => dt.items.add(file));
 
   fileInput.files = dt.files; // fileInput의 파일 목록을 업데이트
@@ -396,6 +425,8 @@ export async function loadFilesToInput(fileInputID, fileIDs) {
     const files = await Promise.all(
       fileIDs.map(async (fileID) => {
         try {
+          if (fileID === "") return null;
+
           const { blob, fileName } = await getFile(fileID); // getFile 함수로 파일을 가져옴
 
           return new File([blob], fileName); // Blob과 파일 이름으로 File 객체 생성

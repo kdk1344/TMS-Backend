@@ -10,6 +10,7 @@ import {
   hideSpinner,
   downloadFile,
   loadFilesToInput,
+  addFiles,
 } from "./common.js";
 
 // DOM 요소들
@@ -54,6 +55,7 @@ function setupEventListeners() {
       const fileInputId = "fileInputForEdit";
       const fileListOutputId = "fileOutputForEdit";
 
+      addFiles(fileInputId);
       updateFilePreview(fileInputId, fileListOutputId);
     });
   }
