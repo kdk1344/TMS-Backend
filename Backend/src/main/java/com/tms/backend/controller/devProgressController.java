@@ -71,7 +71,7 @@ public class devProgressController {
 	        @RequestParam(value = "programType", required = false) String programType,
 	        @RequestParam(value = "programName", required = false) String programName,
 	        @RequestParam(value = "programId", required = false) String programId,
-	        @RequestParam(value = "regStatus", required = false) String regStatus,
+	        @RequestParam(value = "programstatus", required = false) String programstatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
 	        @RequestParam(value = "actualStartDate", required = false) String actualStartDate,
@@ -86,7 +86,7 @@ public class devProgressController {
 
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName,programId, regStatus, developer,
+	            majorCategory, subCategory, programType, programName,programId, programstatus, developer,
 	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 	    
@@ -94,7 +94,7 @@ public class devProgressController {
 	    log.info("개발자 목록"+developers);
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
-	            majorCategory, subCategory, programType, programName,programId, regStatus, developer,
+	            majorCategory, subCategory, programType, programName,programId, programstatus, developer,
 	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
 	    );
 
@@ -120,7 +120,7 @@ public class devProgressController {
 	        @RequestParam(value = "programType", required = false) String programType,
 	        @RequestParam(value = "programName", required = false) String programName,
 	        @RequestParam(value = "programId", required = false) String programId,
-	        @RequestParam(value = "regStatus", required = false) String regStatus,
+	        @RequestParam(value = "programstatus", required = false) String programstatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
 	        @RequestParam(value = "actualStartDate", required = false) String actualStartDate,
@@ -135,12 +135,12 @@ public class devProgressController {
 
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName, programId, regStatus, developer,
+	            majorCategory, subCategory, programType, programName, programId, programstatus, developer,
 	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
-	            majorCategory, subCategory, programType, programName, programId, regStatus, developer,
+	            majorCategory, subCategory, programType, programName, programId, programstatus, developer,
 	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
 	    );
 
@@ -250,7 +250,7 @@ public class devProgressController {
 	        @RequestParam(value = "programType", required = false) String programType,
 	        @RequestParam(value = "programName", required = false) String programName,
 	        @RequestParam(value = "programId", required = false) String programId,
-	        @RequestParam(value = "regStatus", required = false) String regStatus,
+	        @RequestParam(value = "programstatus", required = false) String programstatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
 	        @RequestParam(value = "actualStartDate", required = false) String actualStartDate,
@@ -264,10 +264,13 @@ public class devProgressController {
             HttpServletResponse response) throws IOException {
     	
     	log.info("확인중"+subCategory);
+    	log.info("확인중"+actualStartDate);
+    	log.info("확인중"+actualEndDate);
     	List<devProgress> filteredDevCodeList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName,programId, regStatus, developer,
+	            majorCategory, subCategory, programType, programName, programId, programstatus, developer,
 	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
+
     	log.info("확인중"+filteredDevCodeList);
         devexportToExcel(response, filteredDevCodeList, "filtered_dev_codes.xlsx");
     }
@@ -294,7 +297,7 @@ public class devProgressController {
         headerRow.createCell(12).setCellValue("PRIORITY");
         headerRow.createCell(13).setCellValue("DIFFICULTY");
         headerRow.createCell(14).setCellValue("ESTIMATED_EFFORT");
-        headerRow.createCell(15).setCellValue("REG_STATUS");
+        headerRow.createCell(15).setCellValue("program_status");
         headerRow.createCell(16).setCellValue("REQ_ID");
         headerRow.createCell(17).setCellValue("DELETION_HANDLER");
         headerRow.createCell(18).setCellValue("DELETION_DATE");
@@ -350,7 +353,7 @@ public class devProgressController {
             row.createCell(12).setCellValue(devProgress.getPriority());
             row.createCell(13).setCellValue(devProgress.getDifficulty());
             row.createCell(14).setCellValue(devProgress.getEstimatedEffort());
-            row.createCell(15).setCellValue(devProgress.getRegStatus());
+            row.createCell(15).setCellValue(devProgress.getProgramstatus());
             row.createCell(16).setCellValue(devProgress.getReqId());
             row.createCell(17).setCellValue(devProgress.getDeletionHandler());
             row.createCell(18).setCellValue(devProgress.getDeletionDate());
@@ -396,8 +399,258 @@ public class devProgressController {
         }
         workbook.close();
     }
+  
+    @PostMapping(value = "api/devupload", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> catuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        Map<String, Object> response = new HashMap<>();
+        if (file.isEmpty()) {
+            response.put("status", "failure");
+            response.put("message", "파일이 없습니다. 다시 시도해 주세요.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            Row headerRow = sheet.getRow(0);
+
+            // 예상하는 컬럼명 리스트
+            List<String> expectedHeaders = Arrays.asList("SEQ", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
+            		"PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "CLASS_NAME", "SCREEN_ID", 
+            		"SCREEN_NAME", "SCREEN_MENU_PATH", "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "REG_STATUS", 
+            		"REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", "DEVELOPER", "PLANNED_START_DATE", 
+            		"PLANNED_END_DATE", "ACTUAL_START_DATE", "ACTUAL_END_DATE", "PL", "PL_TEST_SCD_DATE", 
+            		"PL_TEST_CMP_DATE", "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", "IT_CONFIRM_DATE", 
+            		"IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", 
+            		"BUSI_TEST_NOTES", "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
+            		"THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "DEV_STATUS", "INIT_REG_DATE", "INIT_REGISTRAR", 
+            		"LAST_MODIFIED_DATE", "LAST_MODIFIER");
+            if (!isHeaderValid4(headerRow, expectedHeaders)) {
+                response.put("status", "error");
+                response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            List<devProgress> devProgress = new ArrayList<>();
+
+            // 첫 번째 행은 헤더이므로 건너뜁니다.
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    devProgress devprogress = new devProgress();
+                    try {
+                    	devprogress.setSeq((int) row.getCell(0).getNumericCellValue());
+                    	devprogress.setMajorCategory(row.getCell(1).getStringCellValue());
+                    	devprogress.setSubCategory(row.getCell(2).getStringCellValue());
+                    	devprogress.setMinorCategory(row.getCell(3).getStringCellValue());
+                    	devprogress.setProgramDetailType(row.getCell(4).getStringCellValue());
+                    	devprogress.setProgramType(row.getCell(5).getStringCellValue());
+                    	devprogress.setProgramId(row.getCell(6).getStringCellValue());
+                    	devprogress.setProgramName(row.getCell(7).getStringCellValue());
+                    	devprogress.setClassName(row.getCell(8).getStringCellValue());
+                    	devprogress.setScreenId(row.getCell(9).getStringCellValue());
+                    	devprogress.setScreenName(row.getCell(10).getStringCellValue());
+                    	devprogress.setScreenMenuPath(row.getCell(11).getStringCellValue());
+                    	devprogress.setPriority(row.getCell(12).getStringCellValue());
+                    	devprogress.setDifficulty(row.getCell(13).getStringCellValue());
+                    	devprogress.setEstimatedEffort((int) row.getCell(14).getNumericCellValue());
+                    	devprogress.setProgramstatus(row.getCell(15).getStringCellValue());
+                    	devprogress.setReqId(row.getCell(16).getStringCellValue());
+                    	devprogress.setDeletionHandler(row.getCell(17).getStringCellValue());
+                    	devprogress.setDeletionDate(row.getCell(18).getStringCellValue());
+                    	devprogress.setDeletionReason(row.getCell(19).getStringCellValue());
+                    	devprogress.setDeveloper(row.getCell(20).getStringCellValue());
+                    	devprogress.setPlannedStartDate(row.getCell(21).getStringCellValue());
+                    	devprogress.setPlannedEndDate(row.getCell(22).getStringCellValue());
+                    	devprogress.setActualStartDate(row.getCell(23).getStringCellValue());
+                    	devprogress.setActualEndDate(row.getCell(24).getStringCellValue());
+                    	devprogress.setPl(row.getCell(25).getStringCellValue());
+                    	devprogress.setPlTestScdDate(row.getCell(26).getStringCellValue());
+                    	devprogress.setPlTestCmpDate(row.getCell(27).getStringCellValue());
+                    	devprogress.setPlTestResult(row.getCell(28).getStringCellValue());
+                    	devprogress.setPlTestNotes(row.getCell(29).getStringCellValue());
+                    	devprogress.setItMgr(row.getCell(30).getStringCellValue());
+                    	devprogress.setItTestDate(row.getCell(31).getStringCellValue());
+                    	devprogress.setItConfirmDate(row.getCell(32).getStringCellValue());
+                    	devprogress.setItTestResult(row.getCell(33).getStringCellValue());
+                    	devprogress.setItTestNotes(row.getCell(34).getStringCellValue());
+                    	devprogress.setBusiMgr(row.getCell(35).getStringCellValue());
+                    	devprogress.setBusiTestDate(row.getCell(36).getStringCellValue());
+                    	devprogress.setBusiConfirmDate(row.getCell(37).getStringCellValue());
+                    	devprogress.setBusiTestResult(row.getCell(38).getStringCellValue());
+                    	devprogress.setBusiTestNotes(row.getCell(39).getStringCellValue());
+                    	devprogress.setThirdPartyTestMgr(row.getCell(40).getStringCellValue());
+                    	devprogress.setThirdPartyTestDate(row.getCell(41).getStringCellValue());
+                    	devprogress.setThirdPartyConfirmDate(row.getCell(42).getStringCellValue());
+                    	devprogress.setThirdTestResult(row.getCell(43).getStringCellValue());
+                    	devprogress.setThirdPartyTestNotes(row.getCell(44).getStringCellValue());
+                    	devprogress.setDevStatus(row.getCell(45).getStringCellValue());
+                    	devprogress.setInitRegDate(row.getCell(46).getStringCellValue());
+                    	devprogress.setInitRegistrar(row.getCell(47).getStringCellValue());
+                    	devprogress.setLastModifiedDate(row.getCell(48).getStringCellValue());
+                    	devprogress.setLastModifier(row.getCell(49).getStringCellValue());
+                        devProgress.add(devprogress);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        response.put("status", "error");
+                        response.put("message", "파일의 데이터 형식이 올바르지 않습니다: 행 " + (i + 1));
+                        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                    }
+                }
+            }
+
+            // 데이터베이스에 저장
+            devservice.saveAllDevProgress(devProgress);
+            response.put("status", "success");
+            response.put("message", "파일 업로드가 성공적으로 완료되었습니다!");
+            response.put("totalUploaded", devProgress.size());
+
+        } catch (DuplicateKeyException e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "중복된 개발 현황 정보가 발견되었습니다.");
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "파일 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     
     
+    
+    private boolean isHeaderValid4(Row headerRow, List<String> expectedHeaders) {
+        for (int i = 0; i < expectedHeaders.size(); i++) {
+            Cell cell = headerRow.getCell(i);
+            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+//    @PostMapping(value = "/devupload")
+//    public String catuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Model model) {
+//        if (file.isEmpty()) {
+//        	model.addAttribute("status", "failure");
+//            model.addAttribute("message", "파일이 없습니다. 다시 시도해 주세요.");
+//            return "devProgress";  // 결과를 보여줄 JSP 페이지 이름
+//        }
+//
+//        try (InputStream inputStream = file.getInputStream()) {
+//            Workbook workbook = WorkbookFactory.create(inputStream);
+//            Sheet sheet = workbook.getSheetAt(0);
+//            Row headerRow = sheet.getRow(0);
+//
+//            // 예상하는 컬럼명 리스트
+//            List<String> expectedHeaders = Arrays.asList("SEQ", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
+//            		"PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "CLASS_NAME", "SCREEN_ID", 
+//            		"SCREEN_NAME", "SCREEN_MENU_PATH", "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "REG_STATUS", 
+//            		"REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", "DEVELOPER", "PLANNED_START_DATE", 
+//            		"PLANNED_END_DATE", "ACTUAL_START_DATE", "ACTUAL_END_DATE", "PL", "PL_TEST_SCD_DATE", 
+//            		"PL_TEST_CMP_DATE", "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", "IT_CONFIRM_DATE", 
+//            		"IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", 
+//            		"BUSI_TEST_NOTES", "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
+//            		"THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "DEV_STATUS", "INIT_REG_DATE", "INIT_REGISTRAR", 
+//            		"LAST_MODIFIED_DATE", "LAST_MODIFIER");
+//            if (!isHeaderValid4(headerRow, expectedHeaders)) {
+//            	model.addAttribute("status", "error");
+//                model.addAttribute("message", "헤더의 컬럼명이 올바르지 않습니다.");
+//                return "devProgress";  // 결과를 보여줄 JSP 페이지 이름
+//            }
+//
+//            List<devProgress> devProgress = new ArrayList<>();
+//
+//            // 첫 번째 행은 헤더이므로 건너뜁니다.
+//            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+//                Row row = sheet.getRow(i);
+//                if (row != null) {
+//                    devProgress devprogress = new devProgress();
+//                    try {
+//                    	devprogress.setSeq((int) row.getCell(0).getNumericCellValue());
+//                    	devprogress.setMajorCategory(row.getCell(1).getStringCellValue());
+//                    	devprogress.setSubCategory(row.getCell(2).getStringCellValue());
+//                    	devprogress.setMinorCategory(row.getCell(3).getStringCellValue());
+//                    	devprogress.setProgramDetailType(row.getCell(4).getStringCellValue());
+//                    	devprogress.setProgramType(row.getCell(5).getStringCellValue());
+//                    	devprogress.setProgramId(row.getCell(6).getStringCellValue());
+//                    	devprogress.setProgramName(row.getCell(7).getStringCellValue());
+//                    	devprogress.setClassName(row.getCell(8).getStringCellValue());
+//                    	devprogress.setScreenId(row.getCell(9).getStringCellValue());
+//                    	devprogress.setScreenName(row.getCell(10).getStringCellValue());
+//                    	devprogress.setScreenMenuPath(row.getCell(11).getStringCellValue());
+//                    	devprogress.setPriority(row.getCell(12).getStringCellValue());
+//                    	devprogress.setDifficulty(row.getCell(13).getStringCellValue());
+//                    	devprogress.setEstimatedEffort((int) row.getCell(14).getNumericCellValue());
+//                    	devprogress.setProgramstatus(row.getCell(15).getStringCellValue());
+//                    	devprogress.setReqId(row.getCell(16).getStringCellValue());
+//                    	devprogress.setDeletionHandler(row.getCell(17).getStringCellValue());
+//                    	devprogress.setDeletionDate(row.getCell(18).getStringCellValue());
+//                    	devprogress.setDeletionReason(row.getCell(19).getStringCellValue());
+//                    	devprogress.setDeveloper(row.getCell(20).getStringCellValue());
+//                    	devprogress.setPlannedStartDate(row.getCell(21).getStringCellValue());
+//                    	devprogress.setPlannedEndDate(row.getCell(22).getStringCellValue());
+//                    	devprogress.setActualStartDate(row.getCell(23).getStringCellValue());
+//                    	devprogress.setActualEndDate(row.getCell(24).getStringCellValue());
+//                    	devprogress.setPl(row.getCell(25).getStringCellValue());
+//                    	devprogress.setPlTestScdDate(row.getCell(26).getStringCellValue());
+//                    	devprogress.setPlTestCmpDate(row.getCell(27).getStringCellValue());
+//                    	devprogress.setPlTestResult(row.getCell(28).getStringCellValue());
+//                    	devprogress.setPlTestNotes(row.getCell(29).getStringCellValue());
+//                    	devprogress.setItMgr(row.getCell(30).getStringCellValue());
+//                    	devprogress.setItTestDate(row.getCell(31).getStringCellValue());
+//                    	devprogress.setItConfirmDate(row.getCell(32).getStringCellValue());
+//                    	devprogress.setItTestResult(row.getCell(33).getStringCellValue());
+//                    	devprogress.setItTestNotes(row.getCell(34).getStringCellValue());
+//                    	devprogress.setBusiMgr(row.getCell(35).getStringCellValue());
+//                    	devprogress.setBusiTestDate(row.getCell(36).getStringCellValue());
+//                    	devprogress.setBusiConfirmDate(row.getCell(37).getStringCellValue());
+//                    	devprogress.setBusiTestResult(row.getCell(38).getStringCellValue());
+//                    	devprogress.setBusiTestNotes(row.getCell(39).getStringCellValue());
+//                    	devprogress.setThirdPartyTestMgr(row.getCell(40).getStringCellValue());
+//                    	devprogress.setThirdPartyTestDate(row.getCell(41).getStringCellValue());
+//                    	devprogress.setThirdPartyConfirmDate(row.getCell(42).getStringCellValue());
+//                    	devprogress.setThirdTestResult(row.getCell(43).getStringCellValue());
+//                    	devprogress.setThirdPartyTestNotes(row.getCell(44).getStringCellValue());
+//                    	devprogress.setDevStatus(row.getCell(45).getStringCellValue());
+//                    	devprogress.setInitRegDate(row.getCell(46).getStringCellValue());
+//                    	devprogress.setInitRegistrar(row.getCell(47).getStringCellValue());
+//                    	devprogress.setLastModifiedDate(row.getCell(48).getStringCellValue());
+//                    	devprogress.setLastModifier(row.getCell(49).getStringCellValue());
+//                        devProgress.add(devprogress);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        model.addAttribute("status", "error");
+//                        model.addAttribute("message", "파일의 데이터 형식이 올바르지 않습니다: 행 " + (i + 1));
+//                        return "devProgress";  // 결과를 보여줄 JSP 페이지 이름
+//                    }
+//                }
+//            }
+//
+//            // 데이터베이스에 저장
+//            devservice.saveAllDevProgress(devProgress);
+//            model.addAttribute("status", "sucess");
+//            model.addAttribute("message", "성공");
+//            model.addAttribute("totalUploaded", devProgress.size());
+//
+//        } catch (DuplicateKeyException e) {
+//            e.printStackTrace();
+//            model.addAttribute("status", "error");
+//            model.addAttribute("message", "error");
+//            return "devProgress";  // 결과를 보여줄 JSP 페이지 이름
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            model.addAttribute("status", "error");
+//            model.addAttribute("message", "error");
+//            return "devProgress";  // 결과를 보여줄 JSP 페이지 이름
+//        }
+//
+//        return "devProgress";
+//    }
     
    
     

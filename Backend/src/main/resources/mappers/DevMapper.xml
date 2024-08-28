@@ -9,7 +9,7 @@
     		PROGRAM_DETAIL_TYPE AS programDetailType, PROGRAM_TYPE AS programType, PROGRAM_ID AS programId, 
     		PROGRAM_NAME AS programName, CLASS_NAME AS className, SCREEN_ID AS screenId, SCREEN_NAME AS screenName,
 			SCREEN_MENU_PATH AS screenMenuPath, PRIORITY, DIFFICULTY, ESTIMATED_EFFORT AS estimatedEffort,
-   			REG_STATUS AS regStatus, REQ_ID AS reqId, DELETION_HANDLER AS deletionHandler, DELETION_DATE AS deletionDate,
+   			program_status AS programstatus, REQ_ID AS reqId, DELETION_HANDLER AS deletionHandler, DELETION_DATE AS deletionDate,
   			DELETION_REASON AS deletionReason, DEVELOPER, PLANNED_START_DATE AS plannedStartDate,
   			PLANNED_END_DATE AS plannedEndDate, ACTUAL_START_DATE AS actualStartDate, ACTUAL_END_DATE AS actualEndDate,
     		DEV_PROG_ATTACHMENT AS devProgAttachment, PL,PL_TEST_SCD_DATE AS plTestScdDate, PL_TEST_CMP_DATE AS plTestCmpDate,
@@ -38,8 +38,8 @@
 	    <if test="programName != null and programName != ''">
 	        AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
 	    </if>
-	    <if test="regStatus != null and regStatus != ''">
-	        AND REG_STATUS = #{regStatus}
+	    <if test="programstatus != null and programstatus != ''">
+	        AND program_status = #{programstatus}
 	    </if>
 	    <if test="developer != null and developer != ''">
 	        AND DEVELOPER = #{developer}
@@ -47,7 +47,7 @@
 	    <if test="devStatus != null and devStatus != ''">
 	        AND DEV_STATUS = #{devStatus}
 	    </if>
-	    <if test="actualStartDate != null and actualEndDate != null">
+	    <if test="actualStartDate != null and actualStartDate != '' and actualEndDate != null and actualEndDate != ''">
 	        AND ACTUAL_START_DATE BETWEEN #{actualStartDate} AND #{actualEndDate}
 	    </if>
 	    <if test="pl != null and pl != ''">
@@ -84,8 +84,8 @@
 	    <if test="programName != null and programName != ''">
 	        AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
 	    </if>
-	    <if test="regStatus != null and regStatus != ''">
-	        AND REG_STATUS = #{regStatus}
+	    <if test="programstatus != null and programstatus != ''">
+	        AND program_status = #{programstatus}
 	    </if>
 	    <if test="developer != null and developer != ''">
 	        AND DEVELOPER = #{developer}
@@ -110,9 +110,45 @@
 	    </if>
 	</select>
 	
+	<!-- 개발 진행 현황 삭제 -->
 	<delete id="deleteCommonCode" parameterType="String">
 		DELETE FROM DEV_PROGRESS WHERE SEQ = #{seq}
 	</delete>
+	
+	<!-- 개발 진행 현황 추가 -->
+    <insert id="insertDevProgress" parameterType="devProgress">
+	    INSERT INTO DEV_PROGRESS (
+	        SEQ, MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY, 
+	        PROGRAM_DETAIL_TYPE, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, 
+	        CLASS_NAME, SCREEN_ID, SCREEN_NAME, SCREEN_MENU_PATH, 
+	        PRIORITY, DIFFICULTY, ESTIMATED_EFFORT, REG_STATUS, 
+	        REQ_ID, DELETION_HANDLER, DELETION_DATE, DELETION_REASON, 
+	        DEVELOPER, PLANNED_START_DATE, PLANNED_END_DATE, ACTUAL_START_DATE, 
+	        ACTUAL_END_DATE, DEV_PROG_ATTACHMENT, PL, PL_TEST_SCD_DATE, 
+	        PL_TEST_CMP_DATE, PL_TEST_RESULT, PL_TEST_NOTES, IT_MGR, 
+	        IT_TEST_DATE, IT_CONFIRM_DATE, IT_TEST_RESULT, IT_TEST_NOTES, 
+	        BUSI_MGR, BUSI_TEST_DATE, BUSI_CONFIRM_DATE, BUSI_TEST_RESULT, 
+	        BUSI_TEST_NOTES, THIRD_PARTY_TEST_MGR, THIRD_PARTY_TEST_DATE, 
+	        THIRD_PARTY_CONFIRM_DATE, THIRD_TEST_RESULT, THIRD_PARTY_TEST_NOTES, 
+	        DEV_STATUS, INIT_REG_DATE, INIT_REGISTRAR, LAST_MODIFIED_DATE, 
+	        LAST_MODIFIER
+	    ) VALUES (
+	        #{seq}, #{majorCategory}, #{subCategory}, #{minorCategory}, 
+	        #{programDetailType}, #{programType}, #{programId}, #{programName}, 
+	        #{className}, #{screenId}, #{screenName}, #{screenMenuPath}, 
+	        #{priority}, #{difficulty}, #{estimatedEffort}, #{regStatus}, 
+	        #{reqId}, #{deletionHandler}, #{deletionDate}, #{deletionReason}, 
+	        #{developer}, #{plannedStartDate}, #{plannedEndDate}, #{actualStartDate}, 
+	        #{actualEndDate}, #{devProgAttachment}, #{pl}, #{plTestScdDate}, 
+	        #{plTestCmpDate}, #{plTestResult}, #{plTestNotes}, #{itMgr}, 
+	        #{itTestDate}, #{itConfirmDate}, #{itTestResult}, #{itTestNotes}, 
+	        #{busiMgr}, #{busiTestDate}, #{busiConfirmDate}, #{busiTestResult}, 
+	        #{busiTestNotes}, #{thirdPartyTestMgr}, #{thirdPartyTestDate}, 
+	        #{thirdPartyConfirmDate}, #{thirdTestResult}, #{thirdPartyTestNotes}, 
+	        #{devStatus}, #{initRegDate}, #{initRegistrar}, #{lastModifiedDate}, 
+	        #{lastModifier}
+	    )
+	</insert>
 
 	
 </mapper>

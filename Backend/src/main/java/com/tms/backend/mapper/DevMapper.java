@@ -27,7 +27,7 @@ public interface DevMapper {
             @Param("programType") String programType,
             @Param("programName") String programName,
             @Param("programId") String programId,
-            @Param("regStatus") String regStatus,
+            @Param("programstatus") String programstatus,
             @Param("developer") String developer,
             @Param("devStatus") String devStatus,
             @Param("actualStartDate") String actualStartDate,
@@ -47,7 +47,7 @@ public interface DevMapper {
             @Param("programType") String programType,
             @Param("programName") String programName,
             @Param("programId") String programId,
-            @Param("regStatus") String regStatus,
+            @Param("programstatus") String programstatus,
             @Param("developer") String developer,
             @Param("devStatus") String devStatus,
             @Param("actualStartDate") String actualStartDate,
@@ -58,4 +58,5 @@ public interface DevMapper {
             @Param("BusiMgr") String BusiMgr
     );
     public void deleteDevProgress(String seq);
+    public void insertdevProgress(devProgress devProgress);
 }
