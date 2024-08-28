@@ -93,7 +93,7 @@
 	    <if test="devStatus != null and devStatus != ''">
 	        AND DEV_STATUS = #{devStatus}
 	    </if>
-	    <if test="actualStartDate != null and actualEndDate != null">
+	    <if test="actualStartDate != null and actualStartDate != '' and actualEndDate != null and actualEndDate != ''">
 	        AND ACTUAL_START_DATE BETWEEN #{actualStartDate} AND #{actualEndDate}
 	    </if>
 	    <if test="pl != null and pl != ''">
