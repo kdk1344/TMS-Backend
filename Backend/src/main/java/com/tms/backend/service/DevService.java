@@ -35,23 +35,23 @@ public class DevService {
     private DevMapper devMapper;
 
 	public List<devProgress> searchDevProgress(String majorCategory, String subCategory, String programType, 
-	            String programName, String programId, String programstatus, String developer, 
+	            String programName, String programId, String programStatus, String developer, 
 	            String devStatus, String actualStartDate, String actualEndDate, 
 	            String pl, String thirdPartyTestMgr, String ItMgr, 
 	            String BusiMgr, int page, int size) {
 		int offset = (page - 1) * size;
 		return devMapper.searchDevProgress(majorCategory, subCategory, programType, programName, programId,
-		programstatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
+		programStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
 		thirdPartyTestMgr, ItMgr, BusiMgr, offset, size);
 	}
 	
 	public int getTotalDevProgressCount(String majorCategory, String subCategory, String programType, 
-	     String programName, String programId, String programstatus, String developer, 
+	     String programName, String programId, String programStatus, String developer, 
 	     String devStatus, String actualStartDate, String actualEndDate, 
 	     String pl, String thirdPartyTestMgr, String ItMgr, 
 	     String BusiMgr) {
 		return devMapper.getTotalDevProgressCount(majorCategory, subCategory, programType, programName, programId,
-		programstatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
+		programStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
 		thirdPartyTestMgr, ItMgr, BusiMgr);
 	}
 	

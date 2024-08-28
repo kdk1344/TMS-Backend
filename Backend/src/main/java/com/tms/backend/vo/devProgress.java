@@ -21,7 +21,7 @@ public class devProgress {
     private String priority;             // 우선순위 (공통코드)
     private String difficulty;           // 난이도 (공통코드)
     private int estimatedEffort;         // 예상 공수
-    private String programstatus;            // 프로그램 상태 (공통코드)
+    private String programStatus;            // 프로그램 상태 (공통코드)
     private String reqId;                // 요구사항 ID
     private String deletionHandler;      // 삭제처리자 ID
     private String deletionDate;         // 삭제처리일 (YYYY-MM-DD)
