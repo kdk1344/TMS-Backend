@@ -9,7 +9,7 @@
     		PROGRAM_DETAIL_TYPE AS programDetailType, PROGRAM_TYPE AS programType, PROGRAM_ID AS programId, 
     		PROGRAM_NAME AS programName, CLASS_NAME AS className, SCREEN_ID AS screenId, SCREEN_NAME AS screenName,
 			SCREEN_MENU_PATH AS screenMenuPath, PRIORITY, DIFFICULTY, ESTIMATED_EFFORT AS estimatedEffort,
-   			program_status AS programstatus, REQ_ID AS reqId, DELETION_HANDLER AS deletionHandler, DELETION_DATE AS deletionDate,
+   			program_status AS programStatus, REQ_ID AS reqId, DELETION_HANDLER AS deletionHandler, DELETION_DATE AS deletionDate,
   			DELETION_REASON AS deletionReason, DEVELOPER, PLANNED_START_DATE AS plannedStartDate,
   			PLANNED_END_DATE AS plannedEndDate, ACTUAL_START_DATE AS actualStartDate, ACTUAL_END_DATE AS actualEndDate,
     		DEV_PROG_ATTACHMENT AS devProgAttachment, PL,PL_TEST_SCD_DATE AS plTestScdDate, PL_TEST_CMP_DATE AS plTestCmpDate,
