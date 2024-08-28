@@ -496,12 +496,10 @@ public class CodeController {
     @DeleteMapping(value= "api/catdelete", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deletecat(@RequestBody List<String> codeList) {
-        Map<String, Object> response = new HashMap<>();
-        
+        Map<String, Object> response = new HashMap<>();        
         // CategoryCode ªË¡¶
         for (String code : codeList) {
-        	String parentCode = code.substring(0, 2);
-        	String subcode = code.substring(2, 4);
+        	log.info(code.length());
         	if (code.length() == 2) {
         		int child = adminService.checkChildCodesExist2(code);
         		log.info("child:"+child);

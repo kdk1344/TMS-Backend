@@ -424,7 +424,7 @@
 	<select id="checkChildCodesExist2" parameterType="String" resultType="int">
 	    SELECT COUNT(*) 
 	    FROM category_codes 
-	    WHERE SUBSTRING(Code, 1, 2) = #{code}
+	    WHERE SUBSTRING(Code, 0, 2) = #{code}
 	</select>
 
 	
