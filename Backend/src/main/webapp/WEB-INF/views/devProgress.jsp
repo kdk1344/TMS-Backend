@@ -20,6 +20,9 @@
         <input type="file" name="file" accept=".xlsx, .xls" required />
         <button type="submit">업로드</button>
     </form>
+    <form method="get" action="/tms/devexampleexcel">
+	    <button type="submit">전체 엑셀 다운로드</button>
+	</form>
 
 	    
 	

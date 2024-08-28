@@ -24,7 +24,8 @@ public interface AdminMapper {
     void deleteUser(String[] ids);
     public List<User> findAll(Criteria criteria);
 	public int countUsers(Criteria criteria);
-	public List<User> findDevlopers();
+	public List<User> findAuthorityCode(int authorityCode);
+	public List<User> getUserList();
 	
 	//공지사항
 	public List<Notice> searchNotices(@Param("startDate") String postDate,
@@ -92,4 +93,5 @@ public interface AdminMapper {
                                                 	   @Param("codeName") String codeName);
     public List<categoryCode> getParentCategoryCodes();
     public List<categoryCode> findMiddleCodesByParentCode(String parentCode);
+    public List<categoryCode> getsubCategoryCodes();
 }

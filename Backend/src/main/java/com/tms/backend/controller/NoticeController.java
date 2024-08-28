@@ -160,34 +160,6 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
     
-// // 유효성 검사 실패 시 발생하는 예외 처리
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", "Invalid input data");
-//        response.put("errors", ex.getConstraintViolations());
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", "Invalid input data");
-//
-//        // 각 필드의 오류 메시지를 담는 Map
-//        Map<String, String> errors = new HashMap<>();
-//        ex.getBindingResult().getFieldErrors().forEach(error ->
-//                errors.put(error.getField(), error.getDefaultMessage())
-//        );
-//        response.put("errors", errors);
-//
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                .contentType(MediaType.APPLICATION_JSON) // 응답 형식을 명시적으로 JSON으로 설정
-//                .body(response);
-//    }
-    
     @PostMapping(value = "api/{boardType}update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateNotice(

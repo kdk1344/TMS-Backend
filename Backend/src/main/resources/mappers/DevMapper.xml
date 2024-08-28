@@ -116,7 +116,7 @@
 	</delete>
 	
 	<!-- 개발 진행 현황 추가 -->
-    <insert id="insertDevProgress" parameterType="devProgress">
+    <insert id="insertdevProgress" parameterType="devProgress">
 	    INSERT INTO DEV_PROGRESS (
 	        SEQ, MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY, 
 	        PROGRAM_DETAIL_TYPE, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, 
@@ -130,10 +130,9 @@
 	        BUSI_MGR, BUSI_TEST_DATE, BUSI_CONFIRM_DATE, BUSI_TEST_RESULT, 
 	        BUSI_TEST_NOTES, THIRD_PARTY_TEST_MGR, THIRD_PARTY_TEST_DATE, 
 	        THIRD_PARTY_CONFIRM_DATE, THIRD_TEST_RESULT, THIRD_PARTY_TEST_NOTES, 
-	        DEV_STATUS, INIT_REG_DATE, INIT_REGISTRAR, LAST_MODIFIED_DATE, 
-	        LAST_MODIFIER
+	        DEV_STATUS, INIT_REGISTRAR, LAST_MODIFIER
 	    ) VALUES (
-	        #{Seq}, #{majorCategory}, #{subCategory}, #{minorCategory}, 
+	        #{seq}, #{majorCategory}, #{subCategory}, #{minorCategory}, 
 	        #{programDetailType}, #{programType}, #{programId}, #{programName}, 
 	        #{className}, #{screenId}, #{screenName}, #{screenMenuPath}, 
 	        #{priority}, #{difficulty}, #{estimatedEffort}, #{programStatus}, 
@@ -145,8 +144,7 @@
 	        #{busiMgr}, #{busiTestDate}, #{busiConfirmDate}, #{busiTestResult}, 
 	        #{busiTestNotes}, #{thirdPartyTestMgr}, #{thirdPartyTestDate}, 
 	        #{thirdPartyConfirmDate}, #{thirdTestResult}, #{thirdPartyTestNotes}, 
-	        #{devStatus}, #{initRegDate}, #{initRegistrar}, #{lastModifiedDate}, 
-	        #{lastModifier}
+	        #{devStatus}, #{initRegistrar}, #{lastModifier}
 	    )
 	</insert>
 

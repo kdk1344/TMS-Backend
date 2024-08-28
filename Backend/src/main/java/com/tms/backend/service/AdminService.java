@@ -88,8 +88,12 @@ public class AdminService {
         }
     }
     
-    public List<User> findDevlopers() {
-    	return adminmapper.findDevlopers();
+    public List<User> findAuthorityCode(int authorityCode) {
+    	return adminmapper.findAuthorityCode(authorityCode);
+    }
+    
+    public List<User> getUserList() {
+    	return adminmapper.getUserList();
     }
     
     //// 공지사항 서비스
@@ -270,6 +274,11 @@ public class AdminService {
     
     public List<categoryCode> getCTCode(String parentCode) {
         return adminmapper.findMiddleCodesByParentCode(parentCode);
+    }
+    
+    // 중분류 코드 조회 서비스
+    public List<categoryCode> getsubCategoryCodes() {
+        return adminmapper.getsubCategoryCodes();
     }
     
 }

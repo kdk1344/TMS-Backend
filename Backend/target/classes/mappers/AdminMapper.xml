@@ -76,10 +76,16 @@
         </if>
     </select>
     
-    <select id="findDevlopers" resultType="User">
+    <!-- 개발자 목록 -->
+    <select id="findAuthorityCode" parameterType="int" resultType="User">
+    	SELECT USER_ID as userId, USER_NAME as userName,  AUTHORITY_NAME as authorityName
+    	FROM Users
+		WHERE AUTHORITY_NAME = #{authorityCode}
+    </select>
+    
+    <select id="getUserList" resultType="User">
     	SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName
     	FROM Users
-		WHERE AUTHORITY_NAME = '개발자'
     </select>
  
  
@@ -411,6 +417,13 @@
         SELECT CODE, Code_Name as CodeName
         FROM category_codes 
         WHERE Stage_Type = '대'
+    </select>
+    
+    <!-- 대분류 코드만 가져오기 -->
+    <select id="getsubCategoryCodes" resultType="categoryCode">
+        SELECT CODE, Code_Name as CodeName
+        FROM category_codes 
+        WHERE Stage_Type = '중'
     </select>
     
       <!-- 상위 코드에 따른 하위 코드 목록을 조회하는 쿼리 -->
