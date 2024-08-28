@@ -38,8 +38,8 @@
 	    <if test="programName != null and programName != ''">
 	        AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
 	    </if>
-	    <if test="programstatus != null and programstatus != ''">
-	        AND program_status = #{programstatus}
+	    <if test="programStatus != null and programStatus != ''">
+	        AND program_status = #{programStatus}
 	    </if>
 	    <if test="developer != null and developer != ''">
 	        AND DEVELOPER = #{developer}
@@ -84,8 +84,8 @@
 	    <if test="programName != null and programName != ''">
 	        AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
 	    </if>
-	    <if test="programstatus != null and programstatus != ''">
-	        AND program_status = #{programstatus}
+	    <if test="programStatus != null and programStatus != ''">
+	        AND program_status = #{programStatus}
 	    </if>
 	    <if test="developer != null and developer != ''">
 	        AND DEVELOPER = #{developer}
@@ -121,7 +121,7 @@
 	        SEQ, MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY, 
 	        PROGRAM_DETAIL_TYPE, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, 
 	        CLASS_NAME, SCREEN_ID, SCREEN_NAME, SCREEN_MENU_PATH, 
-	        PRIORITY, DIFFICULTY, ESTIMATED_EFFORT, REG_STATUS, 
+	        PRIORITY, DIFFICULTY, ESTIMATED_EFFORT, PROGRAM_STATUS, 
 	        REQ_ID, DELETION_HANDLER, DELETION_DATE, DELETION_REASON, 
 	        DEVELOPER, PLANNED_START_DATE, PLANNED_END_DATE, ACTUAL_START_DATE, 
 	        ACTUAL_END_DATE, DEV_PROG_ATTACHMENT, PL, PL_TEST_SCD_DATE, 
@@ -133,10 +133,10 @@
 	        DEV_STATUS, INIT_REG_DATE, INIT_REGISTRAR, LAST_MODIFIED_DATE, 
 	        LAST_MODIFIER
 	    ) VALUES (
-	        #{seq}, #{majorCategory}, #{subCategory}, #{minorCategory}, 
+	        #{Seq}, #{majorCategory}, #{subCategory}, #{minorCategory}, 
 	        #{programDetailType}, #{programType}, #{programId}, #{programName}, 
 	        #{className}, #{screenId}, #{screenName}, #{screenMenuPath}, 
-	        #{priority}, #{difficulty}, #{estimatedEffort}, #{regStatus}, 
+	        #{priority}, #{difficulty}, #{estimatedEffort}, #{programStatus}, 
 	        #{reqId}, #{deletionHandler}, #{deletionDate}, #{deletionReason}, 
 	        #{developer}, #{plannedStartDate}, #{plannedEndDate}, #{actualStartDate}, 
 	        #{actualEndDate}, #{devProgAttachment}, #{pl}, #{plTestScdDate}, 

@@ -83,6 +83,8 @@ public class devProgressController {
 	        @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "10") int size,
 	        Model model) {
+		
+		log.info(programStatus);
 
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
@@ -352,7 +354,7 @@ public class devProgressController {
             row.createCell(12).setCellValue(devProgress.getPriority());
             row.createCell(13).setCellValue(devProgress.getDifficulty());
             row.createCell(14).setCellValue(devProgress.getEstimatedEffort());
-            row.createCell(15).setCellValue(devProgress.getProgramStatus());
+            row.createCell(15).setCellValue(devProgress.getprogramStatus());
             row.createCell(16).setCellValue(devProgress.getReqId());
             row.createCell(17).setCellValue(devProgress.getDeletionHandler());
             row.createCell(18).setCellValue(devProgress.getDeletionDate());
@@ -416,7 +418,7 @@ public class devProgressController {
             // 예상하는 컬럼명 리스트
             List<String> expectedHeaders = Arrays.asList("SEQ", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
             		"PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "CLASS_NAME", "SCREEN_ID", 
-            		"SCREEN_NAME", "SCREEN_MENU_PATH", "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "REG_STATUS", 
+            		"SCREEN_NAME", "SCREEN_MENU_PATH", "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "PROGRAM_STATUS", 
             		"REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", "DEVELOPER", "PLANNED_START_DATE", 
             		"PLANNED_END_DATE", "ACTUAL_START_DATE", "ACTUAL_END_DATE", "PL", "PL_TEST_SCD_DATE", 
             		"PL_TEST_CMP_DATE", "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", "IT_CONFIRM_DATE", 
@@ -453,7 +455,7 @@ public class devProgressController {
                     	devprogress.setPriority(row.getCell(12).getStringCellValue());
                     	devprogress.setDifficulty(row.getCell(13).getStringCellValue());
                     	devprogress.setEstimatedEffort((int) row.getCell(14).getNumericCellValue());
-                    	devprogress.setProgramStatus(row.getCell(15).getStringCellValue());
+                    	devprogress.setprogramStatus(row.getCell(15).getStringCellValue());
                     	devprogress.setReqId(row.getCell(16).getStringCellValue());
                     	devprogress.setDeletionHandler(row.getCell(17).getStringCellValue());
                     	devprogress.setDeletionDate(row.getCell(18).getStringCellValue());
