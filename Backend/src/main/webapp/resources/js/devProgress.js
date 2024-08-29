@@ -1,4 +1,5 @@
-import { tmsFetch, renderTMSHeader, setupPagination, convertDate } from "./common.js";
+import { tmsFetch, renderTMSHeader, setupPagination, convertDate, initializeSelect } from "./common.js";
+import { getMajorCategoryCodes, getSubCategoryCodes } from "./categoryCode.js";
 
 let currentPage = 1;
 
@@ -21,7 +22,7 @@ function init() {
 
 // 초기 프로그램 개발 진행 현황 목록 로드
 function loadInitialDevProgress() {
-  //   initialize업무대분류("slect요소 아이디"); // 필터링 폼 select 요소에 업무 대분류 render
+  initializeFilterForm(); // 폼 메타 데이터 초기 로드
   renderDevProgress(); // 분류코드 목록 render
 }
 
@@ -151,4 +152,61 @@ function changePage(page) {
   };
 
   renderDevProgress(getDevProgressProps);
+}
+
+async function initializeFilterForm() {
+  const { majorCategoryCodes } = await getMajorCategoryCodes();
+  const { programTypes } = await getProgramTypes();
+  const { programStatusList } = await getProgramStatusList();
+  const { devStatusList } = await getDevStatusList();
+
+  const SELECT_ID = {
+    MAJOR_CATEGORY: "majorCategoryForFilter",
+    PROGRAM_TYPE: "programTypeForFilter",
+    PROGRAM_STATUS: "programStatusForFilter",
+    DEV_STATUS: "devStatusForFilter",
+  };
+
+  const SELECT_DATA = {
+    [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
+    [SELECT_ID.PROGRAM_TYPE]: programTypes,
+    [SELECT_ID.PROGRAM_STATUS]: programStatusList,
+    [SELECT_ID.DEV_STATUS]: devStatusList,
+  };
+
+  Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
+}
+
+// 메타데이터 조회 apis
+// 프로그램 구분 목록 조회
+export async function getProgramTypes() {
+  try {
+    const { programType: programTypes } = await tmsFetch(`/programType`);
+
+    return { programTypes };
+  } catch (error) {
+    console.error(error.message, "프로그램 구분 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 프로그램 상태 목록 조회
+export async function getProgramStatusList() {
+  try {
+    const { programStatus: programStatusList } = await tmsFetch(`/programStatus`);
+
+    return { programStatusList };
+  } catch (error) {
+    console.error(error.message, "프로그램 상태 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 개발진행 상태 목록 조회
+export async function getDevStatusList() {
+  try {
+    const { devStatus: devStatusList } = await tmsFetch(`/devStatus`);
+
+    return { devStatusList };
+  } catch (error) {
+    console.error(error.message, "개발진행 상태 목록을 불러오지 못 했습니다.");
+  }
 }

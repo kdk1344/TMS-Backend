@@ -95,7 +95,7 @@ table td {
   padding: 12px;
   margin-left: 8px;
 
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--gray);
   background-color: var(--white);
 }
 

@@ -576,3 +576,25 @@ export function createPaginationButton({ container, text, disabled, onClick, but
   button.addEventListener("click", onClick);
   container.appendChild(button);
 }
+
+// option 목록을 가져와 select 요소에 옵션을 설정하는 함수
+export function initializeSelect(selectElementId, options = [], valueKey = "code", textContentKey = "codeName") {
+  const select = document.getElementById(selectElementId);
+
+  // 기존 옵션을 모두 삭제하고, 기본값이 되는 옵션은 따로 저장
+  const defaultOption = select.querySelector("option[selected]");
+  select.innerHTML = ""; // 기존 옵션들 삭제
+
+  // 기본값 옵션을 다시 추가
+  if (defaultOption) select.appendChild(defaultOption);
+
+  // 새 옵션 생성 및 추가
+  options.forEach((option) => {
+    const optionElement = document.createElement("option");
+
+    optionElement.value = option[valueKey];
+    optionElement.textContent = option[textContentKey];
+
+    select.appendChild(optionElement);
+  });
+}
