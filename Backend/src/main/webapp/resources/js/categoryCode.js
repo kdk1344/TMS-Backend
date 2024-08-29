@@ -7,6 +7,8 @@ import {
   showSpinner,
   hideSpinner,
   setupPagination,
+  getMajorCategoryCodes,
+  getSubCategoryCodes,
 } from "./common.js";
 
 let currentPage = 1;
@@ -179,31 +181,6 @@ function setupModalEventListeners() {
     // 모달 외부 클릭 시 닫기 설정
     window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
   });
-}
-
-// 대분류 코드 목록 조회
-export async function getMajorCategoryCodes() {
-  try {
-    const { parentCodes: majorCategoryCodes } = await tmsFetch("/catparentCode");
-
-    return { majorCategoryCodes };
-  } catch (error) {
-    console.error("Error fetching CC Parent Codes", error.message);
-  }
-}
-
-// 중분류 코드 목록 조회
-export async function getSubCategoryCodes(parentCode = "") {
-  try {
-    if (parentCode === "") return [];
-
-    const query = new URLSearchParams({ parentCode }).toString();
-    const { CTCodes: subCategoryCodes = [] } = await tmsFetch(`/catcode?${query}`);
-
-    return { subCategoryCodes };
-  } catch (error) {
-    console.error("Error fetching CC Codes", error.message);
-  }
 }
 
 // 대분류 목록을 가져와 select 요소에 옵션을 설정하는 함수

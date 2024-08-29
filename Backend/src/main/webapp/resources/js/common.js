@@ -176,31 +176,6 @@ export async function fetchAPI(url, options) {
   }
 }
 
-// 사용자 로그인 상태 확인하는 함수
-export async function checkSession() {
-  try {
-    const response = await tmsFetch("/checkSession");
-    const isLogin = response.status === "success";
-
-    if (isLogin) return { isLogin, userID: response.userID, authrityCode: response.authrityCode };
-  } catch (error) {
-    if (error.statusCode === 401) return { isLogin: false, userID: null, authrityCode: null };
-    else alert(error.message);
-  }
-}
-
-// 로그아웃 함수
-export async function logout() {
-  try {
-    const response = await tmsFetch("/logout");
-    const isSuccess = response.status === "success";
-
-    if (isSuccess) window.location.href = "/tms/login"; // 로그아웃 후 로그인 페이지로 이동
-  } catch (error) {
-    alert(error.message);
-  }
-}
-
 // 모달 열기
 export function openModal(modalId) {
   const modal = document.getElementById(modalId);
@@ -597,4 +572,55 @@ export function initializeSelect(selectElementId, options = [], valueKey = "code
 
     select.appendChild(optionElement);
   });
+}
+
+/* API 함수 */
+// 사용자 로그인 상태 확인하는 함수
+export async function checkSession() {
+  try {
+    const response = await tmsFetch("/checkSession");
+    const isLogin = response.status === "success";
+
+    if (isLogin) return { isLogin, userID: response.userID, authrityCode: response.authrityCode };
+  } catch (error) {
+    if (error.statusCode === 401) return { isLogin: false, userID: null, authrityCode: null };
+    else alert(error.message);
+  }
+}
+
+// 로그아웃 함수
+export async function logout() {
+  try {
+    const response = await tmsFetch("/logout");
+    const isSuccess = response.status === "success";
+
+    if (isSuccess) window.location.href = "/tms/login"; // 로그아웃 후 로그인 페이지로 이동
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+// 대분류 코드 목록 조회
+export async function getMajorCategoryCodes() {
+  try {
+    const { parentCodes: majorCategoryCodes } = await tmsFetch("/catparentCode");
+
+    return { majorCategoryCodes };
+  } catch (error) {
+    console.error("Error fetching CC Parent Codes", error.message);
+  }
+}
+
+// 중분류 코드 목록 조회
+export async function getSubCategoryCodes(parentCode = "") {
+  try {
+    if (parentCode === "") return [];
+
+    const query = new URLSearchParams({ parentCode }).toString();
+    const { CTCodes: subCategoryCodes = [] } = await tmsFetch(`/catcode?${query}`);
+
+    return { subCategoryCodes };
+  } catch (error) {
+    console.error("Error fetching CC Codes", error.message);
+  }
 }

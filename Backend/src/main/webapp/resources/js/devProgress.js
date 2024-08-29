@@ -1,23 +1,47 @@
-import { tmsFetch, renderTMSHeader, setupPagination, convertDate, initializeSelect } from "./common.js";
-import { getMajorCategoryCodes, getSubCategoryCodes } from "./categoryCode.js";
+import {
+  tmsFetch,
+  renderTMSHeader,
+  setupPagination,
+  convertDate,
+  initializeSelect,
+  getMajorCategoryCodes,
+  getSubCategoryCodes,
+} from "./common.js";
 
 let currentPage = 1;
+
+// DOM 요소들
+const devProgressFilterForm = document.getElementById("devProgressFilterForm");
+const majorCategorySelect = document.getElementById("majorCategoryForFilter");
 
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
 
 // 모달 아이디
 const MODAL_ID = {
-  DEV_PROGRESS_REGISTER: "userRegisterModal",
-  DEV_PROGRESS_EDIT: "userEditModal",
-  DEV_PROGRESS_FILE_DOWNLOAD: "userFileDownloadModal",
+  DEV_PROGRESS_REGISTER: "devProgressRegisterModal",
+  DEV_PROGRESS_EDIT: "devProgressEditModal",
+  DEV_PROGRESS_FILE_DOWNLOAD: "devProgressFileDownloadModal",
 };
 
 // 초기화 함수
 function init() {
   renderTMSHeader();
-  //   setupEventListeners();
+  setupEventListeners();
   loadInitialDevProgress();
+}
+
+// 이벤트 핸들러 설정
+function setupEventListeners() {
+  // 프로그램 개발 진행현황 필터 폼 제출 및 리셋 이벤트 핸들러
+  if (devProgressFilterForm) {
+    devProgressFilterForm.addEventListener("submit", submitDevProgressFilter);
+    devProgressFilterForm.addEventListener("reset", resetDevProgressFilter);
+  }
+
+  if (majorCategorySelect) {
+    majorCategorySelect.addEventListener("change", () => initializeSubCategorySelect(majorCategorySelect.value));
+  }
 }
 
 // 초기 프로그램 개발 진행 현황 목록 로드
@@ -101,6 +125,53 @@ async function renderDevProgress(
   }
 }
 
+// 분류코드 필터링
+function submitDevProgressFilter(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  // 페이지를 1로 초기화하고 테이블 렌더링
+  currentPage = 1;
+
+  let getDevProgressProps = { page: currentPage };
+
+  const programKey = document.getElementById("programKeySelect").value;
+  const programValue = document.getElementById("programValueInput").value.trim();
+
+  const roleKey = document.getElementById("roleKeySelect").value;
+  const roleValue = document.getElementById("roleValueInput").value.trim();
+
+  getDevProgressProps[programKey] = programValue;
+  getDevProgressProps[roleKey] = roleValue;
+
+  const majorCategory = document.getElementById("majorCategoryForFilter").value;
+  const subCategory = document.getElementById("subCategoryForFilter").value;
+  const programType = document.getElementById("programTypeForFilter").value;
+  const programStatus = document.getElementById("programStatusForFilter").value;
+  const developer = document.getElementById("developerForFilter").value;
+  const devStatus = document.getElementById("devStatusForFilter").value;
+  const devStartDate = document.getElementById("actualEndDateFromForFilter").value;
+  const devEndDate = document.getElementById("actualEndDateToForFilter").value;
+
+  getDevProgressProps = {
+    ...getDevProgressProps,
+    majorCategory,
+    subCategory,
+    programType,
+    programStatus,
+    developer,
+    devStatus,
+    devStartDate,
+    devEndDate,
+  };
+
+  renderDevProgress(getDevProgressProps);
+}
+
+// 분류코드 필터 리셋
+function resetDevProgressFilter() {
+  this.reset(); // 폼 초기화
+}
+
 async function getDevProgress(
   getDevProgressProps = {
     page: 1,
@@ -175,6 +246,18 @@ async function initializeFilterForm() {
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
+}
+
+async function initializeSubCategorySelect(selectedMajorCategoryCode) {
+  const SUB_CATEGORY_SELECT_ID = "subCategoryForFilter";
+
+  // 업무 대분류 '전체'를 선택한 경우
+  if (selectedMajorCategoryCode === "") initializeSelect(SUB_CATEGORY_SELECT_ID, []);
+  else {
+    const { subCategoryCodes } = await getSubCategoryCodes(selectedMajorCategoryCode);
+
+    initializeSelect(SUB_CATEGORY_SELECT_ID, subCategoryCodes);
+  }
 }
 
 // 메타데이터 조회 apis
