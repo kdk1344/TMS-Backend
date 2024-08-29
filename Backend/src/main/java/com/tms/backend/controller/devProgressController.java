@@ -190,45 +190,25 @@ public class devProgressController {
         return ResponseEntity.ok(response);
     }
 	
-	//대분류 확인
-	@GetMapping(value = "api/major", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> getMajor() {
-    	Map<String, Object> response = new HashMap<>();
-    	List<categoryCode> Major = adminService.getParentCategoryCodes();
-
-        // 응답 데이터 생성
-        if (Major != null && !Major.isEmpty()) {
-            response.put("status", "success");
-            response.put("major", Major);
-        } else {
-            response.put("status", "failure");
-            response.put("message", "대분류 정보를 찾을 수 없습니다");
-        }
-
-        // 조회된 결과를 반환
-        return ResponseEntity.ok(response);
-    }
-	
-	//중분류 확인
-	@GetMapping(value = "api/sub", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> getSub() {
-    	Map<String, Object> response = new HashMap<>();
-    	List<categoryCode> Sub = adminService.getsubCategoryCodes();
-
-        // 응답 데이터 생성
-        if (Sub != null && !Sub.isEmpty()) {
-            response.put("status", "success");
-            response.put("sub", Sub);
-        } else {
-            response.put("status", "failure");
-            response.put("message", "중분류 정보를 찾을 수 없습니다");
-        }
-
-        // 조회된 결과를 반환
-        return ResponseEntity.ok(response);
-    }
+//	//대분류 확인
+//	@GetMapping(value = "api/major", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> getMajor() {
+//    	Map<String, Object> response = new HashMap<>();
+//    	List<categoryCode> Major = adminService.getParentCategoryCodes();
+//
+//        // 응답 데이터 생성
+//        if (Major != null && !Major.isEmpty()) {
+//            response.put("status", "success");
+//            response.put("major", Major);
+//        } else {
+//            response.put("status", "failure");
+//            response.put("message", "대분류 정보를 찾을 수 없습니다");
+//        }
+//
+//        // 조회된 결과를 반환
+//        return ResponseEntity.ok(response);
+//    }
 	
 	//프로그램 타입 확인
 	@GetMapping(value = "api/programType", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -410,33 +390,72 @@ public class devProgressController {
         return ResponseEntity.ok(response);
     }
 	
-	//개발 진행 현황 조회
-	@GetMapping(value="api/devMangement" , produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/devProgressReg")
+	public String devProgressPage() {
+
+	    return "devProgressReg"; // JSP 페이지로 이동
+	}
+	
+	//개발 진행 현황 등록 페이지
+	@PostMapping(value="api/devProgressReg" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> APIdevProgressPage(HttpServletRequest request, @RequestParam("seq") Integer seq) {
+	public ResponseEntity<Map<String, Object>> devProgressReg(HttpServletRequest request, @RequestBody devProgress devProgress) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		if (session == null || session.getAttribute("authorityCode") == null) {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 			}
 		Map<String, Object> response = new HashMap<>();
-		devProgress DevProgress = devservice.getDevById(seq);
+		try {
+        	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
+            response.put("status", "success");
+            response.put("message", "개발 진행 현황 정보가 등록되었습니다");
+            response.put("devProgress", devProgress);  // 등록된 개발 현황 진행 정보 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            response.put("status", "failure");
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "개발 진행 현황 정보 진행 중에 오류가 발생했습니다.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+	
+	@GetMapping("/devProgressEdit")
+	public String devProgressEditPage() {
+
+	    return "devProgressEdit"; // JSP 페이지로 이동
+	}
+	
+	//개발 진행 현황 수정 페이지
+	@GetMapping(value="api/devProgressEditPage" , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> devProgressEditPage2(HttpServletRequest request, @RequestParam("seq") Integer seq) {
+		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		if (session == null || session.getAttribute("authorityCode") == null) {
+			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+			}
+//		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
 		
-		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
-		List<User> BUSIMGR= adminService.findAuthorityCode(7);
-		List<CommonCode> DevStatus= adminService.getCCCode("06");
+		Map<String, Object> response = new HashMap<>();
+		devProgress DevProgressEdit = devservice.getDevById(seq);
 		  
-	    // 응답 생성	    
-	    response.put("busiMgr", BUSIMGR);
-	    response.put("devStatus", DevStatus);
+	    // 응답 생성
+		response.put("status", "success");
+        response.put("message", "개발 진행 현황 정보 전달.");
+	    response.put("devProgressEdit", DevProgressEdit);
 	    
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
 	
-	// 카테고리 코드 등록
-    @PostMapping(value = "api/devwrite", produces = MediaType.APPLICATION_JSON_VALUE)
+	//개발 진행 현황 수정
+    @PostMapping(value = "api/devProgressEdit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> devWrite(@RequestBody devProgress devprogress) {
+    public ResponseEntity<Map<String, Object>> devProgressEdit(@RequestBody devProgress devprogress) {
         Map<String, Object> response = new HashMap<>();
         try {
             // 데이터베이스에 최종 코드 저장
@@ -444,58 +463,19 @@ public class devProgressController {
 
             // 성공 응답 생성
             response.put("status", "success");
-            response.put("message", "개발 진행 현황이 성공적으로 등록되었습니다.");
+            response.put("message", "개발 진행 현황이 성공적으로 수정되었습니다.");
             response.put("devProgress", devprogress);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             response.put("status", "failure");
-            response.put("message", "프로그램 개발목록 등록 중에 오류 발생");
+            response.put("message", "프로그램 개발목록 수정 중에 오류 발생");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "프로그램 개발목록 등록 중에 오류 발생");
+            response.put("message", "프로그램 개발목록 수정 중에 오류 발생");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-	
-	//개발 진행 현황 수정
-	@PostMapping(value= "api/devmodify" , produces = "application/json")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> DevModify(@RequestBody devProgress devprogress,
-    		@RequestPart(value = "file", required = false) MultipartFile[] files,  // 파일
-            HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
-//        // 개발 진행 현황 존재 여부 확인
-//        devProgress devprog = devservice.get(devprogress.getSeq());
-//        if (devprog == null) {
-//            response.put("message", "해당 개발 진행 현황이 존재하지 않습니다.");
-//            return ResponseEntity.status(404).body(response);
-//        }
-//
-//        // 기존 공지사항 업데이트
-//        devprog.setTitle(devprogress.get());
-//        devprog.setContent(devprogress.getContent());
-//        devprog.setPostDate(devprogress.getPostDate());
-//
-//        // 공지사항에 등록된 기존 첨부파일 전부 삭제
-//        adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
-//
-//        // 새로운 파일 업로드 처리
-//        handleFileUpload(files, existingNotice, boardType);
-//        
-//        log.info("check "+existingNotice);
-//
-//        // 업데이트된 공지사항을 저장
-//        adminService.updateNotice(existingNotice);
-//        
-//
-//        // 응답 생성
-//        response.put("status", "success");
-//        response.put("message", "게시글이 성공적으로 수정되었습니다.");
-//        response.put("notice", existingNotice);
-
-        return ResponseEntity.ok(response);
     }
 	
 	

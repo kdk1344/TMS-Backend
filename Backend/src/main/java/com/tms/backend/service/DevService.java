@@ -66,6 +66,10 @@ public class DevService {
         }
     }
     
+    public void insertdevProgress(devProgress devProgress) {
+    	devMapper.insertdevProgress(devProgress);
+    }
+    
     //seq에 따른 개발 진행 현황 정보 추출
     public devProgress getDevById(Integer seq) {
         return devMapper.getDevById(seq);
