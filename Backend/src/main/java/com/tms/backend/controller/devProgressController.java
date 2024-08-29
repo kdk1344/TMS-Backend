@@ -83,8 +83,8 @@ public class devProgressController {
 	        @RequestParam(value = "programStatus", required = false) String programStatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
-	        @RequestParam(value = "actualStartDate", required = false) String actualStartDate,
-	        @RequestParam(value = "actualEndDate", required = false) String actualEndDate,
+	        @RequestParam(value = "devStartDate", required = false) String devStartDate,
+	        @RequestParam(value = "devEndDate", required = false) String devEndDate,
 	        @RequestParam(value = "pl", required = false) String pl,
 	        @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
@@ -98,14 +98,14 @@ public class devProgressController {
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
+	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 	    
 
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
 	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
+	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
 	    );
 
 	    int totalPages = (int) Math.ceil((double) totalDevProgress / size);
@@ -133,8 +133,8 @@ public class devProgressController {
 	        @RequestParam(value = "programStatus", required = false) String programStatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
-	        @RequestParam(value = "actualStartDate", required = false) String actualStartDate,
-	        @RequestParam(value = "actualEndDate", required = false) String actualEndDate,
+	        @RequestParam(value = "devStartDate", required = false) String devStartDate,
+	        @RequestParam(value = "devEndDate", required = false) String devEndDate,
 	        @RequestParam(value = "pl", required = false) String pl,
 	        @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
@@ -145,12 +145,12 @@ public class devProgressController {
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName, programId, programStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
+	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
 	            majorCategory, subCategory, programType, programName, programId, programStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
+	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
 	    );
 
 	    int totalPages = (int) Math.ceil((double) totalDevProgress / size);
@@ -168,12 +168,11 @@ public class devProgressController {
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
 	
-	@GetMapping(value = "api/devdeveloper", produces = MediaType.APPLICATION_JSON_VALUE)
+	//개발자 확인
+	@GetMapping(value = "api/developer", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getDevUser() {
     	Map<String, Object> response = new HashMap<>();
-        
-        // CategoryService를 통해 대분류 코드를 조회
         List<User> developer = adminService.findAuthorityCode(4);
         
         log.info("확인중" + developer);
@@ -191,39 +190,274 @@ public class devProgressController {
         return ResponseEntity.ok(response);
     }
 	
+	//대분류 확인
+	@GetMapping(value = "api/major", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getMajor() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<categoryCode> Major = adminService.getParentCategoryCodes();
+
+        // 응답 데이터 생성
+        if (Major != null && !Major.isEmpty()) {
+            response.put("status", "success");
+            response.put("major", Major);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "대분류 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//중분류 확인
+	@GetMapping(value = "api/Sub", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getSub() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<categoryCode> Sub = adminService.getsubCategoryCodes();
+
+        // 응답 데이터 생성
+        if (Sub != null && !Sub.isEmpty()) {
+            response.put("status", "success");
+            response.put("Sub", Sub);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "중분류 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//프로그램 타입 확인
+	@GetMapping(value = "api/ProgramType", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getProgramType() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> ProgramType= adminService.getCCCode("02");
+
+        // 응답 데이터 생성
+        if (ProgramType != null && !ProgramType.isEmpty()) {
+            response.put("status", "success");
+            response.put("ProgramType", ProgramType);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "프로그램 타입 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//프로그램 상세 구분 확인
+	@GetMapping(value = "api/ProgramDType", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getProgramDType() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> ProgramDType= adminService.getCCCode("03");
+
+        // 응답 데이터 생성
+        if (ProgramDType != null && !ProgramDType.isEmpty()) {
+            response.put("status", "success");
+            response.put("ProgramDType", ProgramDType);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "프로그램 상세 구분 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//우선도 및 난이도 확인
+	@GetMapping(value = "api/levels", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getlevels() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> levels= adminService.getCCCode("04");
+
+        // 응답 데이터 생성
+        if (levels != null && !levels.isEmpty()) {
+            response.put("status", "success");
+            response.put("levels", levels);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "우선도 및 난이도 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//프로그램 상태 확인
+	@GetMapping(value = "api/ProgramStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getProgramStatus() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> ProgramStatus= adminService.getCCCode("05");
+
+        // 응답 데이터 생성
+        if (ProgramStatus != null && !ProgramStatus.isEmpty()) {
+            response.put("status", "success");
+            response.put("ProgramStatus", ProgramStatus);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "프로그램 상태 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//사용자 ID 확인
+	@GetMapping(value = "api/User", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getUserIDLIST() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<User> User= adminService.getUserList();
+
+        // 응답 데이터 생성
+        if (User != null && !User.isEmpty()) {
+            response.put("status", "success");
+            response.put("User", User);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "사용자 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//우선도 및 난이도 확인
+	@GetMapping(value = "api/TestResult", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getTestResult() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> TestResult= adminService.getCCCode("07");
+
+        // 응답 데이터 생성
+        if (TestResult != null && !TestResult.isEmpty()) {
+            response.put("status", "success");
+            response.put("TestResult", TestResult);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "테스트 결과를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//IT 담당자 확인
+	@GetMapping(value = "api/ITMGR", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getITMGR() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<User> ITMGR= adminService.findAuthorityCode(6);
+
+        // 응답 데이터 생성
+        if (ITMGR != null && !ITMGR.isEmpty()) {
+            response.put("status", "success");
+            response.put("ITMGR", ITMGR);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "IT 담당자 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//기업 담당자 확인
+	@GetMapping(value = "api/BUSIMGR", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getBUSIMGR() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<User> BUSIMGR= adminService.findAuthorityCode(7);
+
+        // 응답 데이터 생성
+        if (BUSIMGR != null && !BUSIMGR.isEmpty()) {
+            response.put("status", "success");
+            response.put("BUSIMGR", BUSIMGR);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "기업 담당자 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	//개발 진행 상태 확인
+	@GetMapping(value = "api/devStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getDevStatus() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> devStatus= adminService.getCCCode("06");
+
+        // 응답 데이터 생성
+        if (devStatus != null && !devStatus.isEmpty()) {
+            response.put("status", "success");
+            response.put("devStatus", devStatus);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "대분류 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
 	//개발 진행 현황 조회
 	@GetMapping(value="api/devMangement" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> APIdevProgressPage(HttpServletRequest request) {
+	public ResponseEntity<Map<String, Object>> APIdevProgressPage(HttpServletRequest request, @RequestParam("seq") Integer seq) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		if (session == null || session.getAttribute("authorityCode") == null) {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 			}
+		Map<String, Object> response = new HashMap<>();
+		devProgress DevProgress = devservice.getDevById(seq);
+		
 		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
-		List<categoryCode> Major = adminService.getParentCategoryCodes();
-		List<categoryCode> Sub = adminService.getsubCategoryCodes();
-		List<CommonCode> ProgramType= adminService.getCCCode("02");
-		List<CommonCode> ProgramDType= adminService.getCCCode("03");
-		List<CommonCode> Prior_diffi= adminService.getCCCode("04");
-		List<CommonCode> ProgramStatus= adminService.getCCCode("05");
-
+		List<User> BUSIMGR= adminService.findAuthorityCode(7);
+		List<CommonCode> DevStatus= adminService.getCCCode("06");
 		  
-	    // 응답 생성
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("authorityCode", authorityCode);
-	    response.put("majorCategory", Major);
-	    response.put("subCategory", Sub);
-	    response.put("programType", ProgramType);
-	    response.put("programDType", ProgramDType);
-	    response.put("priorDiffi", Prior_diffi); 
-	    response.put("programStatus", ProgramStatus);
-
+	    // 응답 생성	    
+	    response.put("busiMgr", BUSIMGR);
+	    response.put("devStatus", DevStatus);
 	    
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
 	
+	// 카테고리 코드 등록
+    @PostMapping(value = "api/devwrite", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> devWrite(@RequestBody devProgress devprogress) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 데이터베이스에 최종 코드 저장
+//            devservice.adddevProgress(devprogress);
 
+            // 성공 응답 생성
+            response.put("status", "success");
+            response.put("message", "개발 진행 현황이 성공적으로 등록되었습니다.");
+            response.put("devProgress", devprogress);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            response.put("status", "failure");
+            response.put("message", "프로그램 개발목록 등록 중에 오류 발생");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "프로그램 개발목록 등록 중에 오류 발생");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	//개발 진행 현황 수정
 	@PostMapping(value= "api/devmodify" , produces = "application/json")
@@ -268,10 +502,10 @@ public class devProgressController {
 	//개발 진행 현황 삭제
 	@DeleteMapping(value= "api/deletedev", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> deletedev(@RequestBody List<String> seqs) {
+    public ResponseEntity<Map<String, Object>> deletedev(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
         
-        for (String seq : seqs) {
+        for (int seq : seqs) {
             devservice.deleteDevProgress(seq);
         }
         
@@ -306,8 +540,8 @@ public class devProgressController {
 	        @RequestParam(value = "programStatus", required = false) String programStatus,
 	        @RequestParam(value = "developer", required = false) String developer,
 	        @RequestParam(value = "devStatus", required = false) String devStatus,
-	        @RequestParam(value = "actualStartDate", required = false) String actualStartDate,
-	        @RequestParam(value = "actualEndDate", required = false) String actualEndDate,
+	        @RequestParam(value = "devStartDate", required = false) String devStartDate, //개발완료일 시작일
+	        @RequestParam(value = "devEndDate", required = false) String devEndDate, //개발완료일 완료일
 	        @RequestParam(value = "pl", required = false) String pl,
 	        @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
@@ -316,12 +550,9 @@ public class devProgressController {
 	        @RequestParam(value = "size", defaultValue = "10") int size,
             HttpServletResponse response) throws IOException {
     	
-    	log.info("확인중"+subCategory);
-    	log.info("확인중"+actualStartDate);
-    	log.info("확인중"+actualEndDate);
     	List<devProgress> filteredDevCodeList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName, programId, programStatus, developer,
-	            devStatus, actualStartDate, actualEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
+	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 
     	log.info("확인중"+filteredDevCodeList);

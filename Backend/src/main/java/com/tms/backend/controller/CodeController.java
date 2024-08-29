@@ -43,6 +43,7 @@ import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
+import com.tms.backend.vo.devProgress;
 
 import lombok.extern.log4j.Log4j;
 
@@ -248,6 +249,13 @@ public class CodeController {
     public void downloadAllcc(HttpServletResponse response) throws IOException {
     	List<CommonCode> commonCodeList = adminService.getAllCommonCodes();
         ccexportToExcel(response, commonCodeList, "all_common_codes.xlsx");
+    }
+    
+    // 액셀 파일 예시를 다운로드
+    @GetMapping("/ccexampleexcel")
+    public void downloadExcc(HttpServletResponse response) throws IOException {
+    	List<CommonCode> ExampleDEV = adminService.getFilteredCommonCodes(null, null, "No_value");    	
+    	ccexportToExcel(response, ExampleDEV, "example.xlsx");
     }
 
     // 조회된 정보를 엑셀로 다운로드
@@ -588,6 +596,13 @@ public class CodeController {
     public void downloadAllcat(HttpServletResponse response) throws IOException {
         List<categoryCode> categoryCodeList = adminService.getAllCategoryCodes();
         catexportToExcel(response, categoryCodeList, "all_category_codes.xlsx");
+    }
+    
+    // 액셀 파일 예시를 다운로드
+    @GetMapping("/catexampleexcel")
+    public void downloadExcat(HttpServletResponse response) throws IOException {
+    	List<categoryCode> ExampleDEV = adminService.searchCategoryCodes(null, null, "NO_VALUE", 1, 10);    	
+    	catexportToExcel(response, ExampleDEV, "example.xlsx");
     }
 
     // 조회된 categoryCode 정보를 엑셀로 다운로드

@@ -42,6 +42,7 @@ import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
+import com.tms.backend.vo.categoryCode;
 
 import lombok.extern.log4j.Log4j;
 
@@ -242,6 +243,12 @@ public class AdminController {
         return null;
     }
     
+    // 액셀 파일 예시를 다운로드
+    @GetMapping("/userexampleexcel")
+    public void downloadExuser(HttpServletResponse response) throws IOException {
+    	List<User> ExampleDEV = adminService.findAuthorityCode(99999);  	
+    	exportToExcel(response, ExampleDEV, "example.xlsx");
+    }
 
 
     // 조회된 사용자 정보를 엑셀로 다운로드

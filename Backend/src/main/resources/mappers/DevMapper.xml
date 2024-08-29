@@ -47,9 +47,12 @@
 	    <if test="devStatus != null and devStatus != ''">
 	        AND DEV_STATUS = #{devStatus}
 	    </if>
-	    <if test="actualStartDate != null and actualStartDate != '' and actualEndDate != null and actualEndDate != ''">
-	        AND ACTUAL_START_DATE BETWEEN #{actualStartDate} AND #{actualEndDate}
-	    </if>
+	    <if test="devStartDate != null and devStartDate != ''">
+            AND ACTUAL_END_DATE &gt;= #{devStartDate}
+        </if>
+        <if test="devEndDate != null and devEndDate != ''">
+            AND ACTUAL_END_DATE &lt;= #{devEndDate}
+        </if>
 	    <if test="pl != null and pl != ''">
 	        AND PL = #{pl}
 	    </if>
@@ -93,9 +96,12 @@
 	    <if test="devStatus != null and devStatus != ''">
 	        AND DEV_STATUS = #{devStatus}
 	    </if>
-	    <if test="actualStartDate != null and actualStartDate != '' and actualEndDate != null and actualEndDate != ''">
-	        AND ACTUAL_START_DATE BETWEEN #{actualStartDate} AND #{actualEndDate}
-	    </if>
+	    <if test="devStartDate != null and devStartDate != ''">
+            AND ACTUAL_END_DATE &gt;= #{devStartDate}
+        </if>
+        <if test="devEndDate != null and devEndDate != ''">
+            AND ACTUAL_END_DATE &lt;= #{devEndDate}
+        </if>
 	    <if test="pl != null and pl != ''">
 	        AND PL = #{pl}
 	    </if>
@@ -111,7 +117,7 @@
 	</select>
 	
 	<!-- 개발 진행 현황 삭제 -->
-	<delete id="deleteCommonCode" parameterType="String">
+	<delete id="deleteCommonCode" parameterType="int">
 		DELETE FROM DEV_PROGRESS WHERE SEQ = #{seq}
 	</delete>
 	
@@ -147,6 +153,13 @@
 	        #{devStatus}, #{initRegistrar}, #{lastModifier}
 	    )
 	</insert>
+	
+	<!-- 개발 진행 현황 정보 추출 -->
+	<select id="getDevById" resultType="devProgress">
+		SELECT *
+		FROM DEV_PROGRESS
+        WHERE SEQ = #{seq}
+	</select>
 
 	
 </mapper>

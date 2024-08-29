@@ -472,15 +472,6 @@ public class NoticeController {
     	
         return "noticeDetail";  // noticeDetail.jsp 페이지로 이동
     }
-    
-
-//    <c:forEach var="attachment" items="${attachments}">
-//    <li>
-//        <a href="${pageContext.request.contextPath}/downloadAttachment?seq=${attachment.seq}">
-//            ${attachment.fileName}
-//        </a>
-//    </li>
-//</c:forEach>
 
 
 

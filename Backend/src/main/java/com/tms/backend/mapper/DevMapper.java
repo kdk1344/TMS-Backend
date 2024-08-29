@@ -30,8 +30,8 @@ public interface DevMapper {
             @Param("programStatus") String programStatus,
             @Param("developer") String developer,
             @Param("devStatus") String devStatus,
-            @Param("actualStartDate") String actualStartDate,
-            @Param("actualEndDate") String actualEndDate,
+            @Param("devStartDate") String devStartDate,
+            @Param("devEndDate") String devEndDate,
             @Param("pl") String pl,
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr,
             @Param("ItMgr") String ItMgr,
@@ -50,13 +50,14 @@ public interface DevMapper {
             @Param("programStatus") String programStatus,
             @Param("developer") String developer,
             @Param("devStatus") String devStatus,
-            @Param("actualStartDate") String actualStartDate,
-            @Param("actualEndDate") String actualEndDate,
+            @Param("devStartDate") String devStartDate,
+            @Param("devEndDate") String devEndDate,
             @Param("pl") String pl,
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr,
             @Param("ItMgr") String ItMgr,
             @Param("BusiMgr") String BusiMgr
     );
-    public void deleteDevProgress(String seq);
+    public void deleteDevProgress(int seq);
     public void insertdevProgress(devProgress devProgress);
+    public devProgress getDevById(int Seq);
 }

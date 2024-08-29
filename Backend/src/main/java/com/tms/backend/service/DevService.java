@@ -36,26 +36,26 @@ public class DevService {
 
 	public List<devProgress> searchDevProgress(String majorCategory, String subCategory, String programType, 
 	            String programName, String programId, String programStatus, String developer, 
-	            String devStatus, String actualStartDate, String actualEndDate, 
+	            String devStatus, String devStartDate, String devEndDate, 
 	            String pl, String thirdPartyTestMgr, String ItMgr, 
 	            String BusiMgr, int page, int size) {
 		int offset = (page - 1) * size;
 		return devMapper.searchDevProgress(majorCategory, subCategory, programType, programName, programId,
-		programStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
+		programStatus, developer, devStatus, devStartDate, devEndDate, pl, 
 		thirdPartyTestMgr, ItMgr, BusiMgr, offset, size);
 	}
 	
 	public int getTotalDevProgressCount(String majorCategory, String subCategory, String programType, 
 	     String programName, String programId, String programStatus, String developer, 
-	     String devStatus, String actualStartDate, String actualEndDate, 
+	     String devStatus, String devStartDate, String devEndDate, 
 	     String pl, String thirdPartyTestMgr, String ItMgr, 
 	     String BusiMgr) {
 		return devMapper.getTotalDevProgressCount(majorCategory, subCategory, programType, programName, programId,
-		programStatus, developer, devStatus, actualStartDate, actualEndDate, pl, 
+		programStatus, developer, devStatus, devStartDate, devEndDate, pl, 
 		thirdPartyTestMgr, ItMgr, BusiMgr);
 	}
 	
-	public void deleteDevProgress(String seq) {
+	public void deleteDevProgress(int seq) {
 		devMapper.deleteDevProgress(seq);
     }
 	
@@ -64,6 +64,11 @@ public class DevService {
         for (devProgress dev : devProgress) {
             devMapper.insertdevProgress(dev);
         }
+    }
+    
+    //seq에 따른 개발 진행 현황 정보 추출
+    public devProgress getDevById(Integer seq) {
+        return devMapper.getDevById(seq);
     }
 	
 	
