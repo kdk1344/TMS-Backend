@@ -193,6 +193,9 @@
             <div class="form-group">
               <label for="developerForFilter">개발자</label>
               <input type="text" id="developerForFilter" name="developer" placeholder="이름" readonly />
+              <button type="button" id="developerSearchButton">
+                <img src="../../resources/images/search_icon.png" alt="개발자 검색" />
+              </button>
             </div>
           </div>
 
@@ -215,9 +218,9 @@
             </div>
 
             <div class="form-group">
-              <label for="actualEndDateFromForFilter">개발완료일</label>
+              <label for="actualEndDateFromForFilter">개발 완료일</label>
               <input id="actualEndDateFromForFilter" name="devStartDate" type="date" />
-              <span>-</span>
+              <span class="dash">-</span>
               <input id="actualEndDateToForFilter" name="devEndDate" type="date" />
             </div>
           </div>
