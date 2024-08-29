@@ -151,28 +151,81 @@
       <!-- 개발진행 조회 필터링 폼 -->
       <form id="devProgressFilterForm">
         <div class="filter-container">
-          <div class="form-group">
-            <label for="parentCodeForFilter">대분류</label>
-            <select id="parentCodeForFilter" name="parentCode">
-              <option value="" selected>전체</option>
-            </select>
+          <div class="filter-container-row">
+            <div class="form-group">
+              <label for="majorCategoryForFilter">업무 대분류</label>
+              <select id="majorCategoryForFilter" name="majorCategory">
+                <option value="" selected>전체</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="subCategoryForFilter">업무 중분류</label>
+              <select id="subCategoryForFilter" name="subCategory">
+                <option value="" selected>전체</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="programTypeForFilter">프로그램 구분</label>
+              <select id="programTypeForFilter" name="programType">
+                <option value="" selected>전체</option>
+              </select>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="codeForFilter">중분류</label>
-            <select id="codeForFilter" name="code">
-              <option value="" selected>전체</option>
-            </select>
+          <div class="filter-container-row">
+            <div class="form-group">
+              <select id="programKeySelect" name="programKey">
+                <option value="programId">프로그램 ID</option>
+                <option value="programName">프로그램명</option>
+              </select>
+              <input type="text" id="programValueInput" name="programValue" />
+            </div>
+
+            <div class="form-group">
+              <label for="programStatusForFilter">프로그램 상태</label>
+              <select id="programStatusForFilter" name="programStatus">
+                <option value="" selected>전체</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="developerForFilter">개발자</label>
+              <input type="text" id="developerForFilter" name="developer" placeholder="이름" readonly />
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="codeNameForFilter">코드명</label>
-            <input type="text" id="codeNameForFilter" name="codeName" placeholder="코드명을 입력하세요" />
+          <div class="filter-container-row">
+            <div class="form-group">
+              <select id="roleKeySelect" name="role">
+                <option value="pl">PL</option>
+                <option value="thirdPartyTestMgr">제3자 테스터</option>
+                <option value="itMgr">IT 담당자</option>
+                <option value="busiMgr">현업 담당자</option>
+              </select>
+              <input type="text" id="roleValueInput" name="roleValue" placeholder="이름을 입력하세요" />
+            </div>
+
+            <div class="form-group">
+              <label for="devStatusForFilter">개발진행 상태</label>
+              <select id="devStatusForFilter" name="devStatus">
+                <option value="" selected>전체</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="actualEndDateFromForFilter">개발완료일</label>
+              <input id="actualEndDateFromForFilter" name="devStartDate" type="date" />
+              <span>-</span>
+              <input id="actualEndDateToForFilter" name="devEndDate" type="date" />
+            </div>
           </div>
         </div>
-        <div class="flex-box align-end">
-          <button type="submit" id="searchDevProgressButton">조회</button>
+
+        <div class="flex-box justify-end">
           <button type="reset" id="resetButton" class="reset-button">초기화</button>
+          <button type="submit" id="searchDevProgressButton">조회</button>
         </div>
       </form>
 

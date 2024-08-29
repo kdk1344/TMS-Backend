@@ -171,8 +171,8 @@
           </div>
         </div>
         <div class="flex-box align-end">
-          <button type="submit" id="searchCategoryCodeButton">조회</button>
           <button type="reset" id="resetButton" class="reset-button">초기화</button>
+          <button type="submit" id="searchCategoryCodeButton">조회</button>
         </div>
       </form>
 

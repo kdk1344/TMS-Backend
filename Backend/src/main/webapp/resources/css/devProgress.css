@@ -33,9 +33,6 @@ table td {
 }
 
 #devProgressFilterForm {
-  display: flex;
-  justify-content: space-between;
-
   border: 1px solid var(--light-gray);
   padding: 16px;
   margin-bottom: 16px;
@@ -45,26 +42,44 @@ table td {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+
+  flex: 1;
 }
 
 .form-group label {
   display: block;
-  white-space: nowrap;
   font-weight: 600;
+
+  width: 140px;
 }
 
 .filter-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
 
-  width: 50%;
+  width: 100%;
+
+  margin-bottom: 20px;
 }
 
 .filter-container select,
 .filter-container input {
-  min-width: 160px;
+  flex: 1;
+}
+
+#programKeySelect,
+#roleKeySelect {
+  flex: none;
+  width: 130px;
+  margin-right: 10px;
+}
+
+.filter-container-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .modal-form {
