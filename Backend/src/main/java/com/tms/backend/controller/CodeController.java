@@ -577,16 +577,6 @@ public class CodeController {
         
     	 // 하위 코드가 없으면 204 상태와 함께 빈 배열 반환
         if (CTCodes.isEmpty()) {
-        	List<categoryCode> empty = new ArrayList<>();
-        	// 빈 필드를 가진 categoryCode 객체 생성
-        	categoryCode emptyCategoryCode = new categoryCode();
-
-        	// 필요한 경우, 필드를 초기화
-        	emptyCategoryCode.setCode("");
-        	emptyCategoryCode.setCodeName("");
-        	emptyCategoryCode.setParentCode("");
-        	empty.add(emptyCategoryCode);
-        	log.info(empty);
             response.put("status", "no_content");
             response.put("message", "해당하는 중분류가 없습니다");
             response.put("CTCodes", CTCodes);

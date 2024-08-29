@@ -47,6 +47,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tms.backend.service.AdminService;
+import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.FileAttachment;
@@ -69,6 +70,9 @@ public class NoticeController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private FileService fileservice;
 
 
     ////공지사항 Controller
@@ -148,7 +152,7 @@ public class NoticeController {
         
         // 새로운 파일 업로드 처리
         if (files != null && files.length > 0) {
-            handleFileUpload(files, notice, boardType);
+            fileservice.handleFileUpload(files, notice, boardType);
         }
 
         // 응답 생성
@@ -201,7 +205,7 @@ public class NoticeController {
         adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
 
         // 새로운 파일 업로드 처리
-        handleFileUpload(files, existingNotice, boardType);
+        fileservice.handleFileUpload(files, existingNotice, boardType);
         
         log.info("check "+existingNotice);
 
@@ -243,20 +247,20 @@ public class NoticeController {
         if (attachment == null) {
             return ResponseEntity.notFound().build();
         }
-        
         // 파일 경로 확인
         File file = new File(attachment.getStorageLocation());
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
         }
 
-        String encodedFileName = encodeFileName(attachment.getFileName());
+        String encodedFileName = fileservice.encodeFileName(attachment.getFileName());
         
      // 파일의 MIME 타입 확인
         String contentType = Files.probeContentType(file.toPath());
         if (contentType == null) {
             contentType = "application/octet-stream";  // MIME 타입을 찾지 못한 경우 기본 바이너리로 처리
         }
+        log.info(attachment.getStorageLocation());
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
@@ -280,7 +284,7 @@ public class NoticeController {
             return ResponseEntity.notFound().build();
         }
 
-        String encodedFileName = encodeFileName(attachment.getFileName());
+        String encodedFileName = fileservice.encodeFileName(attachment.getFileName());
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
@@ -328,106 +332,6 @@ public class NoticeController {
         response.put("status", "success");
         response.put("message", "공지사항이 성공적으로 삭제되었습니다.");
         return ResponseEntity.ok(response);
-    }
-    
-    
-    
-    private void handleFileUpload(MultipartFile[] files, Notice notice, String boardType) {
-        List<FileAttachment> attachments = new ArrayList<>();
-        
-        // boardType에 따라 boardTypeNumber 설정
-        Integer boardTypeNumber;
-        switch (boardType) {
-            case "devProgress":
-                boardTypeNumber = 1;
-                break;
-            case "testProgress":
-                boardTypeNumber = 2;
-                break;
-            case "defect":
-                boardTypeNumber = 3;
-                break;
-            case "nt":
-                boardTypeNumber = 4;
-                break;
-            default:
-                boardTypeNumber = 0; // 기본값 (알 수 없는 boardType)
-                break;
-        }
-        
-        for (MultipartFile file : files) {
-	        if (file != null && !file.isEmpty()) {
-	            try {
-	            	String fileType = getFileType(file.getContentType());
-	            	log.info(fileType);
-	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename());
-	                log.info(storageLocation);
-	                
-	
-	                File destinationFile = new File(storageLocation);
-	                file.transferTo(destinationFile);
-	
-	                FileAttachment attachment = new FileAttachment();
-	                attachment.setIdentifier(notice.getSeq());
-	                attachment.setType(boardTypeNumber);
-	                attachment.setStorageLocation(storageLocation);
-	                attachment.setFileName(file.getOriginalFilename());
-	
-	                attachments.add(attachment);
-	
-	                log.info("File attached: " + file.getOriginalFilename() + " stored at " + storageLocation);
-	            } catch (IOException e) {
-	                log.error("File upload failed", e);
-	            }
-	        } else {
-	            log.info("No file attached");
-	        }
-        }
-
-        adminService.saveAttachments(attachments);
-    }
-    
-    private String getStorageLocation(String fileType, String fileName) {
-        String baseDir = "C:\\Users\\User\\Desktop\\TMS_DEV\\";
-        String storageLocation;
-        switch (fileType) {
-        case "IMAGE":
-            storageLocation = baseDir + "images/";
-            break;
-        case "DOCUMENT":
-            storageLocation = baseDir + "documents/";
-            break;
-        default:
-            storageLocation = baseDir + "others/";
-            break;
-            }
-
-	    // 디렉토리가 존재하지 않으면 생성
-	    File directory = new File(storageLocation);
-	    if (!directory.exists()) {
-	        if (directory.mkdirs()) {
-	            System.out.println("디렉토리가 생성되었습니다: " + storageLocation);
-	        } else {
-	            System.out.println("디렉토리 생성에 실패했습니다: " + storageLocation);
-	        }
-	        }
-
-    return storageLocation + fileName;
-    }
-    
-    
-    private String getFileType(String contentType) {
-        if (contentType != null && contentType.startsWith("image/")) {
-            return "IMAGE";
-        } else if (contentType != null && contentType.startsWith("application/pdf")) {
-            return "DOCUMENT";
-        } else {
-            return "OTHER";
-        }
-    }
-    
-    private String encodeFileName(String fileName) throws UnsupportedEncodingException {
-        return URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
     }
     
     
