@@ -82,7 +82,7 @@
         </div>
         <div class="notice-field">
           <dt>내용</dt>
-          <dd id="noticeContent"></dd>
+          <dd><pre id="noticeContent"></pre></dd>
         </div>
         <div class="notice-field">
           <dt>첨부파일</dt>
