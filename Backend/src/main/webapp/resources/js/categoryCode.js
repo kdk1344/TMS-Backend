@@ -181,26 +181,26 @@ function setupModalEventListeners() {
   });
 }
 
-// 대분류 목록 조회
-async function getCTParentCodes() {
+// 대분류 코드 목록 조회
+export async function getMajorCategoryCodes() {
   try {
-    const { parentCodes = [] } = await tmsFetch("/catparentCode");
+    const { parentCodes: majorCategoryCodes } = await tmsFetch("/catparentCode");
 
-    return { parentCodes };
+    return { majorCategoryCodes };
   } catch (error) {
     console.error("Error fetching CC Parent Codes", error.message);
   }
 }
 
-// 코드 목록 조회
-async function getCCCodes(parentCode = "") {
+// 중분류 코드 목록 조회
+export async function getSubCategoryCodes(parentCode = "") {
   try {
     if (parentCode === "") return [];
 
     const query = new URLSearchParams({ parentCode }).toString();
-    const { CTCodes = [] } = await tmsFetch(`/catcode?${query}`);
+    const { CTCodes: subCategoryCodes = [] } = await tmsFetch(`/catcode?${query}`);
 
-    return { codes: CTCodes };
+    return { subCategoryCodes };
   } catch (error) {
     console.error("Error fetching CC Codes", error.message);
   }
@@ -208,7 +208,7 @@ async function getCCCodes(parentCode = "") {
 
 // 대분류 목록을 가져와 select 요소에 옵션을 설정하는 함수
 async function initializeParentCodes(selectElementId) {
-  const { parentCodes } = await getCTParentCodes();
+  const { majorCategoryCodes } = await getMajorCategoryCodes();
   const parentCodeSelect = document.getElementById(selectElementId);
 
   // 기존 옵션을 모두 삭제하고, 기본값이 되는 옵션은 따로 저장
@@ -221,7 +221,7 @@ async function initializeParentCodes(selectElementId) {
   }
 
   // 새 옵션 생성 및 추가
-  parentCodes.forEach((parentCode) => {
+  majorCategoryCodes.forEach((parentCode) => {
     const option = document.createElement("option");
 
     option.value = parentCode.code;
@@ -239,10 +239,10 @@ async function initializeChildCodes(selectedParentCode) {
 
   if (selectedParentCode === "") return; // 대분류 '전체'를 선택한 경우
 
-  const { codes } = await getCCCodes(selectedParentCode);
+  const { subCategoryCodes } = await getSubCategoryCodes(selectedParentCode);
 
   // 새 옵션 생성 및 추가
-  codes.forEach((code) => {
+  subCategoryCodes.forEach((code) => {
     const option = document.createElement("option");
 
     option.value = code.code;
