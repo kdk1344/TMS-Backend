@@ -211,7 +211,7 @@ public class devProgressController {
     }
 	
 	//중분류 확인
-	@GetMapping(value = "api/Sub", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/sub", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getSub() {
     	Map<String, Object> response = new HashMap<>();
@@ -220,7 +220,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (Sub != null && !Sub.isEmpty()) {
             response.put("status", "success");
-            response.put("Sub", Sub);
+            response.put("sub", Sub);
         } else {
             response.put("status", "failure");
             response.put("message", "중분류 정보를 찾을 수 없습니다");
@@ -231,7 +231,7 @@ public class devProgressController {
     }
 	
 	//프로그램 타입 확인
-	@GetMapping(value = "api/ProgramType", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/programType", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getProgramType() {
     	Map<String, Object> response = new HashMap<>();
@@ -240,7 +240,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (ProgramType != null && !ProgramType.isEmpty()) {
             response.put("status", "success");
-            response.put("ProgramType", ProgramType);
+            response.put("programType", ProgramType);
         } else {
             response.put("status", "failure");
             response.put("message", "프로그램 타입 정보를 찾을 수 없습니다");
@@ -251,7 +251,7 @@ public class devProgressController {
     }
 	
 	//프로그램 상세 구분 확인
-	@GetMapping(value = "api/ProgramDType", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/programDtype", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getProgramDType() {
     	Map<String, Object> response = new HashMap<>();
@@ -260,7 +260,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (ProgramDType != null && !ProgramDType.isEmpty()) {
             response.put("status", "success");
-            response.put("ProgramDType", ProgramDType);
+            response.put("programDtype", ProgramDType);
         } else {
             response.put("status", "failure");
             response.put("message", "프로그램 상세 구분 정보를 찾을 수 없습니다");
@@ -291,7 +291,7 @@ public class devProgressController {
     }
 	
 	//프로그램 상태 확인
-	@GetMapping(value = "api/ProgramStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/programStatus", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getProgramStatus() {
     	Map<String, Object> response = new HashMap<>();
@@ -300,7 +300,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (ProgramStatus != null && !ProgramStatus.isEmpty()) {
             response.put("status", "success");
-            response.put("ProgramStatus", ProgramStatus);
+            response.put("programStatus", ProgramStatus);
         } else {
             response.put("status", "failure");
             response.put("message", "프로그램 상태 정보를 찾을 수 없습니다");
@@ -311,7 +311,7 @@ public class devProgressController {
     }
 	
 	//사용자 ID 확인
-	@GetMapping(value = "api/User", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getUserIDLIST() {
     	Map<String, Object> response = new HashMap<>();
@@ -320,7 +320,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (User != null && !User.isEmpty()) {
             response.put("status", "success");
-            response.put("User", User);
+            response.put("user", User);
         } else {
             response.put("status", "failure");
             response.put("message", "사용자 정보를 찾을 수 없습니다");
@@ -331,7 +331,7 @@ public class devProgressController {
     }
 	
 	//우선도 및 난이도 확인
-	@GetMapping(value = "api/TestResult", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/testResult", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getTestResult() {
     	Map<String, Object> response = new HashMap<>();
@@ -340,7 +340,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (TestResult != null && !TestResult.isEmpty()) {
             response.put("status", "success");
-            response.put("TestResult", TestResult);
+            response.put("testResult", TestResult);
         } else {
             response.put("status", "failure");
             response.put("message", "테스트 결과를 찾을 수 없습니다");
@@ -351,7 +351,7 @@ public class devProgressController {
     }
 	
 	//IT 담당자 확인
-	@GetMapping(value = "api/ITMGR", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/itMgr", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getITMGR() {
     	Map<String, Object> response = new HashMap<>();
@@ -360,7 +360,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (ITMGR != null && !ITMGR.isEmpty()) {
             response.put("status", "success");
-            response.put("ITMGR", ITMGR);
+            response.put("itMgr", ITMGR);
         } else {
             response.put("status", "failure");
             response.put("message", "IT 담당자 정보를 찾을 수 없습니다");
@@ -371,7 +371,7 @@ public class devProgressController {
     }
 	
 	//기업 담당자 확인
-	@GetMapping(value = "api/BUSIMGR", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/busiMgr", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getBUSIMGR() {
     	Map<String, Object> response = new HashMap<>();
@@ -380,7 +380,7 @@ public class devProgressController {
         // 응답 데이터 생성
         if (BUSIMGR != null && !BUSIMGR.isEmpty()) {
             response.put("status", "success");
-            response.put("BUSIMGR", BUSIMGR);
+            response.put("busiMgr", BUSIMGR);
         } else {
             response.put("status", "failure");
             response.put("message", "기업 담당자 정보를 찾을 수 없습니다");
