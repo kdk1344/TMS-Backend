@@ -33,9 +33,6 @@ table td {
 }
 
 #devProgressFilterForm {
-  display: flex;
-  justify-content: space-between;
-
   border: 1px solid var(--light-gray);
   padding: 16px;
   margin-bottom: 16px;
@@ -45,26 +42,67 @@ table td {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+
+  flex: 1;
 }
 
 .form-group label {
   display: block;
-  white-space: nowrap;
   font-weight: 600;
+
+  width: 140px;
 }
 
 .filter-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
 
-  width: 50%;
+  width: 100%;
+
+  margin-bottom: 20px;
 }
 
 .filter-container select,
 .filter-container input {
-  min-width: 160px;
+  flex: 1;
+  height: 100%;
+}
+
+#programKeySelect,
+#roleKeySelect {
+  flex: none;
+  width: 130px;
+  margin-right: 10px;
+}
+
+.filter-container-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+#developerSearchButton {
+  display: flex; /* 이미지가 버튼에 맞게 조정되도록 설정 */
+  align-items: center; /* 버튼 내부의 콘텐츠를 중앙 정렬 */
+  justify-content: center; /* 버튼 내부의 콘텐츠를 중앙 정렬 */
+
+  width: 46px;
+  min-width: fit-content;
+  height: 46px;
+
+  padding: 12px;
+  margin-left: 8px;
+
+  border: 1px solid var(--light-gray);
+  background-color: var(--white);
+}
+
+#developerSearchButton img {
+  max-width: 100%; /* 이미지의 너비를 버튼 너비에 맞게 조정 */
+  max-height: 100%; /* 이미지의 높이를 버튼 높이에 맞게 조정 */
+  display: block; /* 이미지가 버튼 너비에 맞게 조정되도록 설정 */
 }
 
 .modal-form {
@@ -140,4 +178,8 @@ input[type="radio"] {
 }
 .code-display input {
   flex: 1;
+}
+
+.dash {
+  margin: 0 8px;
 }
