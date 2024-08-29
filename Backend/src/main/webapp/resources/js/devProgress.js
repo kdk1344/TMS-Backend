@@ -1,4 +1,4 @@
-import { tmsFetch, renderTMSHeader, setupPagination } from "./common.js";
+import { tmsFetch, renderTMSHeader, setupPagination, convertDate } from "./common.js";
 
 let currentPage = 1;
 
@@ -84,11 +84,11 @@ async function renderDevProgress(
         <td class="program-status">${programStatus}</td>
         <td class="developer">${developer}</th>
         <td class="pl">${pl}</td>
-        <td class="planned-start-date">${plannedStartDate}</td>
-        <td class="planned-end-date">${plannedEndDate}</td>
-        <td class="actual-start-date">${actualStartDate}</td>
-        <td class="actual-end-date">${actualEndDate}</td>
-        <td class="pl-test-cmp-date">${plTestCmpDate}</td>
+        <td class="planned-start-date">${convertDate(plannedStartDate)}</td>
+        <td class="planned-end-date">${convertDate(plannedEndDate)}</td>
+        <td class="actual-start-date">${convertDate(actualStartDate)}</td>
+        <td class="actual-end-date">${convertDate(actualEndDate)}</td>
+        <td class="pl-test-cmp-date">${convertDate(plTestCmpDate)}</td>
         <td class="it-mgr">${itMgr}</td>
         <td class="busi-mgr">${busiMgr}</td>
         <td class="dev-status">${devStatus}</td>
