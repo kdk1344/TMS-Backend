@@ -59,6 +59,29 @@ h2 {
   height: 39vh;
 
   overflow-y: auto;
+
+  white-space: pre-wrap; /* 줄 바꿈 및 공백을 유지하면서 줄을 감쌉니다. */
+}
+
+/* 스크롤바의 기본 스타일 설정 */
+#noticeContent::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* 스크롤바의 막대 (thumb) 스타일 설정 */
+#noticeContent::-webkit-scrollbar-thumb {
+  background-color: var(--extra-light-gray); /* 스크롤바의 색상 */
+  border-radius: 12px; /* 스크롤바의 모서리 둥글게 설정 */
+}
+
+/* 스크롤바의 트랙 (track) 스타일 설정 */
+#noticeContent::-webkit-scrollbar-track {
+  background-color: var(--super-light-gray); /* 스크롤바 트랙의 배경색 */
+}
+
+/* 스크롤바 버튼 숨기기 */
+#noticeContent::-webkit-scrollbar-button {
+  display: none; /* 스크롤바 버튼 숨기기 */
 }
 
 .modal-form {
@@ -79,7 +102,7 @@ h2 {
 
 .modal-form-group label {
   display: block;
-  width: 30%;
+  width: 15%;
 
   font-weight: 600;
 }

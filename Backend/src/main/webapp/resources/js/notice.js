@@ -134,9 +134,9 @@ function loadInitialNotices() {
   getNotices();
 }
 
-async function getNotices({ page = 1, size = 10, startDate = "", endDate = "", title = "", content = "" } = {}) {
+async function getNotices({ page = 1, startDate = "", endDate = "", title = "", content = "" } = {}) {
   try {
-    const query = new URLSearchParams({ page, size, startDate, endDate, title, content }).toString();
+    const query = new URLSearchParams({ page, startDate, endDate, title, content }).toString();
     const { totalPages, notices } = await tmsFetch(`/notices?${query}`);
 
     displayNotices(notices, totalPages);
