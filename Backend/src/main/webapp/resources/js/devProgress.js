@@ -8,7 +8,7 @@ import {
   getSubCategoryCodes,
   openModal,
   closeModal,
-  closeModalOnClickOutside,
+  setupModalEventListeners,
 } from "./common.js";
 
 let currentPage = 1;
@@ -19,6 +19,7 @@ const majorCategorySelect = document.getElementById("majorCategoryForFilter");
 const developerSearchButton = document.getElementById("developerSearchButton");
 const developerSearchModal = document.getElementById("developerSearchModal");
 const developerList = document.getElementById("developerList");
+const closeDeveloperSearchModalButton = document.getElementById("closeDeveloperSearchModalButton");
 
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
@@ -62,19 +63,11 @@ function setupEventListeners() {
   }
 
   if (developerSearchModal) {
+    closeDeveloperSearchModalButton.addEventListener("click", () => closeModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH));
   }
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
-  setupModalEventListeners();
-}
-
-function setupModalEventListeners() {
-  const modals = Object.values(MODAL_ID); // 모든 모달 ID 배열
-
-  modals.forEach((modalId) => {
-    // 모달 외부 클릭 시 닫기 설정
-    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
-  });
+  setupModalEventListeners(Object.values(MODAL_ID));
 }
 
 // 초기 프로그램 개발 진행 현황 목록 로드
@@ -203,6 +196,9 @@ function submitDevProgressFilter(event) {
 // 분류코드 필터 리셋
 function resetDevProgressFilter() {
   this.reset(); // 폼 초기화
+
+  const deverloperNameDisplay = document.getElementById("developerNameDisplay");
+  deverloperNameDisplay.textContent = "";
 }
 
 async function getDevProgress(
@@ -304,23 +300,39 @@ export async function renderDevelopers() {
   // 개발자 목록을 렌더링합니다.
   developers.forEach((developer) => {
     const listItem = document.createElement("li");
+    // data-* 속성을 사용하여 userID와 userName을 저장
+    listItem.dataset.userId = developer.userID;
+    listItem.dataset.userName = developer.userName;
 
-    listItem.textContent = developer.name;
-    listItem.setAttribute("tabindex", "0");
+    const userId = document.createElement("p");
+    userId.textContent = developer.userID;
+
+    // userName과 userID 요소를 생성합니다.
+    const userName = document.createElement("p");
+    userName.textContent = developer.userName;
+
+    listItem.appendChild(userId);
+    listItem.appendChild(userName);
 
     developerList.appendChild(listItem);
   });
 }
 
 function onDeveloperItemClick(event) {
-  const target = event.target;
+  // 이벤트가 발생한 요소부터 가장 가까운 li 요소를 찾습니다.
+  const listItem = event.target.closest("li");
 
-  if (target.tagName === "LI") {
+  console.log("클릭", listItem.tagName);
+
+  if (listItem.tagName === "LI") {
     // 선택된 개발자 이름을 입력 필드에 설정합니다.
     const developerInput = document.getElementById("developerForFilter");
+    const deverloperNameDisplay = document.getElementById("developerNameDisplay");
 
-    developerInput.textContent = target.textContent;
-    developerInput.value = target.id; // 수정1!
+    developerInput.value = listItem.dataset.userId;
+    deverloperNameDisplay.textContent = listItem.dataset.userName;
+
+    closeModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH);
   }
 }
 

@@ -22,7 +22,16 @@
       <div id="developerSearchModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-          <h2>개발자 조회</h2>
+          <div class="flex-box justify-between">
+            <h2>개발자 조회</h2>
+            <button type="button" id="closeDeveloperSearchModalButton" class="modal-close-button">
+              <img src="../../resources/images/close_icon.png" alt="닫기" />
+            </button>
+          </div>
+          <div class="developer-list-header">
+            <p>아이디</p>
+            <p>이름</p>
+          </div>
           <ul class="developer-list" id="developerList">
             <!-- 개발자 목록 동적 삽입 -->
           </ul>
@@ -203,7 +212,8 @@
 
             <div class="form-group">
               <label for="developerForFilter">개발자</label>
-              <input type="text" id="developerForFilter" name="developer" placeholder="이름" readonly />
+              <input type="text" id="developerForFilter" name="developer" readonly hidden />
+              <div class="name-display" id="developerNameDisplay"></div>
               <button type="button" id="developerSearchButton">
                 <img src="../../resources/images/search_icon.png" alt="개발자 검색" />
               </button>

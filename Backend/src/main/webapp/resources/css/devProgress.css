@@ -183,3 +183,52 @@ input[type="radio"] {
 .dash {
   margin: 0 8px;
 }
+
+.developer-list {
+  height: 50vh;
+
+  overflow-y: auto;
+
+  cursor: pointer;
+}
+
+.developer-list::-webkit-scrollbar {
+  display: none;
+}
+
+.developer-list-header,
+.developer-list li {
+  display: flex;
+  align-items: center;
+
+  padding: 8px;
+
+  text-align: center;
+}
+
+.developer-list-header p,
+.developer-list p {
+  width: 300px;
+}
+
+.developer-list-header p {
+  font-weight: 700;
+}
+
+.developer-list li:hover {
+  background-color: var(--super-light-gray);
+}
+
+.name-display {
+  width: 100%;
+  height: 100%;
+
+  padding: 12px;
+
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+
+  font-size: inherit;
+
+  flex: 1;
+}

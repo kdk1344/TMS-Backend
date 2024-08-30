@@ -176,6 +176,13 @@ export async function fetchAPI(url, options) {
   }
 }
 
+export function setupModalEventListeners(modalIds) {
+  modalIds.forEach((modalId) => {
+    // 모달 외부 클릭 시 닫기 설정
+    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
+  });
+}
+
 // 모달 열기
 export function openModal(modalId) {
   const modal = document.getElementById(modalId);
