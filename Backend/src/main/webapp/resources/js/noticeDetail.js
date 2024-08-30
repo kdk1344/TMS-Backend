@@ -2,7 +2,7 @@ import {
   tmsFetch,
   openModal,
   closeModal,
-  closeModalOnClickOutside,
+  setupModalEventListeners,
   renderTMSHeader,
   getCurrentDate,
   updateFilePreview,
@@ -83,16 +83,7 @@ function setupEventListeners() {
   }
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
-  setupModalEventListeners();
-}
-
-function setupModalEventListeners() {
-  const modals = Object.values(MODAL_ID); // 모든 모달 ID 배열
-
-  modals.forEach((modalId) => {
-    // 모달 외부 클릭 시 닫기 설정
-    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
-  });
+  setupModalEventListeners(Object.values(MODAL_ID));
 }
 
 // 공지사항 데이터 로드
