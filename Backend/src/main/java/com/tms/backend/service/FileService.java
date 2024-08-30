@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,7 +40,7 @@ public class FileService {
 	@Autowired
     private AdminService adminService;
 
-    public void handleFileUpload(MultipartFile[] files, Notice notice, String boardType) {
+    public void handleFileUpload(MultipartFile[] files, String boardType, int identifier) {
         List<FileAttachment> attachments = new ArrayList<>();
         
         // boardType에 따라 boardTypeNumber 설정
@@ -75,7 +76,7 @@ public class FileService {
 	                file.transferTo(destinationFile);
 	
 	                FileAttachment attachment = new FileAttachment();
-	                attachment.setIdentifier(notice.getSeq());
+	                attachment.setIdentifier(identifier);
 	                attachment.setType(boardTypeNumber);
 	                attachment.setStorageLocation(storageLocation);
 	                attachment.setFileName(file.getOriginalFilename());

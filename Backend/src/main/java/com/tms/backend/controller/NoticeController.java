@@ -44,6 +44,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tms.backend.service.AdminService;
@@ -85,7 +86,7 @@ public class NoticeController {
                                           @RequestParam(value = "title", required = false) String title,
                                           @RequestParam(value = "content", required = false) String content,
                                           @RequestParam(value = "page", defaultValue = "1") int page,
-                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+                                          @RequestParam(value = "size", defaultValue = "15") int size) {
     	// 날짜 형식 설정 (yyyy-MM-dd)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -152,7 +153,7 @@ public class NoticeController {
         
         // 새로운 파일 업로드 처리
         if (files != null && files.length > 0) {
-            fileservice.handleFileUpload(files, notice, boardType);
+            fileservice.handleFileUpload(files, boardType, notice.getSeq());
         }
 
         // 응답 생성
@@ -205,7 +206,7 @@ public class NoticeController {
         adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
 
         // 새로운 파일 업로드 처리
-        fileservice.handleFileUpload(files, existingNotice, boardType);
+        fileservice.handleFileUpload(files, boardType, existingNotice.getSeq());
         
         log.info("check "+existingNotice);
 
@@ -344,7 +345,7 @@ public class NoticeController {
 				            @RequestParam(value = "title", required = false) String title,
 				            @RequestParam(value = "content", required = false) String content,
 				            @RequestParam(value = "page", defaultValue = "1") int page,
-				            @RequestParam(value = "size", defaultValue = "10") int size,
+				            @RequestParam(value = "size", defaultValue = "15") int size,
                              Model model) {
         return "notice"; // JSP 파일의 경로
     }

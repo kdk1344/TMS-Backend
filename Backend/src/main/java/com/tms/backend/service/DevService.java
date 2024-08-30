@@ -55,6 +55,10 @@ public class DevService {
 		thirdPartyTestMgr, ItMgr, BusiMgr);
 	}
 	
+	public void updatedevProgress(devProgress devProgress) {
+		devMapper.updatedevProgress(devProgress);
+	}
+	
 	public void deleteDevProgress(int seq) {
 		devMapper.deleteDevProgress(seq);
     }

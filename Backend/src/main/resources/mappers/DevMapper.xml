@@ -116,6 +116,62 @@
 	    </if>
 	</select>
 	
+	<!-- 개발 진행 현황 수정 -->
+	<update id="updatedevProgress" parameterType="devProgress">
+		UPDATE DEV_PROGRESS
+        SET 
+            MAJOR_CATEGORY = #{majorCategory},
+            SUB_CATEGORY = #{subCategory},
+            MINOR_CATEGORY = #{minorCategory},
+            PROGRAM_DETAIL_TYPE = #{programDetailType},
+            PROGRAM_TYPE = #{programType},
+            PROGRAM_ID = #{programId},
+            PROGRAM_NAME = #{programName},
+            CLASS_NAME = #{className},
+            SCREEN_ID = #{screenId},
+            SCREEN_NAME = #{screenName},
+            SCREEN_MENU_PATH = #{screenMenuPath},
+            PRIORITY = #{priority},
+            DIFFICULTY = #{difficulty},
+            ESTIMATED_EFFORT = #{estimatedEffort},
+            PROGRAM_STATUS = #{programStatus},
+            REQ_ID = #{reqId},
+            DELETION_HANDLER = #{deletionHandler},
+            DELETION_DATE = #{deletionDate},
+            DELETION_REASON = #{deletionReason},
+            DEVELOPER = #{developer},
+            PLANNED_START_DATE = #{plannedStartDate},
+            PLANNED_END_DATE = #{plannedEndDate},
+            ACTUAL_START_DATE = #{actualStartDate},
+            ACTUAL_END_DATE = #{actualEndDate},
+            DEV_PROG_ATTACHMENT = #{devProgAttachment},
+            PL = #{pl},
+            PL_TEST_SCD_DATE = #{plTestScdDate},
+            PL_TEST_CMP_DATE = #{plTestCmpDate},
+            PL_TEST_RESULT = #{plTestResult},
+            PL_TEST_NOTES = #{plTestNotes},
+            IT_MGR = #{itMgr},
+            IT_TEST_DATE = #{itTestDate},
+            IT_CONFIRM_DATE = #{itConfirmDate},
+            IT_TEST_RESULT = #{itTestResult},
+            IT_TEST_NOTES = #{itTestNotes},
+            BUSI_MGR = #{busiMgr},
+            BUSI_TEST_DATE = #{busiTestDate},
+            BUSI_CONFIRM_DATE = #{busiConfirmDate},
+            BUSI_TEST_RESULT = #{busiTestResult},
+            BUSI_TEST_NOTES = #{busiTestNotes},
+            THIRD_PARTY_TEST_MGR = #{thirdPartyTestMgr},
+            THIRD_PARTY_TEST_DATE = #{thirdPartyTestDate},
+            THIRD_PARTY_CONFIRM_DATE = #{thirdPartyConfirmDate},
+            THIRD_TEST_RESULT = #{thirdTestResult},
+            THIRD_PARTY_TEST_NOTES = #{thirdPartyTestNotes},
+            DEV_STATUS = #{devStatus},
+            INIT_REGISTRAR = #{initRegistrar},
+            LAST_MODIFIED_DATE = CURRENT_TIMESTAMP,
+            LAST_MODIFIER = #{lastModifier}
+        WHERE SEQ = #{seq}
+    </update>
+	
 	<!-- 개발 진행 현황 삭제 -->
 	<delete id="deleteCommonCode" parameterType="int">
 		DELETE FROM DEV_PROGRESS WHERE SEQ = #{seq}

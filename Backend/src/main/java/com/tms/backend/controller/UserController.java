@@ -56,7 +56,7 @@ public class UserController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size
+            @RequestParam(value = "size", defaultValue = "10") int size
     		,Model model,
     		HttpSession session) {
     	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size);
@@ -98,22 +98,17 @@ public class UserController {
         return  "dashboard";
     }
     
-    @GetMapping("/pdpc")
-    public String PdpcPage() {
-        return "pdpc";
-    }
-    
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        // 세션 무효화
-        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
-        if (session != null) {
-            session.invalidate(); // 세션 무효화
-        }
-
-        // 로그아웃 후 로그인 페이지로 리다이렉트
-        return "redirect:/tms/login";
-    }
+//    @GetMapping("/logout")
+//    public String logout(HttpServletRequest request) {
+//        // 세션 무효화
+//        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
+//        if (session != null) {
+//            session.invalidate(); // 세션 무효화
+//        }
+//
+//        // 로그아웃 후 로그인 페이지로 리다이렉트
+//        return "redirect:/tms/login";
+//    }
     
     @GetMapping(value = "api/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

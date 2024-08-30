@@ -57,6 +57,7 @@ public interface DevMapper {
             @Param("ItMgr") String ItMgr,
             @Param("BusiMgr") String BusiMgr
     );
+    public void updatedevProgress(devProgress devProgress);
     public void deleteDevProgress(int seq);
     public void insertdevProgress(devProgress devProgress);
     public devProgress getDevById(int Seq);

@@ -66,12 +66,17 @@ main.content {
 #noticeTable td {
     padding: 10px;
     border: 1px solid #ddd;
-    text-align: left;
+    text-align: center;
+	height: 25px;
+	font-size: 14px;
+}
+
+.notice-title{
+	width: 300px;
 }
 
 .notice-seq {
   width: 55px;
-
   text-align: center;
 }
 

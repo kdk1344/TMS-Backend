@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -26,6 +27,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.DevService;
+import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Criteria;
@@ -71,6 +74,9 @@ public class devProgressController {
 	@Autowired
 	private AdminService adminService;
 	
+	@Autowired
+	private FileService fileservice;
+	
 	//개발진행관리 Controller
 	
 	@GetMapping("/devProgress")
@@ -90,7 +96,7 @@ public class devProgressController {
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
 	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "10") int size,
+	        @RequestParam(value = "size", defaultValue = "15") int size,
 	        Model model) {
 		
 		log.info(programStatus);
@@ -140,7 +146,7 @@ public class devProgressController {
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
 	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "10") int size) {
+	        @RequestParam(value = "size", defaultValue = "15") int size) {
 
 	    // Service를 통해 데이터를 조회
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
@@ -399,7 +405,9 @@ public class devProgressController {
 	//개발 진행 현황 등록 페이지
 	@PostMapping(value="api/devProgressReg" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> devProgressReg(HttpServletRequest request, @RequestBody devProgress devProgress) {
+	public ResponseEntity<Map<String, Object>> devProgressReg(HttpServletRequest request,
+			@RequestPart("devProgress") devProgress devProgress,
+			@RequestPart(value = "file", required = false) MultipartFile[] files) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		if (session == null || session.getAttribute("authorityCode") == null) {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
@@ -408,6 +416,12 @@ public class devProgressController {
 		Map<String, Object> response = new HashMap<>();
 		try {
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
+        	
+        	// 새로운 파일 업로드 처리
+            if (files != null && files.length > 0) {
+                fileservice.handleFileUpload(files, "devProgress", devProgress.getSeq());
+            }
+        	
             response.put("status", "success");
             response.put("message", "개발 진행 현황 정보가 등록되었습니다");
             response.put("devProgress", devProgress);  // 등록된 개발 현황 진행 정보 반환
@@ -433,7 +447,8 @@ public class devProgressController {
 	//개발 진행 현황 수정 페이지
 	@GetMapping(value="api/devProgressEditPage" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> devProgressEditPage2(HttpServletRequest request, @RequestParam("seq") Integer seq) {
+	public ResponseEntity<Map<String, Object>> devProgressEditPage2(HttpServletRequest request,
+			@RequestParam("seq") Integer seq) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		if (session == null || session.getAttribute("authorityCode") == null) {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
@@ -455,16 +470,29 @@ public class devProgressController {
 	//개발 진행 현황 수정
     @PostMapping(value = "api/devProgressEdit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> devProgressEdit(@RequestBody devProgress devprogress) {
+    public ResponseEntity<Map<String, Object>> devProgressEdit(@RequestPart("devProgress") devProgress devProgress,  
+    		@RequestPart(value = "file", required = false) MultipartFile[] files) {
         Map<String, Object> response = new HashMap<>();
+        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq());
         try {
-            // 데이터베이스에 최종 코드 저장
-//            devservice.adddevProgress(devprogress);
+        	// devProgress의 필드를 DevProgressEdit에 복사
+    	    BeanUtils.copyProperties(devProgress, DevProgressEdit);
+    	    
+    	    // 공지사항에 등록된 기존 첨부파일 전부 삭제
+            adminService.deleteAttachmentsByNoticeId(DevProgressEdit.getSeq());
+
+            // 새로운 파일 업로드 처리
+            fileservice.handleFileUpload(files, "devProgress", DevProgressEdit.getSeq());
+            
+            log.info("check "+devProgress);
+
+            // 업데이트된 공지사항을 저장
+            devservice.updatedevProgress(DevProgressEdit);
 
             // 성공 응답 생성
             response.put("status", "success");
             response.put("message", "개발 진행 현황이 성공적으로 수정되었습니다.");
-            response.put("devProgress", devprogress);
+            response.put("DevProgressEdit", DevProgressEdit);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             response.put("status", "failure");
@@ -527,7 +555,7 @@ public class devProgressController {
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
 	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "10") int size,
+	        @RequestParam(value = "size", defaultValue = "15") int size,
             HttpServletResponse response) throws IOException {
     	
     	List<devProgress> filteredDevCodeList = devservice.searchDevProgress(

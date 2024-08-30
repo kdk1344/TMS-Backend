@@ -199,7 +199,7 @@ public class AdminController {
 
         Criteria criteria = new Criteria();
         criteria.setPage(page);
-        criteria.setPerPageNum(10);
+        criteria.setPerPageNum(15);
         criteria.setuserName(userName);
         criteria.setauthorityName(authorityName);
 
