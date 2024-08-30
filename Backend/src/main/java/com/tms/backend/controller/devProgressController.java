@@ -190,6 +190,7 @@ public class devProgressController {
         } else {
             response.put("status", "failure");
             response.put("message", "No developer found.");
+            response.put("developer", developer);
         }
 
         // 조회된 결과를 반환
@@ -415,6 +416,44 @@ public class devProgressController {
 			}
 		Map<String, Object> response = new HashMap<>();
 		try {
+			// 필수 항목 체크
+	        if (devProgress.getMajorCategory() == null || devProgress.getMajorCategory().trim().isEmpty()) {
+	            throw new IllegalArgumentException("업무 대분류는 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getSubCategory() == null || devProgress.getSubCategory().trim().isEmpty()) {
+	            throw new IllegalArgumentException("업무 중분류는 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getProgramId() == null || devProgress.getProgramId().trim().isEmpty()) {
+	            throw new IllegalArgumentException("프로그램 ID는 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getProgramName() == null || devProgress.getProgramName().trim().isEmpty()) {
+	            throw new IllegalArgumentException("프로그램명은 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getDeveloper() == null || devProgress.getDeveloper().trim().isEmpty()) {
+	            throw new IllegalArgumentException("개발자는 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getPriority() == null || devProgress.getPriority().trim().isEmpty()) {
+	            throw new IllegalArgumentException("우선순위은 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getProgramStatus() == null || devProgress.getProgramStatus().trim().isEmpty()) {
+	            throw new IllegalArgumentException("프로그램 상태는 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getPriority() == null || devProgress.getPriority().trim().isEmpty()) {
+	            throw new IllegalArgumentException("우선순위은 필수 입력 항목입니다.");
+	        }
+	        if ("삭제".equals(devProgress.getProgramStatus()) &&
+	        	(devProgress.getDeletionReason() == null || devProgress.getDeletionReason().trim().isEmpty())) {
+	        	throw new IllegalArgumentException("프로그램 상태가 '삭제'인 경우 삭제처리사유 입력은 필수입니다.");
+	        }
+	        // Date 필드 체크
+	        if (devProgress.getPlannedStartDate() == null) {
+	            throw new IllegalArgumentException("시작 예정일은 필수 입력 항목입니다.");
+	        }
+	        if (devProgress.getPlannedEndDate() == null) {
+	            throw new IllegalArgumentException("완료 예정일은 필수 입력 항목입니다.");
+	        }
+	        // 필요한 경우 다른 필수 항목도 추가로 체크
+			
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
         	// 새로운 파일 업로드 처리
@@ -428,7 +467,7 @@ public class devProgressController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             response.put("status", "failure");
-            response.put("message", e.getMessage());
+            response.put("message", e.getMessage());  // 예외 메시지를 response에 포함시킴
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
