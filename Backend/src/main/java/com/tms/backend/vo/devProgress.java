@@ -33,6 +33,7 @@ public class devProgress {
     private Date plannedEndDate;         // 완료 예정일 (YYYY-MM-DD)
     private Date actualStartDate;        // 시작일 (YYYY-MM-DD)
     private Date actualEndDate;          // 완료일 (YYYY-MM-DD)
+    private Date devtestendDate;         // 개발자 단위테스트 완료일 (YYYY-MM-DD)
     private String devProgAttachment;    // 단테증적 첨부파일
     private String pl;                   // PL ID
     private Date plTestScdDate;          // PL 테스트 예정일 (YYYY-MM-DD)

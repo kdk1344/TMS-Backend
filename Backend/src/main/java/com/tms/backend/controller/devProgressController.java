@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -417,42 +420,45 @@ public class devProgressController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			// 필수 항목 체크
-	        if (devProgress.getMajorCategory() == null || devProgress.getMajorCategory().trim().isEmpty()) {
-	            throw new IllegalArgumentException("업무 대분류는 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getSubCategory() == null || devProgress.getSubCategory().trim().isEmpty()) {
-	            throw new IllegalArgumentException("업무 중분류는 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getProgramId() == null || devProgress.getProgramId().trim().isEmpty()) {
-	            throw new IllegalArgumentException("프로그램 ID는 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getProgramName() == null || devProgress.getProgramName().trim().isEmpty()) {
-	            throw new IllegalArgumentException("프로그램명은 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getDeveloper() == null || devProgress.getDeveloper().trim().isEmpty()) {
-	            throw new IllegalArgumentException("개발자는 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getPriority() == null || devProgress.getPriority().trim().isEmpty()) {
-	            throw new IllegalArgumentException("우선순위은 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getProgramStatus() == null || devProgress.getProgramStatus().trim().isEmpty()) {
-	            throw new IllegalArgumentException("프로그램 상태는 필수 입력 항목입니다.");
-	        }
-	        if (devProgress.getPriority() == null || devProgress.getPriority().trim().isEmpty()) {
-	            throw new IllegalArgumentException("우선순위은 필수 입력 항목입니다.");
-	        }
+			validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
+			validateRequiredField(devProgress.getSubCategory(), "업무 중분류");
+			validateRequiredField(devProgress.getProgramId(), "프로그램 ID");
+			validateRequiredField(devProgress.getProgramName(), "프로그램명");
+			validateRequiredField(devProgress.getDeveloper(), "개발자");
+			validateRequiredField(devProgress.getPriority(), "우선순위");
+			validateRequiredField(devProgress.getProgramStatus(), "프로그램 상태");
 	        if ("삭제".equals(devProgress.getProgramStatus()) &&
 	        	(devProgress.getDeletionReason() == null || devProgress.getDeletionReason().trim().isEmpty())) {
 	        	throw new IllegalArgumentException("프로그램 상태가 '삭제'인 경우 삭제처리사유 입력은 필수입니다.");
 	        }
 	        // Date 필드 체크
-	        if (devProgress.getPlannedStartDate() == null) {
-	            throw new IllegalArgumentException("시작 예정일은 필수 입력 항목입니다.");
+	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
+	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
+	        if ((devProgress.getDevtestendDate() != null) && 
+	        	(devProgress.getDevProgAttachment() == null || devProgress.getDevProgAttachment().trim().isEmpty())) {
+	        	devProgress.setDevtestendDate(null);
+	        	throw new IllegalArgumentException
+	        	("단위테스트 증적인 '단위테스트결과서'를 첨부하지 않으면 개발자 단테종료일 등록 값은 미입력 상태로 자동 변경됩니다.");
 	        }
-	        if (devProgress.getPlannedEndDate() == null) {
-	            throw new IllegalArgumentException("완료 예정일은 필수 입력 항목입니다.");
+	        //테스트 완료일이 있을때 테스트 결과가 null 체크
+	        TestEndDateNullCheck(devProgress.getPlTestCmpDate(), devProgress.getPlTestResult(), "PL");
+	        TestEndDateNullCheck(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdTestResult(), "제3자");
+	        TestEndDateNullCheck(devProgress.getItConfirmDate(), devProgress.getItTestResult(), "고객 IT");
+	        TestEndDateNullCheck(devProgress.getBusiConfirmDate(), devProgress.getBusiTestResult(), "고객 현업");        
+	        
+	        // 데이터 체크 자동 세팅
+	        if (devProgress.getPlTestCmpDate() != null && devProgress.getPlTestScdDate() == null) {
+	        	devProgress.setPlTestScdDate(devProgress.getPlTestCmpDate());
 	        }
-	        // 필요한 경우 다른 필수 항목도 추가로 체크
+	        if (devProgress.getThirdPartyConfirmDate() != null && devProgress.getThirdPartyTestDate() == null) {
+	        	devProgress.setThirdPartyTestDate(devProgress.getThirdPartyConfirmDate());
+	        }
+	        if (devProgress.getItConfirmDate() != null && devProgress.getItTestDate() == null) {
+	        	devProgress.setItTestDate(devProgress.getItConfirmDate());
+	        }
+	        if (devProgress.getBusiConfirmDate() != null && devProgress.getBusiTestDate() == null) {
+	        	devProgress.setBusiTestDate(devProgress.getBusiConfirmDate());
+	        }
 			
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
@@ -597,8 +603,10 @@ public class devProgressController {
 	        @RequestParam(value = "size", defaultValue = "15") int size,
             HttpServletResponse response) throws IOException {
     	
+    	log.info(programId);
+    	
     	List<devProgress> filteredDevCodeList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName, programId, programStatus, developer,
+	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
 	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 
@@ -616,124 +624,82 @@ public class devProgressController {
     		check = "no_value";
     		log.info(check);
     		}
+        // 헤더 이름 배열
+        String[] headers = {
+            "SEQ", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
+            "PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
+            "CLASS_NAME", "SCREEN_ID", "SCREEN_NAME", "SCREEN_MENU_PATH", 
+            "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "program_status", 
+            "REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", 
+            "DEVELOPER", "PLANNED_START_DATE", "PLANNED_END_DATE", 
+            "ACTUAL_START_DATE", "ACTUAL_END_DATE", "DEV_TEST_END_DATE", 
+            "PL", "PL_TEST_SCD_DATE", "PL_TEST_CMP_DATE", 
+            "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", 
+            "IT_TEST_DATE", "IT_CONFIRM_DATE", "IT_TEST_RESULT", 
+            "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", 
+            "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
+            "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", 
+            "THIRD_PARTY_CONFIRM_DATE", "THIRD_TEST_RESULT", 
+            "THIRD_PARTY_TEST_NOTES", "DEV_STATUS"
+        };
+
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("SEQ");
-        headerRow.createCell(1).setCellValue("MAJOR_CATEGORY");
-        headerRow.createCell(2).setCellValue("SUB_CATEGORY");
-        headerRow.createCell(3).setCellValue("MINOR_CATEGORY");
-        headerRow.createCell(4).setCellValue("PROGRAM_DETAIL_TYPE");
-        headerRow.createCell(5).setCellValue("PROGRAM_TYPE");
-        headerRow.createCell(6).setCellValue("PROGRAM_ID");
-        headerRow.createCell(7).setCellValue("PROGRAM_NAME");
-        headerRow.createCell(8).setCellValue("CLASS_NAME");
-        headerRow.createCell(9).setCellValue("SCREEN_ID");
-        headerRow.createCell(10).setCellValue("SCREEN_NAME");
-        headerRow.createCell(11).setCellValue("SCREEN_MENU_PATH");
-        headerRow.createCell(12).setCellValue("PRIORITY");
-        headerRow.createCell(13).setCellValue("DIFFICULTY");
-        headerRow.createCell(14).setCellValue("ESTIMATED_EFFORT");
-        headerRow.createCell(15).setCellValue("program_status");
-        headerRow.createCell(16).setCellValue("REQ_ID");
-        headerRow.createCell(17).setCellValue("DELETION_HANDLER");
-        headerRow.createCell(18).setCellValue("DELETION_DATE");
-        headerRow.createCell(19).setCellValue("DELETION_REASON");
-        headerRow.createCell(20).setCellValue("DEVELOPER");
-        headerRow.createCell(21).setCellValue("PLANNED_START_DATE");
-        headerRow.createCell(22).setCellValue("PLANNED_END_DATE");
-        headerRow.createCell(23).setCellValue("ACTUAL_START_DATE");
-        headerRow.createCell(24).setCellValue("ACTUAL_END_DATE");
-        headerRow.createCell(25).setCellValue("PL");
-        headerRow.createCell(26).setCellValue("PL_TEST_SCD_DATE");
-        headerRow.createCell(27).setCellValue("PL_TEST_CMP_DATE");
-        headerRow.createCell(28).setCellValue("PL_TEST_RESULT");
-        headerRow.createCell(29).setCellValue("PL_TEST_NOTES");
-        headerRow.createCell(30).setCellValue("IT_MGR");
-        headerRow.createCell(31).setCellValue("IT_TEST_DATE");
-        headerRow.createCell(32).setCellValue("IT_CONFIRM_DATE");
-        headerRow.createCell(33).setCellValue("IT_TEST_RESULT");
-        headerRow.createCell(34).setCellValue("IT_TEST_NOTES");
-        headerRow.createCell(35).setCellValue("BUSI_MGR");
-        headerRow.createCell(36).setCellValue("BUSI_TEST_DATE");
-        headerRow.createCell(37).setCellValue("BUSI_CONFIRM_DATE");
-        headerRow.createCell(38).setCellValue("BUSI_TEST_RESULT");
-        headerRow.createCell(39).setCellValue("BUSI_TEST_NOTES");
-        headerRow.createCell(40).setCellValue("THIRD_PARTY_TEST_MGR");
-        headerRow.createCell(41).setCellValue("THIRD_PARTY_TEST_DATE");
-        headerRow.createCell(42).setCellValue("THIRD_PARTY_CONFIRM_DATE");
-        headerRow.createCell(43).setCellValue("THIRD_TEST_RESULT");
-        headerRow.createCell(44).setCellValue("THIRD_PARTY_TEST_NOTES");
-        headerRow.createCell(45).setCellValue("DEV_STATUS");
+        for (int i = 0; i < headers.length; i++) {
+            headerRow.createCell(i).setCellValue(headers[i]);
+        }
         if (check != "") {
-        	headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
-            headerRow.createCell(47).setCellValue("LAST_MODIFIER");
+        	headerRow.createCell(47).setCellValue("INIT_REGISTRAR");
+            headerRow.createCell(48).setCellValue("LAST_MODIFIER");
         }
         else {
-	        headerRow.createCell(46).setCellValue("INIT_REG_DATE");
-	        headerRow.createCell(47).setCellValue("INIT_REGISTRAR");
-	        headerRow.createCell(48).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(49).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(47).setCellValue("INIT_REG_DATE");
+	        headerRow.createCell(48).setCellValue("INIT_REGISTRAR");
+	        headerRow.createCell(49).setCellValue("LAST_MODIFIED_DATE");
+	        headerRow.createCell(50).setCellValue("LAST_MODIFIER");
         }
+        
+        // 헤더와 데이터 매핑
+        String[] fields = {
+            "getSeq", "getMajorCategory", "getSubCategory", "getMinorCategory",
+            "getProgramDetailType", "getProgramType", "getProgramId", "getProgramName",
+            "getClassName", "getScreenId", "getScreenName", "getScreenMenuPath",
+            "getPriority", "getDifficulty", "getEstimatedEffort", "getProgramStatus",
+            "getReqId", "getDeletionHandler", "getDeletionDate", "getDeletionReason",
+            "getDeveloper", "getPlannedStartDate", "getPlannedEndDate",
+            "getActualStartDate", "getActualEndDate", "getDevtestendDate",
+            "getPl", "getPlTestScdDate", "getPlTestCmpDate", 
+            "getPlTestResult", "getPlTestNotes", "getItMgr", 
+            "getItTestDate", "getItConfirmDate", "getItTestResult", 
+            "getItTestNotes", "getBusiMgr", "getBusiTestDate", 
+            "getBusiConfirmDate", "getBusiTestResult", "getBusiTestNotes", 
+            "getThirdPartyTestMgr", "getThirdPartyTestDate", 
+            "getThirdPartyConfirmDate", "getThirdTestResult", 
+            "getThirdPartyTestNotes", "getDevStatus"
+        };
 
         // 데이터 행 생성
         int rowNum = 1;
         for (devProgress devProgress : devProgressList) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(devProgress.getSeq());
-            row.createCell(1).setCellValue(devProgress.getMajorCategory());
-            row.createCell(2).setCellValue(devProgress.getSubCategory());
-            row.createCell(3).setCellValue(devProgress.getMinorCategory());
-            row.createCell(4).setCellValue(devProgress.getProgramDetailType());
-            row.createCell(5).setCellValue(devProgress.getProgramType());
-            row.createCell(6).setCellValue(devProgress.getProgramId());
-            row.createCell(7).setCellValue(devProgress.getProgramName());
-            row.createCell(8).setCellValue(devProgress.getClassName());
-            row.createCell(9).setCellValue(devProgress.getScreenId());
-            row.createCell(10).setCellValue(devProgress.getScreenName());
-            row.createCell(11).setCellValue(devProgress.getScreenMenuPath());
-            row.createCell(12).setCellValue(devProgress.getPriority());
-            row.createCell(13).setCellValue(devProgress.getDifficulty());
-            row.createCell(14).setCellValue(devProgress.getEstimatedEffort());
-            row.createCell(15).setCellValue(devProgress.getProgramStatus());
-            row.createCell(16).setCellValue(devProgress.getReqId());
-            row.createCell(17).setCellValue(devProgress.getDeletionHandler());
-            row.createCell(18).setCellValue(devProgress.getDeletionDate());
-            row.createCell(19).setCellValue(devProgress.getDeletionReason());
-            row.createCell(20).setCellValue(devProgress.getDeveloper());
-            row.createCell(21).setCellValue(devProgress.getPlannedStartDate());
-            row.createCell(22).setCellValue(devProgress.getPlannedEndDate());
-            row.createCell(23).setCellValue(devProgress.getActualStartDate());
-            row.createCell(24).setCellValue(devProgress.getActualEndDate());
-            row.createCell(25).setCellValue(devProgress.getPl());
-            row.createCell(26).setCellValue(devProgress.getPlTestScdDate());
-            row.createCell(27).setCellValue(devProgress.getPlTestCmpDate());
-            row.createCell(28).setCellValue(devProgress.getPlTestResult());
-            row.createCell(29).setCellValue(devProgress.getPlTestNotes());
-            row.createCell(30).setCellValue(devProgress.getItMgr());
-            row.createCell(31).setCellValue(devProgress.getItTestDate());
-            row.createCell(32).setCellValue(devProgress.getItConfirmDate());
-            row.createCell(33).setCellValue(devProgress.getItTestResult());
-            row.createCell(34).setCellValue(devProgress.getItTestNotes());
-            row.createCell(35).setCellValue(devProgress.getBusiMgr());
-            row.createCell(36).setCellValue(devProgress.getBusiTestDate());
-            row.createCell(37).setCellValue(devProgress.getBusiConfirmDate());
-            row.createCell(38).setCellValue(devProgress.getBusiTestResult());
-            row.createCell(39).setCellValue(devProgress.getBusiTestNotes());
-            row.createCell(40).setCellValue(devProgress.getThirdPartyTestMgr());
-            row.createCell(41).setCellValue(devProgress.getThirdPartyTestDate());
-            row.createCell(42).setCellValue(devProgress.getThirdPartyConfirmDate());
-            row.createCell(43).setCellValue(devProgress.getThirdTestResult());
-            row.createCell(44).setCellValue(devProgress.getThirdPartyTestNotes());
-            row.createCell(45).setCellValue(devProgress.getDevStatus());
+            for (int i = 0; i < fields.length; i++) {
+                try {
+                    Method method = devProgress.getClass().getMethod(fields[i]);
+                    Object value = method.invoke(devProgress);
+                    row.createCell(i).setCellValue(value != null ? value.toString() : "");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             if (check != "") {
-	            row.createCell(46).setCellValue(devProgress.getInitRegistrar());
-	            row.createCell(47).setCellValue(devProgress.getLastModifier());
+	            row.createCell(47).setCellValue(devProgress.getInitRegistrar());
+	            row.createCell(48).setCellValue(devProgress.getLastModifier());
             }
             else {
-            	row.createCell(46).setCellValue(devProgress.getInitRegDate().toString());
-	            row.createCell(47).setCellValue(devProgress.getInitRegistrar());
-	            row.createCell(48).setCellValue(devProgress.getLastModifiedDate().toString());
-	            row.createCell(49).setCellValue(devProgress.getLastModifier());
+            	row.createCell(47).setCellValue(devProgress.getInitRegDate().toString());
+	            row.createCell(48).setCellValue(devProgress.getInitRegistrar());
+	            row.createCell(49).setCellValue(devProgress.getLastModifiedDate().toString());
+	            row.createCell(50).setCellValue(devProgress.getLastModifier());
             }
         }
         // 엑셀 파일을 HTTP 응답으로 내보내기
@@ -765,7 +731,8 @@ public class devProgressController {
             		"PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "CLASS_NAME", "SCREEN_ID", 
             		"SCREEN_NAME", "SCREEN_MENU_PATH", "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "PROGRAM_STATUS", 
             		"REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", "DEVELOPER", "PLANNED_START_DATE", 
-            		"PLANNED_END_DATE", "ACTUAL_START_DATE", "ACTUAL_END_DATE", "PL", "PL_TEST_SCD_DATE", 
+            		"PLANNED_END_DATE", "ACTUAL_START_DATE", "ACTUAL_END_DATE", "DEV_TEST_END_DATE", 
+                    "PL", "PL_TEST_SCD_DATE", 
             		"PL_TEST_CMP_DATE", "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", "IT_CONFIRM_DATE", 
             		"IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", 
             		"BUSI_TEST_NOTES", "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
@@ -777,6 +744,21 @@ public class devProgressController {
             }
 
             List<devProgress> devProgress = new ArrayList<>();
+            
+            // 필드명 배열과 대응되는 셀 타입 배열
+            String[] fieldNames = {
+                "seq", "majorCategory", "subCategory", "minorCategory", "programDetailType",
+                "programType", "programId", "programName", "className", "screenId",
+                "screenName", "screenMenuPath", "priority", "difficulty", "estimatedEffort",
+                "programStatus", "reqId", "deletionHandler", "deletionDate", "deletionReason",
+                "developer", "plannedStartDate", "plannedEndDate", "actualStartDate",
+                "actualEndDate", "devtestendDate", "pl", "plTestScdDate", "plTestCmpDate",
+                "plTestResult", "plTestNotes", "itMgr", "itTestDate", "itConfirmDate",
+                "itTestResult", "itTestNotes", "busiMgr", "busiTestDate", "busiConfirmDate",
+                "busiTestResult", "busiTestNotes", "thirdPartyTestMgr", "thirdPartyTestDate",
+                "thirdPartyConfirmDate", "thirdTestResult", "thirdPartyTestNotes", "devStatus",
+                "initRegistrar", "lastModifier"
+            };
 
             // 첫 번째 행은 헤더이므로 건너뜁니다.
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
@@ -785,56 +767,72 @@ public class devProgressController {
                     devProgress devprogress = new devProgress();
 
                     try {
-                    	devprogress.setSeq((int) getCellValueAsNumeric(row.getCell(0)));
-                        devprogress.setMajorCategory(getCellValueAsString(row.getCell(1)));
-                        devprogress.setSubCategory(getCellValueAsString(row.getCell(2)));
-                        devprogress.setMinorCategory(getCellValueAsString(row.getCell(3)));
-                        devprogress.setProgramDetailType(getCellValueAsString(row.getCell(4)));
-                        devprogress.setProgramType(getCellValueAsString(row.getCell(5)));
-                        devprogress.setProgramId(getCellValueAsString(row.getCell(6)));
-                        devprogress.setProgramName(getCellValueAsString(row.getCell(7)));
-                        devprogress.setClassName(getCellValueAsString(row.getCell(8)));
-                        devprogress.setScreenId(getCellValueAsString(row.getCell(9)));
-                        devprogress.setScreenName(getCellValueAsString(row.getCell(10)));
-                        devprogress.setScreenMenuPath(getCellValueAsString(row.getCell(11)));
-                        devprogress.setPriority(getCellValueAsString(row.getCell(12)));
-                        devprogress.setDifficulty(getCellValueAsString(row.getCell(13)));
-                        devprogress.setEstimatedEffort((int) getCellValueAsNumeric(row.getCell(14)));
-                        devprogress.setProgramStatus(getCellValueAsString(row.getCell(15)));
-                        devprogress.setReqId(getCellValueAsString(row.getCell(16)));
-                        devprogress.setDeletionHandler(getCellValueAsString(row.getCell(17)));
-                        devprogress.setDeletionDate(getCellValueAsDate(row.getCell(18)));
-                        devprogress.setDeletionReason(getCellValueAsString(row.getCell(19)));
-                        devprogress.setDeveloper(getCellValueAsString(row.getCell(20)));
-                        devprogress.setPlannedStartDate(getCellValueAsDate(row.getCell(21)));
-                        devprogress.setPlannedEndDate(getCellValueAsDate(row.getCell(22)));
-                        devprogress.setActualStartDate(getCellValueAsDate(row.getCell(23)));
-                        devprogress.setActualEndDate(getCellValueAsDate(row.getCell(24)));
-                        devprogress.setPl(getCellValueAsString(row.getCell(25)));
-                        devprogress.setPlTestScdDate(getCellValueAsDate(row.getCell(26)));
-                        devprogress.setPlTestCmpDate(getCellValueAsDate(row.getCell(27)));
-                        devprogress.setPlTestResult(getCellValueAsString(row.getCell(28)));
-                        devprogress.setPlTestNotes(getCellValueAsString(row.getCell(29)));
-                        devprogress.setItMgr(getCellValueAsString(row.getCell(30)));
-                        devprogress.setItTestDate(getCellValueAsDate(row.getCell(31)));
-                        devprogress.setItConfirmDate(getCellValueAsDate(row.getCell(32)));
-                        devprogress.setItTestResult(getCellValueAsString(row.getCell(33)));
-                        devprogress.setItTestNotes(getCellValueAsString(row.getCell(34)));
-                        devprogress.setBusiMgr(getCellValueAsString(row.getCell(35)));
-                        devprogress.setBusiTestDate(getCellValueAsDate(row.getCell(36)));
-                        devprogress.setBusiConfirmDate(getCellValueAsDate(row.getCell(37)));
-                        devprogress.setBusiTestResult(getCellValueAsString(row.getCell(38)));
-                        devprogress.setBusiTestNotes(getCellValueAsString(row.getCell(39)));
-                        devprogress.setThirdPartyTestMgr(getCellValueAsString(row.getCell(40)));
-                        devprogress.setThirdPartyTestDate(getCellValueAsDate(row.getCell(41)));
-                        devprogress.setThirdPartyConfirmDate(getCellValueAsDate(row.getCell(42)));
-                        devprogress.setThirdTestResult(getCellValueAsString(row.getCell(43)));
-                        devprogress.setThirdPartyTestNotes(getCellValueAsString(row.getCell(44)));
-                        devprogress.setDevStatus(getCellValueAsString(row.getCell(45)));
-                        devprogress.setInitRegistrar(getCellValueAsString(row.getCell(46)));
-                        devprogress.setLastModifier(getCellValueAsString(row.getCell(47)));
+                    	for (int j = 0; j < fieldNames.length; j++) {
+                            Field field = devProgress.class.getDeclaredField(fieldNames[j]);
+                            field.setAccessible(true);
+
+                            switch (field.getType().getSimpleName()) {
+                                case "int":
+                                    field.set(devprogress, (int) getCellValueAsNumeric(row.getCell(j)));
+                                    break;
+                                case "Date":
+                                    field.set(devprogress, getCellValueAsDate(row.getCell(j)));
+                                    break;
+                                default:
+                                    field.set(devprogress, getCellValueAsString(row.getCell(j)));
+                                    break;
+                            }
+                        }
+//                    	devprogress.setSeq((int) getCellValueAsNumeric(row.getCell(0)));
+//                        devprogress.setMajorCategory(getCellValueAsString(row.getCell(1)));
+//                        devprogress.setSubCategory(getCellValueAsString(row.getCell(2)));
+//                        devprogress.setMinorCategory(getCellValueAsString(row.getCell(3)));
+//                        devprogress.setProgramDetailType(getCellValueAsString(row.getCell(4)));
+//                        devprogress.setProgramType(getCellValueAsString(row.getCell(5)));
+//                        devprogress.setProgramId(getCellValueAsString(row.getCell(6)));
+//                        devprogress.setProgramName(getCellValueAsString(row.getCell(7)));
+//                        devprogress.setClassName(getCellValueAsString(row.getCell(8)));
+//                        devprogress.setScreenId(getCellValueAsString(row.getCell(9)));
+//                        devprogress.setScreenName(getCellValueAsString(row.getCell(10)));
+//                        devprogress.setScreenMenuPath(getCellValueAsString(row.getCell(11)));
+//                        devprogress.setPriority(getCellValueAsString(row.getCell(12)));
+//                        devprogress.setDifficulty(getCellValueAsString(row.getCell(13)));
+//                        devprogress.setEstimatedEffort((int) getCellValueAsNumeric(row.getCell(14)));
+//                        devprogress.setProgramStatus(getCellValueAsString(row.getCell(15)));
+//                        devprogress.setReqId(getCellValueAsString(row.getCell(16)));
+//                        devprogress.setDeletionHandler(getCellValueAsString(row.getCell(17)));
+//                        devprogress.setDeletionDate(getCellValueAsDate(row.getCell(18)));
+//                        devprogress.setDeletionReason(getCellValueAsString(row.getCell(19)));
+//                        devprogress.setDeveloper(getCellValueAsString(row.getCell(20)));
+//                        devprogress.setPlannedStartDate(getCellValueAsDate(row.getCell(21)));
+//                        devprogress.setPlannedEndDate(getCellValueAsDate(row.getCell(22)));
+//                        devprogress.setActualStartDate(getCellValueAsDate(row.getCell(23)));
+//                        devprogress.setActualEndDate(getCellValueAsDate(row.getCell(24)));
+//                        devprogress.setDevtestendDate(getCellValueAsDate(row.getCell(25)));
+//                        devprogress.setPl(getCellValueAsString(row.getCell(26)));
+//                        devprogress.setPlTestScdDate(getCellValueAsDate(row.getCell(27)));
+//                        devprogress.setPlTestCmpDate(getCellValueAsDate(row.getCell(28)));
+//                        devprogress.setPlTestResult(getCellValueAsString(row.getCell(29)));
+//                        devprogress.setPlTestNotes(getCellValueAsString(row.getCell(30)));
+//                        devprogress.setItMgr(getCellValueAsString(row.getCell(31)));
+//                        devprogress.setItTestDate(getCellValueAsDate(row.getCell(32)));
+//                        devprogress.setItConfirmDate(getCellValueAsDate(row.getCell(33)));
+//                        devprogress.setItTestResult(getCellValueAsString(row.getCell(34)));
+//                        devprogress.setItTestNotes(getCellValueAsString(row.getCell(35)));
+//                        devprogress.setBusiMgr(getCellValueAsString(row.getCell(36)));
+//                        devprogress.setBusiTestDate(getCellValueAsDate(row.getCell(37)));
+//                        devprogress.setBusiConfirmDate(getCellValueAsDate(row.getCell(38)));
+//                        devprogress.setBusiTestResult(getCellValueAsString(row.getCell(39)));
+//                        devprogress.setBusiTestNotes(getCellValueAsString(row.getCell(40)));
+//                        devprogress.setThirdPartyTestMgr(getCellValueAsString(row.getCell(41)));
+//                        devprogress.setThirdPartyTestDate(getCellValueAsDate(row.getCell(42)));
+//                        devprogress.setThirdPartyConfirmDate(getCellValueAsDate(row.getCell(43)));
+//                        devprogress.setThirdTestResult(getCellValueAsString(row.getCell(44)));
+//                        devprogress.setThirdPartyTestNotes(getCellValueAsString(row.getCell(45)));
+//                        devprogress.setDevStatus(getCellValueAsString(row.getCell(46)));
+//                        devprogress.setInitRegistrar(getCellValueAsString(row.getCell(47)));
+//                        devprogress.setLastModifier(getCellValueAsString(row.getCell(48)));
                         devProgress.add(devprogress);
-                        log.info(devProgress);
                     } catch (Exception e) {
                         e.printStackTrace();
                         response.put("status", "error");
@@ -866,7 +864,7 @@ public class devProgressController {
     }
     
     
-    
+    // 액셀 유효헤더 확인
     private boolean isHeaderValid4(Row headerRow, List<String> expectedHeaders) {
         for (int i = 0; i < expectedHeaders.size(); i++) {
             Cell cell = headerRow.getCell(i);
@@ -877,13 +875,15 @@ public class devProgressController {
         return true;
     }
     
+    // 액셀 Cell값 String 변환 
     private String getCellValueAsString(Cell cell) {
         if (cell == null) {
             return null;
         }
         return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
     }
-
+    
+    // 액셀 Cell값 Num 변환
     private double getCellValueAsNumeric(Cell cell) {
         if (cell == null) {
             return 0;
@@ -891,6 +891,7 @@ public class devProgressController {
         return cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() : Double.parseDouble(cell.toString());
     }
     
+    // 액셀 Cell값 Date 변환
     private Date getCellValueAsDate(Cell cell) {
         if (cell == null) {
             return null;
@@ -915,6 +916,28 @@ public class devProgressController {
         }
 
         return null; // 다른 유형의 셀은 null 반환
+    }
+    
+    // String Value값 필수값 유효성 점검
+    private void validateRequiredField(String fieldValue, String fieldName) {
+        if (fieldValue == null || fieldValue.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + "은(는) 필수 입력 항목입니다.");
+        }
+    }
+    
+    // Date Value값 유효성 점검
+    private void validateDate(Date dateValue, String dateName) {
+        if (dateValue == null) {
+            throw new IllegalArgumentException(dateName + "은(는) 필수 입력 항목입니다.");
+        }
+    }
+    
+    // 테스트 완료일이 있을때 테스트 결과 null 체크
+    private void TestEndDateNullCheck(Date dateValue, String ResultValue, String dataName) {
+	    if ((dateValue != null) && 
+	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
+	        	throw new IllegalArgumentException(dataName + " 단위테스트 수행 결과 '성공' 인지 '실패'인지 등록하시기 바랍니다.");
+	        }
     }
     
     
