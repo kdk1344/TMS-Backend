@@ -78,6 +78,11 @@ public class DevService {
     public devProgress getDevById(Integer seq) {
         return devMapper.getDevById(seq);
     }
+    
+    //프로그램 아이디 중복 확인
+    public boolean checkCountProgramId(String programId) {
+    	return devMapper.checkCountProgramId(programId) == 0;
+    }
 	
 	
 	

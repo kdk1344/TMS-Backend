@@ -71,6 +71,7 @@ public interface AdminMapper {
     public List<CommonCode> getParentCommonCodes();
     public List<CommonCode> findSubCodesByParentCode(String parentCode);
     public String searchParentCodeName(String parentCode);
+    public String getStageCCodes(String parentCode, String seq);
     
     
     // 분류코드 mapper
@@ -94,4 +95,6 @@ public interface AdminMapper {
     public List<categoryCode> getParentCategoryCodes();
     public List<categoryCode> findMiddleCodesByParentCode(String parentCode);
     public List<categoryCode> getsubCategoryCodes();
+    public String getStageCodes(@Param("stageType") String stageType, 
+     	   						@Param("code") String code);
 }

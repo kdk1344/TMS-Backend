@@ -233,6 +233,13 @@
 		FROM DEV_PROGRESS
         WHERE SEQ = #{seq}
 	</select>
+	
+	<!-- 프로그램 ID 갯수 확인 -->
+	<select id="checkCountProgramId" resultType="int">
+		SELECT COUNT(*)
+        FROM dev_progress
+        where PROGRAM_ID = #{programId}
+	</select>
 
 	
 </mapper>

@@ -197,17 +197,24 @@ public class AdminService {
     	return adminmapper.checkChildCodesExist(code);
     }
     
-    // 대분류 코드 조회 서비스
+    // 공통 코드 조회 서비스
     public List<CommonCode> getParentCommonCodes() {
         return adminmapper.getParentCommonCodes();
     }
     
+    // 상위 코드에 따른 하위 코드 목록을 조회
     public List<CommonCode> getCCCode(String parentCode) {
         return adminmapper.findSubCodesByParentCode(parentCode);
     }
     
+    // 특정 코드의 상위코드 이름 조회
     public String searchParentCodeName(String parentCode) {
         return adminmapper.searchParentCodeName(parentCode);
+    }
+    
+    //원하는 공통코드 이름 조회
+    public String getStageCCodes(String parentCode, String seq) {
+    	return adminmapper.getStageCCodes(parentCode, seq);
     }
         
     
@@ -279,6 +286,11 @@ public class AdminService {
     // 중분류 코드 조회 서비스
     public List<categoryCode> getsubCategoryCodes() {
         return adminmapper.getsubCategoryCodes();
+    }
+    
+    //원하는 분류 코드 이름 조회
+    public String getStageCodes(String StageType, String Code) {
+    	return adminmapper.getStageCodes(StageType, Code);
     }
     
 }

@@ -61,4 +61,5 @@ public interface DevMapper {
     public void deleteDevProgress(int seq);
     public void insertdevProgress(devProgress devProgress);
     public devProgress getDevById(int Seq);
+    public int checkCountProgramId(String programId);
 }
