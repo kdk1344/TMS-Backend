@@ -18,6 +18,17 @@
     <main class="content">
       <h1 class="page-title">프로그램 개발 진행현황</h1>
 
+      <!-- 개발자 검색 모달 -->
+      <div id="developerSearchModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <h2>개발자 조회</h2>
+          <ul class="developer-list" id="developerList">
+            <!-- 개발자 목록 동적 삽입 -->
+          </ul>
+        </div>
+      </div>
+
       <!-- Register Modal -->
       <div id="devProgressRegisterModal" class="modal">
         <!-- Modal content -->

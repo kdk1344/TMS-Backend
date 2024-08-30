@@ -6,6 +6,9 @@ import {
   initializeSelect,
   getMajorCategoryCodes,
   getSubCategoryCodes,
+  openModal,
+  closeModal,
+  closeModalOnClickOutside,
 } from "./common.js";
 
 let currentPage = 1;
@@ -13,12 +16,16 @@ let currentPage = 1;
 // DOM 요소들
 const devProgressFilterForm = document.getElementById("devProgressFilterForm");
 const majorCategorySelect = document.getElementById("majorCategoryForFilter");
+const developerSearchButton = document.getElementById("developerSearchButton");
+const developerSearchModal = document.getElementById("developerSearchModal");
+const developerList = document.getElementById("developerList");
 
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
 
 // 모달 아이디
 const MODAL_ID = {
+  DEV_PROGRESS_DEVELOPER_SEARCH: "developerSearchModal",
   DEV_PROGRESS_REGISTER: "devProgressRegisterModal",
   DEV_PROGRESS_EDIT: "devProgressEditModal",
   DEV_PROGRESS_FILE_DOWNLOAD: "devProgressFileDownloadModal",
@@ -42,6 +49,32 @@ function setupEventListeners() {
   if (majorCategorySelect) {
     majorCategorySelect.addEventListener("change", () => initializeSubCategorySelect(majorCategorySelect.value));
   }
+
+  if (developerSearchButton) {
+    developerSearchButton.addEventListener("click", () => {
+      renderDevelopers();
+      openModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH);
+    });
+  }
+
+  if (developerList) {
+    developerList.addEventListener("click", onDeveloperItemClick);
+  }
+
+  if (developerSearchModal) {
+  }
+
+  // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
+  setupModalEventListeners();
+}
+
+function setupModalEventListeners() {
+  const modals = Object.values(MODAL_ID); // 모든 모달 ID 배열
+
+  modals.forEach((modalId) => {
+    // 모달 외부 클릭 시 닫기 설정
+    window.addEventListener("click", (event) => closeModalOnClickOutside(event, modalId));
+  });
 }
 
 // 초기 프로그램 개발 진행 현황 목록 로드
@@ -260,6 +293,37 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
   }
 }
 
+// 개발자 목록 렌더링
+export async function renderDevelopers() {
+  const { developers } = await getDevelopers();
+  const developerList = document.getElementById("developerList");
+
+  // 기존 목록을 지웁니다.
+  developerList.innerHTML = "";
+
+  // 개발자 목록을 렌더링합니다.
+  developers.forEach((developer) => {
+    const listItem = document.createElement("li");
+
+    listItem.textContent = developer.name;
+    listItem.setAttribute("tabindex", "0");
+
+    developerList.appendChild(listItem);
+  });
+}
+
+function onDeveloperItemClick(event) {
+  const target = event.target;
+
+  if (target.tagName === "LI") {
+    // 선택된 개발자 이름을 입력 필드에 설정합니다.
+    const developerInput = document.getElementById("developerForFilter");
+
+    developerInput.textContent = target.textContent;
+    developerInput.value = target.id; // 수정1!
+  }
+}
+
 // 메타데이터 조회 apis
 // 프로그램 구분 목록 조회
 export async function getProgramTypes() {
@@ -291,5 +355,16 @@ export async function getDevStatusList() {
     return { devStatusList };
   } catch (error) {
     console.error(error.message, "개발진행 상태 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 개발자 목록 조회
+export async function getDevelopers() {
+  try {
+    const { developer: developers } = await tmsFetch(`/developer`);
+
+    return { developers };
+  } catch (error) {
+    console.error(error.message, "개발자 목록을 불러오지 못 했습니다.");
   }
 }
