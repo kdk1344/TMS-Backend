@@ -9,6 +9,8 @@ import {
   openModal,
   closeModal,
   setupModalEventListeners,
+  showSpinner,
+  hideSpinner,
 } from "./common.js";
 
 let currentPage = 1;
@@ -19,8 +21,10 @@ const majorCategorySelect = document.getElementById("majorCategoryForFilter");
 const developerSearchButton = document.getElementById("developerSearchButton");
 const developerList = document.getElementById("developerList");
 
+const uploadDevProgressFileButton = document.getElementById("uploadDevProgressFileButton");
+const uploadDevProgressFileInput = document.getElementById("uploadDevProgressFileInput");
+
 const developerSearchModal = document.getElementById("developerSearchModal");
-const devProgressFileDownloadModal = document.getElementById("devProgressFileDownloadModal");
 
 const closeDeveloperSearchModalButton = document.getElementById("closeDeveloperSearchModalButton");
 const openDevProgressFileDownloadModalButton = document.getElementById("openDevProgressFileDownloadModalButton");
@@ -71,6 +75,16 @@ function setupEventListeners() {
     closeDeveloperSearchModalButton.addEventListener("click", () => closeModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH));
   }
 
+  // 엑셀 업로드 이벤트 핸들러
+  if (uploadDevProgressFileButton && uploadDevProgressFileInput) {
+    uploadDevProgressFileButton.addEventListener("click", () => {
+      uploadDevProgressFileInput.click(); // 파일 선택 창 열기
+    });
+
+    uploadDevProgressFileInput.addEventListener("change", uploadDevProgressFile);
+  }
+
+  // 엑셀 다운로드 이벤트 핸들러
   if (openDevProgressFileDownloadModalButton) {
     openDevProgressFileDownloadModalButton.addEventListener("click", () => {
       copyFilterValuesToDownloadForm(); // 필터링 값 복사
@@ -83,6 +97,7 @@ function setupEventListeners() {
       closeModal(MODAL_ID.DEV_PROGRESS_FILE_DOWNLOAD)
     );
   }
+
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
   setupModalEventListeners(Object.values(MODAL_ID));
 }
@@ -361,8 +376,6 @@ function copyFilterValuesToDownloadForm() {
     devEndDate,
   } = getCurrentFilterValues();
 
-  console.log(getCurrentFilterValues());
-
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
   document.getElementById("majorCategoryForDownload").value = majorCategory;
   document.getElementById("subCategoryForDownload").value = subCategory;
@@ -380,7 +393,7 @@ function copyFilterValuesToDownloadForm() {
   document.getElementById("actualEndDateToForDownload").value = devEndDate;
 }
 
-// 메타데이터 조회 apis
+// API 함수
 // 프로그램 구분 목록 조회
 export async function getProgramTypes() {
   try {
@@ -422,5 +435,35 @@ export async function getDevelopers() {
     return { developers };
   } catch (error) {
     console.error(error.message, "개발자 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 개발 진행현황 파일 업로드
+async function uploadDevProgressFile() {
+  if (uploadDevProgressFileInput.files.length <= 0) return;
+
+  const formData = new FormData();
+
+  // key 이름의 경우 서버와 협의
+  formData.append("file", uploadDevProgressFileInput.files[0]);
+
+  try {
+    showSpinner();
+
+    const response = await tmsFetch("/devupload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const success = response ? response.status === "success" : false;
+
+    if (success) {
+      alert("파일 업로드가 완료되었습니다.");
+      location.reload(); // 페이지 새로고침
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }

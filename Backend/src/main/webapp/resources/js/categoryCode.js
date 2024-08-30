@@ -2,7 +2,6 @@ import {
   tmsFetch,
   openModal,
   closeModal,
-  closeModalOnClickOutside,
   renderTMSHeader,
   showSpinner,
   hideSpinner,
