@@ -161,7 +161,7 @@ public class devProgressController {
 
 	    int totalPages = (int) Math.ceil((double) totalDevProgress / size);
 	    
-	    List<User> developers = adminService.findAuthorityCode(4);
+	    List<User> developers = adminService.findAuthorityCode(5);
 	    
 	    // 응답 생성
 	    Map<String, Object> response = new HashMap<>();
@@ -179,7 +179,7 @@ public class devProgressController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getDevUser() {
     	Map<String, Object> response = new HashMap<>();
-        List<User> developer = adminService.findAuthorityCode(4);
+        List<User> developer = adminService.findAuthorityCode(5);
         
         log.info("확인중" + developer);
 
@@ -342,7 +342,7 @@ public class devProgressController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getITMGR() {
     	Map<String, Object> response = new HashMap<>();
-    	List<User> ITMGR= adminService.findAuthorityCode(6);
+    	List<User> ITMGR= adminService.findAuthorityCode(7);
 
         // 응답 데이터 생성
         if (ITMGR != null && !ITMGR.isEmpty()) {
@@ -362,7 +362,7 @@ public class devProgressController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getBUSIMGR() {
     	Map<String, Object> response = new HashMap<>();
-    	List<User> BUSIMGR= adminService.findAuthorityCode(7);
+    	List<User> BUSIMGR= adminService.findAuthorityCode(8);
 
         // 응답 데이터 생성
         if (BUSIMGR != null && !BUSIMGR.isEmpty()) {
