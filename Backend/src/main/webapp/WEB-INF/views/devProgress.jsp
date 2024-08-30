@@ -135,7 +135,7 @@
         <div class="modal-content">
           <h2>엑셀 다운로드</h2>
           <div class="download-box">
-            <form id="downloadAllDevProgressForm" action="catdownloadAll" method="get" class="flex-box align-center">
+            <form id="downloadAllDevProgressForm" action="devdownloadAll" method="get" class="flex-box align-center">
               <button type="submit" id="downloadAllDevProgressButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />전체자료 다운로드
               </button>
@@ -144,15 +144,26 @@
 
             <form
               id="downloadFilteredDevProgressForm"
-              action="catdownloadFiltered"
+              action="devdownloadFiltered"
               method="get"
               id="downloadFilteredForm"
               class="flex-box align-center"
             >
               <!-- 숨겨진 input 필드 -->
-              <input type="hidden" id="parentCodeForDownload" name="parentCode" />
-              <input type="hidden" id="codeForDownload" name="code" />
-              <input type="hidden" id="codeNameForDownload" name="codeName" />
+              <input type="hidden" id="majorCategoryForDownload" name="majorCategory" />
+              <input type="hidden" id="subCategoryForDownload" name="subCategory" />
+              <input type="hidden" id="programTypeForDownload" name="programType" />
+              <input type="hidden" id="programIdForDownload" name="programId" />
+              <input type="hidden" id="programNameForDownload" name="programName" />
+              <input type="hidden" id="programStatusForDownload" name="programStatus" />
+              <input type="hidden" id="developerForDownload" name="developer" />
+              <input type="hidden" id="plForDownload" name="pl" />
+              <input type="hidden" id="thirdPartyTestMgrForDownload" name="thirdPartyTestMgr" />
+              <input type="hidden" id="itMgrForDownload" name="itMgr" />
+              <input type="hidden" id="busiMgrForDownload" name="busiMgr" />
+              <input type="hidden" id="devStatusForDownload" name="devStatus" />
+              <input type="hidden" id="actualEndDateFromForDownload" name="devStartDate" />
+              <input type="hidden" id="actualEndDateToForDownload" name="devEndDate" />
 
               <button type="submit" id="downloadFilteredDevProgressButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />
@@ -310,41 +321,3 @@
     </main>
   </body>
 </html>
-
-<!-- 
-    <form id="searchForm" method="get" action="/devProgress">
-	    <div class="filter-row">
-	        <div class="form-group">
-	            <label for="majorCategory">업무 대분류</label>
-	            <input type="text" id="majorCategory" name="majorCategory" value="${param.majorCategory}">
-	        </div>
-	        <div class="form-group">
-	            <label for="subCategory">업무 중분류</label>
-	            <input type="text" id="subCategory" name="subCategory" value="${param.subCategory}">
-	        </div>
-	        <div class="form-group">
-	            <label for="programType">프로그램 구분</label>
-	            <input type="text" id="programType" name="programType" value="${param.programType}">
-	        </div>
-	        <div class="form-group">
-	            <label for="programName">프로그램명</label>
-	            <input type="text" id="programName" name="programName" value="${param.programName}">
-	        </div>
-	    
-	        <div class="form-group">
-	            <label for="actualStartDate">실제 시작일</label>
-	            <input type="date" id="actualStartDate" name="actualStartDate" value="${param.actualStartDate}">
-	        </div>
-	        <div class="form-group">
-	            <label for="actualEndDate">실제 종료일</label>
-	            <input type="date" id="actualEndDate" name="actualEndDate" value="${param.actualEndDate}">
-	        </div>
-	        <div class="form-group">
-	            <label for="pl">PL</label>
-	            <input type="text" id="pl" name="pl" value="${param.pl}">
-	        </div>
-	 
-	    </div>
-	    <button type="submit">조회</button>
-	</form>
-	 -->

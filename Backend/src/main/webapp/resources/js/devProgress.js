@@ -17,9 +17,14 @@ let currentPage = 1;
 const devProgressFilterForm = document.getElementById("devProgressFilterForm");
 const majorCategorySelect = document.getElementById("majorCategoryForFilter");
 const developerSearchButton = document.getElementById("developerSearchButton");
-const developerSearchModal = document.getElementById("developerSearchModal");
 const developerList = document.getElementById("developerList");
+
+const developerSearchModal = document.getElementById("developerSearchModal");
+const devProgressFileDownloadModal = document.getElementById("devProgressFileDownloadModal");
+
 const closeDeveloperSearchModalButton = document.getElementById("closeDeveloperSearchModalButton");
+const openDevProgressFileDownloadModalButton = document.getElementById("openDevProgressFileDownloadModalButton");
+const closeDevProgressFileDownloadModalButton = document.getElementById("closeDevProgressFileDownloadModalButton");
 
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
@@ -66,6 +71,18 @@ function setupEventListeners() {
     closeDeveloperSearchModalButton.addEventListener("click", () => closeModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH));
   }
 
+  if (openDevProgressFileDownloadModalButton) {
+    openDevProgressFileDownloadModalButton.addEventListener("click", () => {
+      copyFilterValuesToDownloadForm(); // 필터링 값 복사
+      openModal(MODAL_ID.DEV_PROGRESS_FILE_DOWNLOAD);
+    });
+  }
+
+  if (closeDevProgressFileDownloadModalButton) {
+    closeDevProgressFileDownloadModalButton.addEventListener("click", () =>
+      closeModal(MODAL_ID.DEV_PROGRESS_FILE_DOWNLOAD)
+    );
+  }
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
   setupModalEventListeners(Object.values(MODAL_ID));
 }
@@ -158,37 +175,7 @@ function submitDevProgressFilter(event) {
   // 페이지를 1로 초기화하고 테이블 렌더링
   currentPage = 1;
 
-  let getDevProgressProps = { page: currentPage };
-
-  const programKey = document.getElementById("programKeySelect").value;
-  const programValue = document.getElementById("programValueInput").value.trim();
-
-  const roleKey = document.getElementById("roleKeySelect").value;
-  const roleValue = document.getElementById("roleValueInput").value.trim();
-
-  getDevProgressProps[programKey] = programValue;
-  getDevProgressProps[roleKey] = roleValue;
-
-  const majorCategory = document.getElementById("majorCategoryForFilter").value;
-  const subCategory = document.getElementById("subCategoryForFilter").value;
-  const programType = document.getElementById("programTypeForFilter").value;
-  const programStatus = document.getElementById("programStatusForFilter").value;
-  const developer = document.getElementById("developerForFilter").value;
-  const devStatus = document.getElementById("devStatusForFilter").value;
-  const devStartDate = document.getElementById("actualEndDateFromForFilter").value;
-  const devEndDate = document.getElementById("actualEndDateToForFilter").value;
-
-  getDevProgressProps = {
-    ...getDevProgressProps,
-    majorCategory,
-    subCategory,
-    programType,
-    programStatus,
-    developer,
-    devStatus,
-    devStartDate,
-    devEndDate,
-  };
+  const getDevProgressProps = getCurrentFilterValues();
 
   renderDevProgress(getDevProgressProps);
 }
@@ -233,25 +220,45 @@ async function getDevProgress(
 function changePage(page) {
   currentPage = page;
 
-  // 필터링 조건을 가져오기 (추후 수정 필요)
-  const getDevProgressProps = {
-    page: currentPage,
-    majorCategory: document.getElementById("majorCategory").value || "",
-    subCategory: document.getElementById("subCategory").value || "",
-    programType: document.getElementById("programType").value || "",
-    programId: document.getElementById("programId").value || "",
-    programName: document.getElementById("programName").value || "",
-    programStatus: document.getElementById("programStatus").value || "",
-    developer: document.getElementById("developer").value || "",
-    actualStartDate: document.getElementById("actualStartDate").value || "",
-    actualEndDate: document.getElementById("actualEndDate").value || "",
-    pl: document.getElementById("pl").value || "",
-    thirdPartyTestMgr: document.getElementById("thirdPartyTestMgr").value || "",
-    itMgr: document.getElementById("itMgr").value || "",
-    busiMgr: document.getElementById("busiMgr").value || "",
-  };
+  const getDevProgressProps = getCurrentFilterValues();
 
   renderDevProgress(getDevProgressProps);
+}
+
+function getCurrentFilterValues() {
+  let getDevProgressProps = { page: currentPage };
+
+  const programKey = document.getElementById("programKeySelect").value;
+  const programValue = document.getElementById("programValueInput").value.trim();
+
+  const roleKey = document.getElementById("roleKeySelect").value;
+  const roleValue = document.getElementById("roleValueInput").value.trim();
+
+  getDevProgressProps[programKey] = programValue;
+  getDevProgressProps[roleKey] = roleValue;
+
+  const majorCategory = document.getElementById("majorCategoryForFilter").value;
+  const subCategory = document.getElementById("subCategoryForFilter").value;
+  const programType = document.getElementById("programTypeForFilter").value;
+  const programStatus = document.getElementById("programStatusForFilter").value;
+  const developer = document.getElementById("developerForFilter").value;
+  const devStatus = document.getElementById("devStatusForFilter").value;
+  const devStartDate = document.getElementById("actualEndDateFromForFilter").value;
+  const devEndDate = document.getElementById("actualEndDateToForFilter").value;
+
+  getDevProgressProps = {
+    ...getDevProgressProps,
+    majorCategory,
+    subCategory,
+    programType,
+    programStatus,
+    developer,
+    devStatus,
+    devStartDate,
+    devEndDate,
+  };
+
+  return getDevProgressProps;
 }
 
 async function initializeFilterForm() {
@@ -322,8 +329,6 @@ function onDeveloperItemClick(event) {
   // 이벤트가 발생한 요소부터 가장 가까운 li 요소를 찾습니다.
   const listItem = event.target.closest("li");
 
-  console.log("클릭", listItem.tagName);
-
   if (listItem.tagName === "LI") {
     // 선택된 개발자 이름을 입력 필드에 설정합니다.
     const developerInput = document.getElementById("developerForFilter");
@@ -334,6 +339,45 @@ function onDeveloperItemClick(event) {
 
     closeModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH);
   }
+}
+
+// 프로그램 개발 진행현황 필터링 폼의 값을 다운로드 폼으로 복사하는 함수
+function copyFilterValuesToDownloadForm() {
+  // 조회 필터링 폼의 값을 가져옴
+  const {
+    majorCategory,
+    subCategory,
+    programType,
+    programId,
+    programName,
+    programStatus,
+    developer,
+    pl,
+    thirdPartyTestMgr,
+    itMgr,
+    busiMgr,
+    devStatus,
+    devStartDate,
+    devEndDate,
+  } = getCurrentFilterValues();
+
+  console.log(getCurrentFilterValues());
+
+  // 숨겨진 다운로드 폼의 input 필드에 값을 설정
+  document.getElementById("majorCategoryForDownload").value = majorCategory;
+  document.getElementById("subCategoryForDownload").value = subCategory;
+  document.getElementById("programTypeForDownload").value = programType;
+  document.getElementById("programIdForDownload").value = programId;
+  document.getElementById("programNameForDownload").value = programName;
+  document.getElementById("programStatusForDownload").value = programStatus;
+  document.getElementById("developerForDownload").value = developer;
+  document.getElementById("plForDownload").value = pl;
+  document.getElementById("thirdPartyTestMgrForDownload").value = thirdPartyTestMgr;
+  document.getElementById("itMgrForDownload").value = itMgr;
+  document.getElementById("busiMgrForDownload").value = busiMgr;
+  document.getElementById("devStatusForDownload").value = devStatus;
+  document.getElementById("actualEndDateFromForDownload").value = devStartDate;
+  document.getElementById("actualEndDateToForDownload").value = devEndDate;
 }
 
 // 메타데이터 조회 apis
