@@ -25,13 +25,6 @@ table td {
   text-overflow: unset;
 }
 
-/* 숨겨진 파일 입력 필드 */
-#uploadDevProgressFileInput {
-  visibility: hidden; /* 요소를 보이지 않게 함 */
-  width: 0;
-  height: 0;
-}
-
 #devProgressFilterForm {
   border: 1px solid var(--light-gray);
   padding: 16px;

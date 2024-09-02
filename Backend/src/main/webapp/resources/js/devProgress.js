@@ -22,6 +22,8 @@ const majorCategorySelect = document.getElementById("majorCategoryForFilter");
 const uploadDevProgressFileButton = document.getElementById("uploadDevProgressFileButton");
 const uploadDevProgressFileInput = document.getElementById("uploadDevProgressFileInput");
 
+const openDevProgressFileUploadModalButton = document.getElementById("openDevProgressFileUploadModalButton");
+const closeDevProgressFileUploadModalButton = document.getElementById("closeDevProgressFileUploadModalButton");
 const openDevProgressFileDownloadModalButton = document.getElementById("openDevProgressFileDownloadModalButton");
 const closeDevProgressFileDownloadModalButton = document.getElementById("closeDevProgressFileDownloadModalButton");
 
@@ -33,6 +35,7 @@ const MODAL_ID = {
   DEV_PROGRESS_DEVELOPER_SEARCH: "developerSearchModal",
   DEV_PROGRESS_REGISTER: "devProgressRegisterModal",
   DEV_PROGRESS_EDIT: "devProgressEditModal",
+  DEV_PROGRESS_FILE_UPLOAD: "devProgressFileUploadModal",
   DEV_PROGRESS_FILE_DOWNLOAD: "devProgressFileDownloadModal",
 };
 
@@ -56,12 +59,18 @@ function setupEventListeners() {
   }
 
   // 엑셀 업로드 이벤트 핸들러
-  if (uploadDevProgressFileButton && uploadDevProgressFileInput) {
-    uploadDevProgressFileButton.addEventListener("click", () => {
-      uploadDevProgressFileInput.click(); // 파일 선택 창 열기
-    });
+  if (openDevProgressFileUploadModalButton) {
+    openDevProgressFileUploadModalButton.addEventListener("click", () => openModal(MODAL_ID.DEV_PROGRESS_FILE_UPLOAD));
+  }
 
-    uploadDevProgressFileInput.addEventListener("change", uploadDevProgressFile);
+  if (closeDevProgressFileUploadModalButton) {
+    closeDevProgressFileUploadModalButton.addEventListener("click", () =>
+      closeModal(MODAL_ID.DEV_PROGRESS_FILE_UPLOAD)
+    );
+  }
+
+  if (uploadDevProgressFileButton) {
+    uploadDevProgressFileButton.addEventListener("click", uploadDevProgressFile);
   }
 
   // 엑셀 다운로드 이벤트 핸들러

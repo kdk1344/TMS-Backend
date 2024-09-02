@@ -19,8 +19,7 @@
       <h1 class="page-title">프로그램 개발 진행현황</h1>
 
       <!-- 개발자 검색 모달 -->
-      <div id="developerSearchModal" class="modal">
-        <!-- Modal content -->
+      <!-- <div id="developerSearchModal" class="modal">
         <div class="modal-content">
           <div class="flex-box justify-between">
             <h2>개발자 조회</h2>
@@ -33,8 +32,40 @@
             <p>이름</p>
           </div>
           <ul class="developer-list" id="developerList">
-            <!-- 개발자 목록 동적 삽입 -->
           </ul>
+        </div>
+      </div> -->
+
+      <!-- File Upload Modal -->
+      <div id="devProgressFileUploadModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <h2>엑셀 업로드</h2>
+          <div class="excel-template-download-box">
+            <pre>
+엑셀로 업로드하여 다수의 목록을 한번에 입력할 수 있습니다. 
+엑셀 양식에 데이터를 입력하여 업로드하세요. (파일 형식: xls, xlsx)</pre
+            >
+            <form id="downloadTemplateForm" action="devexampleexcel" method="get" class="flex-box align-center">
+              <button type="submit" id="downloadTemplateForm" class="excel-button">
+                <img src="../../resources/images/download_icon.png" />엑셀 양식 다운로드
+              </button>
+            </form>
+          </div>
+
+          <!-- 파일 선택 input -->
+          <input
+            type="file"
+            id="uploadDevProgressFileInput"
+            class="excel-upload-input"
+            name="file"
+            accept=".xlsx, .xls"
+          />
+
+          <div class="flex-box justify-end">
+            <button type="button" class="cancel-button" id="closeDevProgressFileUploadModalButton">취소</button>
+            <button type="button" class="save-button" id="uploadDevProgressFileButton">저장</button>
+          </div>
         </div>
       </div>
 
@@ -176,10 +207,7 @@
           <button id="deleteDevProgressButton" class="delete-button">삭제</button>
         </div>
         <div class="flex-box">
-          <!-- 파일 선택 input -->
-          <input type="file" id="uploadDevProgressFileInput" name="file" accept=".xlsx, .xls" />
-
-          <button id="uploadDevProgressFileButton" class="excel-button">
+          <button id="openDevProgressFileUploadModalButton" class="excel-button">
             <img src="../../resources/images/upload_icon.png" />엑셀 업로드
           </button>
           <button id="openDevProgressFileDownloadModalButton" class="excel-button">

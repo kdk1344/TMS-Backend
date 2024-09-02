@@ -589,6 +589,22 @@ button:focus {
   white-space: nowrap;
 }
 
+.excel-template-download-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  margin-bottom: 24px;
+
+  white-space: nowrap;
+  line-height: 16px;
+}
+
+.excel-upload-input {
+  margin-bottom: 24px;
+}
+
 .modal-close-button {
   width: 20px;
   min-width: 20px;
