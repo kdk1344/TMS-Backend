@@ -287,13 +287,23 @@ public class AdminController {
     private void exportToExcel(HttpServletResponse response, List<User> userList, String fileName) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Users");
+        String check = "";
+        if (userList.isEmpty()) {
+        	check = "no_value";
+    		log.info(check);
+        }
 
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("UserID");
         headerRow.createCell(1).setCellValue("userName");
         headerRow.createCell(2).setCellValue("Password");
-        headerRow.createCell(3).setCellValue("AuthorityCode");
-        headerRow.createCell(4).setCellValue("AuthorityName");
+        if (check != "") {
+        	headerRow.createCell(3).setCellValue("AuthorityName");
+        }
+        else {
+	        headerRow.createCell(3).setCellValue("AuthorityCode");
+	        headerRow.createCell(4).setCellValue("AuthorityName");
+        }
 
         int rowNum = 1;
         for (User user : userList) {
@@ -302,8 +312,13 @@ public class AdminController {
             row.createCell(0).setCellValue(user.getuserID());
             row.createCell(1).setCellValue(user.getuserName());
             row.createCell(2).setCellValue(user.getPassword());
-            row.createCell(3).setCellValue(user.getauthorityCode());
-            row.createCell(4).setCellValue(user.getauthorityName());
+            if (check != "") {
+            	row.createCell(3).setCellValue(user.getauthorityName());
+            }
+            else {
+	            row.createCell(3).setCellValue(user.getauthorityCode());
+	            row.createCell(4).setCellValue(user.getauthorityName());
+            }
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -347,7 +362,7 @@ public class AdminController {
             Row headerRow = sheet.getRow(0);
             
          // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("userID", "userName", "Password", "AuthorityCode", "AuthorityName");
+            List<String> expectedHeaders = Arrays.asList("userID", "userName", "Password", "AuthorityName");
             if (!isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -364,19 +379,14 @@ public class AdminController {
                     try {
 	                    user.setuserID(row.getCell(0).getStringCellValue());
 	                    user.setuserName(row.getCell(1).getStringCellValue());
-	                    user.setPassword(row.getCell(2).getStringCellValue());
-	                    if (row.getCell(3) == null || row.getCell(3).getCellType() == CellType.BLANK) {
-                            // AuthorityCode가 비어있을 경우 서비스의 join 메서드로 향함
-	                    	user.setauthorityName(row.getCell(4).getStringCellValue());
-                            adminService.join(user);
-                        } else {
-                            user.setauthorityCode((int) row.getCell(3).getNumericCellValue());
-                            user.setauthorityName(row.getCell(4).getStringCellValue());
-    	                    users.add(user);
-                        }
-//	                    user.setauthorityCode((int)row.getCell(3).getNumericCellValue());
-//	                    user.setauthorityName(row.getCell(4).getStringCellValue());
-//	                    users.add(user);
+	                    if (row.getCell(2).getCellType() == CellType.NUMERIC ) {
+	                    	user.setPassword(String.valueOf((int) row.getCell(2).getNumericCellValue()));
+	                    }
+	                    else{
+	                    	user.setPassword(row.getCell(2).getStringCellValue());
+	                    }
+                        user.setauthorityName(row.getCell(3).getStringCellValue());
+	                    adminService.join(user);
                     } catch (Exception e) {
                         // 형식 오류 또는 예상치 못한 컬럼 데이터 처리
                         e.printStackTrace();

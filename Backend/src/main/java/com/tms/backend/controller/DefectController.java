@@ -42,7 +42,7 @@ public class DefectController {
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "defectseq", required = false) String defectseq,
+            @RequestParam(value = "defectSeq", required = false) String defectSeq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -52,10 +52,10 @@ public class DefectController {
 	                               Model model) {
 	    
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectseq, defectRegistrar, defectHandler, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
 
 	    // 총 결함 수 조회
-	    int totalDefects = defectService.getTotalDefectsCount(testCategory, majorCategory, subCategory, defectSeverity, defectseq, defectRegistrar, defectHandler, defectStatus);
+	    int totalDefects = defectService.getTotalDefectsCount(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus);
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -77,7 +77,7 @@ public class DefectController {
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "defectseq", required = false) String defectseq,
+            @RequestParam(value = "defectSeq", required = false) String defectSeq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -102,10 +102,10 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
 			// 결함 목록 조회
-		    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectseq, defectRegistrar, defectHandler, defectStatus, page, size);
+		    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
 
 		    // 총 결함 수 조회
-		    int totalDefects = defectService.getTotalDefectsCount(testCategory, majorCategory, subCategory, defectSeverity, defectseq, defectRegistrar, defectHandler, defectStatus);
+		    int totalDefects = defectService.getTotalDefectsCount(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus);
 		    
 		    // 총 페이지 수 계산
 		    int totalPages = (int) Math.ceil((double) totalDefects / size);
