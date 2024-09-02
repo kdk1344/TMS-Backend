@@ -732,7 +732,18 @@ public class devProgressController {
 	        @RequestParam(value = "size", defaultValue = "15") int size,
             HttpServletResponse response) throws IOException {
     	
-    	log.info(programId);
+    	log.info("idcheck"+programStatus);
+    	
+    	majorCategory = adminService.getStageCodes("대", majorCategory);
+		subCategory = adminService.getStageCodes("중", subCategory);
+		if (programType != null && !programType.isEmpty()) {
+			programType = adminService.getStageCCodes("02", programType);}
+		if (programStatus != null && !programStatus.isEmpty()) {
+			programStatus = adminService.getStageCCodes("05", programStatus);}
+		if (devStatus != null && !devStatus.isEmpty()) {
+			log.info("major 진행중" + devStatus);
+			devStatus = adminService.getStageCCodes("06", devStatus);}
+			log.info(devStatus);
     	
     	List<devProgress> filteredDevCodeList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
