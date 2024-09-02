@@ -37,4 +37,5 @@ public interface DefectMapper {
 	  @Param("defectRegistrar") String defectRegistrar,
 	  @Param("defectHandler") String defectHandler,
 	  @Param("defectStatus") String defectStatus);
+	public void deleteDefect(int seq);
 }

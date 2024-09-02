@@ -47,6 +47,10 @@
 	    </if>
 	    <!-- 나머지 필터 조건들 동일하게 적용 -->
 	</select>
+	
+	<delete id="deleteDefect" parameterType="int">
+		DELETE FROM DEFECT WHERE DEFECT_SEQ = #{seq}
+	</delete>
 
 	
 </mapper>

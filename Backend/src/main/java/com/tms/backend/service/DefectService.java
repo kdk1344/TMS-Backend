@@ -40,6 +40,10 @@ public class DefectService {
     public int getTotalDefectsCount(String testCategory, String majorCategory, String subCategory, String defectSeverity, String defectSeq, String defectRegistrar, String defectHandler, String defectStatus) {
         return defectmapper.countDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus);
     }
+    
+    public void deleteDefect(int seq) {
+    	defectmapper.deleteDefect(seq);
+    }
 	
 	
 

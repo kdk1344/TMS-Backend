@@ -540,28 +540,28 @@ public class devProgressController {
 	    return "devProgressEdit"; // JSP 페이지로 이동
 	}
 	
-//	//개발 진행 현황 수정 페이지
-//	@GetMapping(value="api/devProgressEditPage" , produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ResponseBody
-//	public ResponseEntity<Map<String, Object>> devProgressEditPage2(HttpServletRequest request,
-//			@RequestParam("seq") Integer seq) {
-//		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
-//		if (session == null || session.getAttribute("authorityCode") == null) {
-//			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
-//			}
-////		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
-//		
-//		Map<String, Object> response = new HashMap<>();
-//		devProgress DevProgressEdit = devservice.getDevById(seq);
-//		  
-//	    // 응답 생성
-//		response.put("status", "success");
-//        response.put("message", "개발 진행 현황 정보 전달.");
-//	    response.put("devProgressEdit", DevProgressEdit);
-//	    
-//	    return ResponseEntity.ok(response); // JSON으로 응답 반환
-//	}
+	//개발 진행 현황 수정 페이지
+	@GetMapping(value="api/devProgressDetail" , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> devProgressEditPage2(HttpServletRequest request,
+			@RequestParam("seq") Integer seq) {
+		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		if (session == null || session.getAttribute("authorityCode") == null) {
+			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+			}
+//		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+		
+		Map<String, Object> response = new HashMap<>();
+		devProgress DevProgressEdit = devservice.getDevById(seq);
+		  
+	    // 응답 생성
+		response.put("status", "success");
+        response.put("message", "개발 진행 현황 정보 전달.");
+	    response.put("devProgress", DevProgressEdit);
+	    
+	    return ResponseEntity.ok(response); // JSON으로 응답 반환
+	}
 	
 	//개발 진행 현황 수정
     @PostMapping(value = "api/devProgressEdit", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -692,7 +692,7 @@ public class devProgressController {
         }
         
         response.put("status", "success");
-        response.put("message", "공통코드가 성공적으로 삭제되었습니다.");
+        response.put("message", "개발 진행 현황 정보가 성공적으로 삭제되었습니다.");
         return ResponseEntity.ok(response);
     }
 	

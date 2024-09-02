@@ -173,7 +173,7 @@
     </update>
 	
 	<!-- 개발 진행 현황 삭제 -->
-	<delete id="deleteCommonCode" parameterType="int">
+	<delete id="deleteDevProgress" parameterType="int">
 		DELETE FROM DEV_PROGRESS WHERE SEQ = #{seq}
 	</delete>
 	
