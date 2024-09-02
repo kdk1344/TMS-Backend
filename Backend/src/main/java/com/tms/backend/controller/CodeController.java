@@ -328,25 +328,37 @@ public class CodeController {
                 	CommonCode commonCode = new CommonCode();
                     try {
                     	// ParentCode 처리
+                        String parentCode;
                         if (row.getCell(0).getCellType() == CellType.NUMERIC) {
-                        	String parentCode = String.format("%02d", (int) row.getCell(0).getNumericCellValue());
-                            commonCode.setParentCode(parentCode);  // 숫자를 2자리 문자열로 변환
+                            parentCode = String.format("%02d", (int) row.getCell(0).getNumericCellValue());
                         } else {
-                            commonCode.setParentCode(row.getCell(0).getStringCellValue());
+                            parentCode = row.getCell(0).getStringCellValue();
                         }
 
                         // Code 처리
+                        String code;
                         if (row.getCell(1).getCellType() == CellType.NUMERIC) {
-                        	String code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
-                            commonCode.setCode(code);  // 숫자를 문자열로 변환
+                            code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
                         } else {
-                            commonCode.setCode(row.getCell(1).getStringCellValue());
+                            code = row.getCell(1).getStringCellValue();
                         }
 
-                        // CodeName은 기본적으로 문자열로 처리
-                        commonCode.setCodeName(row.getCell(2).getStringCellValue());
+                        // CodeName 처리
+                        String codeName = row.getCell(2).getStringCellValue();
 
-                        commonCodes.add(commonCode);
+                        // 특정 조건 검사 (예: 빈 문자열 또는 null 값이 아닌 경우에만 추가)
+                        if (parentCode != null && !parentCode.trim().isEmpty() &&
+                            code != null && !code.trim().isEmpty() &&
+                            codeName != null && !codeName.trim().isEmpty()) {
+
+                            // CommonCode 객체에 값 설정
+                            commonCode.setParentCode(parentCode);
+                            commonCode.setCode(code);
+                            commonCode.setCodeName(codeName);
+
+                            // 리스트에 추가
+                            commonCodes.add(commonCode);
+                            }
                     } catch (Exception e) {
                         e.printStackTrace();
                         response.put("status", "error");
@@ -675,23 +687,33 @@ public class CodeController {
                 if (row != null) {
                     categoryCode categoryCode = new categoryCode();
                     try {
-                    	categoryCode.setStageType(row.getCell(0).getStringCellValue());  // 첫 번째 셀 (StageType)
+                    	// StageType 처리
+                    	String stageType;
+                    	stageType = row.getCell(0).getStringCellValue();
                         // Code 처리
+                    	String code;
                         if (row.getCell(1).getCellType() == CellType.NUMERIC) {
-                        	if ("대".equals(categoryCode.getStageType())) {
-	                        	String code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
-	                        	categoryCode.setCode(code);  // 숫자를 문자열로 변환
+                        	if ("대".equals(stageType)) {
+	                        	code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
                         	}
                         	else {
-	                    		String code = String.format("%04d", (int) row.getCell(1).getNumericCellValue());
-	                        	categoryCode.setCode(code);  // 숫자를 문자열로 변환
+	                    		code = String.format("%04d", (int) row.getCell(1).getNumericCellValue());
                         	}
                         } else {
-                        	categoryCode.setCode(row.getCell(1).getStringCellValue());
-                        }                        
-                        categoryCode.setCode(row.getCell(1).getStringCellValue());       // 두 번째 셀 (Code)
-                        categoryCode.setCodeName(row.getCell(2).getStringCellValue());   // 세 번째 셀 (CodeName)
-                        categoryCodes.add(categoryCode);
+                        	code = row.getCell(1).getStringCellValue();
+                        }
+                        // 코드네임 처리
+                        String codeName;
+                        codeName = row.getCell(2).getStringCellValue();
+                        // 특정 조건 검사 (예: 빈 문자열 또는 null 값이 아닌 경우에만 추가)
+                        if (stageType != null && !stageType.trim().isEmpty() &&
+                            code != null && !code.trim().isEmpty() &&
+                            codeName != null && !codeName.trim().isEmpty()) {
+                        	categoryCode.setStageType(stageType);
+	                        categoryCode.setCode(code);       // 두 번째 셀 (Code)
+	                        categoryCode.setCodeName(codeName);   // 세 번째 셀 (CodeName)
+	                        categoryCodes.add(categoryCode);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         response.put("status", "error");
