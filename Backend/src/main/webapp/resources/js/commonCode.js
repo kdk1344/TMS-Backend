@@ -12,8 +12,8 @@ import {
 let currentPage = 1;
 
 // DOM 요소들
-const uploadCommonCodeFileInput = document.getElementById("uploadCommonCodeFileInput");
-const uploadCommonCodeFileButton = document.getElementById("uploadCommonCodeFileButton");
+const uploadCommonCodeFileInput = document.getElementById("uploadFileInput");
+const uploadCommonCodeFileButton = document.getElementById("uploadFileButton");
 
 const commonCodeRegisterForm = document.getElementById("commonCodeRegisterForm");
 const commonCodeEditForm = document.getElementById("commonCodeEditForm");
@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", init);
 const MODAL_ID = {
   COMMON_CODE_REGISTER: "commonCodeRegisterModal",
   COMMON_CODE_EDIT: "commonCodeEditModal",
+  COMMON_CODE_FILE_UPLOAD: "fileUploadModal",
   COMMON_CODE_FILE_DOWNLOAD: "commonCodeFileDownloadModal",
 };
 
@@ -56,22 +57,6 @@ function setupEventListeners() {
 
       initializeChildCodes(selectedParentCode);
     });
-  }
-
-  // 공통코드 파일 업로드 버튼 클릭 이벤트 핸들러
-  if (uploadCommonCodeFileButton) {
-    uploadCommonCodeFileButton.addEventListener("click", () => {
-      if (uploadCommonCodeFileInput) {
-        uploadCommonCodeFileInput.click(); // 파일 선택 창 열기
-      } else {
-        console.error("File input element not found.");
-      }
-    });
-  }
-
-  // 공통코드 파일 업로드 인풋 change 이벤트 핸들러
-  if (uploadCommonCodeFileInput) {
-    uploadCommonCodeFileInput.addEventListener("change", uploadCommonCodeFile);
   }
 
   // 공통코드 테이블 클릭 이벤트 핸들러
@@ -115,6 +100,21 @@ function setupEventListeners() {
   // 전체 선택 체크박스 클릭 이벤트 핸들러
   if (selectAllCommonCodeCheckbox) {
     selectAllCommonCodeCheckbox.addEventListener("click", toggleAllCheckboxes);
+  }
+
+  // 파일 업로드
+  if (uploadCommonCodeFileButton) {
+    uploadCommonCodeFileButton.addEventListener("click", uploadCommonCodeFile);
+  }
+
+  if (openFileUploadModalButton) {
+    openFileUploadModalButton.addEventListener("click", () => openModal(MODAL_ID.COMMON_CODE_FILE_UPLOAD));
+  }
+
+  if (closeFileUploadModalButton) {
+    closeFileUploadModalButton.addEventListener("click", () => {
+      closeModal(MODAL_ID.COMMON_CODE_FILE_UPLOAD);
+    });
   }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러

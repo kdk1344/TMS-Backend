@@ -51,11 +51,6 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
-  // 사용자 파일 업로드
-  if (uploadUserFileButton) {
-    uploadUserFileButton.addEventListener("click", uploadUserFile);
-  }
-
   // 사용자 테이블 클릭 이벤트 핸들러
   if (userTableBody) {
     // 사용자 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
@@ -98,6 +93,11 @@ function setupEventListeners() {
   // 전체 선택 체크박스 클릭 이벤트 핸들러
   if (selectAllUserCheckbox) {
     selectAllUserCheckbox.addEventListener("click", toggleAllCheckboxes);
+  }
+
+  // 사용자 파일 업로드
+  if (uploadUserFileButton) {
+    uploadUserFileButton.addEventListener("click", uploadUserFile);
   }
 
   if (openFileUploadModalButton) {
