@@ -789,14 +789,14 @@ public class devProgressController {
             }
         }
         if (check != "") {
-        	headerRow.createCell(45).setCellValue("INIT_REGISTRAR");
-            headerRow.createCell(46).setCellValue("LAST_MODIFIER");
+        	headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
+            headerRow.createCell(47).setCellValue("LAST_MODIFIER");
         }
         else {
-	        headerRow.createCell(45).setCellValue("INIT_REG_DATE");
-	        headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
-	        headerRow.createCell(47).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(48).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(47).setCellValue("INIT_REG_DATE");
+	        headerRow.createCell(48).setCellValue("INIT_REGISTRAR");
+	        headerRow.createCell(49).setCellValue("LAST_MODIFIED_DATE");
+	        headerRow.createCell(50).setCellValue("LAST_MODIFIER");
         }
         
         // 헤더와 데이터 매핑
@@ -836,10 +836,10 @@ public class devProgressController {
 	            row.createCell(47).setCellValue(devProgress.getLastModifier());
             }
             else {
-            	row.createCell(46).setCellValue(devProgress.getInitRegDate().toString());
-	            row.createCell(47).setCellValue(devProgress.getInitRegistrar());
-	            row.createCell(48).setCellValue(devProgress.getLastModifiedDate().toString());
-	            row.createCell(49).setCellValue(devProgress.getLastModifier());
+            	row.createCell(47).setCellValue(devProgress.getInitRegDate().toString());
+	            row.createCell(48).setCellValue(devProgress.getInitRegistrar());
+	            row.createCell(49).setCellValue(devProgress.getLastModifiedDate().toString());
+	            row.createCell(50).setCellValue(devProgress.getLastModifier());
             }
         }
         // 엑셀 파일을 HTTP 응답으로 내보내기
