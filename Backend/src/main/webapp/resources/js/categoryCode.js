@@ -14,8 +14,10 @@ import {
 let currentPage = 1;
 
 // DOM 요소들
-const uploadCategoryCodeFileInput = document.getElementById("uploadCategoryCodeFileInput");
-const uploadCategoryCodeFileButton = document.getElementById("uploadCategoryCodeFileButton");
+const uploadCategoryCodeFileInput = document.getElementById("uploadFileInput");
+const uploadCategoryCodeFileButton = document.getElementById("uploadFileButton");
+const openFileUploadModalButton = document.getElementById("openFileUploadModalButton");
+const closeFileUploadModalButton = document.getElementById("closeFileUploadModalButton");
 
 const categoryCodeRegisterForm = document.getElementById("categoryCodeRegisterForm");
 const categoryCodeEditForm = document.getElementById("categoryCodeEditForm");
@@ -43,6 +45,7 @@ document.addEventListener("DOMContentLoaded", init);
 const MODAL_ID = {
   CATEGORY_CODE_REGISTER: "categoryCodeRegisterModal",
   CATEGORY_CODE_EDIT: "categoryCodeEditModal",
+  CATEGORY_CODE_FILE_UPLOAD: "fileUploadModal",
   CATEGORY_CODE_FILE_DOWNLOAD: "categoryCodeFileDownloadModal",
 };
 
@@ -61,22 +64,6 @@ function setupEventListeners() {
 
       initializeChildCodes(selectedParentCode);
     });
-  }
-
-  // 분류코드 파일 업로드 버튼 클릭 이벤트 핸들러
-  if (uploadCategoryCodeFileButton) {
-    uploadCategoryCodeFileButton.addEventListener("click", () => {
-      if (uploadCategoryCodeFileInput) {
-        uploadCategoryCodeFileInput.click(); // 파일 선택 창 열기
-      } else {
-        console.error("File input element not found.");
-      }
-    });
-  }
-
-  // 분류코드 파일 업로드 인풋 change 이벤트 핸들러
-  if (uploadCategoryCodeFileInput) {
-    uploadCategoryCodeFileInput.addEventListener("change", uploadCategoryCodeFile);
   }
 
   // 분류코드 테이블 클릭 이벤트 핸들러
@@ -143,6 +130,21 @@ function setupEventListeners() {
   // 전체 선택 체크박스 클릭 이벤트 핸들러
   if (selectAllCategoryCodeCheckbox) {
     selectAllCategoryCodeCheckbox.addEventListener("click", toggleAllCheckboxes);
+  }
+
+  // 파일 업로드
+  if (uploadCategoryCodeFileButton) {
+    uploadCategoryCodeFileButton.addEventListener("click", uploadCategoryCodeFile);
+  }
+
+  if (openFileUploadModalButton) {
+    openFileUploadModalButton.addEventListener("click", () => openModal(MODAL_ID.CATEGORY_CODE_FILE_UPLOAD));
+  }
+
+  if (closeFileUploadModalButton) {
+    closeFileUploadModalButton.addEventListener("click", () => {
+      closeModal(MODAL_ID.CATEGORY_CODE_FILE_UPLOAD);
+    });
   }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러

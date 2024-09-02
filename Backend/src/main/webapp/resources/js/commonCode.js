@@ -14,6 +14,8 @@ let currentPage = 1;
 // DOM 요소들
 const uploadCommonCodeFileInput = document.getElementById("uploadFileInput");
 const uploadCommonCodeFileButton = document.getElementById("uploadFileButton");
+const openFileUploadModalButton = document.getElementById("openFileUploadModalButton");
+const closeFileUploadModalButton = document.getElementById("closeFileUploadModalButton");
 
 const commonCodeRegisterForm = document.getElementById("commonCodeRegisterForm");
 const commonCodeEditForm = document.getElementById("commonCodeEditForm");
