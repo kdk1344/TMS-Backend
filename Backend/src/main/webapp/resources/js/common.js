@@ -113,9 +113,18 @@ function generateMenuItem(item) {
 // Error 객체를 확장하여 상태 코드를 추가
 class TMSError extends Error {
   constructor(message, statusCode) {
-    super(message); // 부모 클래스의 생성자를 호출하여 메시지를 설정
+    super(message ? message : TMSError.getDefaultErrorMessage(statusCode)); // 부모 클래스의 생성자를 호출하여 메시지를 설정
     this.statusCode = statusCode; // 상태 코드를 추가 속성으로 설정
     this.name = this.constructor.name; // 오류 이름을 설정
+  }
+
+  static getDefaultErrorMessage(statusCode) {
+    if (statusCode >= 500) return "[Error 500] 서버에 문제가 생겼습니다.";
+    if (statusCode === 401) return "[Error 401] 아이디와 비밀번호를 확인해주세요.";
+    if (statusCode === 403) return "[Error 403] 접근 권한이 없습니다.";
+    if (statusCode === 404) return "[Error 404] 요청하신 페이지를 찾을 수 없습니다.";
+    if (statusCode === 409) return "[Error 409] 기존 리소스와 충돌이 발생했습니다.(ex. 중복 아이디)";
+    if (statusCode >= 400) return "[Error] 유효하지 않은 요청입니다.";
   }
 }
 
@@ -151,21 +160,15 @@ export async function tmsFetch(url, options) {
 export async function fetchAPI(url, options) {
   try {
     const response = await fetch(url, options);
+    const contentType = response.headers.get("content-type");
+    const isJsonType = contentType && contentType.includes("application/json");
 
     if (!response.ok) {
       const statusCode = response.status;
+      let result = isJsonType ? await response.json() : { message: undefined };
 
-      if (statusCode >= 500) throw new TMSError("[Error 500] 서버에 문제가 생겼습니다.", statusCode);
-      if (statusCode === 401) throw new TMSError("[Error 401] 아이디와 비밀번호를 확인해주세요.", statusCode);
-      if (statusCode === 403) throw new TMSError("[Error 403] 접근 권한이 없습니다.", statusCode);
-      if (statusCode === 404) throw new TMSError("[Error 404] 요청하신 페이지를 찾을 수 없습니다.", statusCode);
-      if (statusCode === 409)
-        throw new TMSError("[Error 409] 기존 리소스와 충돌이 발생했습니다.(ex. 중복 아이디)", statusCode);
-      if (statusCode >= 400) throw new TMSError("[Error] 유효하지 않은 요청입니다.", statusCode);
+      throw new TMSError(result.message, statusCode);
     }
-
-    const contentType = response.headers.get("content-type");
-    const isJsonType = contentType && contentType.includes("application/json");
 
     if (isJsonType) return response.json();
 
