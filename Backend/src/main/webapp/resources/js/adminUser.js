@@ -10,8 +10,8 @@ import {
 let currentPage = 1;
 
 // DOM 요소들
-const uploadUserFileInput = document.getElementById("uploadUserFileInput");
-const uploadUserFileButton = document.getElementById("uploadUserFileButton");
+const uploadUserFileInput = document.getElementById("uploadFileInput");
+const uploadUserFileButton = document.getElementById("uploadFileButton");
 
 const userRegisterForm = document.getElementById("userRegisterForm");
 const userEditForm = document.getElementById("userEditForm");
@@ -21,9 +21,13 @@ const userTableBody = document.getElementById("userTableBody");
 const selectAllUserCheckbox = document.getElementById("selectAllUserCheckbox");
 
 const openUserRegisterModalButton = document.getElementById("openUserRegisterModalButton");
+const closeUserRegisterModalButton = document.getElementById("closeUserRegisterModalButton");
+
+const openFileUploadModalButton = document.getElementById("openFileUploadModalButton");
+const closeFileUploadModalButton = document.getElementById("closeFileUploadModalButton");
 const openUserFileDownloadModalButton = document.getElementById("openUserFileDownloadModalButton");
 const closeUserFileDownloadModalButton = document.getElementById("closeUserFileDownloadModalButton");
-const closeUserRegisterModalButton = document.getElementById("closeUserRegisterModalButton");
+
 const closeUserEditModalButton = document.getElementById("closeUserEditModalButton");
 const deleteUserButton = document.getElementById("deleteUserButton");
 
@@ -34,6 +38,7 @@ document.addEventListener("DOMContentLoaded", init);
 const MODAL_ID = {
   USER_REGISTER: "userRegisterModal",
   USER_EDIT: "userEditModal",
+  USER_FILE_UPLOAD: "fileUploadModal",
   USER_FILE_DOWNLOAD: "userFileDownloadModal",
 };
 
@@ -46,20 +51,9 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
-  // 사용자 파일 업로드 버튼 클릭 이벤트 핸들러
+  // 사용자 파일 업로드
   if (uploadUserFileButton) {
-    uploadUserFileButton.addEventListener("click", () => {
-      if (uploadUserFileInput) {
-        uploadUserFileInput.click(); // 파일 선택 창 열기
-      } else {
-        console.error("File input element not found.");
-      }
-    });
-  }
-
-  // 사용자 파일 업로드 인풋 change 이벤트 핸들러
-  if (uploadUserFileInput) {
-    uploadUserFileInput.addEventListener("change", uploadUserFile);
+    uploadUserFileButton.addEventListener("click", uploadUserFile);
   }
 
   // 사용자 테이블 클릭 이벤트 핸들러
@@ -104,6 +98,16 @@ function setupEventListeners() {
   // 전체 선택 체크박스 클릭 이벤트 핸들러
   if (selectAllUserCheckbox) {
     selectAllUserCheckbox.addEventListener("click", toggleAllCheckboxes);
+  }
+
+  if (openFileUploadModalButton) {
+    openFileUploadModalButton.addEventListener("click", () => openModal(MODAL_ID.USER_FILE_UPLOAD));
+  }
+
+  if (closeFileUploadModalButton) {
+    closeFileUploadModalButton.addEventListener("click", () => {
+      closeModal(MODAL_ID.USER_FILE_UPLOAD);
+    });
   }
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러

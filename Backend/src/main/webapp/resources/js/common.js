@@ -209,6 +209,18 @@ export function closeModal(modalId) {
 
     if (form) form.reset(); // 모달 내부 폼이 있는 경우 폼 리셋
 
+    // 모든 input, textarea, select 요소를 리셋
+    const inputs = modal.querySelectorAll("input, textarea, select");
+    inputs.forEach((input) => {
+      if (input.type === "file") {
+        input.value = ""; // 파일 입력 필드의 경우 빈 문자열로 설정하여 리셋
+      } else if (input.type === "checkbox" || input.type === "radio") {
+        input.checked = false; // 체크박스와 라디오 버튼은 체크 상태를 해제
+      } else {
+        input.value = ""; // 다른 유형의 입력 필드는 빈 문자열로 설정
+      }
+    });
+
     /** @note file-preview라는 클래스명을 첨부파일 프리뷰 요소에 넣어야 함  */
     if (filePreview) filePreview.innerHTML = ""; // file-preview 요소 리셋
   } else {

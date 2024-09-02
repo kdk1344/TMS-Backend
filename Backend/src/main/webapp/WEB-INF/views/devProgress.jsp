@@ -47,7 +47,7 @@
 엑셀 양식에 데이터를 입력하여 업로드하세요. (파일 형식: xls, xlsx)</pre
             >
             <form id="downloadTemplateForm" action="devexampleexcel" method="get" class="flex-box align-center">
-              <button type="submit" id="downloadTemplateForm" class="excel-button">
+              <button type="submit" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />엑셀 양식 다운로드
               </button>
             </form>
