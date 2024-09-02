@@ -132,11 +132,7 @@
 
             <div class="form-group">
               <label for="developerForFilter">개발자</label>
-              <input type="text" id="developerForFilter" name="developer" readonly hidden />
-              <div class="name-display" id="developerNameDisplay"></div>
-              <button type="button" id="developerSearchButton">
-                <img src="../../resources/images/search_icon.png" alt="개발자 검색" />
-              </button>
+              <input type="text" id="developerForFilter" name="developer" />
             </div>
           </div>
 
