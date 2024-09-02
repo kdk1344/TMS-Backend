@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -63,9 +65,6 @@ import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
 import com.tms.backend.vo.devProgress;
-
-import java.text.ParseException;
-
 import lombok.extern.log4j.Log4j;
 
 @Controller
@@ -162,16 +161,16 @@ public class devProgressController {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		log.info(simpleDateFormat.format(new Date()));
 
-		log.info("major 진행중1" + majorCategory);
 		majorCategory = adminService.getStageCodes("대", majorCategory);
-		log.info("major 진행중2" + majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
 		if (programType != null && !programType.isEmpty()) {
 			programType = adminService.getStageCCodes("02", programType);}
 		if (programStatus != null && !programStatus.isEmpty()) {
 			programStatus = adminService.getStageCCodes("05", programStatus);}
 		if (devStatus != null && !devStatus.isEmpty()) {
+			log.info("major 진행중" + devStatus);
 			devStatus = adminService.getStageCCodes("06", devStatus);}
+			log.info(devStatus);
 		
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName, programId, programStatus, developer,
@@ -913,70 +912,28 @@ public class devProgressController {
                                     break;
                             }
                         }
-//                    	devprogress.setSeq((int) getCellValueAsNumeric(row.getCell(0)));
-//                        devprogress.setMajorCategory(getCellValueAsString(row.getCell(1)));
-//                        devprogress.setSubCategory(getCellValueAsString(row.getCell(2)));
-//                        devprogress.setMinorCategory(getCellValueAsString(row.getCell(3)));
-//                        devprogress.setProgramDetailType(getCellValueAsString(row.getCell(4)));
-//                        devprogress.setProgramType(getCellValueAsString(row.getCell(5)));
-//                        devprogress.setProgramId(getCellValueAsString(row.getCell(6)));
-//                        devprogress.setProgramName(getCellValueAsString(row.getCell(7)));
-//                        devprogress.setClassName(getCellValueAsString(row.getCell(8)));
-//                        devprogress.setScreenId(getCellValueAsString(row.getCell(9)));
-//                        devprogress.setScreenName(getCellValueAsString(row.getCell(10)));
-//                        devprogress.setScreenMenuPath(getCellValueAsString(row.getCell(11)));
-//                        devprogress.setPriority(getCellValueAsString(row.getCell(12)));
-//                        devprogress.setDifficulty(getCellValueAsString(row.getCell(13)));
-//                        devprogress.setEstimatedEffort((int) getCellValueAsNumeric(row.getCell(14)));
-//                        devprogress.setProgramStatus(getCellValueAsString(row.getCell(15)));
-//                        devprogress.setReqId(getCellValueAsString(row.getCell(16)));
-//                        devprogress.setDeletionHandler(getCellValueAsString(row.getCell(17)));
-//                        devprogress.setDeletionDate(getCellValueAsDate(row.getCell(18)));
-//                        devprogress.setDeletionReason(getCellValueAsString(row.getCell(19)));
-//                        devprogress.setDeveloper(getCellValueAsString(row.getCell(20)));
-//                        devprogress.setPlannedStartDate(getCellValueAsDate(row.getCell(21)));
-//                        devprogress.setPlannedEndDate(getCellValueAsDate(row.getCell(22)));
-//                        devprogress.setActualStartDate(getCellValueAsDate(row.getCell(23)));
-//                        devprogress.setActualEndDate(getCellValueAsDate(row.getCell(24)));
-//                        devprogress.setDevtestendDate(getCellValueAsDate(row.getCell(25)));
-//                        devprogress.setPl(getCellValueAsString(row.getCell(26)));
-//                        devprogress.setPlTestScdDate(getCellValueAsDate(row.getCell(27)));
-//                        devprogress.setPlTestCmpDate(getCellValueAsDate(row.getCell(28)));
-//                        devprogress.setPlTestResult(getCellValueAsString(row.getCell(29)));
-//                        devprogress.setPlTestNotes(getCellValueAsString(row.getCell(30)));
-//                        devprogress.setItMgr(getCellValueAsString(row.getCell(31)));
-//                        devprogress.setItTestDate(getCellValueAsDate(row.getCell(32)));
-//                        devprogress.setItConfirmDate(getCellValueAsDate(row.getCell(33)));
-//                        devprogress.setItTestResult(getCellValueAsString(row.getCell(34)));
-//                        devprogress.setItTestNotes(getCellValueAsString(row.getCell(35)));
-//                        devprogress.setBusiMgr(getCellValueAsString(row.getCell(36)));
-//                        devprogress.setBusiTestDate(getCellValueAsDate(row.getCell(37)));
-//                        devprogress.setBusiConfirmDate(getCellValueAsDate(row.getCell(38)));
-//                        devprogress.setBusiTestResult(getCellValueAsString(row.getCell(39)));
-//                        devprogress.setBusiTestNotes(getCellValueAsString(row.getCell(40)));
-//                        devprogress.setThirdPartyTestMgr(getCellValueAsString(row.getCell(41)));
-//                        devprogress.setThirdPartyTestDate(getCellValueAsDate(row.getCell(42)));
-//                        devprogress.setThirdPartyConfirmDate(getCellValueAsDate(row.getCell(43)));
-//                        devprogress.setThirdTestResult(getCellValueAsString(row.getCell(44)));
-//                        devprogress.setThirdPartyTestNotes(getCellValueAsString(row.getCell(45)));
-//                        devprogress.setDevStatus(getCellValueAsString(row.getCell(46)));
-//                        devprogress.setInitRegistrar(getCellValueAsString(row.getCell(47)));
-//                        devprogress.setLastModifier(getCellValueAsString(row.getCell(48)));
                         devProgress.add(devprogress);
                     } catch (Exception e) {
                         e.printStackTrace();
                         response.put("status", "error");
-                        response.put("message", "파일의 데이터 형식이 올바르지 않습니다: 행 " + (i + 1));
+                        response.put("message", "올바르지 않은 값이 입력되었습니다.");
                         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                     }
                 }
             }
 
             // 데이터베이스에 저장
-            devservice.saveAllDevProgress(devProgress);
-            response.put("status", "success");
-            response.put("message", "파일 업로드가 성공적으로 완료되었습니다!");
-            response.put("totalUploaded", devProgress.size());
+            try {
+                devservice.saveAllDevProgress(devProgress);
+                response.put("status", "success");
+                response.put("message", "파일 업로드가 성공적으로 완료되었습니다!");
+                response.put("totalUploaded", devProgress.size());
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.put("status", "error");
+                response.put("message", "외래 키 제약 조건을 위반했습니다. 데이터가 올바르지 않습니다.");
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
 
         } catch (DuplicateKeyException e) {
             e.printStackTrace();

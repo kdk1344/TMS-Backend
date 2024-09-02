@@ -204,6 +204,7 @@ public class AdminService {
     
     // 상위 코드에 따른 하위 코드 목록을 조회
     public List<CommonCode> getCCCode(String parentCode) {
+    	log.info("cc code check"+parentCode);
         return adminmapper.findSubCodesByParentCode(parentCode);
     }
     
@@ -213,8 +214,9 @@ public class AdminService {
     }
     
     //원하는 공통코드 이름 조회
-    public String getStageCCodes(String parentCode, String seq) {
-    	return adminmapper.getStageCCodes(parentCode, seq);
+    public String getStageCCodes(String parentCode, String code) {
+    	log.info("parentCode: " + parentCode + ", code: " + code);
+    	return adminmapper.getStageCCodes(parentCode, code);
     }
         
     
