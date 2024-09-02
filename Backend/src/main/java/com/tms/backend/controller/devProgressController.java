@@ -783,16 +783,20 @@ public class devProgressController {
 
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < headers.length; i++) {
-        	if (check.equals("") || i > 0) {
-                headerRow.createCell(i).setCellValue(headers[i]);
+        if (!check.equals("")) {
+        	// "SEQ"를 무시하고 다음 헤더부터 시작
+        	log.info("check"+check);
+            for (int i = 1; i < headers.length; i++) {
+                headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
-        }
-        if (check != "") {
-        	headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
+            headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
             headerRow.createCell(47).setCellValue("LAST_MODIFIER");
         }
         else {
+        	// "SEQ"를 포함하여 모든 헤더 생성
+            for (int i = 0; i < headers.length; i++) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
 	        headerRow.createCell(47).setCellValue("INIT_REG_DATE");
 	        headerRow.createCell(48).setCellValue("INIT_REGISTRAR");
 	        headerRow.createCell(49).setCellValue("LAST_MODIFIED_DATE");
@@ -1044,6 +1048,8 @@ public class devProgressController {
             setDate.accept(DateValue1);
         }
     }
+    
+    
     
 
     

@@ -182,6 +182,7 @@ public class AdminService {
     }
     
     public void addCommonCode(CommonCode commonCode) {
+    	log.info(commonCode.getCode());
         adminmapper.insertCommonCode(commonCode);
     }
 
