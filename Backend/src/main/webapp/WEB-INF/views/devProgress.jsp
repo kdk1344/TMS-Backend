@@ -203,7 +203,7 @@
       <!-- 버튼 그룹 -->
       <div class="button-group">
         <div class="flex-box">
-          <button id="openDevProgressRegisterModalButton">등록</button>
+          <button id="goDevProgressRegisterPageButton">등록</button>
           <button id="deleteDevProgressButton" class="delete-button">삭제</button>
         </div>
         <div class="flex-box">

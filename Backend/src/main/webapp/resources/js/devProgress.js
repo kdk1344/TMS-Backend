@@ -16,8 +16,12 @@ import {
 let currentPage = 1;
 
 // DOM 요소들
+const devProgressTableBody = document.getElementById("devProgressTableBody");
+
 const devProgressFilterForm = document.getElementById("devProgressFilterForm");
 const majorCategorySelect = document.getElementById("majorCategoryForFilter");
+
+const goDevProgressRegisterPageButton = document.getElementById("goDevProgressRegisterPageButton");
 
 const uploadDevProgressFileButton = document.getElementById("uploadDevProgressFileButton");
 const uploadDevProgressFileInput = document.getElementById("uploadDevProgressFileInput");
@@ -48,6 +52,32 @@ function init() {
 
 // 이벤트 핸들러 설정
 function setupEventListeners() {
+  // 프로그램 개발 등록 페이지로 이동
+  if (goDevProgressRegisterPageButton) {
+    goDevProgressRegisterPageButton.addEventListener("click", () => {
+      window.location.href = "/tms/devProgressReg";
+    });
+  }
+
+  // 프로그램 개발 목록 테이블 클릭 이벤트 핸들러
+  if (devProgressTableBody) {
+    devProgressTableBody.addEventListener("click", (event) => {
+      const clickedElement = event.target;
+
+      if (clickedElement.type === "checkbox") {
+        return;
+      }
+
+      const row = event.target.closest("tr");
+
+      if (row) {
+        const checkbox = row.querySelector('input[type="checkbox"]'); // tr 내부의 첫 번째 체크박스 요소 선택
+        const devProgressId = checkbox.value;
+        window.location.href = `/tms/devProgressEdit?seq=${devProgressId}`;
+      }
+    });
+  }
+
   // 프로그램 개발 진행현황 필터 폼 제출 및 리셋 이벤트 핸들러
   if (devProgressFilterForm) {
     devProgressFilterForm.addEventListener("submit", submitDevProgressFilter);
