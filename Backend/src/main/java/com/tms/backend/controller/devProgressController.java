@@ -732,8 +732,6 @@ public class devProgressController {
 	        @RequestParam(value = "size", defaultValue = "15") int size,
             HttpServletResponse response) throws IOException {
     	
-    	log.info("idcheck"+programStatus);
-    	
     	majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
 		if (programType != null && !programType.isEmpty()) {
@@ -786,17 +784,19 @@ public class devProgressController {
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < headers.length; i++) {
-            headerRow.createCell(i).setCellValue(headers[i]);
+        	if (check.equals("") || i > 0) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
         }
         if (check != "") {
-        	headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
-            headerRow.createCell(47).setCellValue("LAST_MODIFIER");
+        	headerRow.createCell(45).setCellValue("INIT_REGISTRAR");
+            headerRow.createCell(46).setCellValue("LAST_MODIFIER");
         }
         else {
-	        headerRow.createCell(46).setCellValue("INIT_REG_DATE");
-	        headerRow.createCell(47).setCellValue("INIT_REGISTRAR");
-	        headerRow.createCell(48).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(49).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(45).setCellValue("INIT_REG_DATE");
+	        headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
+	        headerRow.createCell(47).setCellValue("LAST_MODIFIED_DATE");
+	        headerRow.createCell(48).setCellValue("LAST_MODIFIER");
         }
         
         // 헤더와 데이터 매핑
