@@ -197,7 +197,12 @@
 
               <div class="form-group">
                 <label for="plTestNotes">테스트 의견</label>
-                <textarea id="plTestNotes" name="plTestNotes" placeholder="테스트 의견을 입력해 주세요."></textarea>
+                <textarea
+                  id="plTestNotes"
+                  name="plTestNotes"
+                  class="custom-scroll"
+                  placeholder="테스트 의견을 입력해 주세요."
+                ></textarea>
               </div>
             </div>
           </fieldset>
@@ -233,6 +238,7 @@
                   id="thirdPartyTestNotes"
                   name="thirdPartyTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
+                  class="custom-scroll"
                 ></textarea>
               </div>
             </div>
@@ -265,7 +271,12 @@
 
               <div class="form-group">
                 <label for="itTestNotes">테스트 의견</label>
-                <textarea id="itTestNotes" name="itTestNotes" placeholder="테스트 의견을 입력해 주세요."></textarea>
+                <textarea
+                  id="itTestNotes"
+                  name="itTestNotes"
+                  placeholder="테스트 의견을 입력해 주세요."
+                  class="custom-scroll"
+                ></textarea>
               </div>
             </div>
           </fieldset>
@@ -297,7 +308,12 @@
 
               <div class="form-group">
                 <label for="busiTestNotes">테스트 의견</label>
-                <textarea id="busiTestNotes" name="busiTestNotes" placeholder="테스트 의견을 입력해 주세요."></textarea>
+                <textarea
+                  id="busiTestNotes"
+                  name="busiTestNotes"
+                  placeholder="테스트 의견을 입력해 주세요."
+                  class="custom-scroll"
+                ></textarea>
               </div>
             </div>
           </fieldset>
