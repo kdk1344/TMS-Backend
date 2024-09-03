@@ -178,7 +178,7 @@
 	</delete>
 	
 	<!-- 개발 진행 현황 추가 -->
-    <insert id="insertdevProgress" parameterType="devProgress">
+    <insert id="insertdevProgress" parameterType="devProgress" useGeneratedKeys="true" keyProperty="seq">
 	    INSERT INTO DEV_PROGRESS (
 	        MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY, 
 	        PROGRAM_DETAIL_TYPE, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, 

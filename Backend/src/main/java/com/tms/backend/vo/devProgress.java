@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class devProgress {
-	private int seq;                     // SEQ
+	private Integer seq;                     // SEQ
     private String majorCategory;        // 업무 대분류
     private String subCategory;          // 업무 중분류
     private String minorCategory;        // 소분류

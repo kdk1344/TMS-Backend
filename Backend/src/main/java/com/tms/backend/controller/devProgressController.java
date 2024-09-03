@@ -532,6 +532,7 @@ public class devProgressController {
 	        devProgress.setLastModifier(UserID);
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
+        	
         	log.info(devProgress.getSeq());
         	
         	// 새로운 파일 업로드 처리
