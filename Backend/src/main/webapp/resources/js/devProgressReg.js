@@ -8,10 +8,8 @@ import {
   getProgramDetailTypes,
   getLevels,
   getProgramStatusList,
-  getDevStatusList,
   addFiles,
   updateFilePreview,
-  checkSession,
   showSpinner,
   hideSpinner,
 } from "./common.js";
@@ -74,23 +72,14 @@ function setupEventListeners() {
 /**  등록 폼 초기화 함수 */
 async function initializeRegisterForm() {
   // 모든 비동기 호출을 병렬로 실행
-  const [
-    { majorCategoryCodes },
-    { programTypes },
-    { programDetailTypes },
-    { levels },
-    { programStatusList },
-    { devStatusList },
-    { userID },
-  ] = await Promise.all([
-    getMajorCategoryCodes(),
-    getProgramTypes(),
-    getProgramDetailTypes(),
-    getLevels(),
-    getProgramStatusList(),
-    getDevStatusList(),
-    checkSession(),
-  ]);
+  const [{ majorCategoryCodes }, { programTypes }, { programDetailTypes }, { levels }, { programStatusList }] =
+    await Promise.all([
+      getMajorCategoryCodes(),
+      getProgramTypes(),
+      getProgramDetailTypes(),
+      getLevels(),
+      getProgramStatusList(),
+    ]);
 
   const SELECT_DATA = {
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
@@ -99,12 +88,9 @@ async function initializeRegisterForm() {
     [SELECT_ID.PRIORITY]: levels,
     [SELECT_ID.DIFFICULTY]: levels,
     [SELECT_ID.PROGRAM_STATUS]: programStatusList,
-    [SELECT_ID.DEV_STATUS]: devStatusList,
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
-
-  document.getElementById("lastModifier").value = userID; // 변경자
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {

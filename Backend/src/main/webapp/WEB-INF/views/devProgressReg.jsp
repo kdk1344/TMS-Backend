@@ -303,19 +303,18 @@
           </fieldset>
         </div>
 
-        <div class="input-container-row">
+        <!-- 수정 시 필요 -->
+        <!-- <div class="input-container-row">
           <div class="form-group">
             <label for="devStatus">개발진행상태</label>
-            <select id="devStatus" name="devStatus">
-              <option value="" disabled selected>진행상태를 선택해 주세요.</option>
-            </select>
+            <input id="devStatus" name="devStatus" readonly/>
           </div>
 
           <div class="form-group">
             <label for="lastModifier">변경자</label>
             <input id="lastModifier" name="lastModifier" readonly />
           </div>
-        </div>
+        </div> -->
 
         <div class="button-container">
           <button class="cancel-button" type="button">취소</button>
