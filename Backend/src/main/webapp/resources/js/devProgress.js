@@ -6,6 +6,9 @@ import {
   initializeSelect,
   getMajorCategoryCodes,
   getSubCategoryCodes,
+  getProgramTypes,
+  getProgramStatusList,
+  getDevStatusList,
   openModal,
   closeModal,
   setupModalEventListeners,
@@ -387,38 +390,6 @@ function copyFilterValuesToDownloadForm() {
 }
 
 // API 함수
-// 프로그램 구분 목록 조회
-export async function getProgramTypes() {
-  try {
-    const { programType: programTypes } = await tmsFetch(`/programType`);
-
-    return { programTypes };
-  } catch (error) {
-    console.error(error.message, "프로그램 구분 목록을 불러오지 못 했습니다.");
-  }
-}
-
-// 프로그램 상태 목록 조회
-export async function getProgramStatusList() {
-  try {
-    const { programStatus: programStatusList } = await tmsFetch(`/programStatus`);
-
-    return { programStatusList };
-  } catch (error) {
-    console.error(error.message, "프로그램 상태 목록을 불러오지 못 했습니다.");
-  }
-}
-
-// 개발진행 상태 목록 조회
-export async function getDevStatusList() {
-  try {
-    const { devStatus: devStatusList } = await tmsFetch(`/devStatus`);
-
-    return { devStatusList };
-  } catch (error) {
-    console.error(error.message, "개발진행 상태 목록을 불러오지 못 했습니다.");
-  }
-}
 
 // 개발자 목록 조회
 export async function getDevelopers() {

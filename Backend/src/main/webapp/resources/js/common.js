@@ -646,3 +646,58 @@ export async function getSubCategoryCodes(parentCode = "") {
     console.error("Error fetching CC Codes", error.message);
   }
 }
+
+// 프로그램 구분 목록 조회
+export async function getProgramTypes() {
+  try {
+    const { programType: programTypes } = await tmsFetch(`/programType`);
+
+    return { programTypes };
+  } catch (error) {
+    console.error(error.message, "프로그램 구분 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 프로그램 상세구분 목록 조회
+export async function getProgramDetailTypes() {
+  try {
+    const { programDtype: programDetailTypes } = await tmsFetch(`/programDtype`);
+
+    return { programDetailTypes };
+  } catch (error) {
+    console.error(error.message, "프로그램 상세구분 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 우선순위 및 난이도 레벨 조회
+export async function getLevels() {
+  try {
+    const { levels } = await tmsFetch(`/levels`);
+
+    return { levels };
+  } catch (error) {
+    console.error(error.message, "우선순위 및 난이도 레벨을 불러오지 못 했습니다.");
+  }
+}
+
+// 프로그램 상태 목록 조회
+export async function getProgramStatusList() {
+  try {
+    const { programStatus: programStatusList } = await tmsFetch(`/programStatus`);
+
+    return { programStatusList };
+  } catch (error) {
+    console.error(error.message, "프로그램 상태 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 개발진행 상태 목록 조회
+export async function getDevStatusList() {
+  try {
+    const { devStatus: devStatusList } = await tmsFetch(`/devStatus`);
+
+    return { devStatusList };
+  } catch (error) {
+    console.error(error.message, "개발진행 상태 목록을 불러오지 못 했습니다.");
+  }
+}
