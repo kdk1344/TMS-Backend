@@ -254,7 +254,8 @@ public class CodeController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/ccexampleexcel")
     public void downloadExcc(HttpServletResponse response) throws IOException {
-    	List<CommonCode> ExampleDEV = adminService.getFilteredCommonCodes(null, null, "No_value");    	
+    	List<CommonCode> ExampleDEV = adminService.getFilteredCommonCodes(null, null, "No_value");
+    	log.info(ExampleDEV);
     	ccexportToExcel(response, ExampleDEV, "example.xlsx");
     }
 
@@ -355,9 +356,16 @@ public class CodeController {
                             commonCode.setParentCode(parentCode);
                             commonCode.setCode(code);
                             commonCode.setCodeName(codeName);
-
-                            // 리스트에 추가
-                            commonCodes.add(commonCode);
+                            
+                            //중복 확인
+                            boolean Count = adminService.countdupliCCode(commonCode);
+	                        if (!Count) {
+	                        	commonCodes.add(commonCode);
+	                        	log.info("성공이야!");
+	                        }
+	                        else {
+	                        	log.info("중복이야!");
+	                        	}
                             }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -712,7 +720,13 @@ public class CodeController {
                         	categoryCode.setStageType(stageType);
 	                        categoryCode.setCode(code);       // 두 번째 셀 (Code)
 	                        categoryCode.setCodeName(codeName);   // 세 번째 셀 (CodeName)
-	                        categoryCodes.add(categoryCode);
+	                        boolean Count = adminService.countdupliCtCode(categoryCode);
+	                        if (!Count) {
+	                        	categoryCodes.add(categoryCode);
+	                        }
+	                        else {
+	                        	log.info("중복이야!");
+	                        	}
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -73,6 +73,7 @@ public interface AdminMapper {
     public String searchParentCodeName(String parentCode);
     public String getStageCCodes(@Param("parentCode") String parentCode, 
     							@Param("code") String code);
+    public int countdupliCCode(CommonCode commonCode); //중복 공통코드 확인
     
     
     // 분류코드 mapper
@@ -98,4 +99,5 @@ public interface AdminMapper {
     public List<categoryCode> getsubCategoryCodes();
     public String getStageCodes(@Param("stageType") String stageType, 
      	   						@Param("code") String code);
+    public int countdupliCtCode(categoryCode categoryCode);
 }

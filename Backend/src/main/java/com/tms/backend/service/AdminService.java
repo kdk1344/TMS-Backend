@@ -177,6 +177,7 @@ public class AdminService {
  // 공통코드 삽입
     public void saveAllCommonCodes(List<CommonCode> commonCodes) {
         for (CommonCode commonCode : commonCodes) {
+        	log.info("확인중"+commonCode);
             adminmapper.insertCommonCode(commonCode);
         }
     }
@@ -218,6 +219,11 @@ public class AdminService {
     public String getStageCCodes(String parentCode, String code) {
     	log.info("parentCode: " + parentCode + ", code: " + code);
     	return adminmapper.getStageCCodes(parentCode, code);
+    }
+    
+    // 중복 공통코드 확인
+    public boolean countdupliCCode(CommonCode commonCode) {
+    	return adminmapper.countdupliCCode(commonCode) >0;
     }
         
     
@@ -294,6 +300,11 @@ public class AdminService {
     //원하는 분류 코드 이름 조회
     public String getStageCodes(String StageType, String Code) {
     	return adminmapper.getStageCodes(StageType, Code);
+    }
+    
+    // 중복 분류코드 확인
+    public boolean countdupliCtCode(categoryCode categoryCode) {
+    	return adminmapper.countdupliCtCode(categoryCode) >0;
     }
     
 }

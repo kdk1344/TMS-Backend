@@ -324,6 +324,13 @@
         WHERE parent_code = #{parentCode} and Code = #{code}
     </select>
     
+    <!--  중복 공통코드 확인 -->
+    <select id="countdupliCCode" parameterType="CommonCode" resultType="int">
+    	SELECT COUNT(*)
+    	FROM common_codes
+    	WHERE parent_code = #{parentCode} and Code = #{code} and CODE_NAME = #{codeName} 
+    </select>
+    
     
 	
 	
@@ -455,6 +462,13 @@
 	    FROM category_codes 
 	    WHERE SUBSTRING(Code, 0, 2) = #{code}
 	</select>
+	
+	<!--  중복 분류코드 확인 -->
+    <select id="countdupliCtCode" parameterType="categoryCode" resultType="int">
+    	SELECT COUNT(*)
+    	FROM category_code
+    	WHERE Stage_Type = #{stageType} and Code = #{code} and CODE_NAME = #{codeName} 
+    </select>
 
 	
 </mapper>
