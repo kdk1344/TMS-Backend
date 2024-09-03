@@ -508,13 +508,14 @@ public class devProgressController {
 	        }
 	        //프로그램 ID 중복체크
 	        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());
-	        if(IdCheck) {
+	        if(!IdCheck) {
 	        	response.put("status", "failure");
 	            response.put("message", "프로그램 ID가 중복되었습니다.");
 	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	        }
-	        //최초 등록자 로그인 ID 세팅
+	        //최초 등록자, 변경자 로그인 ID 세팅
 	        devProgress.setInitRegistrar(UserID);
+	        devProgress.setLastModifier(UserID);
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
         	// 새로운 파일 업로드 처리
