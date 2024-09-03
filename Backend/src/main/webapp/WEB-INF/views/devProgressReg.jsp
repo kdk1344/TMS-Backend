@@ -333,7 +333,7 @@
         </div> -->
 
         <div class="button-container">
-          <button class="cancel-button" type="button">취소</button>
+          <button id="goBackButton" class="cancel-button" type="button">취소</button>
           <button class="save-button">저장</button>
         </div>
       </form>

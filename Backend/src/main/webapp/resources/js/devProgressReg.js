@@ -30,6 +30,7 @@ const SELECT_ID = {
 // DOM 요소들
 const devProgressRegisterForm = document.getElementById("devProgressRegisterForm");
 const majorCategorySelect = document.getElementById("majorCategory");
+const goBackButton = document.getElementById("goBackButton");
 
 const fileInput = document.getElementById("fileInput");
 const fileSelectButton = document.getElementById("fileSelectButton");
@@ -67,6 +68,9 @@ function setupEventListeners() {
 
   // 프로그램 개발 정보 등록
   devProgressRegisterForm.addEventListener("submit", register);
+
+  // 뒤로가기
+  goBackButton.addEventListener("click", goBack);
 }
 
 /**  등록 폼 초기화 함수 */
@@ -156,4 +160,12 @@ async function register(event) {
   } finally {
     hideSpinner();
   }
+}
+
+function goBack() {
+  const confirmed = confirm("등록을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
+
+  if (!confirmed) return;
+
+  window.history.back();
 }
