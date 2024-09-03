@@ -442,6 +442,20 @@ public class devProgressController {
 		String UserID = (String) session.getAttribute("id");
 		Map<String, Object> response = new HashMap<>();
 		try {
+			//코드로 들어오는 데이터를 코드명으로 변경
+			devProgress.setMajorCategory(adminService.getStageCodes("대", devProgress.getMajorCategory()));
+			devProgress.setSubCategory(adminService.getStageCodes("중", devProgress.getSubCategory()));
+			devProgress.setProgramType(adminService.getStageCCodes("02", devProgress.getProgramType()));
+			devProgress.setProgramDetailType(adminService.getStageCCodes("03", devProgress.getProgramDetailType()));
+			devProgress.setPriority(adminService.getStageCCodes("04", devProgress.getPriority()));
+			devProgress.setDifficulty(adminService.getStageCCodes("04", devProgress.getDifficulty()));
+			devProgress.setProgramStatus(adminService.getStageCCodes("05", devProgress.getProgramStatus()));
+			devProgress.setPlTestResult(adminService.getStageCCodes("07", devProgress.getPlTestResult()));
+			devProgress.setItTestResult(adminService.getStageCCodes("07", devProgress.getItTestResult()));
+			devProgress.setBusiTestResult(adminService.getStageCCodes("07", devProgress.getBusiTestResult()));
+			devProgress.setThirdTestResult(adminService.getStageCCodes("07", devProgress.getThirdTestResult()));
+			devProgress.setDevStatus(adminService.getStageCCodes("06", devProgress.getDevStatus()));
+			
 			// 필수 항목 체크
 			validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
 			validateRequiredField(devProgress.getSubCategory(), "업무 중분류");
@@ -594,6 +608,21 @@ public class devProgressController {
 //			}
 		String UserID = (String) session.getAttribute("id");
 		Map<String, Object> response = new HashMap<>();
+		
+		//코드로 들어오는 데이터를 코드명으로 변경
+		devProgress.setMajorCategory(adminService.getStageCodes("대", devProgress.getMajorCategory()));
+		devProgress.setSubCategory(adminService.getStageCodes("중", devProgress.getSubCategory()));
+		devProgress.setProgramType(adminService.getStageCCodes("02", devProgress.getProgramType()));
+		devProgress.setProgramDetailType(adminService.getStageCCodes("03", devProgress.getProgramDetailType()));
+		devProgress.setPriority(adminService.getStageCCodes("04", devProgress.getPriority()));
+		devProgress.setDifficulty(adminService.getStageCCodes("04", devProgress.getDifficulty()));
+		devProgress.setProgramStatus(adminService.getStageCCodes("05", devProgress.getProgramStatus()));
+		devProgress.setPlTestResult(adminService.getStageCCodes("07", devProgress.getPlTestResult()));
+		devProgress.setItTestResult(adminService.getStageCCodes("07", devProgress.getItTestResult()));
+		devProgress.setBusiTestResult(adminService.getStageCCodes("07", devProgress.getBusiTestResult()));
+		devProgress.setThirdTestResult(adminService.getStageCCodes("07", devProgress.getThirdTestResult()));
+		devProgress.setDevStatus(adminService.getStageCCodes("06", devProgress.getDevStatus()));
+		
 		try {
 			// 필수 항목 체크
 			validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
