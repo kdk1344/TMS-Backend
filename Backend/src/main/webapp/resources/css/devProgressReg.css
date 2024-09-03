@@ -1,0 +1,182 @@
+#devProgressRegisterForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  margin-bottom: 8px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  gap: 8px;
+
+  width: 100%;
+}
+
+.fieldset-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+}
+
+.fieldset-container fieldset {
+  flex: 1;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 8px;
+
+  background-color: var(--super-light-gray);
+  padding: 8px;
+
+  border: 1px solid var(--light-gray);
+  border-collapse: collapse;
+}
+
+.input-container-row {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  gap: 16px;
+
+  width: 100%;
+}
+
+.input-container-row .form-group label {
+  min-width: fit-content;
+}
+
+.important-box {
+  width: 100%;
+
+  background-color: var(--super-light-gray);
+}
+
+.file-box {
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+
+  background-color: var(--super-light-gray);
+  padding: 8px;
+
+  border: 1px solid var(--light-gray);
+}
+
+.file-box legend {
+  margin-bottom: 16px;
+}
+
+.file-box fieldset {
+  min-width: 50%;
+}
+
+.file-box .form-group {
+  flex: none;
+
+  height: fit-content;
+}
+
+.form-group-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 16px;
+
+  width: 100%;
+}
+
+.input-container-row .form-group {
+  flex: none;
+}
+
+.input-container-row .form-group label {
+  width: auto;
+}
+
+.input-container-row .form-group select {
+  min-width: 181px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+
+  min-width: 120px;
+
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  flex: 1;
+}
+
+.form-group textarea {
+  min-height: 140px;
+}
+
+.small-form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  flex: 1;
+}
+
+.small-form-group label {
+  display: block;
+
+  width: 128px;
+
+  font-weight: 600;
+}
+
+.small-form-group input {
+  flex: 1;
+}
+
+.flex-box {
+  display: flex;
+  gap: 16px;
+}
+
+legend .flex-box {
+  margin-bottom: 16px;
+}
+
+.file-preview {
+  height: 100px;
+}

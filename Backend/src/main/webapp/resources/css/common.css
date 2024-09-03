@@ -180,6 +180,8 @@ button {
 
 label {
   white-space: nowrap;
+
+  cursor: pointer;
 }
 
 input,
@@ -187,12 +189,14 @@ select,
 textarea {
   width: 100%;
 
-  padding: 12px;
+  padding: 8px;
 
   border: 1px solid var(--gray);
   border-radius: 4px;
 
   font-size: inherit;
+
+  cursor: pointer;
 }
 
 input[type="checkbox"] {
@@ -201,6 +205,7 @@ input[type="checkbox"] {
 
   cursor: pointer;
 }
+
 input[type="date"] {
   position: relative;
 }
@@ -219,6 +224,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 input[readonly] {
   cursor: default; /* 기본 커서로 설정 */
+
+  background-color: var(--super-light-gray);
 }
 
 textarea {
@@ -518,6 +525,11 @@ button:focus {
     transform: rotate(360deg);
   }
 }
+
+.flex-box {
+  display: flex;
+}
+
 .justify-between {
   justify-content: space-between;
 }
@@ -626,4 +638,9 @@ button:focus {
   height: 100%;
 
   object-fit: cover; /* 이미지 비율을 유지하며 버튼 크기에 맞춤 */
+}
+
+.required-indicator {
+  color: red;
+  font-weight: bold;
 }
