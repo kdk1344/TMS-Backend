@@ -147,9 +147,12 @@ public class NoticeController {
         log.info("Title: " + notice.getTitle());
         log.info("Content: " + notice.getContent());
         log.info("Post Date: " + notice.getPostDate());
+        log.info("seq Date: " + notice.getSeq());
 
         // Notice 객체를 데이터베이스에 저장
         adminService.createNotice(notice);
+        
+        log.info("seq Date: " + notice.getSeq());
         
         // 새로운 파일 업로드 처리
         if (files != null && files.length > 0) {

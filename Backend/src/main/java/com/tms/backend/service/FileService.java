@@ -42,7 +42,7 @@ public class FileService {
 
     public void handleFileUpload(MultipartFile[] files, String boardType, int identifier) {
         List<FileAttachment> attachments = new ArrayList<>();
-        
+        log.info(boardType + "첨부 체크" + identifier);
         // boardType에 따라 boardTypeNumber 설정
         Integer boardTypeNumber;
         switch (boardType) {

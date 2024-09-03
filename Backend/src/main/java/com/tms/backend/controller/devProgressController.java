@@ -518,8 +518,11 @@ public class devProgressController {
 	        devProgress.setLastModifier(UserID);
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
+        	log.info(devProgress.getSeq());
+        	
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
+            	log.info("첨부중");
                 fileservice.handleFileUpload(files, "devProgress", devProgress.getSeq());
             }
         	
@@ -534,7 +537,7 @@ public class devProgressController {
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "개발 진행 현황 정보 진행 중에 오류가 발생했습니다.");
+            response.put("message", "개발 진행 현황 정보 등록 중에 오류가 발생했습니다.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
