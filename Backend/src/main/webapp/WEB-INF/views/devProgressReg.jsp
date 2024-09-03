@@ -312,11 +312,6 @@
           </div>
 
           <div class="form-group">
-            <label for="lastModifiedDate">변경일자</label>
-            <input id="lastModifiedDate" name="lastModifiedDate" readonly />
-          </div>
-
-          <div class="form-group">
             <label for="lastModifier">변경자</label>
             <input id="lastModifier" name="lastModifier" readonly />
           </div>

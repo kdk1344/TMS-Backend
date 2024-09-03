@@ -1,4 +1,5 @@
 import {
+  tmsFetch,
   renderTMSHeader,
   initializeSelect,
   getMajorCategoryCodes,
@@ -10,6 +11,7 @@ import {
   getDevStatusList,
   addFiles,
   updateFilePreview,
+  checkSession,
   showSpinner,
   hideSpinner,
 } from "./common.js";
@@ -28,10 +30,10 @@ const SELECT_ID = {
 };
 
 // DOM 요소들
+const devProgressRegisterForm = document.getElementById("devProgressRegisterForm");
 const majorCategorySelect = document.getElementById("majorCategory");
 
 const fileInput = document.getElementById("fileInput");
-const fileOutput = document.getElementById("fileOutput");
 const fileSelectButton = document.getElementById("fileSelectButton");
 
 // 문서 로드 시 초기화
@@ -64,6 +66,9 @@ function setupEventListeners() {
     addFiles(fileInputId);
     updateFilePreview(fileInputId, fileOutputId);
   });
+
+  // 프로그램 개발 정보 등록
+  devProgressRegisterForm.addEventListener("submit", register);
 }
 
 /**  등록 폼 초기화 함수 */
@@ -76,6 +81,7 @@ async function initializeRegisterForm() {
     { levels },
     { programStatusList },
     { devStatusList },
+    { userID },
   ] = await Promise.all([
     getMajorCategoryCodes(),
     getProgramTypes(),
@@ -83,6 +89,7 @@ async function initializeRegisterForm() {
     getLevels(),
     getProgramStatusList(),
     getDevStatusList(),
+    checkSession(),
   ]);
 
   const SELECT_DATA = {
@@ -96,6 +103,8 @@ async function initializeRegisterForm() {
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
+
+  document.getElementById("lastModifier").value = userID; // 변경자
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {
@@ -105,5 +114,60 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
     const { subCategoryCodes } = await getSubCategoryCodes(selectedMajorCategoryCode);
 
     initializeSelect(SELECT_ID.SUB_CATEGORY, subCategoryCodes);
+  }
+}
+
+// 프로그램 개발 등록
+async function register(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  const confirmed = confirm("프로그램 개발 정보를 등록하시겠습니까?");
+  if (!confirmed) return;
+
+  // 기존 FormData 객체 생성
+  const formData = new FormData(event.target);
+
+  // 새로운 FormData 객체 생성
+  const newFormData = new FormData();
+
+  // 파일 추출 (다중 파일 지원)
+  const files = formData.getAll("file"); // 다중 파일을 배열로 가져오기
+
+  // 파일을 제외한 나머지 데이터 추출
+  const devProgressData = {};
+
+  formData.forEach((value, key) => {
+    if (key !== "file") {
+      devProgressData[key] = value;
+    }
+  });
+
+  // notice 데이터 추가 (JSON 형태로 묶기)
+  newFormData.append("devProgress", new Blob([JSON.stringify(devProgressData)], { type: "application/json" }));
+
+  // 파일 추가
+  files.forEach((file) => {
+    newFormData.append("file", file); // Blob으로 감싸지 않고 File 객체 그대로 추가
+  });
+
+  showSpinner();
+
+  try {
+    const { status } = await tmsFetch("/devProgressReg", {
+      method: "POST",
+      body: newFormData,
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`프로그램 개발 정보 등록이 완료되었습니다.`);
+      event.target.reset(); // 폼 초기화
+      window.location.href = "/tms/devProgress"; // 프로그램 개발 목록으로 이동
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
   }
 }
