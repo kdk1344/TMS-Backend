@@ -53,8 +53,8 @@ public class DefectService {
     }
     
     // 특정 아이디 결함 건수
-    public int countDefects(String programId, String managerType) {
-    	return defectmapper.countDefects(programId, managerType);
+    public int countDefect(String programId, String managerType) {
+    	return defectmapper.countDefect(programId, managerType);
     }
     
     // 특정 아이디 결함 조치 완료 건수

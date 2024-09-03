@@ -76,7 +76,44 @@
     )
 	</insert>
 	
-
+	<select id="countDefect" parameterType="String" resultType="int">
+	    SELECT COUNT(*)
+	    FROM defect a
+	    INNER JOIN dev_progress b
+	    ON a.PROGRAM_ID = b.PROGRAM_ID
+	    <if test="managerType == 'thirdParty'">
+            AND a.DEFECT_REGISTRAR = b.THIRD_PARTY_TEST_MGR
+        </if>
+        <if test="managerType == 'it'">
+            AND a.DEFECT_REGISTRAR = b.IT_MGR
+        </if>
+        <if test="managerType == 'busi'">
+            AND a.DEFECT_REGISTRAR = b.BUSI_MGR
+        </if>
+        WHERE 1=1
+	        AND a.TEST_STAGE = "단위테스트"
+	        AND a.PROGRAM_ID = #{programId}
+	</select>
+	
+	<select id="countDefectSoultions" parameterType="String" resultType="int">
+	    SELECT COUNT(*)
+	    FROM defect a
+	    INNER JOIN dev_progress b
+	    ON a.PROGRAM_ID = b.PROGRAM_ID
+	    <if test="managerType == 'thirdParty'">
+            AND a.DEFECT_REGISTRAR = b.THIRD_PARTY_TEST_MGR
+        </if>
+        <if test="managerType == 'it'">
+            AND a.DEFECT_REGISTRAR = b.IT_MGR
+        </if>
+        <if test="managerType == 'busi'">
+            AND a.DEFECT_REGISTRAR = b.BUSI_MGR
+        </if>
+	    WHERE 1=1
+	        AND a.TEST_STAGE = "단위테스트"
+	        AND a.PROGRAM_ID = #{programId}
+	        AND a.DEFECT_COMPLETION_DATE is not null
+	</select>
 
 	
 </mapper>

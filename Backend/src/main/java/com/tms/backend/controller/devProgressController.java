@@ -560,10 +560,10 @@ public class devProgressController {
 		devProgress DevProgressEdit = devservice.getDevById(seq);
 		
 		Map<String, Integer> defectCounts = new HashMap<>();
-		defectCounts.put("totalDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "All"));
-		defectCounts.put("thirdPartyDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "thirdParty"));
-		defectCounts.put("itDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "it"));
-		defectCounts.put("busiDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "busi"));
+		defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
+		defectCounts.put("thirdPartyDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "thirdParty"));
+		defectCounts.put("itDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "it"));
+		defectCounts.put("busiDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "busi"));
 		defectCounts.put("thirdPartySolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "thirdParty"));
 		defectCounts.put("itSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "it"));
 		defectCounts.put("busiSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "busi"));
