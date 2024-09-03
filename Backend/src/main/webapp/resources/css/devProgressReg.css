@@ -74,9 +74,6 @@ legend {
 }
 
 .file-box {
-  display: flex;
-  justify-content: space-between;
-
   width: 100%;
 
   background-color: var(--super-light-gray);
@@ -86,17 +83,30 @@ legend {
 }
 
 .file-box legend {
-  margin-bottom: 16px;
+  margin: 0;
+}
+
+.file-box .file-button {
+  margin: 0;
 }
 
 .file-box fieldset {
-  min-width: 50%;
+  min-width: fit-content;
 }
 
 .file-box .form-group {
   flex: none;
 
   height: fit-content;
+}
+
+.file-box-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 .form-group-container {
@@ -179,4 +189,31 @@ legend .flex-box {
 
 .file-preview {
   height: 100px;
+
+  padding: 0;
+}
+
+.file-preview ul {
+  padding: 0;
+}
+
+/* 스크롤바의 기본 스타일 설정 */
+.file-preview::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* 스크롤바의 막대 (thumb) 스타일 설정 */
+.file-preview::-webkit-scrollbar-thumb {
+  background-color: var(--extra-light-gray); /* 스크롤바의 색상 */
+  border-radius: 12px; /* 스크롤바의 모서리 둥글게 설정 */
+}
+
+/* 스크롤바의 트랙 (track) 스타일 설정 */
+.file-preview::-webkit-scrollbar-track {
+  background-color: var(--super-light-gray); /* 스크롤바 트랙의 배경색 */
+}
+
+/* 스크롤바 버튼 숨기기 */
+.file-preview::-webkit-scrollbar-button {
+  display: none; /* 스크롤바 버튼 숨기기 */
 }

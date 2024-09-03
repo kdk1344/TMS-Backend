@@ -8,6 +8,8 @@ import {
   getLevels,
   getProgramStatusList,
   getDevStatusList,
+  addFiles,
+  updateFilePreview,
   showSpinner,
   hideSpinner,
 } from "./common.js";
@@ -28,6 +30,10 @@ const SELECT_ID = {
 // DOM 요소들
 const majorCategorySelect = document.getElementById("majorCategory");
 
+const fileInput = document.getElementById("fileInput");
+const fileOutput = document.getElementById("fileOutput");
+const fileSelectButton = document.getElementById("fileSelectButton");
+
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
 
@@ -44,6 +50,20 @@ function setupEventListeners() {
   if (majorCategorySelect) {
     majorCategorySelect.addEventListener("change", () => initializeSubCategorySelect(majorCategorySelect.value));
   }
+
+  // 파일 선택 버튼 클릭 시 파일 입력 필드 클릭
+  fileSelectButton.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  // 파일 입력 필드에서 파일이 선택되면 파일 목록 업데이트
+  fileInput.addEventListener("change", () => {
+    const fileInputId = "fileInput";
+    const fileOutputId = "fileOutput";
+
+    addFiles(fileInputId);
+    updateFilePreview(fileInputId, fileOutputId);
+  });
 }
 
 /**  등록 폼 초기화 함수 */

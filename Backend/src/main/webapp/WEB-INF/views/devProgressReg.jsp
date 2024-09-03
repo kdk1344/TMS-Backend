@@ -151,9 +151,15 @@
 
         <div class="file-box">
           <fieldset>
-            <div class="flex-box">
-              <legend>단위테스트 증적 첨부+</legend>
-              <button type="button" class="file-button" id="fileSelectButton">파일 선택</button>
+            <div class="file-box-top">
+              <div class="flex-box">
+                <legend>단위테스트 증적 첨부+</legend>
+                <button type="button" class="file-button" id="fileSelectButton">파일 선택</button>
+              </div>
+              <div class="form-group">
+                <label for="devTestEndDate">개발자 단위테스트 종료일</label>
+                <input id="devTestEndDate" name="devtestendDate" type="date" />
+              </div>
             </div>
 
             <div class="file-preview-container">
@@ -161,11 +167,6 @@
               <div id="fileOutput" class="file-preview"></div>
             </div>
           </fieldset>
-
-          <div class="form-group">
-            <label for="devTestEndDate">개발자 단위테스트 종료일</label>
-            <input id="devTestEndDate" name="devtestendDate" type="date" />
-          </div>
         </div>
 
         <div class="fieldset-container">
