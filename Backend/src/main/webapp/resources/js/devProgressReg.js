@@ -48,12 +48,22 @@ function setupEventListeners() {
 
 /**  등록 폼 초기화 함수 */
 async function initializeRegisterForm() {
-  const { majorCategoryCodes } = await getMajorCategoryCodes();
-  const { programTypes } = await getProgramTypes();
-  const { programDetailTypes } = await getProgramDetailTypes();
-  const { levels } = await getLevels();
-  const { programStatusList } = await getProgramStatusList();
-  const { devStatusList } = await getDevStatusList();
+  // 모든 비동기 호출을 병렬로 실행
+  const [
+    { majorCategoryCodes },
+    { programTypes },
+    { programDetailTypes },
+    { levels },
+    { programStatusList },
+    { devStatusList },
+  ] = await Promise.all([
+    getMajorCategoryCodes(),
+    getProgramTypes(),
+    getProgramDetailTypes(),
+    getLevels(),
+    getProgramStatusList(),
+    getDevStatusList(),
+  ]);
 
   const SELECT_DATA = {
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
