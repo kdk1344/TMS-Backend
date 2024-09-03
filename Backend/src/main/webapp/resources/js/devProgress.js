@@ -318,10 +318,12 @@ function getCurrentFilterValues() {
 }
 
 async function initializeFilterForm() {
-  const { majorCategoryCodes } = await getMajorCategoryCodes();
-  const { programTypes } = await getProgramTypes();
-  const { programStatusList } = await getProgramStatusList();
-  const { devStatusList } = await getDevStatusList();
+  const [{ majorCategoryCodes }, { programTypes }, { programStatusList }, { devStatusList }] = await Promise.all([
+    getMajorCategoryCodes(),
+    getProgramTypes(),
+    getProgramStatusList(),
+    getDevStatusList(),
+  ]);
 
   const SELECT_ID = {
     MAJOR_CATEGORY: "majorCategoryForFilter",
