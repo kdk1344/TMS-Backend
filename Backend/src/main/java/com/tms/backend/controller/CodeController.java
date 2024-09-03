@@ -361,10 +361,8 @@ public class CodeController {
                             boolean Count = adminService.countdupliCCode(commonCode);
 	                        if (!Count) {
 	                        	commonCodes.add(commonCode);
-	                        	log.info("성공이야!");
 	                        }
 	                        else {
-	                        	log.info("중복이야!");
 	                        	}
                             }
                     } catch (Exception e) {

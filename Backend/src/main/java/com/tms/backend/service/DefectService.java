@@ -22,6 +22,7 @@ import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
+import com.tms.backend.vo.devProgress;
 
 import lombok.extern.log4j.Log4j;
 
@@ -44,7 +45,22 @@ public class DefectService {
     public void deleteDefect(int seq) {
     	defectmapper.deleteDefect(seq);
     }
-	
+    
+    public void saveAllDefect(List<Defect> defect) {
+        for (Defect def : defect) {
+            defectmapper.insertdefect(def);
+        }	
+    }
+    
+    // 특정 아이디 결함 건수
+    public int countDefects(String programId, String managerType) {
+    	return defectmapper.countDefects(programId, managerType);
+    }
+    
+    // 특정 아이디 결함 조치 완료 건수
+    public int countDefectSoultions(String programId, String managerType) {
+    	return defectmapper.countDefectSoultions(programId, managerType);
+    }	
 	
 
     

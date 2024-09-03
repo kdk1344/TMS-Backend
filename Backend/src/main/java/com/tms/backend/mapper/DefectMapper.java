@@ -38,4 +38,8 @@ public interface DefectMapper {
 	  @Param("defectHandler") String defectHandler,
 	  @Param("defectStatus") String defectStatus);
 	public void deleteDefect(int seq);
+	public void insertdefect(Defect def);
+	public int countDefects(@Param("programId") String programId, @Param("managerType") String managerType);
+	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType);
+
 }

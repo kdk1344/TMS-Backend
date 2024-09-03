@@ -114,7 +114,7 @@
     <select id="searchNotices" parameterType="map" resultMap="NoticeResultMap">
         SELECT n.*, a.*
         FROM notices n
-        LEFT JOIN file_attachments a ON n.SEQ = a.SEQ
+        LEFT JOIN file_attachments a ON n.SEQ = a.identifier
         WHERE 1=1
          <!-- 시작일과 종료일에 따른 POST_DATE 범위 검색 -->
         <if test="startDate != null and startDate != ''">

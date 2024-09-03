@@ -55,6 +55,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.AdminService;
+import com.tms.backend.service.DefectService;
 import com.tms.backend.service.DevService;
 import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
@@ -80,6 +81,9 @@ public class devProgressController {
 	
 	@Autowired
 	private FileService fileservice;
+	
+	@Autowired
+	private DefectService defectservice;
 	
 	//개발진행관리 Controller
 	
@@ -554,11 +558,21 @@ public class devProgressController {
 		
 		Map<String, Object> response = new HashMap<>();
 		devProgress DevProgressEdit = devservice.getDevById(seq);
-		  
+		
+		Map<String, Integer> defectCounts = new HashMap<>();
+		defectCounts.put("totalDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "All"));
+		defectCounts.put("thirdPartyDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "thirdParty"));
+		defectCounts.put("itDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "it"));
+		defectCounts.put("busiDefectCount", defectservice.countDefects(DevProgressEdit.getProgramId(), "busi"));
+		defectCounts.put("thirdPartySolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "thirdParty"));
+		defectCounts.put("itSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "it"));
+		defectCounts.put("busiSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "busi"));
+
 	    // 응답 생성
 		response.put("status", "success");
         response.put("message", "개발 진행 현황 정보 전달.");
 	    response.put("devProgress", DevProgressEdit);
+	    response.put("defectCounts", defectCounts);
 	    
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
@@ -926,7 +940,7 @@ public class devProgressController {
                                     field.set(devprogress, getCellValueAsString(row.getCell(j)));
                                     break;
                             }
-                        }
+                        }                    	
                         devProgress.add(devprogress);
                     } catch (Exception e) {
                         e.printStackTrace();
