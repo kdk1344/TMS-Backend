@@ -180,7 +180,7 @@
 	<!-- 개발 진행 현황 추가 -->
     <insert id="insertdevProgress" parameterType="devProgress">
 	    INSERT INTO DEV_PROGRESS (
-	        SEQ, MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY, 
+	        MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY, 
 	        PROGRAM_DETAIL_TYPE, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, 
 	        CLASS_NAME, SCREEN_ID, SCREEN_NAME, SCREEN_MENU_PATH, 
 	        PRIORITY, DIFFICULTY, ESTIMATED_EFFORT, PROGRAM_STATUS, 
@@ -194,7 +194,7 @@
 	        THIRD_PARTY_CONFIRM_DATE, THIRD_TEST_RESULT, THIRD_PARTY_TEST_NOTES, 
 	        DEV_STATUS, INIT_REGISTRAR, LAST_MODIFIER
 	    ) VALUES (
-	        #{seq}, #{majorCategory}, #{subCategory}, #{minorCategory}, 
+	        #{majorCategory}, #{subCategory}, #{minorCategory}, 
 	        #{programDetailType}, #{programType}, #{programId}, #{programName}, 
 	        #{className}, #{screenId}, #{screenName}, #{screenMenuPath}, 
 	        #{priority}, #{difficulty}, #{estimatedEffort}, #{programStatus}, 

@@ -857,7 +857,7 @@ public class devProgressController {
   
     @PostMapping(value = "api/devupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> catuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Map<String, Object>> devuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         Map<String, Object> response = new HashMap<>();
         if (file.isEmpty()) {
             response.put("status", "failure");
