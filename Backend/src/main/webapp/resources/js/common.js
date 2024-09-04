@@ -285,6 +285,10 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
   files.forEach((file, _) => {
     const fileItem = document.createElement("li");
 
+    // 파일 링크 표시
+    const fileLink = document.createElement("a");
+    fileLink.classList.add("file-link");
+
     // 파일 이름 표시
     const fileName = document.createElement("span");
     fileName.textContent = file.name;
@@ -301,7 +305,8 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     });
 
     // 파일 항목에 파일 이름과 삭제 버튼 추가
-    fileItem.appendChild(fileName);
+    fileLink.appendChild(fileName);
+    fileItem.appendChild(fileLink);
     fileItem.appendChild(removeButton);
 
     // <li> 요소를 <ul> 요소에 추가
@@ -351,6 +356,21 @@ export function removeFile(fileName, fileInputId, fileListOutputId) {
   fileInput.files = dt.files; // fileInput의 파일 목록을 업데이트
 
   updateFilePreview(fileInputId, fileListOutputId); // 미리보기 업데이트
+}
+
+// file-link 클래스를 가진 요소에 다운로드 링크 설정
+export function setDownloadLink(files) {
+  const fileLinks = document.querySelectorAll(".file-link");
+
+  fileLinks.forEach((fileLink, index) => {
+    fileLink.htef = "#";
+
+    console.log(fileLink);
+    fileLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      downloadFile(files[index].seq); // 클릭 시 파일 다운로드 시작
+    });
+  });
 }
 
 // 파일을 다운로드하는 함수
@@ -701,5 +721,16 @@ export async function getDevStatusList() {
     return { devStatusList };
   } catch (error) {
     console.error(error.message, "개발진행 상태 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 테스트 결과 목록 조회
+export async function getTestResultList() {
+  try {
+    const { testResult: testResultList } = await tmsFetch(`/testResult`);
+
+    return { testResultList };
+  } catch (error) {
+    console.error(error.message, "테스트 결과 목록을 불러오지 못 했습니다.");
   }
 }
