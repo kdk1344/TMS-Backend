@@ -25,6 +25,8 @@ const devProgressFilterForm = document.getElementById("devProgressFilterForm");
 const majorCategorySelect = document.getElementById("majorCategoryForFilter");
 
 const goDevProgressRegisterPageButton = document.getElementById("goDevProgressRegisterPageButton");
+const selectAllDevProgressCheckbox = document.getElementById("selectAllDevProgressCheckbox");
+const deleteDevProgressButton = document.getElementById("deleteDevProgressButton");
 
 const uploadDevProgressFileButton = document.getElementById("uploadDevProgressFileButton");
 const uploadDevProgressFileInput = document.getElementById("uploadDevProgressFileInput");
@@ -89,6 +91,16 @@ function setupEventListeners() {
 
   if (majorCategorySelect) {
     majorCategorySelect.addEventListener("change", () => initializeSubCategorySelect(majorCategorySelect.value));
+  }
+
+  // 전체 선택 체크박스 클릭 이벤트 핸들러
+  if (selectAllDevProgressCheckbox) {
+    selectAllDevProgressCheckbox.addEventListener("click", toggleAllCheckboxes);
+  }
+
+  // 프로그램 개발 정보 삭제
+  if (deleteDevProgressButton) {
+    deleteDevProgressButton.addEventListener("click", deleteDevProgress);
   }
 
   // 엑셀 업로드 이벤트 핸들러
@@ -391,6 +403,12 @@ function copyFilterValuesToDownloadForm() {
   document.getElementById("actualEndDateToForDownload").value = devEndDate;
 }
 
+// 체크박스 전체 선택/해제
+function toggleAllCheckboxes() {
+  const checkboxes = document.querySelectorAll('input[name="devProgress"]');
+  checkboxes.forEach((checkbox) => (checkbox.checked = selectAllDevProgressCheckbox.checked));
+}
+
 // API 함수
 
 // 개발자 목록 조회
@@ -425,6 +443,43 @@ async function uploadDevProgressFile() {
 
     if (success) {
       alert("파일 업로드가 완료되었습니다.");
+      location.reload(); // 페이지 새로고침
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
+  } finally {
+    hideSpinner();
+  }
+}
+
+// 프로그램 개발 정보 삭제
+async function deleteDevProgress() {
+  try {
+    const confirmed = confirm("프로그램 개발 정보를 삭제하시겠습니까?");
+
+    if (!confirmed) return;
+
+    const selectedDevProgressIds = Array.from(document.querySelectorAll('input[name="devProgress"]:checked')).map(
+      (checkbox) => checkbox.value
+    );
+
+    if (selectedDevProgressIds.length === 0) {
+      alert("삭제할 프로그램 개발 정보를 선택해주세요.");
+      return;
+    }
+
+    showSpinner();
+
+    const { status } = await tmsFetch("/deletedev", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(selectedDevProgressIds),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`프로그램 개발 정보 삭제가 완료되었습니다.`);
       location.reload(); // 페이지 새로고침
     }
   } catch (error) {
