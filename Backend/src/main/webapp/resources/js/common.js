@@ -239,6 +239,8 @@ export function closeModalOnClickOutside(event, modalId) {
 
 // 타임스탬프를 yyyy-mm-dd 형식으로 변환하는 함수
 export function convertDate(timestamp) {
+  if (!timestamp) return "";
+
   // 타임스탬프를 Date 객체로 변환
   const date = new Date(timestamp);
 
