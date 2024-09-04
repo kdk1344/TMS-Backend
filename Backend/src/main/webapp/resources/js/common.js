@@ -21,7 +21,7 @@ const menuData = [
   },
   {
     name: "결함진행관리",
-    subMenu: [{ name: "결함현황", link: "/tms/defectStatus" }],
+    subMenu: [{ name: "결함현황", link: "/tms/defect" }],
   },
   {
     name: "관리자",
@@ -721,5 +721,38 @@ export async function getTestResultList() {
     return { testResultList };
   } catch (error) {
     console.error(error.message, "테스트 결과 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 테스트 단계 목록 조회
+export async function getTestStageList() {
+  try {
+    const { testStage: testStageList } = await tmsFetch(`/testStage`);
+
+    return { testStageList };
+  } catch (error) {
+    console.error(error.message, "테스트 단계 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 결함심각도 목록 조회
+export async function getDefectSeverityList() {
+  try {
+    const { defectSeverity: defectSeverityList } = await tmsFetch(`/defectSeverity`);
+
+    return { defectSeverityList };
+  } catch (error) {
+    console.error(error.message, "결함심각도 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 결함 처리상태 목록 조회
+export async function getDefectStatusList() {
+  try {
+    const { defectStatus: defectStatusList } = await tmsFetch(`/defectStatus`);
+
+    return { defectStatusList };
+  } catch (error) {
+    console.error(error.message, "결함 처리상태 목록을 불러오지 못 했습니다.");
   }
 }

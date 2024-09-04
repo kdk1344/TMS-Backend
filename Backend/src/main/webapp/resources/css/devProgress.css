@@ -139,38 +139,10 @@ table td {
   gap: 8px;
 }
 
-.code,
-.th-code,
-.stage-type,
-.th-stage-type {
-  width: 100px;
-
-  text-align: center;
-}
-
 input[type="radio"] {
   width: fit-content;
 
   cursor: pointer;
-}
-
-.code-display {
-  display: flex;
-
-  flex: 1;
-}
-
-.code-display span {
-  display: inline-block;
-  width: 50px;
-  margin: auto;
-
-  font-size: 18px;
-  font-weight: 600;
-  text-align: center;
-}
-.code-display input {
-  flex: 1;
 }
 
 .dash {

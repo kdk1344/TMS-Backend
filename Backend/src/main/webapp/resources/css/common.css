@@ -566,7 +566,7 @@ button:focus {
   background-color: var(--gray);
 }
 
-.register-defect-button {
+.defect-button {
   background-color: var(--extra-dark-green);
 }
 

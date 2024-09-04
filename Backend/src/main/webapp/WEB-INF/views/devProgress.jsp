@@ -222,9 +222,9 @@
           <thead>
             <tr>
               <th><input type="checkbox" id="selectAllDevProgressCheckbox" /></th>
-              <th class="sub-category">업무<br />중분류</th>
+              <th class="sub-category">업무 중분류</th>
               <th class="program-type">프로그램<br />구분</th>
-              <th class="program-id">프로그램 ID</th>
+              <th class="program-id">프로그램ID</th>
               <th class="program-name">프로그램명</th>
               <th class="screen-id">화면ID</th>
               <th class="screen-name">화면명</th>
