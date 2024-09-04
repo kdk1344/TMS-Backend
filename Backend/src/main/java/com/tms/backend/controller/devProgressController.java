@@ -698,16 +698,20 @@ public class devProgressController {
 	        		&& devProgress.getBusiConfirmDate() != null) {
 	        	devProgress.setDevStatus("고객 현업 확인완료");
 	        }
-	        //프로그램 ID 중복체크
-	        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());
-	        if(!IdCheck) {
-	        	response.put("status", "failure");
-	            response.put("message", "프로그램 ID가 중복되었습니다.");
-	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-	        }
-	        log.info("seq값 확인"+devProgress.getSeq());
+
 	        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq());
 	        devProgress.setInitRegistrar(DevProgressEdit.getInitRegistrar());
+	        log.info("프ID1"+devProgress.getProgramId());
+	        log.info("프ID2"+DevProgressEdit.getProgramId());
+	        //프로그램 ID 중복체크
+	        if(!devProgress.getProgramId().equals(DevProgressEdit.getProgramId())) {
+		        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());
+		        if(!IdCheck) {
+		        	response.put("status", "failure");
+		            response.put("message", "프로그램 ID가 중복되었습니다.");
+		            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		        }
+	        }
 	        
         	// devProgress의 필드를 DevProgressEdit에 복사
     	    BeanUtils.copyProperties(devProgress, DevProgressEdit);
