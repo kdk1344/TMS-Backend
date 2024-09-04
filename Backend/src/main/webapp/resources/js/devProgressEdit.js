@@ -197,6 +197,7 @@ async function fillFormValues(data) {
 
   await loadFilesToInput(fileInputId, fileIds); // 파일 input에 가져온 파일들 채우기
 
+  addFiles(fileInputId); // 전역변수에 가져온 첨부파일 저장
   updateFilePreview(fileInputId, fileOutputId); // 파일 목록 렌더링
 
   setDownloadLink(data.attachments); // 수정페이지에서 파일 다운로드 가능하도록 다운로드 링크 설정
@@ -258,9 +259,13 @@ async function edit(event) {
   // 파일 추출 (다중 파일 지원)
   const files = formData.getAll("file"); // 다중 파일을 배열로 가져오기
 
-  // 파일을 제외한 나머지 데이터 추출
   const devProgressData = {};
+  const devProgressId = new URLSearchParams(window.location.search).get("seq");
 
+  // seq 추가
+  devProgressData["seq"] = devProgressId;
+
+  // 파일을 제외한 나머지 데이터 추출
   formData.forEach((value, key) => {
     if (key != "file") {
       devProgressData[key] = value;
