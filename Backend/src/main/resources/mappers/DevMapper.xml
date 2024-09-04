@@ -240,7 +240,7 @@
 	</select>
 	
 	<!--  프로그램 ID 목록 확인 -->
-	<select id="checkProgramId" resultType="String">
+	<select id="checkProgramId" resultType="devProgress">
 		SELECT PROGRAM_ID
 		FROM dev_progress
 	</select>

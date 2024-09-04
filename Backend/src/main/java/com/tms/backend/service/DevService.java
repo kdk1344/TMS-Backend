@@ -85,8 +85,8 @@ public class DevService {
     }
     
     //프로그램 아이디 목록 확인
-    public void checkProgramId() {
-    	devMapper.checkProgramId();
+    public List<devProgress> checkProgramId() {
+    	return devMapper.checkProgramId();
     }
 	
 	

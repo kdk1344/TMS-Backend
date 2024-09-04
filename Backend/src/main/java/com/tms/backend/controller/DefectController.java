@@ -47,7 +47,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.DefectService;
+import com.tms.backend.service.DevService;
 import com.tms.backend.service.FileService;
+import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Defect;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.User;
@@ -68,6 +70,9 @@ public class DefectController {
 	
 	@Autowired
 	private FileService fileservice;
+	
+	@Autowired
+	private DevService devService;
 	
 	
 	@GetMapping("/defectStatus")
@@ -158,7 +163,7 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getDefectType() {
     	Map<String, Object> response = new HashMap<>();
-    	List<User> defectType= adminService.findAuthorityCode(13);
+    	List<CommonCode> defectType= adminService.getCCCode("13");
 
         // 응답 데이터 생성
         if (defectType != null && !defectType.isEmpty()) {
@@ -178,7 +183,7 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getdefectSeverity() {
     	Map<String, Object> response = new HashMap<>();
-    	List<User> defectSeverity= adminService.findAuthorityCode(14);
+    	List<CommonCode> defectSeverity= adminService.getCCCode("14");
 
         // 응답 데이터 생성
         if (defectSeverity != null && !defectSeverity.isEmpty()) {
@@ -198,7 +203,7 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getdefectStatus() {
     	Map<String, Object> response = new HashMap<>();
-    	List<User> defectStatus= adminService.findAuthorityCode(15);
+    	List<CommonCode> defectStatus= adminService.getCCCode("15");
 
         // 응답 데이터 생성
         if (defectStatus != null && !defectStatus.isEmpty()) {
@@ -218,24 +223,21 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getprogramId() {
     	Map<String, Object> response = new HashMap<>();
-    	List<User> defectStatus= adminService.findAuthorityCode(15);
+    	List<devProgress> programId = devService.checkProgramId();
 
         // 응답 데이터 생성
-        if (defectStatus != null && !defectStatus.isEmpty()) {
+        if (programId != null && !programId.isEmpty()) {
             response.put("status", "success");
-            response.put("defectStatus", defectStatus);
+            response.put("programId", programId);
         } else {
             response.put("status", "failure");
-            response.put("message", "결함 처리 상태 정보를 찾을 수 없습니다");
+            response.put("message", "프로그램 ID 정보를 찾을 수 없습니다");
         }
 
         // 조회된 결과를 반환
         return ResponseEntity.ok(response);
     }
-	
-	
-	checkProgramId
-	
+		
 	//개발 진행 현황 수정
     @PostMapping(value = "api/defectReg", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
