@@ -12,7 +12,6 @@ import {
   addFiles,
   loadFilesToInput,
   updateFilePreview,
-  setDownloadLink,
   convertDate,
   showSpinner,
   hideSpinner,
@@ -199,8 +198,6 @@ async function fillFormValues(data) {
 
   addFiles(fileInputId); // 전역변수에 가져온 첨부파일 저장
   updateFilePreview(fileInputId, fileOutputId); // 파일 목록 렌더링
-
-  setDownloadLink(data.attachments); // 수정페이지에서 파일 다운로드 가능하도록 다운로드 링크 설정
 }
 
 function setSelectValueByText(selectId, text) {

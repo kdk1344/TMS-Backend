@@ -287,6 +287,10 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
 
     // 파일 링크 표시
     const fileLink = document.createElement("a");
+    const url = window.URL.createObjectURL(file);
+
+    fileLink.href = url;
+    fileLink.download = file.name; // 파일 이름 설정
     fileLink.classList.add("file-link");
 
     // 파일 이름 표시
@@ -356,21 +360,6 @@ export function removeFile(fileName, fileInputId, fileListOutputId) {
   fileInput.files = dt.files; // fileInput의 파일 목록을 업데이트
 
   updateFilePreview(fileInputId, fileListOutputId); // 미리보기 업데이트
-}
-
-// file-link 클래스를 가진 요소에 다운로드 링크 설정
-export function setDownloadLink(files) {
-  const fileLinks = document.querySelectorAll(".file-link");
-
-  fileLinks.forEach((fileLink, index) => {
-    fileLink.htef = "#";
-
-    console.log(fileLink);
-    fileLink.addEventListener("click", (event) => {
-      event.preventDefault();
-      downloadFile(files[index].seq); // 클릭 시 파일 다운로드 시작
-    });
-  });
 }
 
 // 파일을 다운로드하는 함수
