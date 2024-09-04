@@ -99,7 +99,7 @@
 	</insert>
 	
 	<!-- 결함 수정 xml -->
-	<update id="updatedefect" parameterType="Defect">
+	<update id="updateDefect" parameterType="Defect">
 	    UPDATE DEFECT
 	    SET 
 	        TEST_STAGE = #{testStage}, 
@@ -130,6 +130,12 @@
 	        LAST_MODIFIER = #{lastModifier}
 	    WHERE SEQ = #{seq}
 	</update>
+	
+	<select id="getDefectById" resultType="Defect">
+		SELECT *
+		FROM defect
+		WHERE SEQ = #{seq}
+	</select>
 	
 	<select id="countDefect" parameterType="String" resultType="int">
 	    SELECT COUNT(*)

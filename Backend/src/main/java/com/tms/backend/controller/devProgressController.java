@@ -115,8 +115,6 @@ public class devProgressController {
 	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
 	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
-	    
-
 
 	    int totalDevProgress = devservice.getTotalDevProgressCount(
 	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
@@ -223,25 +221,33 @@ public class devProgressController {
         return ResponseEntity.ok(response);
     }
 	
-//	//대분류 확인
-//	@GetMapping(value = "api/major", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> getMajor() {
-//    	Map<String, Object> response = new HashMap<>();
-//    	List<categoryCode> Major = adminService.getParentCategoryCodes();
-//
-//        // 응답 데이터 생성
-//        if (Major != null && !Major.isEmpty()) {
-//            response.put("status", "success");
-//            response.put("major", Major);
-//        } else {
-//            response.put("status", "failure");
-//            response.put("message", "대분류 정보를 찾을 수 없습니다");
-//        }
-//
-//        // 조회된 결과를 반환
-//        return ResponseEntity.ok(response);
-//    }
+	//프로그램 ID 확인
+	@GetMapping(value = "api/programId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getprogramId(
+    		@RequestParam(value = "programType", required = false) String programType,
+            @RequestParam(value = "developer", required = false) String developer,
+            @RequestParam(value = "programId", required = false) String programId,
+            @RequestParam(value = "programName", required = false) String programName,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+    	Map<String, Object> response = new HashMap<>();
+    	List<devProgress> programID = devservice.checkProgramId(programType, developer, programId, programName, page, size);
+    	int totalprogramId = devservice.checkProgramIdCounts(programType, developer, programId, programName);
+
+        // 응답 데이터 생성
+        if (programId != null && !programId.isEmpty()) {
+            response.put("status", "success");
+            response.put("programId", programID);
+            response.put("totalprogramId", totalprogramId);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "프로그램 ID 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
 	
 	//프로그램 타입 확인
 	@GetMapping(value = "api/programType", produces = MediaType.APPLICATION_JSON_VALUE)

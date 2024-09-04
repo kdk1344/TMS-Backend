@@ -85,10 +85,15 @@ public class DevService {
     }
     
     //프로그램 아이디 목록 확인
-    public List<devProgress> checkProgramId() {
-    	return devMapper.checkProgramId();
+    public List<devProgress> checkProgramId(String programType, String developer, String programId, String programName, int page, int size) {
+    	int offset = (page - 1) * size;
+    	return devMapper.checkProgramId(programType, developer, programId, programName, offset, size);
     }
-	
+    
+    //프로그램 아이디 페이징처리
+    public int checkProgramIdCounts(String programType, String developer, String programId, String programName) {
+   		return devMapper.checkProgramIdCounts(programType, developer, programId, programName);
+   	}
 	
 	
 

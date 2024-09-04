@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,9 +71,6 @@ public class DefectController {
 	
 	@Autowired
 	private FileService fileservice;
-	
-	@Autowired
-	private DevService devService;
 	
 	
 	@GetMapping("/defectStatus")
@@ -172,6 +170,26 @@ public class DefectController {
         // 조회된 결과를 반환
         return ResponseEntity.ok(response);
     }
+	
+	//테스트 단계 상태 확인
+	@GetMapping(value = "api/testStage", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> gettestStage() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> testStage= adminService.getCCCode("11");
+
+        // 응답 데이터 생성
+        if (testStage != null && !testStage.isEmpty()) {
+            response.put("status", "success");
+            response.put("testStage", testStage);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "테스트 단계 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
 		
 	//결함 처리 상태 확인
 	@GetMapping(value = "api/defectStatus", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -193,25 +211,17 @@ public class DefectController {
         return ResponseEntity.ok(response);
     }
 	
-	//프로그램 ID 확인
-	@GetMapping(value = "api/programId", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> getprogramId() {
-    	Map<String, Object> response = new HashMap<>();
-    	List<devProgress> programId = devService.checkProgramId();
-
-        // 응답 데이터 생성
-        if (programId != null && !programId.isEmpty()) {
-            response.put("status", "success");
-            response.put("programId", programId);
-        } else {
-            response.put("status", "failure");
-            response.put("message", "프로그램 ID 정보를 찾을 수 없습니다");
-        }
-
-        // 조회된 결과를 반환
-        return ResponseEntity.ok(response);
-    }
+	//결함 등록 페이지
+	@GetMapping("/defectReg")
+	public String defectRegPage() {
+		return "defectReg";
+	}
+	
+	//결함 수정 페이지
+	@GetMapping("/defectEdit")
+	public String defectEditPage() {
+	    return "defectEdit"; // JSP 페이지로 이동
+	}
 		
 	//개발 진행 현황 수정
     @PostMapping(value = "api/defectReg", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -237,9 +247,32 @@ public class DefectController {
 			}
 			//최초 결함 등록자 로그인 ID 세팅
 			defect.setDefectRegistrar(UserID);
+			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
+			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
+				defect.setDefectStatus("등록완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null) {
+				defect.setDefectStatus("조치완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
+				defect.setDefectStatus("PL 확인완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null && defect.getDefectRegConfirmDate() != null) {
+				defect.setDefectStatus("등록자 확인완료");}
 			
 	        //결함 정보 등록
         	defectService.insertdefect(defect);
+        	// 필수 항목 체크
+			validateRequiredField(defect.getMajorCategory(), "업무 대분류");
+			validateRequiredField(defect.getSubCategory(), "업무 중분류");
+			validateRequiredField(defect.getTestStage(), "테스트 단계");
+			validateRequiredField(defect.getTestId(), "테스트ID");
+			validateRequiredField(defect.getDefectType(), "결함유형");
+			validateRequiredField(defect.getDefectSeverity(), "결함심각도");
+			validateRequiredField(defect.getDefectDescription(), "결함 내용");
+			validateRequiredField(defect.getProgramId(), "프로그램ID");
+			validateRequiredField(defect.getDefectHandler(), "조치담당자");
+			validateRequiredField(defect.getPl(), "PL");
+			if(defect.getDefectRegDate() == null) {
+				throw new IllegalArgumentException("결함등록일은 필수 입력 항목입니다.");
+			}
         	
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
@@ -265,7 +298,80 @@ public class DefectController {
         }
 	}
 		
+    //결함 현황 수정 페이지
+  	@GetMapping(value="api/defectDetail" , produces = MediaType.APPLICATION_JSON_VALUE)
+  	@ResponseBody
+  	public ResponseEntity<Map<String, Object>> defectEditPage2(HttpServletRequest request,
+  			@RequestParam("seq") Integer seq) {
+  		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+  		if (session == null || session.getAttribute("authorityCode") == null) {
+  			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+  			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+  			}
+//  		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+  		
+  		Map<String, Object> response = new HashMap<>();
+  		Defect DefectEdit = defectService.getDefectById(seq);
+  		
+  		List<FileAttachment> attachments = adminService.getAttachments(seq);
+  		DefectEdit.setDefectAttachment(attachments);
+
+  	    // 응답 생성
+  		response.put("status", "success");
+        response.put("message", "개발 진행 현황 정보 전달.");
+  	    response.put("defectEdit", DefectEdit);
+  	    response.put("attachments", attachments);
+  	    
+  	    return ResponseEntity.ok(response); // JSON으로 응답 반환
+  	}	
+  	
+  	//개발 진행 현황 수정
+    @PostMapping(value = "api/defectEdit", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> defectEdit(HttpServletRequest request,
+			@RequestPart("defect") Defect defect,
+			@RequestPart(value = "file", required = false) MultipartFile[] files) {
+		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+//		if (session == null || session.getAttribute("authorityCode") == null) {
+//			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+//			}
+		String UserID = (String) session.getAttribute("id");
+		Map<String, Object> response = new HashMap<>();
 		
+		try {
+			Defect DefectEdit = defectService.getDefectById(defect.getSeq());
+			
+			// devProgress의 필드를 DevProgressEdit에 복사
+		    BeanUtils.copyProperties(defect, DefectEdit);
+		    
+		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
+	        adminService.deleteAttachmentsByNoticeId(defect.getSeq());
+	
+	        // 새로운 파일 업로드 처리
+	        fileservice.handleFileUpload(files, "defect", defect.getSeq());
+	        List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq());
+	        defect.setDefectAttachment(attachments);
+	        
+	        // 업데이트된 공지사항을 저장
+	        defectService.updateDefect(DefectEdit);
+	
+	        // 성공 응답 생성
+	        response.put("status", "success");
+	        response.put("message", "개발 진행 현황이 성공적으로 수정되었습니다.");
+	        response.put("DefectEdit", DefectEdit);
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+	    } catch (IllegalArgumentException e) {
+	        response.put("status", "failure");
+	        response.put("message", "프로그램 개발목록 수정 중에 오류 발생");
+	        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("status", "error");
+	        response.put("message", "프로그램 개발목록 수정 중에 오류 발생");
+	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 		
 	//결함 현황 삭제
 	@DeleteMapping(value= "api/deleteDefect", produces = "application/json")
@@ -570,5 +676,12 @@ public class DefectController {
         }
 
         return null; // 다른 유형의 셀은 null 반환
+    }
+    
+    // String Value값 필수값 유효성 점검
+    private void validateRequiredField(String fieldValue, String fieldName) {
+        if (fieldValue == null || fieldValue.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + "은(는) 필수 입력 항목입니다.");
+        }
     }
 }

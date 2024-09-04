@@ -42,12 +42,24 @@ public class DefectService {
         return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
     }
     
+    //결함 업데이트
+    public void updateDefect(Defect defect) {
+    	defectmapper.updateDefect(defect);
+    }
+    
+    //결함 등록
     public void insertdefect(Defect defect) {
     	defectmapper.insertdefect(defect);
     }
     
+    //결함 삭제
     public void deleteDefect(int seq) {
     	defectmapper.deleteDefect(seq);
+    }
+    
+    //seq에 따른 결함 현황 가져오기
+    public Defect getDefectById(int seq) {
+    	return defectmapper.getDefectById(seq);
     }
     
     //전체 결함 보기

@@ -62,5 +62,14 @@ public interface DevMapper {
     public void insertdevProgress(devProgress devProgress);
     public devProgress getDevById(int Seq);
     public int checkCountProgramId(String programId);
-    public List<devProgress> checkProgramId(); //프로그램 ID 목록 퐉보
+    public List<devProgress> checkProgramId(@Param("programType") String programType,
+											@Param("developer") String developer,
+											@Param("programId") String programId,
+											@Param("programName") String programName,
+											@Param("offset") int offset,
+											@Param("size") int size); //프로그램 ID 목록 퐉보
+    public int checkProgramIdCounts(@Param("programType") String programType,
+	    							@Param("developer") String developer,
+	    							@Param("programId") String programId,
+	    							@Param("programName") String programName);
 }
