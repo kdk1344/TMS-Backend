@@ -63,11 +63,11 @@ public class DefectController {
 	
 	
 	@GetMapping("/defectStatus")
-	public String defectStatusPage(@RequestParam(value = "testCategory", required = false) String testCategory,
+	public String defectStatusPage(@RequestParam(value = "testStage", required = false) String testStage,
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "defectSeq", required = false) String defectSeq,
+            @RequestParam(value = "originalDefectNumber", required = false) String originalDefectNumber,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -77,10 +77,10 @@ public class DefectController {
 	                               Model model) {
 	    
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus, page, size);
 
 	    // 총 결함 수 조회
-	    int totalDefects = defectService.getTotalDefectsCount(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus);
+	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus);
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -98,11 +98,11 @@ public class DefectController {
 	@GetMapping(value="api/defect" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> APIdefectPage(HttpServletRequest request,
-			@RequestParam(value = "testCategory", required = false) String testCategory,
+			@RequestParam(value = "testStage", required = false) String testStage,
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "defectSeq", required = false) String defectSeq,
+            @RequestParam(value = "originalDefectNumber", required = false) String originalDefectNumber,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -127,10 +127,10 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
 			// 결함 목록 조회
-		    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
+		    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus, page, size);
 
 		    // 총 결함 수 조회
-		    int totalDefects = defectService.getTotalDefectsCount(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus);
+		    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus);
 		    
 		    // 총 페이지 수 계산
 		    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -240,7 +240,7 @@ public class DefectController {
     // 조회된 개발 진행 현황 정보를 엑셀로 다운로드
     @GetMapping("/defectdownloadFiltered")
     public void downloadFiltereddefects(
-    		@RequestParam(value = "testCategory", required = false) String testCategory,
+    		@RequestParam(value = "testStage", required = false) String testStage,
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
@@ -261,7 +261,7 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
 
 
     	log.info("확인중"+defects);

@@ -472,11 +472,6 @@ public class devProgressController {
 	        // Date 필드 체크
 	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
 	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
-	        if ((devProgress.getDevtestendDate() != null) && (devProgress.getDevProgAttachment() == null)) {
-	        	devProgress.setDevtestendDate(null);
-	        	throw new IllegalArgumentException
-	        	("단위테스트 증적인 '단위테스트결과서'를 첨부하지 않으면 개발자 단테종료일 등록 값은 미입력 상태로 자동 변경됩니다.");
-	        }
 	        //테스트 완료일이 있을때 테스트 결과가 null 체크
 	        TestEndDateNullCheck(devProgress.getPlTestCmpDate(), devProgress.getPlTestResult(), "PL");
 	        TestEndDateNullCheck(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdTestResult(), "제3자");
@@ -533,14 +528,20 @@ public class devProgressController {
 	        devProgress.setLastModifier(UserID);
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
-        	
-        	log.info(devProgress.getSeq());
-        	
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
             	log.info("첨부중");
                 fileservice.handleFileUpload(files, "devProgress", devProgress.getSeq());
             }
+            List<FileAttachment> attachments = adminService.getAttachments(devProgress.getSeq());
+            devProgress.setDevProgAttachment(attachments);
+            
+            // 개발 완료일과 첨부파일이 같이 입력될때만 입력 가능
+            if (devProgress.getDevtestendDate() != null && (devProgress.getDevProgAttachment() == null || devProgress.getDevProgAttachment().isEmpty())) {
+	            devProgress.setDevtestendDate(null);
+	        	throw new IllegalArgumentException
+	        	("단위테스트 증적인 '단위테스트결과서'를 첨부하지 않으면 개발자 단테종료일 등록 값은 미입력 상태로 자동 변경됩니다.");
+	        }
         	
             response.put("status", "success");
             response.put("message", "개발 진행 현황 정보가 등록되었습니다");
@@ -651,11 +652,6 @@ public class devProgressController {
 	        // Date 필드 체크
 	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
 	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
-	        if ((devProgress.getDevtestendDate() != null) && (devProgress.getDevProgAttachment() == null)) {
-	        	devProgress.setDevtestendDate(null);
-	        	throw new IllegalArgumentException
-	        	("단위테스트 증적인 '단위테스트결과서'를 첨부하지 않으면 개발자 단테종료일 등록 값은 미입력 상태로 자동 변경됩니다.");
-	        }
 	        //테스트 완료일이 있을때 테스트 결과가 null 체크
 	        TestEndDateNullCheck(devProgress.getPlTestCmpDate(), devProgress.getPlTestResult(), "PL");
 	        TestEndDateNullCheck(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdTestResult(), "제3자");
@@ -716,8 +712,15 @@ public class devProgressController {
 
             // 새로운 파일 업로드 처리
             fileservice.handleFileUpload(files, "devProgress", DevProgressEdit.getSeq());
+            List<FileAttachment> attachments = adminService.getAttachments(DevProgressEdit.getSeq());
+            devProgress.setDevProgAttachment(attachments);
             
-            log.info("check "+devProgress);
+            // 개발 완료일과 첨부파일이 같이 입력될때만 입력 가능
+            if (devProgress.getDevtestendDate() != null && (devProgress.getDevProgAttachment() == null || devProgress.getDevProgAttachment().isEmpty())) {
+	            devProgress.setDevtestendDate(null);
+	        	throw new IllegalArgumentException
+	        	("단위테스트 증적인 '단위테스트결과서'를 첨부하지 않으면 개발자 단테종료일 등록 값은 미입력 상태로 자동 변경됩니다.");
+	        }
 
             // 업데이트된 공지사항을 저장
             devservice.updatedevProgress(DevProgressEdit);

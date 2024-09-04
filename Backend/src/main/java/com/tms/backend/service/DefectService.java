@@ -33,13 +33,13 @@ public class DefectService {
 	@Autowired
     private DefectMapper defectmapper;
 
-    public List<Defect> searchDefects(String testCategory, String majorCategory, String subCategory, String defectSeverity, String defectSeq, String defectRegistrar, String defectHandler, String defectStatus, int page, int size) {
+    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, String originalDefectNumber, String defectRegistrar, String defectHandler, String defectStatus, int page, int size) {
         int offset = (page - 1) * size;
-        return defectmapper.searchDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, offset, size);
+        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus, offset, size);
     }
 
-    public int getTotalDefectsCount(String testCategory, String majorCategory, String subCategory, String defectSeverity, String defectSeq, String defectRegistrar, String defectHandler, String defectStatus) {
-        return defectmapper.countDefects(testCategory, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus);
+    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, String originalDefectNumber, String defectRegistrar, String defectHandler, String defectStatus) {
+        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus);
     }
     
     public void deleteDefect(int seq) {

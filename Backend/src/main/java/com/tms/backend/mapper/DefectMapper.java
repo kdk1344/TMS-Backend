@@ -19,21 +19,21 @@ import lombok.extern.log4j.Log4j;
 @Mapper
 public interface DefectMapper {
 
-	public List<Defect> searchDefects(@Param("testCategory") String testCategory, 
-            @Param("taskCategory") String taskCategory, 
-            @Param("taskSubCategory") String taskSubCategory, 
+	public List<Defect> searchDefects(@Param("testStage") String testStage, 
+            @Param("majorCategory") String majorCategory, 
+            @Param("subCategory") String subCategory, 
             @Param("defectSeverity") String defectSeverity,
-            @Param("defectNumber") String defectNumber,
+            @Param("originalDefectNumber") String originalDefectNumber,
             @Param("defectRegistrar") String defectRegistrar,
             @Param("defectHandler") String defectHandler,
             @Param("defectStatus") String defectStatus,
             @Param("offset") int offset, 
             @Param("size") int size);
-	public int countDefects(@Param("testCategory") String testCategory, 
-	  @Param("taskCategory") String taskCategory, 
-	  @Param("taskSubCategory") String taskSubCategory, 
+	public int countDefects(@Param("testStage") String testStage, 
+	  @Param("majorCategory") String majorCategory, 
+	  @Param("subCategory") String subCategory, 
 	  @Param("defectSeverity") String defectSeverity,
-	  @Param("defectNumber") String defectNumber,
+	  @Param("originalDefectNumber") String originalDefectNumber,
 	  @Param("defectRegistrar") String defectRegistrar,
 	  @Param("defectHandler") String defectHandler,
 	  @Param("defectStatus") String defectStatus);

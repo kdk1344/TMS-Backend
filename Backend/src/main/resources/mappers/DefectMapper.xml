@@ -7,20 +7,20 @@
 	    SELECT * 
 	    FROM DEFECT
 	    WHERE 1=1
-	    <if test="testCategory != null and testCategory != ''">
-	        AND TEST_CATEGORY = #{testCategory}
+	    <if test="testStage != null and testStage != ''">
+	        AND TEST_STAGE = #{testStage}
 	    </if>
-	    <if test="taskCategory != null and taskCategory != ''">
-	        AND TASK_CATEGORY = #{taskCategory}
+	    <if test="majorCategory != null and majorCategory != ''">
+	        AND MAJOR_CATEGORY = #{majorCategory}
 	    </if>
-	    <if test="taskSubCategory != null and taskSubCategory != ''">
-	        AND TASK_SUB_CATEGORY = #{taskSubCategory}
+	    <if test="subCategory != null and subCategory != ''">
+	        AND SUB_CATEGORY = #{subCategory}
 	    </if>
 	    <if test="defectSeverity != null and defectSeverity != ''">
 	        AND DEFECT_SEVERITY = #{defectSeverity}
 	    </if>
-	    <if test="defectNumber != null and defectNumber != ''">
-	        AND DEFECT_SEQ = #{defectNumber}
+	    <if test="originalDefectNumber != null and originalDefectNumber != ''">
+	        AND ORIGINAL_DEFECT_NUMBER = #{originalDefectNumber}
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
 	        AND DEFECT_REGISTRAR = #{defectRegistrar}
@@ -39,13 +39,30 @@
 	    SELECT COUNT(*)
 	    FROM DEFECT
 	    WHERE 1=1
-	    <if test="testCategory != null and testCategory != ''">
-	        AND TEST_CATEGORY = #{testCategory}
+	    <if test="testStage != null and testStage != ''">
+	        AND TEST_STAGE = #{testStage}
 	    </if>
-	    <if test="taskCategory != null and taskCategory != ''">
-	        AND TASK_CATEGORY = #{taskCategory}
+	    <if test="majorCategory != null and majorCategory != ''">
+	        AND MAJOR_CATEGORY = #{majorCategory}
 	    </if>
-	    <!-- 나머지 필터 조건들 동일하게 적용 -->
+	    <if test="subCategory != null and subCategory != ''">
+	        AND SUB_CATEGORY = #{subCategory}
+	    </if>
+	    <if test="defectSeverity != null and defectSeverity != ''">
+	        AND DEFECT_SEVERITY = #{defectSeverity}
+	    </if>
+	    <if test="originalDefectNumber != null and originalDefectNumber != ''">
+	        AND ORIGINAL_DEFECT_NUMBER = #{originalDefectNumber}
+	    </if>
+	    <if test="defectRegistrar != null and defectRegistrar != ''">
+	        AND DEFECT_REGISTRAR = #{defectRegistrar}
+	    </if>
+	    <if test="defectHandler != null and defectHandler != ''">
+	        AND DEFECT_HANDLER = #{defectHandler}
+	    </if>
+	    <if test="defectStatus != null and defectStatus != ''">
+	        AND DEFECT_STATUS = #{defectStatus}
+	    </if>
 	</select>
 	
 	<delete id="deleteDefect" parameterType="int">

@@ -210,6 +210,8 @@ public class NoticeController {
 
         // 货肺款 颇老 诀肺靛 贸府
         fileservice.handleFileUpload(files, boardType, existingNotice.getSeq());
+        List<FileAttachment> attachments = adminService.getAttachments(existingNotice.getSeq());
+        existingNotice.setAttachments(attachments);
         
         log.info("check "+existingNotice);
 
