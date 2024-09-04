@@ -121,27 +121,7 @@
 	            <th class="defect-status">처리상태</th>
 	        </tr>
 	    </thead>
-	    <tbody>
-	        <c:forEach var="defect" items="${defects}">
-	            <tr>
-	                <td><input type="checkbox" /></td>
-	                <td><a href="/tms/defectDetail?seq=${defect.seq}">${defect.seq}</a></td>
-	                <td>${defect.subCategory}</td>
-	                <td>${defect.severity}</td>
-	                <td>${defect.testId}</td>
-	                <td>${defect.programName}</td>
-	                <td>${defect.registrar}</td>
-	                <td><fmt:formatDate value="${defect.regDate}" pattern="yyyy-MM-dd" /></td>
-	                <td>${defect.handler}</td>
-	                <td><fmt:formatDate value="${defect.scheduledDate}" pattern="yyyy-MM-dd" /></td>
-	                <td><fmt:formatDate value="${defect.completionDate}" pattern="yyyy-MM-dd" /></td>
-	                <td>${defect.pl}</td>
-	                <td><fmt:formatDate value="${defect.plConfirmDate}" pattern="yyyy-MM-dd" /></td>
-	                <td><fmt:formatDate value="${defect.regConfirmDate}" pattern="yyyy-MM-dd" /></td>
-	                <td>${defect.status}</td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
+
 	  </table>
 
       <!-- 페이지네이션 -->

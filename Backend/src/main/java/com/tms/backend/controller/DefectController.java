@@ -76,33 +76,8 @@ public class DefectController {
 	
 	
 	@GetMapping("/defectStatus")
-	public String defectStatusPage(@RequestParam(value = "testStage", required = false) String testStage,
-            @RequestParam(value = "majorCategory", required = false) String majorCategory,
-            @RequestParam(value = "subCategory", required = false) String subCategory,
-            @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "seq", required = false) int seq,
-            @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
-            @RequestParam(value = "defectHandler", required = false) String defectHandler,
-            @RequestParam(value = "Pl", required = false) String pl,
-            @RequestParam(value = "defectStatus", required = false) String defectStatus,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-	                               Model model) {
+	public String defectStatusPage() {
 	    
-		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, page, size);
-
-	    // 총 결함 수 조회
-	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
-	    
-	    // 총 페이지 수 계산
-	    int totalPages = (int) Math.ceil((double) totalDefects / size);
-
-	    // 모델에 데이터 추가
-	    model.addAttribute("defects", defects);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("totalDefects", totalDefects);
 
 	    return "defectStatus"; // defectStatus.jsp로 이동
 	}
@@ -115,7 +90,7 @@ public class DefectController {
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "seq", required = false) int seq,
+            @RequestParam(value = "seq", required = false) Integer seq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -329,7 +304,7 @@ public class DefectController {
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "seq", required = false) int seq,
+            @RequestParam(value = "seq", required = false) Integer seq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
