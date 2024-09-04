@@ -124,7 +124,7 @@
         <div class="filter-container">
           <div class="filter-container-row">
             <div class="form-group">
-              <label for="majorCategoryForFilter">업무 대분류<span class="required-indicator">*</span></label>
+              <label for="majorCategoryForFilter">업무 대분류</label>
               <select id="majorCategoryForFilter" name="majorCategory">
                 <option value="" selected>전체</option>
               </select>

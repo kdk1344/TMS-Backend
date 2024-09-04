@@ -97,8 +97,8 @@
               </div>
 
               <div class="form-group">
-                <label for="difficulty">난이도</label>
-                <select id="difficulty" name="difficulty">
+                <label for="difficulty">난이도<span class="required-indicator">*</span></label>
+                <select id="difficulty" name="difficulty" required>
                   <option value="" disabled selected>난이도를 선택해 주세요.</option>
                 </select>
               </div>
