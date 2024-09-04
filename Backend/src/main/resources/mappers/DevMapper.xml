@@ -238,6 +238,12 @@
         FROM dev_progress
         where PROGRAM_ID = #{programId}
 	</select>
+	
+	<!--  프로그램 ID 목록 확인 -->
+	<select id="checkProgramId" resultType="String">
+		SELECT PROGRAM_ID
+		FROM dev_progress
+	</select>
 
 	
 </mapper>

@@ -700,7 +700,7 @@ public class devProgressController {
 	        }
 	        //프로그램 ID 중복체크
 	        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());
-	        if(IdCheck) {
+	        if(!IdCheck) {
 	        	response.put("status", "failure");
 	            response.put("message", "프로그램 ID가 중복되었습니다.");
 	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

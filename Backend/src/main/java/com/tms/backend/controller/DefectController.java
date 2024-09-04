@@ -213,6 +213,29 @@ public class DefectController {
         return ResponseEntity.ok(response);
     }
 	
+	//프로그램 ID 확인
+	@GetMapping(value = "api/programId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getprogramId() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<User> defectStatus= adminService.findAuthorityCode(15);
+
+        // 응답 데이터 생성
+        if (defectStatus != null && !defectStatus.isEmpty()) {
+            response.put("status", "success");
+            response.put("defectStatus", defectStatus);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "결함 처리 상태 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	
+	checkProgramId
+	
 	//개발 진행 현황 수정
     @PostMapping(value = "api/defectReg", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -231,13 +254,14 @@ public class DefectController {
 		defect.setDefectStatus(adminService.getStageCCodes("15", defect.getDefectStatus()));
 		
 		try {
-			// 필수 항목 체크
+			// 테스트 ID 비어있을 경우 프로그램 ID 입력
 			if(defect.getTestId() == null || defect.getTestId().trim().isEmpty()) {
 				defect.setTestId(defect.getProgramId());
 			}
+			//최초 결함 등록자 로그인 ID 세팅
+			defect.setDefectRegistrar(UserID);
 			
-			
-	        //최초 등록자, 변경자 로그인 ID 세팅
+	        //결함 정보 등록
         	defectService.insertdefect(defect);
         	
         	// 새로운 파일 업로드 처리

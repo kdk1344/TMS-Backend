@@ -244,6 +244,7 @@
         WHERE CODE = #{parentCode} AND Parent_Code = '00'
     </select>
    
+   <!-- 특정 조건의  -->
     <select id="getTotalCommonCodeCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM common_codes

@@ -83,6 +83,11 @@ public class DevService {
     public boolean checkCountProgramId(String programId) {
     	return devMapper.checkCountProgramId(programId) == 0;
     }
+    
+    //프로그램 아이디 목록 확인
+    public void checkProgramId() {
+    	devMapper.checkProgramId();
+    }
 	
 	
 	
