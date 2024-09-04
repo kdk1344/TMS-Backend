@@ -94,12 +94,16 @@ public class CodeController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             response.put("status", "failure");
-            response.put("message", e.getMessage());
+            response.put("message", "공통 코드 등록중에 오류가 발생했습니다");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (DuplicateKeyException e) {
+            response.put("status", "failure");
+            response.put("message", "공통 코드가 중복되었습니다.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "Error occurred while registering common code.");
+            response.put("message", "공통 코드 등록중에 오류가 발생했습니다");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -119,18 +123,18 @@ public class CodeController {
             boolean success = adminService.updateCommonCode(commonCode);  // 공통코드 수정
             if (success) {
                 response.put("status", "success");
-                response.put("message", "CommonCode updated successfully!");
+                response.put("message", "공통 코드가 성공적으로 등록됐습니다");
                 response.put("commonCode", commonCode);  // 업데이트된 공통코드 정보 반환
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.put("status", "failure");
-                response.put("message", "Error updating common code.");
+                response.put("message", "공통 코드 등록 중에 오류가 발생했습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "Error occurred while updating common code.");
+            response.put("message", "공통 코드 등록 중에 오류가 발생했습니다.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -216,7 +220,7 @@ public class CodeController {
             response.put("parentCodes", parentCodes);
         } else {
             response.put("status", "failure");
-            response.put("message", "No parent codes found.");
+            response.put("message", "상위 코드를 찾을 수 없습니다.");
         }
 
         // 조회된 결과를 반환
@@ -383,7 +387,7 @@ public class CodeController {
         } catch (DuplicateKeyException e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "중복된 공통 코드가 발견되었습니다.");
+            response.put("message", "공통 코드가 중복되었습니다.");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (IOException e) {
             e.printStackTrace();
@@ -465,12 +469,16 @@ public class CodeController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             response.put("status", "failure");
-            response.put("message", e.getMessage());
+            response.put("message", "분류 코드를 등록중에 오류가 발생했습니다.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (DuplicateKeyException e) {
+            response.put("status", "failure");
+            response.put("message", "분류 코드가 중복되었습니다.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "Error occurred while registering category code.");
+            response.put("message", "분류 코드를 등록중에 오류가 발생했습니다.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -503,18 +511,18 @@ public class CodeController {
             boolean success = adminService.updateCategoryCode(categoryCode);  // categoryCode 수정
             if (success) {
                 response.put("status", "success");
-                response.put("message", "CategoryCode updated successfully!");
+                response.put("message", "분류 코드가 성공적으로 수정됐습니다");
                 response.put("categoryCode", categoryCode);  // 업데이트된 categoryCode 정보 반환
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.put("status", "failure");
-                response.put("message", "Error updating category code.");
+                response.put("message", "분류 코드 수정에 실패했습니다");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "Error occurred while updating category code.");
+            response.put("message", "분류 코드 수정중에 오류가 발생했습니다.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -580,7 +588,7 @@ public class CodeController {
             response.put("parentCodes", parentCodes);
         } else {
             response.put("status", "failure");
-            response.put("message", "No parent codes found.");
+            response.put("message", "상위코드가 없습니다");
         }
 
         // 조회된 결과를 반환
@@ -723,7 +731,6 @@ public class CodeController {
 	                        	categoryCodes.add(categoryCode);
 	                        }
 	                        else {
-	                        	log.info("중복이야!");
 	                        	}
                         }
                     } catch (Exception e) {
@@ -744,7 +751,7 @@ public class CodeController {
         } catch (DuplicateKeyException e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "중복된 카테고리 코드가 발견되었습니다.");
+            response.put("message", "분류 코드가 중복되었습니다.");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (IOException e) {
             e.printStackTrace();
