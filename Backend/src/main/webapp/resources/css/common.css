@@ -441,6 +441,10 @@ button:focus {
   color: black;
 }
 
+.file-link {
+  cursor: pointer;
+}
+
 .file-preview-container {
   width: 100%;
 }

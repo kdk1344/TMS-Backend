@@ -8,6 +8,7 @@ import {
   getProgramDetailTypes,
   getLevels,
   getProgramStatusList,
+  getTestResultList,
   addFiles,
   updateFilePreview,
   showSpinner,
@@ -24,6 +25,10 @@ const SELECT_ID = {
   PRIORITY: "priority",
   DIFFICULTY: "difficulty",
   PROGRAM_STATUS: "programStatus",
+  PL_TEST_RESULT: "plTestResult",
+  THIRD_PARTY_TEST_RESULT: "thirdTestResult",
+  IT_TEST_RESULT: "itTestResult",
+  BUSI_TEST_RESULT: "busiTestResult",
   DEV_STATUS: "devStatus",
 };
 
@@ -76,14 +81,21 @@ function setupEventListeners() {
 /**  등록 폼 초기화 함수 */
 async function initializeRegisterForm() {
   // 모든 비동기 호출을 병렬로 실행
-  const [{ majorCategoryCodes }, { programTypes }, { programDetailTypes }, { levels }, { programStatusList }] =
-    await Promise.all([
-      getMajorCategoryCodes(),
-      getProgramTypes(),
-      getProgramDetailTypes(),
-      getLevels(),
-      getProgramStatusList(),
-    ]);
+  const [
+    { majorCategoryCodes },
+    { programTypes },
+    { programDetailTypes },
+    { levels },
+    { programStatusList },
+    { testResultList },
+  ] = await Promise.all([
+    getMajorCategoryCodes(),
+    getProgramTypes(),
+    getProgramDetailTypes(),
+    getLevels(),
+    getProgramStatusList(),
+    getTestResultList(),
+  ]);
 
   const SELECT_DATA = {
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
@@ -92,6 +104,10 @@ async function initializeRegisterForm() {
     [SELECT_ID.PRIORITY]: levels,
     [SELECT_ID.DIFFICULTY]: levels,
     [SELECT_ID.PROGRAM_STATUS]: programStatusList,
+    [SELECT_ID.PL_TEST_RESULT]: testResultList,
+    [SELECT_ID.THIRD_PARTY_TEST_RESULT]: testResultList,
+    [SELECT_ID.IT_TEST_RESULT]: testResultList,
+    [SELECT_ID.BUSI_TEST_RESULT]: testResultList,
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
