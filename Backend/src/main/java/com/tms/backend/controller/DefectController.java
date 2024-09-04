@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -25,6 +26,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -38,13 +40,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.DefectService;
+import com.tms.backend.service.FileService;
 import com.tms.backend.vo.Defect;
+import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.devProgress;
 
@@ -61,13 +66,16 @@ public class DefectController {
 	@Autowired
 	private AdminService adminService;
 	
+	@Autowired
+	private FileService fileservice;
+	
 	
 	@GetMapping("/defectStatus")
 	public String defectStatusPage(@RequestParam(value = "testStage", required = false) String testStage,
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "originalDefectNumber", required = false) String originalDefectNumber,
+            @RequestParam(value = "seq", required = false) int seq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -77,10 +85,10 @@ public class DefectController {
 	                               Model model) {
 	    
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, page, size);
 
 	    // 총 결함 수 조회
-	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus);
+	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -102,7 +110,7 @@ public class DefectController {
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "originalDefectNumber", required = false) String originalDefectNumber,
+            @RequestParam(value = "seq", required = false) int seq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -127,10 +135,10 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
 			// 결함 목록 조회
-		    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus, page, size);
+		    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, page, size);
 
 		    // 총 결함 수 조회
-		    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus);
+		    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
 		    
 		    // 총 페이지 수 계산
 		    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -204,16 +212,67 @@ public class DefectController {
         // 조회된 결과를 반환
         return ResponseEntity.ok(response);
     }
+	
+	//개발 진행 현황 수정
+    @PostMapping(value = "api/defectReg", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> defectReg(HttpServletRequest request,
+			@RequestPart("defect") Defect defect,
+			@RequestPart(value = "file", required = false) MultipartFile[] files) {
+		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		String UserID = (String) session.getAttribute("id");
+		Map<String, Object> response = new HashMap<>();
+		
+		//코드로 들어오는 데이터를 코드명으로 변경
+		defect.setMajorCategory(adminService.getStageCodes("대", defect.getMajorCategory()));
+		defect.setSubCategory(adminService.getStageCodes("중", defect.getSubCategory()));
+		defect.setDefectType(adminService.getStageCCodes("13", defect.getDefectType()));
+		defect.setDefectSeverity(adminService.getStageCCodes("14", defect.getDefectSeverity()));
+		defect.setDefectStatus(adminService.getStageCCodes("15", defect.getDefectStatus()));
+		
+		try {
+			// 필수 항목 체크
+			if(defect.getTestId() == null || defect.getTestId().trim().isEmpty()) {
+				defect.setTestId(defect.getProgramId());
+			}
+			
+			
+	        //최초 등록자, 변경자 로그인 ID 세팅
+        	defectService.insertdefect(defect);
+        	
+        	// 새로운 파일 업로드 처리
+            if (files != null && files.length > 0) {
+            	log.info("첨부중");
+                fileservice.handleFileUpload(files, "devProgress", defect.getSeq());
+            }
+            List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq());
+            defect.setDefectAttachment(attachments);
+        	
+            response.put("status", "success");
+            response.put("message", "결함 정보가 등록되었습니다");
+            response.put("defect", defect);  // 등록된 개발 현황 진행 정보 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            response.put("status", "failure");
+            response.put("message", e.getMessage());  // 예외 메시지를 response에 포함시킴
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "결함 정보 등록 중에 오류가 발생했습니다.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
 		
 		
 		
 	//결함 현황 삭제
 	@DeleteMapping(value= "api/deleteDefect", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> deleteDefect(@RequestBody List<Integer> defectSeqs) {
+    public ResponseEntity<Map<String, Object>> deleteDefect(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
         
-        for (int seq : defectSeqs) {
+        for (int seq : seqs) {
             defectService.deleteDefect(seq);
         }
         
@@ -225,7 +284,7 @@ public class DefectController {
 	// 전체 개발 진행 현황 정보를 엑셀로 다운로드
     @GetMapping("/defectdownloadAll")
     public void downloadAlldefect(HttpServletResponse response) throws IOException {
-    	List<Defect> defects = defectService.searchDefects(null, null, null, null, null, null, null, null, 1, 15);;
+    	List<Defect> defects = defectService.searchAllDefects();
         log.info(defects);
         defectexportToExcel(response, defects, "all_defects_codes.xlsx");
     }
@@ -233,7 +292,7 @@ public class DefectController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/defectsexampleexcel")
     public void downloadExdefects(HttpServletResponse response) throws IOException {
-    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, null, null, null, null, 1, 15);;    	
+    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, 1, 15);  	
     	defectexportToExcel(response, defects, "example.xlsx");
     }
     
@@ -244,7 +303,7 @@ public class DefectController {
             @RequestParam(value = "majorCategory", required = false) String majorCategory,
             @RequestParam(value = "subCategory", required = false) String subCategory,
             @RequestParam(value = "defectSeverity", required = false) String defectSeverity,
-            @RequestParam(value = "defectSeq", required = false) String defectSeq,
+            @RequestParam(value = "seq", required = false) int seq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
@@ -261,7 +320,7 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, defectSeq, defectRegistrar, defectHandler, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, page, size);
 
 
     	log.info("확인중"+defects);
@@ -280,7 +339,7 @@ public class DefectController {
     		}
         // 헤더 이름 배열
         String[] headers = {
-        	    "DEFECT_SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
+        	    "SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
         	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
         	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_REG_DATE", 
         	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
@@ -293,7 +352,7 @@ public class DefectController {
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
         if (!check.equals("")) {
-        	// "defect_SEQ"를 무시하고 다음 헤더부터 시작
+        	// "SEQ"를 무시하고 다음 헤더부터 시작
         	log.info("check"+check);
             for (int i = 1; i < headers.length; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
@@ -302,7 +361,7 @@ public class DefectController {
             headerRow.createCell(25).setCellValue("LAST_MODIFIER");
         }
         else {
-        	// "defect_SEQ"를 포함하여 모든 헤더 생성
+        	// "SEQ"를 포함하여 모든 헤더 생성
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
@@ -314,7 +373,7 @@ public class DefectController {
         
         // 헤더와 데이터 매핑
         String[] fields = {
-        	    "getDefectSeq", "getTestStage", "getMajorCategory", "getSubCategory", 
+        	    "getseq", "getTestStage", "getMajorCategory", "getSubCategory", 
         	    "getTestId", "getProgramType", "getProgramId", "getProgramName", 
         	    "getDefectType", "getDefectSeverity", "getDefectDescription", 
         	    "getDefectRegistrar", "getDefectRegDate", "getDefectHandler", 
@@ -366,7 +425,7 @@ public class DefectController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("DEFECT_SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
+            List<String> expectedHeaders = Arrays.asList("SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
             	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
             	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_REG_DATE", 
             	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
@@ -384,7 +443,7 @@ public class DefectController {
             
             // 필드명 배열과 대응되는 셀 타입 배열
             String[] fieldNames = {
-            	    "defectSeq", "testStage", "majorCategory", "subCategory", 
+            	    "seq", "testStage", "majorCategory", "subCategory", 
             	    "testId", "programType", "programId", "programName", 
             	    "defectType", "defectSeverity", "defectDescription", 
             	    "defectRegistrar", "defectRegDate", "defectHandler", 

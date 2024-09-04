@@ -536,7 +536,7 @@ public class devProgressController {
             List<FileAttachment> attachments = adminService.getAttachments(devProgress.getSeq());
             devProgress.setDevProgAttachment(attachments);
             
-            // 개발 완료일과 첨부파일이 같이 입력될때만 입력 가능
+            // 개발자 단위테스트 완료일은 첨부파일이 같이 입력될때만 입력 가능
             if (devProgress.getDevtestendDate() != null && (devProgress.getDevProgAttachment() == null || devProgress.getDevProgAttachment().isEmpty())) {
 	            devProgress.setDevtestendDate(null);
 	        	throw new IllegalArgumentException
@@ -622,6 +622,8 @@ public class devProgressController {
 		String UserID = (String) session.getAttribute("id");
 		Map<String, Object> response = new HashMap<>();
 		
+		log.info("devProgress: " + devProgress);
+		
 		//코드로 들어오는 데이터를 코드명으로 변경
 		devProgress.setMajorCategory(adminService.getStageCodes("대", devProgress.getMajorCategory()));
 		devProgress.setSubCategory(adminService.getStageCodes("중", devProgress.getSubCategory()));
@@ -703,7 +705,10 @@ public class devProgressController {
 	            response.put("message", "프로그램 ID가 중복되었습니다.");
 	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	        }
+	        log.info("seq값 확인"+devProgress.getSeq());
 	        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq());
+	        devProgress.setInitRegistrar(DevProgressEdit.getInitRegistrar());
+	        
         	// devProgress의 필드를 DevProgressEdit에 복사
     	    BeanUtils.copyProperties(devProgress, DevProgressEdit);
     	    
@@ -715,7 +720,7 @@ public class devProgressController {
             List<FileAttachment> attachments = adminService.getAttachments(DevProgressEdit.getSeq());
             devProgress.setDevProgAttachment(attachments);
             
-            // 개발 완료일과 첨부파일이 같이 입력될때만 입력 가능
+            // 개발자 단위테스트 완료일은 첨부파일이 같이 입력될때만 입력 가능
             if (devProgress.getDevtestendDate() != null && (devProgress.getDevProgAttachment() == null || devProgress.getDevProgAttachment().isEmpty())) {
 	            devProgress.setDevtestendDate(null);
 	        	throw new IllegalArgumentException

@@ -33,19 +33,29 @@ public class DefectService {
 	@Autowired
     private DefectMapper defectmapper;
 
-    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, String originalDefectNumber, String defectRegistrar, String defectHandler, String defectStatus, int page, int size) {
+    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, int seq, String defectRegistrar, String defectHandler, String defectStatus, int page, int size) {
         int offset = (page - 1) * size;
-        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus, offset, size);
+        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, offset, size);
     }
 
-    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, String originalDefectNumber, String defectRegistrar, String defectHandler, String defectStatus) {
-        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, originalDefectNumber, defectRegistrar, defectHandler, defectStatus);
+    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, int seq, String defectRegistrar, String defectHandler, String defectStatus) {
+        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
+    }
+    
+    public void insertdefect(Defect defect) {
+    	defectmapper.insertdefect(defect);
     }
     
     public void deleteDefect(int seq) {
     	defectmapper.deleteDefect(seq);
     }
     
+    //전체 결함 보기
+    public List<Defect> searchAllDefects() {
+    	return defectmapper.searchAllDefects();
+    }
+    
+    // 결함 여러개 등록
     public void saveAllDefect(List<Defect> defect) {
         for (Defect def : defect) {
             defectmapper.insertdefect(def);

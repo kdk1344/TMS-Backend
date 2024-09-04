@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Data
 public class Defect {
-    private int defectSeq;                       // 결함SEQ
+    private Integer seq;                       // 결함SEQ
     private String testStage;                    // 테스트단계
     private String majorCategory;                // 업무대분류
     private String subCategory;                  // 업무중분류
@@ -40,6 +40,7 @@ public class Defect {
     private String lastModifier;                 // 최종 변경자
     private String defectAttachments;            // 결함 첨부파일
     private String defectFixAttachments;         // 결함 조치 첨부파일
+    private List<FileAttachment> defectAttachment;    // 결함증적 첨부파일
 
     
 }

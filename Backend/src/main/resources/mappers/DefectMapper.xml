@@ -65,11 +65,16 @@
 	    </if>
 	</select>
 	
+	<select id="searchAllDefects" resultType="Defect">
+		SELECT * FROM DEFECT
+	</select>
+	
 	<delete id="deleteDefect" parameterType="int">
 		DELETE FROM DEFECT WHERE DEFECT_SEQ = #{seq}
 	</delete>
 	
-	<insert id="insertdefect" parameterType="Defect">
+	<!-- 결함 입력 xml -->
+	<insert id="insertdefect" parameterType="Defect" useGeneratedKeys="true" keyProperty="seq">
 		INSERT INTO DEFECT (
 	    TEST_STAGE, MAJOR_CATEGORY, SUB_CATEGORY, 
 	    TEST_ID, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, 
@@ -92,6 +97,39 @@
 	    #{defectStatus}, #{initCreater}, #{lastModifier}
     )
 	</insert>
+	
+	<!-- 결함 수정 xml -->
+	<update id="updatedefect" parameterType="Defect">
+	    UPDATE DEFECT
+	    SET 
+	        TEST_STAGE = #{testStage}, 
+	        MAJOR_CATEGORY = #{majorCategory}, 
+	        SUB_CATEGORY = #{subCategory}, 
+	        TEST_ID = #{testId}, 
+	        PROGRAM_TYPE = #{programType}, 
+	        PROGRAM_ID = #{programId}, 
+	        PROGRAM_NAME = #{programName}, 
+	        DEFECT_TYPE = #{defectType}, 
+	        DEFECT_SEVERITY = #{defectSeverity}, 
+	        DEFECT_DESCRIPTION = #{defectDescription}, 
+	        DEFECT_REGISTRAR = #{defectRegistrar}, 
+	        DEFECT_REG_DATE = #{defectRegDate}, 
+	        DEFECT_HANDLER = #{defectHandler}, 
+	        DEFECT_SCHEDULED_DATE = #{defectScheduledDate}, 
+	        DEFECT_COMPLETION_DATE = #{defectCompletionDate}, 
+	        DEFECT_RESOLUTION_DETAILS = #{defectResolutionDetails}, 
+	        PL = #{pl}, 
+	        PL_CONFIRM_DATE = #{plConfirmDate}, 
+	        ORIGINAL_DEFECT_NUMBER = #{originalDefectNumber}, 
+	        PL_DEFECT_JUDGE_CLASS = #{plDefectJudgeClass}, 
+	        PL_COMMENTS = #{plComments}, 
+	        DEFECT_REG_CONFIRM_DATE = #{defectRegConfirmDate}, 
+	        DEFECT_REGISTRAR_COMMENT = #{defectRegistrarComment}, 
+	        DEFECT_STATUS = #{defectStatus}, 
+	        INIT_CREATER = #{initCreater}, 
+	        LAST_MODIFIER = #{lastModifier}
+	    WHERE SEQ = #{seq}
+	</update>
 	
 	<select id="countDefect" parameterType="String" resultType="int">
 	    SELECT COUNT(*)

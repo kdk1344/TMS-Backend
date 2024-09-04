@@ -192,7 +192,7 @@ public class NoticeController {
 //        }
 
         Map<String, Object> response = new HashMap<>();
-
+        
         // 공지사항 존재 여부 확인
         Notice existingNotice = adminService.getNoticeById(notice.getSeq());
         if (existingNotice == null) {
