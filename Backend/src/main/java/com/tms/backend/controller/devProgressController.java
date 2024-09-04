@@ -61,6 +61,7 @@ import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.PageDTO;
 import com.tms.backend.vo.User;
@@ -580,18 +581,28 @@ public class devProgressController {
 		
 		Map<String, Integer> defectCounts = new HashMap<>();
 		defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
-		defectCounts.put("thirdPartyDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "thirdParty"));
-		defectCounts.put("itDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "it"));
-		defectCounts.put("busiDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "busi"));
-		defectCounts.put("thirdPartySolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "thirdParty"));
-		defectCounts.put("itSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "it"));
-		defectCounts.put("busiSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "busi"));
+		String[] types = { "thirdParty", "it", "busi" };
+		for (String type : types) {
+		    defectCounts.put(type + "DefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), type));
+		    defectCounts.put(type + "SolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), type));
+		}
+		List<FileAttachment> attachments = adminService.getAttachments(seq);
+		DevProgressEdit.setDevProgAttachment(attachments);
+
+//		defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
+//		defectCounts.put("thirdPartyDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "thirdParty"));
+//		defectCounts.put("itDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "it"));
+//		defectCounts.put("busiDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "busi"));
+//		defectCounts.put("thirdPartySolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "thirdParty"));
+//		defectCounts.put("itSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "it"));
+//		defectCounts.put("busiSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "busi"));
 
 	    // 응답 생성
 		response.put("status", "success");
         response.put("message", "개발 진행 현황 정보 전달.");
 	    response.put("devProgress", DevProgressEdit);
 	    response.put("defectCounts", defectCounts);
+	    response.put("attachments", attachments);
 	    
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
