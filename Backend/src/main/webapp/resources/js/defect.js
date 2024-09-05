@@ -182,7 +182,7 @@ async function renderDefect(
         <td class="defect-registrar">${defectRegistrar}</td>
         <td class="defect-discovery-date">${convertDate(defectDiscoveryDate)}</td>
         <td class="defect-severity">${defectSeverity}</td>
-        <td class="defect-description">${defectDescription}</th>
+        <td class="defect-description ellipsis">${defectDescription}</th>
         <td class="defect-handler">${defectHandler}</td>
         <td class="defect-scheduled-date">${convertDate(defectScheduledDate)}</td>
         <td class="defect-completion-date">${convertDate(defectCompletionDate)}</td>

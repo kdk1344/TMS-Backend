@@ -136,3 +136,11 @@ input[type="radio"] {
 .defect-number {
   width: 104px;
 }
+
+td.defect-description {
+  text-align: left;
+}
+
+.defect-description {
+  max-width: 300px;
+}
