@@ -20,16 +20,16 @@
 	        AND DEFECT_SEVERITY = #{defectSeverity}
 	    </if>
 	    <if test="seq != null and seq != ''">
-	        AND SEQ = #{seq}
+	        AND SEQ LIKE CONCAT('%', #{seq}, '%')
 	    </if>
 	    <if test="pl != null and pl != ''">
-	        AND PL = #{pl}
+	        AND PL LIKE CONCAT('%', #{pl}, '%')
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
-	        AND DEFECT_REGISTRAR = #{defectRegistrar}
+	        AND DEFECT_REGISTRAR LIKE CONCAT('%', #{defectRegistrar}, '%')
 	    </if>
 	    <if test="defectHandler != null and defectHandler != ''">
-	        AND DEFECT_HANDLER = #{defectHandler}
+	        AND DEFECT_HANDLER LIKE CONCAT('%', #{defectHandler}, '%')
 	    </if>
 	    <if test="defectStatus != null and defectStatus != ''">
 	        AND DEFECT_STATUS = #{defectStatus}
@@ -58,13 +58,13 @@
 	        AND SEQ = #{seq}
 	    </if>
 	    <if test="pl != null and pl != ''">
-	        AND PL = #{pl}
+	        AND PL LIKE CONCAT('%', #{pl}, '%')}
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
-	        AND DEFECT_REGISTRAR = #{defectRegistrar}
+	        AND DEFECT_REGISTRAR LIKE CONCAT('%', #{defectRegistrar}, '%')
 	    </if>
 	    <if test="defectHandler != null and defectHandler != ''">
-	        AND DEFECT_HANDLER = #{defectHandler}
+	        AND DEFECT_HANDLER LIKE CONCAT('%', #{defectHandler}, '%')
 	    </if>
 	    <if test="defectStatus != null and defectStatus != ''">
 	        AND DEFECT_STATUS = #{defectStatus}

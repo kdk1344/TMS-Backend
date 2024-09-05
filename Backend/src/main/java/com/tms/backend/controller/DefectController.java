@@ -94,7 +94,7 @@ public class DefectController {
             @RequestParam(value = "Pl", required = false) String pl,
             @RequestParam(value = "defectStatus", required = false) String defectStatus,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "size", defaultValue = "15") int size) {
 		
 //		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
@@ -103,6 +103,8 @@ public class DefectController {
 //			}
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		log.info(defectRegistrar);
 
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
@@ -110,6 +112,8 @@ public class DefectController {
 			defectSeverity = adminService.getStageCCodes("14", defectSeverity);}
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
+		if (testStage != null && !testStage.isEmpty()) {
+			testStage = adminService.getStageCCodes("11", defectSeverity);}
 		
 		log.info(defectStatus + "실행중");
 		
@@ -424,7 +428,7 @@ public class DefectController {
     public ResponseEntity<Map<String, Object>> deleteDefect(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
         
-        for (int seq : seqs) {
+        for (Integer seq : seqs) {
             defectService.deleteDefect(seq);
         }
         
@@ -470,6 +474,8 @@ public class DefectController {
 			defectSeverity = adminService.getStageCCodes("14", defectSeverity);}
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
+		if (testStage != null && !testStage.isEmpty()) {
+			testStage = adminService.getStageCCodes("11", defectSeverity);}
 		
 		// 결함 목록 조회
 	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, page, size);

@@ -55,12 +55,12 @@ public class DefectService {
     }
     
     //결함 삭제
-    public void deleteDefect(int seq) {
+    public void deleteDefect(Integer seq) {
     	defectmapper.deleteDefect(seq);
     }
     
     //seq에 따른 결함 현황 가져오기
-    public Defect getDefectById(int seq) {
+    public Defect getDefectById(Integer seq) {
     	return defectmapper.getDefectById(seq);
     }
     

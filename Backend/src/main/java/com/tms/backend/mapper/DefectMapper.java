@@ -39,10 +39,10 @@ public interface DefectMapper {
 	  @Param("defectHandler") String defectHandler,
 	  @Param("pl") String pl,
 	  @Param("defectStatus") String defectStatus);
-	public void deleteDefect(int seq);
+	public void deleteDefect(Integer seq);
 	public void insertdefect(Defect def);
 	public void updateDefect(Defect def);
-	public Defect getDefectById(int seq); 
+	public Defect getDefectById(Integer seq); 
 	public List<Defect> searchAllDefects();
 	public int countDefect(@Param("programId") String programId, @Param("managerType") String managerType);
 	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType);
