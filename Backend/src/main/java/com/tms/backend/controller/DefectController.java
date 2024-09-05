@@ -103,8 +103,6 @@ public class DefectController {
 //			}
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		log.info(defectRegistrar);
 
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
@@ -114,6 +112,8 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
 			testStage = adminService.getStageCCodes("11", defectSeverity);}
+		
+		log.info(testStage);
 		
 		log.info(defectStatus + "실행중");
 		
@@ -512,7 +512,7 @@ public class DefectController {
         if (!check.equals("")) {
         	// "SEQ"를 무시하고 다음 헤더부터 시작
         	log.info("check"+check);
-            for (int i = 1; i < headers.length; i++) {
+            for (int i = 1; i < headers.length-4; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
             headerRow.createCell(24).setCellValue("INIT_CREATER");
@@ -583,14 +583,13 @@ public class DefectController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
+            List<String> expectedHeaders = Arrays.asList("TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
             	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
             	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_REG_DATE", 
             	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
             	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
             	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
-            	    "DEFECT_REGISTRAR_COMMENT", "DEFECT_STATUS", "INIT_CREATED_DATE", 
-            	    "INIT_CREATER", "LAST_MODIFIED_DATE", "LAST_MODIFIER");
+            	    "DEFECT_REGISTRAR_COMMENT", "DEFECT_STATUS", "INIT_CREATER", "LAST_MODIFIER");
             if (!isHeaderValid5(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -601,7 +600,7 @@ public class DefectController {
             
             // 필드명 배열과 대응되는 셀 타입 배열
             String[] fieldNames = {
-            	    "seq", "testStage", "majorCategory", "subCategory", 
+            	    "testStage", "majorCategory", "subCategory", 
             	    "testId", "programType", "programId", "programName", 
             	    "defectType", "defectSeverity", "defectDescription", 
             	    "defectRegistrar", "defectRegDate", "defectHandler", 
@@ -609,8 +608,7 @@ public class DefectController {
             	    "defectResolutionDetails", "pl", "plConfirmDate", 
             	    "originalDefectNumber", "plDefectJudgeClass", "plComments", 
             	    "defectRegConfirmDate", "defectRegistrarComment", 
-            	    "defectStatus", "initCreatedDate", "initCreater", 
-            	    "lastModifiedDate", "lastModifier"
+            	    "defectStatus", "initCreater", "lastModifier"
             	};
 
             // 첫 번째 행은 헤더이므로 건너뜁니다.
