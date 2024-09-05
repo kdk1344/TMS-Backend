@@ -669,3 +669,7 @@ button:focus {
 .custom-scroll::-webkit-scrollbar-button {
   display: none; /* 스크롤바 버튼 숨기기 */
 }
+
+.hidden-scroll::-webkit-scrollbar {
+  display: none;
+}
