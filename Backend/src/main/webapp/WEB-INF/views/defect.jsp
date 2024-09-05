@@ -176,7 +176,7 @@
               <th class="program-id">프로그램ID</th>
               <th class="program-name">프로그램명</th>
               <th class="defect-registrar">결함등록자</th>
-              <th class="defect-reg-date">결함등록일</th>
+              <th class="defect-discovery-date">결함발생일</th>
               <th class="defect-severity">결함심각도</th>
               <th class="defect-description">결함내용</th>
               <th class="defect-handler">결함조치자</th>
