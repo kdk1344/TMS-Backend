@@ -73,11 +73,11 @@ public class DefectController {
 	private FileService fileservice;
 	
 	
-	@GetMapping("/defectStatus")
+	@GetMapping("/defect")
 	public String defectStatusPage() {
 	    
 
-	    return "defectStatus"; // defectStatus.jsp로 이동
+	    return "defect"; // defect.jsp로 이동
 	}
 	
 	
@@ -245,8 +245,9 @@ public class DefectController {
 			if(defect.getTestId() == null || defect.getTestId().trim().isEmpty()) {
 				defect.setTestId(defect.getProgramId());
 			}
-			//최초 결함 등록자 로그인 ID 세팅
+			//테스트 결함등록자, 최초 결함 등록자 로그인 ID 세팅
 			defect.setDefectRegistrar(UserID);
+			defect.setInitCreater(UserID);
 			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
 			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
 				defect.setDefectStatus("등록완료");}
@@ -311,6 +312,7 @@ public class DefectController {
 //  		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
   		
   		Map<String, Object> response = new HashMap<>();
+  		
   		Defect DefectEdit = defectService.getDefectById(seq);
   		
   		List<FileAttachment> attachments = adminService.getAttachments(seq);
@@ -339,36 +341,77 @@ public class DefectController {
 		String UserID = (String) session.getAttribute("id");
 		Map<String, Object> response = new HashMap<>();
 		
+		//코드로 들어오는 데이터를 코드명으로 변경
+		defect.setMajorCategory(adminService.getStageCodes("대", defect.getMajorCategory()));
+		defect.setSubCategory(adminService.getStageCodes("중", defect.getSubCategory()));
+		defect.setDefectType(adminService.getStageCCodes("13", defect.getDefectType()));
+		defect.setDefectSeverity(adminService.getStageCCodes("14", defect.getDefectSeverity()));
+		defect.setDefectStatus(adminService.getStageCCodes("15", defect.getDefectStatus()));
+				
 		try {
-			Defect DefectEdit = defectService.getDefectById(defect.getSeq());
+			// 테스트 ID 비어있을 경우 프로그램 ID 입력
+			if(defect.getTestId() == null || defect.getTestId().trim().isEmpty()) {
+				defect.setTestId(defect.getProgramId());
+			}
+			//최초 결함 등록자 로그인 ID 세팅
+			defect.setDefectRegistrar(UserID);
+			defect.setInitCreater(UserID);
+			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
+			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
+				defect.setDefectStatus("등록완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null) {
+				defect.setDefectStatus("조치완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
+				defect.setDefectStatus("PL 확인완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null && defect.getDefectRegConfirmDate() != null) {
+				defect.setDefectStatus("등록자 확인완료");}
 			
+			//등록된 결함 파일 가져오기
+			Defect DefectEdit = defectService.getDefectById(defect.getSeq());
 			// devProgress의 필드를 DevProgressEdit에 복사
 		    BeanUtils.copyProperties(defect, DefectEdit);
-		    
+		    //최종변경자 세팅
+			DefectEdit.setLastModifier(UserID);
 		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq());
-	
-	        // 새로운 파일 업로드 처리
-	        fileservice.handleFileUpload(files, "defect", defect.getSeq());
-	        List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq());
-	        defect.setDefectAttachment(attachments);
-	        
 	        // 업데이트된 공지사항을 저장
 	        defectService.updateDefect(DefectEdit);
+	        
+	        validateRequiredField(defect.getMajorCategory(), "업무 대분류");
+			validateRequiredField(defect.getSubCategory(), "업무 중분류");
+			validateRequiredField(defect.getTestStage(), "테스트 단계");
+			validateRequiredField(defect.getTestId(), "테스트ID");
+			validateRequiredField(defect.getDefectType(), "결함유형");
+			validateRequiredField(defect.getDefectSeverity(), "결함심각도");
+			validateRequiredField(defect.getDefectDescription(), "결함 내용");
+			validateRequiredField(defect.getProgramId(), "프로그램ID");
+			validateRequiredField(defect.getDefectHandler(), "조치담당자");
+			validateRequiredField(defect.getPl(), "PL");
+			if(defect.getDefectRegDate() == null) {
+				throw new IllegalArgumentException("결함등록일은 필수 입력 항목입니다.");
+			}
+        	
+        	// 새로운 파일 업로드 처리
+            if (files != null && files.length > 0) {
+            	log.info("첨부중");
+            	fileservice.handleFileUpload(files, "defect", defect.getSeq());
+            }
+            List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq());
+            defect.setDefectAttachment(attachments);
 	
 	        // 성공 응답 생성
 	        response.put("status", "success");
-	        response.put("message", "개발 진행 현황이 성공적으로 수정되었습니다.");
+	        response.put("message", "결함 현황이 성공적으로 수정되었습니다.");
 	        response.put("DefectEdit", DefectEdit);
 	        return new ResponseEntity<>(response, HttpStatus.OK);
 	    } catch (IllegalArgumentException e) {
 	        response.put("status", "failure");
-	        response.put("message", "프로그램 개발목록 수정 중에 오류 발생");
+	        response.put("message", "결함 현황 수정 중에 오류 발생했습니다");
 	        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        response.put("status", "error");
-	        response.put("message", "프로그램 개발목록 수정 중에 오류 발생");
+	        response.put("message", "결함 현황 수정 중에 오류 발생했습니다");
 	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
