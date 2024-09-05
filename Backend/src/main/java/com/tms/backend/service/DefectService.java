@@ -33,13 +33,15 @@ public class DefectService {
 	@Autowired
     private DefectMapper defectmapper;
 
-    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, int seq, String defectRegistrar, String defectHandler, String defectStatus, int page, int size) {
-        int offset = (page - 1) * size;
-        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, offset, size);
+    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq, String defectRegistrar, String defectHandler, String pl, String defectStatus, int page, int size) {
+    	log.info("searchDefects method called");
+    	int offset = (page - 1) * size;
+        log.info(offset);
+        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, offset, size);
     }
 
-    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, int seq, String defectRegistrar, String defectHandler, String defectStatus) {
-        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
+    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq, String defectRegistrar, String defectHandler, String pl, String defectStatus) {
+        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus);
     }
     
     //결함 업데이트

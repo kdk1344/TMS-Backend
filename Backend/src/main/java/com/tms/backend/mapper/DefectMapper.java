@@ -23,9 +23,10 @@ public interface DefectMapper {
             @Param("majorCategory") String majorCategory, 
             @Param("subCategory") String subCategory, 
             @Param("defectSeverity") String defectSeverity,
-            @Param("seq") int seq,
+            @Param("seq") Integer seq,
             @Param("defectRegistrar") String defectRegistrar,
             @Param("defectHandler") String defectHandler,
+            @Param("pl") String pl,
             @Param("defectStatus") String defectStatus,
             @Param("offset") int offset, 
             @Param("size") int size);
@@ -33,9 +34,10 @@ public interface DefectMapper {
 	  @Param("majorCategory") String majorCategory, 
 	  @Param("subCategory") String subCategory, 
 	  @Param("defectSeverity") String defectSeverity,
-	  @Param("seq") int seq,
+	  @Param("seq") Integer seq,
 	  @Param("defectRegistrar") String defectRegistrar,
 	  @Param("defectHandler") String defectHandler,
+	  @Param("pl") String pl,
 	  @Param("defectStatus") String defectStatus);
 	public void deleteDefect(int seq);
 	public void insertdefect(Defect def);

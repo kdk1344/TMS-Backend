@@ -101,9 +101,8 @@ public class DefectController {
 //			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
 //			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 //			}
-		
+		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		log.info(simpleDateFormat.format(new Date()));
 
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
@@ -112,23 +111,26 @@ public class DefectController {
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
-			// 결함 목록 조회
-		    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, page, size);
-
-		    // 총 결함 수 조회
-		    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus);
-		    
-		    // 총 페이지 수 계산
-		    int totalPages = (int) Math.ceil((double) totalDefects / size);
+		log.info(defectStatus + "실행중");
+		
+		// 결함 목록 조회
+		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,  defectStatus, page, size);
+	    
+	    log.info("error check");
+	    // 총 결함 수 조회
+	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus);
+	    
+	    // 총 페이지 수 계산
+	    int totalPages = (int) Math.ceil((double) totalDefects / size);
 	    
 	    // 응답 생성
-	    Map<String, Object> response = new HashMap<>();
 	    response.put("defects", defects);
 	    response.put("currentPage", page);
 	    response.put("totalPages", totalPages);
 	    response.put("totalDefects", totalDefects);
 
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
+
 	}
 	
 	//결함 유형 확인
@@ -442,7 +444,7 @@ public class DefectController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/defectsexampleexcel")
     public void downloadExdefects(HttpServletResponse response) throws IOException {
-    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, 1, 15);  	
+    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, null, 1, 15);  	
     	defectexportToExcel(response, defects, "example.xlsx");
     }
     
@@ -470,7 +472,7 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, page, size);
 
 
     	log.info("확인중"+defects);

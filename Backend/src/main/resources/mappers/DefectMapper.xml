@@ -19,8 +19,11 @@
 	    <if test="defectSeverity != null and defectSeverity != ''">
 	        AND DEFECT_SEVERITY = #{defectSeverity}
 	    </if>
-	    <if test="originalDefectNumber != null and originalDefectNumber != ''">
-	        AND ORIGINAL_DEFECT_NUMBER = #{originalDefectNumber}
+	    <if test="seq != null and seq != ''">
+	        AND SEQ = #{seq}
+	    </if>
+	    <if test="pl != null and pl != ''">
+	        AND PL = #{pl}
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
 	        AND DEFECT_REGISTRAR = #{defectRegistrar}
@@ -31,7 +34,7 @@
 	    <if test="defectStatus != null and defectStatus != ''">
 	        AND DEFECT_STATUS = #{defectStatus}
 	    </if>
-	    ORDER BY DEFECT_SEQ DESC
+	    ORDER BY SEQ DESC
 	    LIMIT #{offset}, #{size}
 	</select>
 	
@@ -51,8 +54,11 @@
 	    <if test="defectSeverity != null and defectSeverity != ''">
 	        AND DEFECT_SEVERITY = #{defectSeverity}
 	    </if>
-	    <if test="originalDefectNumber != null and originalDefectNumber != ''">
-	        AND ORIGINAL_DEFECT_NUMBER = #{originalDefectNumber}
+	    <if test="seq != null and seq != ''">
+	        AND SEQ = #{seq}
+	    </if>
+	    <if test="pl != null and pl != ''">
+	        AND PL = #{pl}
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
 	        AND DEFECT_REGISTRAR = #{defectRegistrar}
@@ -70,7 +76,7 @@
 	</select>
 	
 	<delete id="deleteDefect" parameterType="int">
-		DELETE FROM DEFECT WHERE DEFECT_SEQ = #{seq}
+		DELETE FROM DEFECT WHERE SEQ = #{seq}
 	</delete>
 	
 	<!-- 결함 입력 xml -->
