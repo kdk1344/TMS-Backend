@@ -131,13 +131,13 @@ public class AdminService {
         }
     }
     
-    public void deleteAttachmentsByNoticeId(Integer seq) {
+    public void deleteAttachmentsByNoticeId(Integer seq, int type) {
     	log.info("삭제 진행중");
-    	adminmapper.deleteAttachmentsByNoticeId(seq);
+    	adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
     
-    public List<FileAttachment> getAttachments(Integer seq) {
-        return adminmapper.getAttachmentsByNoticeId(seq);
+    public List<FileAttachment> getAttachments(Integer seq, int type) {
+        return adminmapper.getAttachments(seq, type);
     }
     
     public FileAttachment getAttachmentById(Integer seq) {
@@ -145,10 +145,11 @@ public class AdminService {
     }
     
     // 공지 삭제
-    public void deleteNotice(Integer seq) {
+    public void deleteNotice(Integer seq, int type) {
 
         // 공지사항 삭제
         adminmapper.deleteNotice(seq);
+        adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
     
     

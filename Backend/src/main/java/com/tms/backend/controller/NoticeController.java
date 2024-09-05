@@ -206,11 +206,11 @@ public class NoticeController {
         existingNotice.setPostDate(notice.getPostDate());
 
         // 공지사항에 등록된 기존 첨부파일 전부 삭제
-        adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq());
+        adminService.deleteAttachmentsByNoticeId(existingNotice.getSeq(),4);
 
         // 새로운 파일 업로드 처리
         fileservice.handleFileUpload(files, boardType, existingNotice.getSeq());
-        List<FileAttachment> attachments = adminService.getAttachments(existingNotice.getSeq());
+        List<FileAttachment> attachments = adminService.getAttachments(existingNotice.getSeq(),4);
         existingNotice.setAttachments(attachments);
         
         log.info("check "+existingNotice);
@@ -237,7 +237,7 @@ public class NoticeController {
             return ResponseEntity.status(404).body(response);
         }
 
-        List<FileAttachment> attachments = adminService.getAttachments(seq);
+        List<FileAttachment> attachments = adminService.getAttachments(seq,4);
         notice.setAttachments(attachments);
 
         response.put("notice", notice);
@@ -332,7 +332,7 @@ public class NoticeController {
 
         // 공지사항 삭제
         for (Integer seq : seqs) {
-            adminService.deleteNotice(seq);
+            adminService.deleteNotice(seq, 4);
         }
         
         response.put("status", "success");
@@ -369,7 +369,7 @@ public class NoticeController {
         }
 
         // 첨부파일 리스트 조회 및 설정
-        List<FileAttachment> attachments = adminService.getAttachments(seq);
+        List<FileAttachment> attachments = adminService.getAttachments(seq,4);
         log.info(attachments);
         log.info(seq);
         notice.setAttachments(attachments);

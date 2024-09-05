@@ -193,13 +193,13 @@
     
     <!-- 특정 공지사항의 첨부파일 삭제 -->
     <delete id="deleteAttachmentsByNoticeId">
-        DELETE FROM file_attachments WHERE IDENTIFIER = #{seq}
+        DELETE FROM file_attachments WHERE IDENTIFIER = #{seq} AND TYPE = #{type}
     </delete>
     
-    <select id="getAttachmentsByNoticeId" resultType="FA">
+    <select id="getAttachments" resultType="FA">
         SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION as storageLocation, FILE_NAME as filename, CREATED_DATE as createdDate
         FROM file_attachments
-        WHERE IDENTIFIER = #{seq}
+        WHERE IDENTIFIER = #{seq} AND TYPE = #{type}
     </select>
     
     <!-- 특정 첨부파일 조회 -->

@@ -20,7 +20,7 @@
 	        AND DEFECT_SEVERITY = #{defectSeverity}
 	    </if>
 	    <if test="seq != null and seq != ''">
-	        AND SEQ LIKE CONCAT('%', #{seq}, '%')
+	    	AND SEQ = #{seq}
 	    </if>
 	    <if test="pl != null and pl != ''">
 	        AND PL LIKE CONCAT('%', #{pl}, '%')

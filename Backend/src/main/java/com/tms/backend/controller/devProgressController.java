@@ -539,7 +539,7 @@ public class devProgressController {
             	log.info("첨부중");
                 fileservice.handleFileUpload(files, "devProgress", devProgress.getSeq());
             }
-            List<FileAttachment> attachments = adminService.getAttachments(devProgress.getSeq());
+            List<FileAttachment> attachments = adminService.getAttachments(devProgress.getSeq(),1);
             devProgress.setDevProgAttachment(attachments);
             
             // 개발자 단위테스트 완료일은 첨부파일이 같이 입력될때만 입력 가능
@@ -593,7 +593,7 @@ public class devProgressController {
 		    defectCounts.put(type + "DefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), type));
 		    defectCounts.put(type + "SolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), type));
 		}
-		List<FileAttachment> attachments = adminService.getAttachments(seq);
+		List<FileAttachment> attachments = adminService.getAttachments(seq, 1);
 		DevProgressEdit.setDevProgAttachment(attachments);
 
 //		defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
@@ -723,11 +723,11 @@ public class devProgressController {
     	    BeanUtils.copyProperties(devProgress, DevProgressEdit);
     	    
     	    // 공지사항에 등록된 기존 첨부파일 전부 삭제
-            adminService.deleteAttachmentsByNoticeId(DevProgressEdit.getSeq());
+            adminService.deleteAttachmentsByNoticeId(DevProgressEdit.getSeq(), 1);
 
             // 새로운 파일 업로드 처리
             fileservice.handleFileUpload(files, "devProgress", DevProgressEdit.getSeq());
-            List<FileAttachment> attachments = adminService.getAttachments(DevProgressEdit.getSeq());
+            List<FileAttachment> attachments = adminService.getAttachments(DevProgressEdit.getSeq(), 1);
             devProgress.setDevProgAttachment(attachments);
             
             // 개발자 단위테스트 완료일은 첨부파일이 같이 입력될때만 입력 가능
