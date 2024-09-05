@@ -144,6 +144,7 @@ public class AdminService {
         return adminmapper.getAttachmentById(seq);
     }
     
+    // 공지 삭제
     public void deleteNotice(Integer seq) {
 
         // 공지사항 삭제
@@ -153,13 +154,14 @@ public class AdminService {
     
     //공통 코드 Service
     
-    
+    //공통 코드 조회
     public List<CommonCode> searchCommonCodes(String parentCode, String code, String codeName, int page, int size) {
         int offset = (page - 1) * size;
         log.info(offset);
         return adminmapper.searchCommonCodes(parentCode, code, codeName, offset, size);
     }
-
+    
+    // 공통 코드 갯수 총합
     public int getTotalCommonCodeCount(String parentCode, String code, String codeName) {
         return adminmapper.getTotalCommonCodeCount(parentCode, code, codeName);
     }
@@ -174,7 +176,7 @@ public class AdminService {
         return adminmapper.getFilteredCommonCodes(parentCode, code, codeName);
     }
     
- // 공통코드 삽입
+    // 공통코드 단체 삽입
     public void saveAllCommonCodes(List<CommonCode> commonCodes) {
         for (CommonCode commonCode : commonCodes) {
         	log.info("확인중"+commonCode);
@@ -182,19 +184,22 @@ public class AdminService {
         }
     }
     
+    //공통코드 추가
     public void addCommonCode(CommonCode commonCode) {
-    	log.info(commonCode.getCode());
         adminmapper.insertCommonCode(commonCode);
     }
-
+    
+    //공통코드 수정
     public boolean updateCommonCode(CommonCode commonCode) {
         return adminmapper.updateCommonCode(commonCode) > 0;
     }
-
+    
+    //공통코드 삭제
     public void deleteCommonCode(String seq) {
     	adminmapper.deleteCommonCode(seq);
     }
     
+    //상위 코드에 따른 하위 코드 갯수 확인
     public int checkChildCodesExist(String code) {
     	return adminmapper.checkChildCodesExist(code);
     }
@@ -206,7 +211,6 @@ public class AdminService {
     
     // 상위 코드에 따른 하위 코드 목록을 조회
     public List<CommonCode> getCCCode(String parentCode) {
-    	log.info("cc code check"+parentCode);
         return adminmapper.findSubCodesByParentCode(parentCode);
     }
     

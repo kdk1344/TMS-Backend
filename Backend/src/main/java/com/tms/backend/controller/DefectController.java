@@ -103,6 +103,8 @@ public class DefectController {
 //			}
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		log.info("테스트 스테이지"+testStage);
 
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
@@ -111,12 +113,10 @@ public class DefectController {
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
-			testStage = adminService.getStageCCodes("11", defectSeverity);}
+			testStage = adminService.getStageCCodes("11", testStage);}
 		
-		log.info(testStage);
-		
-		log.info(defectStatus + "실행중");
-		
+		log.info("테스트 스테이지"+testStage);
+				
 		// 결함 목록 조회
 		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,  defectStatus, page, size);
 	    
@@ -475,7 +475,7 @@ public class DefectController {
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
-			testStage = adminService.getStageCCodes("11", defectSeverity);}
+			testStage = adminService.getStageCCodes("11", testStage);}
 		
 		// 결함 목록 조회
 	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, page, size);
