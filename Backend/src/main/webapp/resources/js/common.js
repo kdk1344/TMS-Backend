@@ -607,6 +607,14 @@ export function initializeSelect(selectElementId, options = [], valueKey = "code
   });
 }
 
+export function goBack(message) {
+  const confirmed = confirm(message ? message : "뒤로가시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
+
+  if (!confirmed) return;
+
+  window.history.back();
+}
+
 /* API 함수 */
 // 사용자 로그인 상태 확인하는 함수
 export async function checkSession() {

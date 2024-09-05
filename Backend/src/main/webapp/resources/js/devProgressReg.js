@@ -13,6 +13,7 @@ import {
   updateFilePreview,
   showSpinner,
   hideSpinner,
+  goBack,
 } from "./common.js";
 
 /** @global */
@@ -75,7 +76,7 @@ function setupEventListeners() {
   devProgressRegisterForm.addEventListener("submit", register);
 
   // 뒤로가기
-  goBackButton.addEventListener("click", goBack);
+  goBackButton.addEventListener("click", () => goBack("등록을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
 }
 
 /**  등록 폼 초기화 함수 */
@@ -176,12 +177,4 @@ async function register(event) {
   } finally {
     hideSpinner();
   }
-}
-
-function goBack() {
-  const confirmed = confirm("등록을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
-
-  if (!confirmed) return;
-
-  window.history.back();
 }
