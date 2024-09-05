@@ -167,7 +167,5 @@
 		  window.onload = function() {
 		    truncateTextByClass("notice-contents", 50); // 최대 50글자까지만 표시
 		  };
-		  
-		  function 
   </script>
 </html>

@@ -1,4 +1,6 @@
 package com.tms.backend.controller;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,7 @@ public class UserController {
     		,Model model,
     		HttpSession session) {
     	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size);
+    	log.info(noticeList);
     	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
         int totalPages = (int) Math.ceil((double) totalNotices / size);
         
@@ -96,6 +99,37 @@ public class UserController {
         log.info("Session ID after login: " + session.getId());
         
         return  "dashboard";
+    }
+    
+    // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
+    @GetMapping(value = "api/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getNotices(@RequestParam(value = "startDate", required = false) String startDate,
+                                          @RequestParam(value = "endDate", required = false) String endDate,
+                                          @RequestParam(value = "title", required = false) String title,
+                                          @RequestParam(value = "content", required = false) String content,
+                                          @RequestParam(value = "page", defaultValue = "1") int page,
+                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+    	
+        // 공지사항 조회
+        List<Notice> notices = adminService.searchNotices(startDate, endDate, title, content, page, size);
+        int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
+        int totalPages = (int) Math.ceil((double) totalNotices / size);
+        
+        //최근 공지글
+        Notice latestNotice = adminService.getLatestNotice();
+        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq());
+        latestNotice.setAttachments(attachments);
+
+        // 응답 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("notices", notices);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalNotices", totalNotices);
+        response.put("latestNotice", latestNotice);
+
+        return response;
     }
     
 //    @GetMapping("/logout")
