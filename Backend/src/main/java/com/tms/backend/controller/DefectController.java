@@ -114,21 +114,16 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
 			testStage = adminService.getStageCCodes("11", testStage);}
-		
-		log.info("테스트 스테이지"+testStage);
-				
+						
 		// 결함 목록 조회
 		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,  defectStatus, page, size);
 	    
-		log.info("seq0값체크"+defectService.searchDefects(null, null, null, null, 0, null, null, null,  null, 1, 15));
-	    
-	    log.info("error check");
 	    // 총 결함 수 조회
 	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus);
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
-	    
+	    	    
 	    // 응답 생성
 	    response.put("defects", defects);
 	    response.put("currentPage", page);
@@ -503,7 +498,7 @@ public class DefectController {
     	defectexportToExcel(response, defects, "filtered_defects_codes.xlsx");
     }
     
- // 엑셀 파일로 데이터를 내보내는 메서드
+    // 엑셀 파일로 데이터를 내보내는 메서드
     private void defectexportToExcel(HttpServletResponse response, List<Defect> Defects, String fileName) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Defect");
@@ -640,28 +635,18 @@ public class DefectController {
                             Field field = Defect.class.getDeclaredField(fieldNames[j]);
                             field.setAccessible(true);
 
-                            try {
-                                switch (field.getType().getSimpleName()) {
-                                    case "int":
-                                        // 셀 값이 비어있는지 확인하고 숫자일 경우만 처리
-                                        Double numericValue = getCellValueAsNumeric2(row.getCell(j));
-                                        field.set(deFect, numericValue != null ? numericValue.intValue() : null);
-                                        break;
-                                    case "Date":
-                                        field.set(deFect, getCellValueAsDate2(row.getCell(j)));
-                                        break;
-                                    default:
-                                        // 문자열인 경우 빈 문자열을 null로 처리
-                                        String cellValue = getCellValueAsString2(row.getCell(j));
-                                        field.set(deFect, cellValue != null && cellValue.trim().isEmpty() ? null : cellValue);
-                                        break;
-                                }
-                            } catch (NumberFormatException e) {
-                                // NumberFormatException 발생 시 셀 값을 null로 설정
-                                row.getCell(j).setCellType(CellType.BLANK);
-                                field.set(deFect, null);  // 필드 값도 null로 설정
-                                System.out.println("NumberFormatException: 잘못된 숫자 형식이 감지되어 셀 값을 null로 설정했습니다.");
-                            }
+                            switch (field.getType().getSimpleName()) {
+                            case "int":
+                                field.set(deFect, (int) getCellValueAsNumeric2(row.getCell(j)));
+                                break;
+                            case "Date":
+                                field.set(deFect, getCellValueAsDate2(row.getCell(j)));
+                                break;
+                            default:
+                            	log.info(field.getType().getSimpleName());
+                                field.set(deFect, getCellValueAsString2(row.getCell(j)));
+                                break;
+                        }
                         }
                     	defect.add(deFect);
                     } catch (Exception e) {
@@ -718,6 +703,7 @@ public class DefectController {
         if (cell == null) {
             return null;
         }
+        log.info(cell);
         return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
     }
     

@@ -28,7 +28,7 @@ public class Defect {
     private String defectResolutionDetails;      // 결함 조치 내역
     private String pl;                            // PL
     private Date plConfirmDate;                  // PL 확인일
-    private Integer originalDefectNumber;         // 기 발생 결함번호
+    private int originalDefectNumber;         // 기 발생 결함번호
     private String plDefectJudgeClass;           // PL결함판단구분
     private String plComments;                   // PL의견
     private Date defectRegConfirmDate;           // 결함 등록자 확인일

@@ -1004,6 +1004,7 @@ public class devProgressController {
                                     field.set(devprogress, getCellValueAsDate(row.getCell(j)));
                                     break;
                                 default:
+                                	log.info(field.getType().getSimpleName());
                                     field.set(devprogress, getCellValueAsString(row.getCell(j)));
                                     break;
                             }
