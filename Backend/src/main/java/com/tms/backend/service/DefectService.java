@@ -34,9 +34,7 @@ public class DefectService {
     private DefectMapper defectmapper;
 
     public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq, String defectRegistrar, String defectHandler, String pl, String defectStatus, int page, int size) {
-    	log.info("searchDefects method called");
     	int offset = (page - 1) * size;
-        log.info(offset);
         return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, offset, size);
     }
 

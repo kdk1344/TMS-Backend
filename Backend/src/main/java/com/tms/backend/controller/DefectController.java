@@ -103,6 +103,8 @@ public class DefectController {
 //			}
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		log.info("테스트 스테이지"+testStage);
 
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
@@ -111,14 +113,14 @@ public class DefectController {
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
-			testStage = adminService.getStageCCodes("11", defectSeverity);}
+			testStage = adminService.getStageCCodes("11", testStage);}
 		
-		log.info(testStage);
-		
-		log.info(defectStatus + "실행중");
-		
+		log.info("테스트 스테이지"+testStage);
+				
 		// 결함 목록 조회
 		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,  defectStatus, page, size);
+	    
+		log.info("seq0값체크"+defectService.searchDefects(null, null, null, null, 0, null, null, null,  null, 1, 15));
 	    
 	    log.info("error check");
 	    // 총 결함 수 조회
@@ -286,8 +288,14 @@ public class DefectController {
             	log.info("첨부중");
                 fileservice.handleFileUpload(files, "devProgress", defect.getSeq());
             }
-            List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq());
+            if (files != null && files.length > 0) {
+            	log.info("첨부중");
+                fileservice.handleFileUpload(files, "devProgressFix", defect.getSeq());
+            }
+            List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
+            List<FileAttachment> fixattachments = adminService.getAttachments(defect.getSeq(),32);
+            defect.setDefectFixAttachments(fixattachments);
         	
             response.put("status", "success");
             response.put("message", "결함 정보가 등록되었습니다");
@@ -321,14 +329,17 @@ public class DefectController {
   		
   		Defect DefectEdit = defectService.getDefectById(seq);
   		
-  		List<FileAttachment> attachments = adminService.getAttachments(seq);
+  		List<FileAttachment> attachments = adminService.getAttachments(seq, 31);
   		DefectEdit.setDefectAttachment(attachments);
+  		List<FileAttachment> fixattachments = adminService.getAttachments(seq, 32);
+  		DefectEdit.setDefectFixAttachments(fixattachments);
 
   	    // 응답 생성
   		response.put("status", "success");
         response.put("message", "개발 진행 현황 정보 전달.");
   	    response.put("defectEdit", DefectEdit);
   	    response.put("attachments", attachments);
+  	  response.put("fixattachments", fixattachments);
   	    
   	    return ResponseEntity.ok(response); // JSON으로 응답 반환
   	}	
@@ -379,7 +390,8 @@ public class DefectController {
 		    //최종변경자 세팅
 			DefectEdit.setLastModifier(UserID);
 		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
-	        adminService.deleteAttachmentsByNoticeId(defect.getSeq());
+	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),31);
+	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),32);
 	        // 업데이트된 공지사항을 저장
 	        defectService.updateDefect(DefectEdit);
 	        
@@ -402,8 +414,14 @@ public class DefectController {
             	log.info("첨부중");
             	fileservice.handleFileUpload(files, "defect", defect.getSeq());
             }
-            List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq());
+            if (files != null && files.length > 0) {
+            	log.info("첨부중");
+            	fileservice.handleFileUpload(files, "defectFix", defect.getSeq());
+            }
+            List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
+            List<FileAttachment> fixattachments = adminService.getAttachments(defect.getSeq(),32);
+            defect.setDefectFixAttachments(fixattachments);
 	
 	        // 성공 응답 생성
 	        response.put("status", "success");
@@ -475,7 +493,7 @@ public class DefectController {
 		if (defectStatus != null && !defectStatus.isEmpty()) {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
-			testStage = adminService.getStageCCodes("11", defectSeverity);}
+			testStage = adminService.getStageCCodes("11", testStage);}
 		
 		// 결함 목록 조회
 	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, page, size);

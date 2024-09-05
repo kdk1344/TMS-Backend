@@ -80,7 +80,7 @@ public class UserController {
         int nextPageGroupStart = startPage + pageGroupSize;
         
         Notice latestNotice = adminService.getLatestNotice();
-        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq());
+        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4);
         latestNotice.setAttachments(attachments);
 
         // 모델에 데이터 추가
@@ -118,7 +118,7 @@ public class UserController {
         
         //최근 공지글
         Notice latestNotice = adminService.getLatestNotice();
-        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq());
+        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4);
         latestNotice.setAttachments(attachments);
 
         // 응답 생성

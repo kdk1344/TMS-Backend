@@ -44,8 +44,10 @@ public interface AdminMapper {
     public void insertAttachment(FileAttachment attachment);
     public Notice getNoticeById(Integer seq);
     public void updateNotice(Notice notice);
-    public void deleteAttachmentsByNoticeId(Integer seq);
-    public List<FileAttachment> getAttachmentsByNoticeId(Integer seq);
+    public void deleteAttachmentsByNoticeId(@Param("seq") int seq,
+    										@Param("type") int type);
+    public List<FileAttachment> getAttachments(@Param("seq") int seq,
+												@Param("type") int type);
     public FileAttachment getAttachmentById(Integer seq);
     public void deleteNotice(Integer seq);
     

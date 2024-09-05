@@ -38,9 +38,8 @@ public class Defect {
     private String initCreater;                  // 최초 등록자
     private Date lastModifiedDate;               // 최종 변경일시
     private String lastModifier;                 // 최종 변경자
-    private String defectAttachments;            // 결함 첨부파일
-    private String defectFixAttachments;         // 결함 조치 첨부파일
-    private List<FileAttachment> defectAttachment;    // 결함증적 첨부파일
+    private List<FileAttachment> defectAttachment;            // 결함 첨부파일
+    private List<FileAttachment> defectFixAttachments;         // 결함 조치 첨부파일
 
     
 }

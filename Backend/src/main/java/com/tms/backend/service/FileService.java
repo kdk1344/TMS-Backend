@@ -46,18 +46,24 @@ public class FileService {
         // boardType에 따라 boardTypeNumber 설정
         Integer boardTypeNumber;
         switch (boardType) {
-            case "devProgress":
-                boardTypeNumber = 1;
-                break;
-            case "testProgress":
-                boardTypeNumber = 2;
-                break;
-            case "defect":
-                boardTypeNumber = 3;
-                break;
-            case "nt":
-                boardTypeNumber = 4;
-                break;
+	        case "devProgress":
+	            boardTypeNumber = 1;
+	            break;
+	        case "testProgress":
+	            boardTypeNumber = 21;
+	            break;
+	        case "testProgressThird":
+	            boardTypeNumber = 22;
+	            break;
+	        case "defect":
+	            boardTypeNumber = 31;
+	            break;
+	        case "defectFix":
+	            boardTypeNumber = 32;
+	            break;
+	        case "nt":
+	            boardTypeNumber = 4;
+	            break;
             default:
                 boardTypeNumber = 0; // 기본값 (알 수 없는 boardType)
                 break;
