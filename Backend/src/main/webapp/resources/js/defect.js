@@ -140,7 +140,7 @@ async function renderDefect(
     majorCategory: "",
     subCategory: "",
     defectSeverity: "",
-    defectNumber: "",
+    seq: "",
     defectStatus: "",
     defectRegistrar: "",
     defectHandler: "",
@@ -155,7 +155,6 @@ async function renderDefect(
     defects.forEach((defect) => {
       const {
         seq,
-        defectNumber,
         subCategory,
         programId,
         programName,
@@ -176,7 +175,7 @@ async function renderDefect(
 
       row.innerHTML = `
         <td><input type="checkbox" name="defect" value="${seq}"></td>
-        <td class="defect-number">${defectNumber}</td>
+        <td class="defect-number">${seq}</td>
         <td class="sub-category">${subCategory}</td>
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
@@ -270,7 +269,7 @@ function getCurrentFilterValues() {
     majorCategory,
     subCategory,
     defectSeverity,
-    defectNumber,
+    seq: defectNumber,
     defectStatus,
   };
 
@@ -322,7 +321,7 @@ function copyFilterValuesToDownloadForm() {
     majorCategory,
     subCategory,
     defectSeverity,
-    defectNumber,
+    seq,
     defectStatus,
     defectRegistrar = "",
     defectHandler = "",
@@ -337,7 +336,7 @@ function copyFilterValuesToDownloadForm() {
   document.getElementById("defectRegistrarForDownload").value = defectRegistrar;
   document.getElementById("defectHandlerForDownload").value = defectHandler;
   document.getElementById("plForDownload").value = pl;
-  document.getElementById("defectNumberForDownload").value = defectNumber;
+  document.getElementById("defectNumberForDownload").value = seq;
   document.getElementById("defectStatusForDownload").value = defectStatus;
 }
 

@@ -73,7 +73,7 @@
               <input type="hidden" id="defectRegistrarForDownload" name="defectRegistrar" />
               <input type="hidden" id="defectHandlerForDownload" name="defectHandler" />
               <input type="hidden" id="plForDownload" name="pl" />
-              <input type="hidden" id="defectNumberForDownload" name="defectNumber" />
+              <input type="hidden" id="defectNumberForDownload" name="seq" />
               <input type="hidden" id="defectStatusForDownload" name="defectStatus" />
 
               <button type="submit" id="downloadFilteredDefectButton" class="excel-button">
@@ -132,7 +132,7 @@
 
           <div class="form-group">
             <label for="defectNumberForFilter">결함번호</label>
-            <input type="text" id="defectNumberForFilter" name="defectNumber" pattern="\d{9}" maxlength="10" />
+            <input type="text" id="defectNumberForFilter" name="seq" pattern="\d{0,10}" maxlength="10" />
           </div>
 
           <div class="form-group">
