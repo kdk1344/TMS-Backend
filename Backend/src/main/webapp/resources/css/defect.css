@@ -136,7 +136,3 @@ input[type="radio"] {
 .defect-number {
   width: 104px;
 }
-
-.defect-description {
-  max-width: 200px;
-}
