@@ -159,7 +159,7 @@ async function renderDefect(
         programId,
         programName,
         defectRegistrar,
-        defectRegDate,
+        defectDiscoveryDate,
         defectSeverity,
         defectDescription,
         defectHandler,
@@ -180,7 +180,7 @@ async function renderDefect(
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
         <td class="defect-registrar">${defectRegistrar}</td>
-        <td class="defect-reg-date">${convertDate(defectRegDate)}</td>
+        <td class="defect-discovery-date">${convertDate(defectDiscoveryDate)}</td>
         <td class="defect-severity">${defectSeverity}</td>
         <td class="defect-description">${defectDescription}</th>
         <td class="defect-handler">${defectHandler}</td>
