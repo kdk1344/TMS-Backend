@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Dev-mapper.xml -->
+<mapper namespace="com.tms.backend.mapper.TestMapper">
+    <select id="searchTestProgress" parameterType="map" resultType="TestProgress">
+        SELECT * FROM TEST_PROGRESS
+        WHERE 1=1
+        <if test="testStage != null and testStage != ''">
+            AND TEST_STAGE = #{testStage}
+        </if>
+        <if test="majorCategory != null and majorCategory != ''">
+            AND MAJOR_CATEGORY = #{majorCategory}
+        </if>
+        <if test="subCategory != null and subCategory != ''">
+            AND SUB_CATEGORY = #{subCategory}
+        </if>
+        <if test="programType != null and programType != ''">
+            AND PROGRAM_TYPE = #{programType}
+        </if>
+        <if test="testId != null and testId != ''">
+            AND TEST_ID LIKE CONCAT('%', #{testId}, '%')
+        </if>
+        <if test="programId != null and programId != ''">
+            AND PROGRAM_ID LIKE CONCAT('%', #{programId}, '%')
+        </if>
+        <if test="programName != null and programName != ''">
+            AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
+        </if>
+        <if test="developer != null and developer != ''">
+            AND DEVELOPER LIKE CONCAT('%', #{developer}, '%')
+        </if>
+        <if test="testStatus != null and testStatus != ''">
+            AND TEST_STATUS = #{testStatus}
+        </if>
+        <if test="pl != null and pl != ''">
+            AND PL = #{pl}
+        </if>
+        <if test="ItMgr != null and ItMgr != ''">
+            AND IT_MGR = #{ItMgr}
+        </if>
+        <if test="BusiMgr != null and BusiMgr != ''">
+            AND BUSI_MGR = #{BusiMgr}
+        </if>
+        <if test="execCompanyMgr != null and execCompanyMgr != ''">
+            AND EXEC_COMPANY_MGR = #{execCompanyMgr}
+        </if>
+        LIMIT #{offset}, #{size}
+    </select>
+	
+	<select id="getTotalTestCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TEST_PROGRESS
+        WHERE 1=1
+	    <if test="testStage != null and testStage != ''">
+            AND TEST_STAGE = #{testStage}
+        </if>
+        <if test="majorCategory != null and majorCategory != ''">
+            AND MAJOR_CATEGORY = #{majorCategory}
+        </if>
+        <if test="subCategory != null and subCategory != ''">
+            AND SUB_CATEGORY = #{subCategory}
+        </if>
+        <if test="programType != null and programType != ''">
+            AND PROGRAM_TYPE = #{programType}
+        </if>
+        <if test="testId != null and testId != ''">
+            AND TEST_ID LIKE CONCAT('%', #{testId}, '%')
+        </if>
+        <if test="programId != null and programId != ''">
+            AND PROGRAM_ID LIKE CONCAT('%', #{programId}, '%')
+        </if>
+        <if test="programName != null and programName != ''">
+            AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
+        </if>
+        <if test="developer != null and developer != ''">
+            AND DEVELOPER LIKE CONCAT('%', #{developer}, '%')
+        </if>
+        <if test="testStatus != null and testStatus != ''">
+            AND TEST_STATUS = #{testStatus}
+        </if>
+        <if test="pl != null and pl != ''">
+            AND PL = #{pl}
+        </if>
+        <if test="ItMgr != null and ItMgr != ''">
+            AND IT_MGR = #{ItMgr}
+        </if>
+        <if test="BusiMgr != null and BusiMgr != ''">
+            AND BUSI_MGR = #{BusiMgr}
+        </if>
+        <if test="execCompanyMgr != null and execCompanyMgr != ''">
+            AND EXEC_COMPANY_MGR = #{execCompanyMgr}
+        </if>
+	</select>
+	
+	
+	
+</mapper>

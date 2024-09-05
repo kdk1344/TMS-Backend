@@ -50,11 +50,13 @@ import com.tms.backend.service.AdminService;
 import com.tms.backend.service.DefectService;
 import com.tms.backend.service.DevService;
 import com.tms.backend.service.FileService;
+import com.tms.backend.service.TestService;
 import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Defect;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.devProgress;
+import com.tms.backend.vo.testProgress;
 
 import lombok.extern.log4j.Log4j;
 
@@ -69,12 +71,57 @@ public class TestController {
 	@Autowired
 	private FileService fileservice;
 	
+	@Autowired
+	private TestService testService;
 	
 	@GetMapping("/testProgress")
-	public String defectStatusPage() {
+	public String TestProgressPage() {
+			
+			return "testProgress"; // JSP 페이지 이동
+	}
+	
+	
+	@GetMapping("api/testProgress")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> TestProgress(HttpServletRequest request,
+			@RequestParam(value = "testStage", required = false) String testStage,
+            @RequestParam(value = "majorCategory", required = false) String majorCategory,
+            @RequestParam(value = "subCategory", required = false) String subCategory,
+            @RequestParam(value = "programType", required = false) String programType,
+            @RequestParam(value = "testId", required = false) String testId,
+            @RequestParam(value = "programName", required = false) String programName,
+	        @RequestParam(value = "programId", required = false) String programId,
+	        @RequestParam(value = "developer", required = false) String developer,
+	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
+	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
+            @RequestParam(value = "Pl", required = false) String pl,
+            @RequestParam(value = "execCompanyMgr", required = false) String execCompanyMgr,
+            @RequestParam(value = "testStatus", required = false) String testStatus,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+	        @RequestParam(value = "size", defaultValue = "15") int size) {
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		majorCategory = adminService.getStageCodes("대", majorCategory);
+		subCategory = adminService.getStageCodes("중", subCategory);
+		
+		// 결함 목록 조회
+		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, page, size);
+
+	    // 총 결함 수 조회
+	    int totalDefects = testService.getTotalTestCount(testStage, majorCategory, subCategory, programType, testId,
+				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr);
+	    // 총 페이지 수 계산
+	    int totalPages = (int) Math.ceil((double) totalDefects / size);
 	    
 
-	    return "testProgress"; // testProgress.jsp로 이동
+		// 응답 생성
+	    response.put("testProgress", testProgressList);
+	    response.put("currentPage", page);
+	    response.put("totalPages", totalPages);
+	    response.put("totalDefects", totalDefects);
+
+	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
 	
 	
