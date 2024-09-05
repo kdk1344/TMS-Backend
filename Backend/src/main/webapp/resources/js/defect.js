@@ -180,7 +180,7 @@ async function renderDefect(
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
         <td class="defect-registrar">${defectRegistrar}</td>
-        <td class="defect-reg-date">${defectRegDate}</td>
+        <td class="defect-reg-date">${convertDate(defectRegDate)}</td>
         <td class="defect-severity">${defectSeverity}</td>
         <td class="defect-description">${defectDescription}</th>
         <td class="defect-handler">${defectHandler}</td>
