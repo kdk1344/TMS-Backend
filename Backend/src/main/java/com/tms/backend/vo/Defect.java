@@ -21,14 +21,14 @@ public class Defect {
     private String defectSeverity;               // 결함 심각도
     private String defectDescription;            // 결함 내용
     private String defectRegistrar;              // 결함 등록자
-    private Date defectRegDate;                  // 결함 등록일
+    private Date defectDiscoveryDate;                  // 결함 등록일
     private String defectHandler;                // 결함 조치 담당자
     private Date defectScheduledDate;            // 결함 조치 예정일
     private Date defectCompletionDate;           // 결함 조치 완료일
     private String defectResolutionDetails;      // 결함 조치 내역
     private String pl;                            // PL
     private Date plConfirmDate;                  // PL 확인일
-    private String originalDefectNumber;         // 기 발생 결함번호
+    private Integer originalDefectNumber;         // 기 발생 결함번호
     private String plDefectJudgeClass;           // PL결함판단구분
     private String plComments;                   // PL의견
     private Date defectRegConfirmDate;           // 결함 등록자 확인일

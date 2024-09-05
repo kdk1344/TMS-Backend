@@ -279,8 +279,8 @@ public class DefectController {
 			validateRequiredField(defect.getProgramId(), "프로그램ID");
 			validateRequiredField(defect.getDefectHandler(), "조치담당자");
 			validateRequiredField(defect.getPl(), "PL");
-			if(defect.getDefectRegDate() == null) {
-				throw new IllegalArgumentException("결함등록일은 필수 입력 항목입니다.");
+			if(defect.getDefectDiscoveryDate() == null) {
+				throw new IllegalArgumentException("결함발생일은 필수 입력 항목입니다.");
 			}
         	
         	// 새로운 파일 업로드 처리
@@ -405,8 +405,8 @@ public class DefectController {
 			validateRequiredField(defect.getProgramId(), "프로그램ID");
 			validateRequiredField(defect.getDefectHandler(), "조치담당자");
 			validateRequiredField(defect.getPl(), "PL");
-			if(defect.getDefectRegDate() == null) {
-				throw new IllegalArgumentException("결함등록일은 필수 입력 항목입니다.");
+			if(defect.getDefectDiscoveryDate() == null) {
+				throw new IllegalArgumentException("결함발생일은 필수 입력 항목입니다.");
 			}
         	
         	// 새로운 파일 업로드 처리
@@ -517,7 +517,7 @@ public class DefectController {
         String[] headers = {
         	    "SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
         	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
-        	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_REG_DATE", 
+        	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_DISCOVERY_DATE", 
         	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
         	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
         	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
@@ -552,7 +552,7 @@ public class DefectController {
         	    "getseq", "getTestStage", "getMajorCategory", "getSubCategory", 
         	    "getTestId", "getProgramType", "getProgramId", "getProgramName", 
         	    "getDefectType", "getDefectSeverity", "getDefectDescription", 
-        	    "getDefectRegistrar", "getDefectRegDate", "getDefectHandler", 
+        	    "getDefectRegistrar", "getdefectDiscoveryDate", "getDefectHandler", 
         	    "getDefectScheduledDate", "getDefectCompletionDate", 
         	    "getDefectResolutionDetails", "getPl", "getPlConfirmDate", 
         	    "getOriginalDefectNumber", "getPlDefectJudgeClass", "getPlComments", 
@@ -603,7 +603,7 @@ public class DefectController {
             // 예상하는 컬럼명 리스트
             List<String> expectedHeaders = Arrays.asList("TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
             	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
-            	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_REG_DATE", 
+            	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_DISCOVERY_DATE", 
             	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
             	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
             	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
@@ -621,7 +621,7 @@ public class DefectController {
             	    "testStage", "majorCategory", "subCategory", 
             	    "testId", "programType", "programId", "programName", 
             	    "defectType", "defectSeverity", "defectDescription", 
-            	    "defectRegistrar", "defectRegDate", "defectHandler", 
+            	    "defectRegistrar", "defectDiscoveryDate", "defectHandler", 
             	    "defectScheduledDate", "defectCompletionDate", 
             	    "defectResolutionDetails", "pl", "plConfirmDate", 
             	    "originalDefectNumber", "plDefectJudgeClass", "plComments", 
@@ -640,16 +640,27 @@ public class DefectController {
                             Field field = Defect.class.getDeclaredField(fieldNames[j]);
                             field.setAccessible(true);
 
-                            switch (field.getType().getSimpleName()) {
-                                case "int":
-                                    field.set(deFect, (int) getCellValueAsNumeric2(row.getCell(j)));
-                                    break;
-                                case "Date":
-                                    field.set(deFect, getCellValueAsDate2(row.getCell(j)));
-                                    break;
-                                default:
-                                    field.set(deFect, getCellValueAsString2(row.getCell(j)));
-                                    break;
+                            try {
+                                switch (field.getType().getSimpleName()) {
+                                    case "int":
+                                        // 셀 값이 비어있는지 확인하고 숫자일 경우만 처리
+                                        Double numericValue = getCellValueAsNumeric2(row.getCell(j));
+                                        field.set(deFect, numericValue != null ? numericValue.intValue() : null);
+                                        break;
+                                    case "Date":
+                                        field.set(deFect, getCellValueAsDate2(row.getCell(j)));
+                                        break;
+                                    default:
+                                        // 문자열인 경우 빈 문자열을 null로 처리
+                                        String cellValue = getCellValueAsString2(row.getCell(j));
+                                        field.set(deFect, cellValue != null && cellValue.trim().isEmpty() ? null : cellValue);
+                                        break;
+                                }
+                            } catch (NumberFormatException e) {
+                                // NumberFormatException 발생 시 셀 값을 null로 설정
+                                row.getCell(j).setCellType(CellType.BLANK);
+                                field.set(deFect, null);  // 필드 값도 null로 설정
+                                System.out.println("NumberFormatException: 잘못된 숫자 형식이 감지되어 셀 값을 null로 설정했습니다.");
                             }
                         }
                     	defect.add(deFect);
