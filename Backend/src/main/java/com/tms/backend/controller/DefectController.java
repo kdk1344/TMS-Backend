@@ -671,7 +671,7 @@ public class DefectController {
             } catch (Exception e) {
                 e.printStackTrace();
                 response.put("status", "error");
-                response.put("message", "외래 키 제약 조건을 위반했습니다. 데이터가 올바르지 않습니다.");
+                response.put("message", e.getMessage());
                 return new ResponseEntity<>(response, HttpStatus.CONFLICT);
             }
 
