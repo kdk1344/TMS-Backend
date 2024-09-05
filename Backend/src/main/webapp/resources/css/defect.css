@@ -58,16 +58,12 @@ table td {
   align-items: center;
   gap: 20px;
 
-  width: 80%;
+  width: 90%;
 }
 
 .filter-container select,
 .filter-container input {
   height: 100%;
-}
-
-#defectNumberForFilter {
-  width: 104px;
 }
 
 .modal-form {
@@ -119,6 +115,22 @@ input[type="radio"] {
 
 .dash {
   margin: 0 8px;
+}
+
+#subCategoryForFilter {
+  width: 150px;
+}
+
+#defectRoleKeySelect {
+  width: 110px;
+}
+
+#defectRoleValueInput {
+  width: 110px;
+}
+
+#defectNumberForFilter {
+  width: 100px;
 }
 
 .defect-number {

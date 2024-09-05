@@ -66,20 +66,15 @@
               class="flex-box align-center"
             >
               <!-- 숨겨진 input 필드 -->
+              <input type="hidden" id="testStageForDownload" name="testStage" />
               <input type="hidden" id="majorCategoryForDownload" name="majorCategory" />
               <input type="hidden" id="subCategoryForDownload" name="subCategory" />
-              <input type="hidden" id="programTypeForDownload" name="programType" />
-              <input type="hidden" id="programIdForDownload" name="programId" />
-              <input type="hidden" id="programNameForDownload" name="programName" />
-              <input type="hidden" id="programStatusForDownload" name="programStatus" />
-              <input type="hidden" id="developerForDownload" name="developer" />
+              <input type="hidden" id="defectSeverityForDownload" name="defectSeverity" />
+              <input type="hidden" id="defectRegistrarForDownload" name="defectRegistrar" />
+              <input type="hidden" id="defectHandlerForDownload" name="defectHandler" />
               <input type="hidden" id="plForDownload" name="pl" />
-              <input type="hidden" id="thirdPartyTestMgrForDownload" name="thirdPartyTestMgr" />
-              <input type="hidden" id="itMgrForDownload" name="itMgr" />
-              <input type="hidden" id="busiMgrForDownload" name="busiMgr" />
-              <input type="hidden" id="devStatusForDownload" name="devStatus" />
-              <input type="hidden" id="actualEndDateFromForDownload" name="devStartDate" />
-              <input type="hidden" id="actualEndDateToForDownload" name="devEndDate" />
+              <input type="hidden" id="defectNumberForDownload" name="defectNumber" />
+              <input type="hidden" id="defectStatusForDownload" name="defectStatus" />
 
               <button type="submit" id="downloadFilteredDefectButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />
@@ -132,12 +127,12 @@
               <option value="defectHandler">결함조치자</option>
               <option value="pl">PL</option>
             </select>
-            <input type="text" id="defectRoleValueInput" name="defectRoleValue" placeholder="이름을 입력하세요." />
+            <input type="text" id="defectRoleValueInput" name="defectRoleValue" placeholder="이름" />
           </div>
 
           <div class="form-group">
             <label for="defectNumberForFilter">결함번호</label>
-            <input type="text" id="defectNumberForFilter" name="defectNumber" />
+            <input type="text" id="defectNumberForFilter" name="defectNumber" pattern="\d{9}" maxlength="10" />
           </div>
 
           <div class="form-group">

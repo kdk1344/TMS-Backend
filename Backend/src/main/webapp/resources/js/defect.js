@@ -4,11 +4,11 @@ import {
   setupPagination,
   convertDate,
   initializeSelect,
+  getTestStageList,
   getMajorCategoryCodes,
   getSubCategoryCodes,
-  getProgramTypes,
-  getProgramStatusList,
-  getDevStatusList,
+  getDefectSeverityList,
+  getDefectStatusList,
   openModal,
   closeModal,
   setupModalEventListeners,
@@ -51,8 +51,8 @@ const MODAL_ID = {
 function init() {
   renderTMSHeader();
   setupEventListeners();
-  // initializeFilterForm(); // 폼 메타 데이터 초기 로드
-  // renderDefect(); // 결함현황 목록 render
+  initializeFilterForm(); // 폼 메타 데이터 초기 로드
+  renderDefect(); // 결함현황 목록 render
 }
 
 // 이벤트 핸들러 설정
@@ -134,71 +134,63 @@ function setupEventListeners() {
 
 // 결함현황 목록 테이블 렌더링
 async function renderDefect(
-  getDefectProps = {
+  getDefectsProps = {
     page: 1,
+    testStage: "",
     majorCategory: "",
     subCategory: "",
-    programType: "",
-    programId: "",
-    programName: "",
-    programStatus: "",
-    developer: "",
-    actualStartDate: "",
-    actualEndDate: "",
+    defectSeverity: "",
+    defectNumber: "",
+    defectStatus: "",
+    defectRegistrar: "",
+    defectHandler: "",
     pl: "",
-    thirdPartyTestMgr: "",
-    itMgr: "",
-    busiMgr: "",
   }
 ) {
-  const { defectList, totalPages } = await getDefect(getDefectProps);
+  const { defects, totalPages } = await getDefects(getDefectsProps);
 
   if (defectTableBody) {
     defectTableBody.innerHTML = "";
 
-    defectList.forEach((defect) => {
+    defects.forEach((defect) => {
       const {
         seq,
+        defectNumber,
         subCategory,
-        programType,
         programId,
         programName,
-        screenId,
-        screenName,
-        programStatus,
-        developer,
+        defectRegistrar,
+        defectRegDate,
+        defectSeverity,
+        defectDescription,
+        defectHandler,
+        defectScheduledDate,
+        defectCompletionDate,
         pl,
-        plannedStartDate,
-        plannedEndDate,
-        actualStartDate,
-        actualEndDate,
-        plTestCmpDate,
-        itMgr,
-        busiMgr,
-        devStatus,
+        plConfirmDate,
+        defectRegConfirmDate,
+        defectStatus,
       } = defect;
 
       const row = document.createElement("tr");
 
       row.innerHTML = `
         <td><input type="checkbox" name="defect" value="${seq}"></td>
+        <td class="defect-number">${defectNumber}</td>
         <td class="sub-category">${subCategory}</td>
-        <td class="program-type">${programType}</td>
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
-        <td class="screen-id">${screenId}</td>
-        <td class="screen-name">${screenName}</td>
-        <td class="program-status">${programStatus}</td>
-        <td class="developer">${developer}</th>
+        <td class="defect-registrar">${defectRegistrar}</td>
+        <td class="defect-reg-date">${defectRegDate}</td>
+        <td class="defect-severity">${defectSeverity}</td>
+        <td class="defect-description">${defectDescription}</th>
+        <td class="defect-handler">${defectHandler}</td>
+        <td class="defect-scheduled-date">${convertDate(defectScheduledDate)}</td>
+        <td class="defect-completion-date">${convertDate(defectCompletionDate)}</td>
         <td class="pl">${pl}</td>
-        <td class="planned-start-date">${convertDate(plannedStartDate)}</td>
-        <td class="planned-end-date">${convertDate(plannedEndDate)}</td>
-        <td class="actual-start-date">${convertDate(actualStartDate)}</td>
-        <td class="actual-end-date">${convertDate(actualEndDate)}</td>
-        <td class="pl-test-cmp-date">${convertDate(plTestCmpDate)}</td>
-        <td class="it-mgr">${itMgr}</td>
-        <td class="busi-mgr">${busiMgr}</td>
-        <td class="dev-status">${devStatus}</td>
+        <td class="pl-confirm-date">${convertDate(plConfirmDate)}</td>
+        <td class="defect-reg-confirm-date">${convertDate(defectRegConfirmDate)}</td>
+        <td class="defect-status">${defectStatus}</td>
       `;
       defectTableBody.appendChild(row);
     });
@@ -207,48 +199,44 @@ async function renderDefect(
   }
 }
 
-// 분류코드 필터링
+// 결함현황 필터링
 function submitDefectFilter(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
   // 페이지를 1로 초기화하고 테이블 렌더링
   currentPage = 1;
 
-  const getDefectProps = getCurrentFilterValues();
+  const getDefectsProps = getCurrentFilterValues();
 
-  renderDefect(getDefectProps);
+  renderDefect(getDefectsProps);
 }
 
-// 분류코드 필터 리셋
+// 결함현황 필터 리셋
 function resetDefectFilter() {
   this.reset(); // 폼 초기화
 }
 
-async function getDefect(
-  getDefectProps = {
+async function getDefects(
+  getDefectsProps = {
     page: 1,
-    majorCategory: "",
-    subCategory: "",
-    programType: "",
-    programId: "",
-    programName: "",
-    programStatus: "",
-    developer: "",
-    actualStartDate: "",
-    actualEndDate: "",
+    testStage,
+    majorCategory,
+    subCategory,
+    defectSeverity,
+    defectNumber,
+    defectStatus,
+    defectRegistrar: "",
+    defectHandler: "",
     pl: "",
-    thirdPartyTestMgr: "",
-    itMgr: "",
-    busiMgr: "",
   }
 ) {
   try {
-    const query = new URLSearchParams(getDefectProps).toString();
-    const { defectList, totalPages } = await tmsFetch(`/defect?${query}`);
+    const query = new URLSearchParams(getDefectsProps).toString();
+    const { defects, totalPages } = await tmsFetch(`/defect?${query}`);
 
-    return { defectList, totalPages };
+    return { defects, totalPages };
   } catch (error) {
-    console.error(error.message, "개발 목록을 불러오지 못 했습니다.");
+    console.error(error.message, "결함현황 목록을 불러오지 못 했습니다.");
   }
 }
 
@@ -256,67 +244,59 @@ async function getDefect(
 function changePage(page) {
   currentPage = page;
 
-  const getDefectProps = getCurrentFilterValues();
+  const getDefectsProps = getCurrentFilterValues();
 
-  renderDefect(getDefectProps);
+  renderDefect(getDefectsProps);
 }
 
 function getCurrentFilterValues() {
-  let getDefectProps = { page: currentPage };
+  let getDefectsProps = { page: currentPage };
 
-  const programKey = document.getElementById("programKeySelect").value;
-  const programValue = document.getElementById("programValueInput").value.trim();
+  const defectRoleKey = document.getElementById("defectRoleKeySelect").value;
+  const defectRoleValue = document.getElementById("defectRoleValueInput").value.trim();
 
-  const roleKey = document.getElementById("roleKeySelect").value;
-  const roleValue = document.getElementById("roleValueInput").value.trim();
+  getDefectsProps[defectRoleKey] = defectRoleValue;
 
-  getDefectProps[programKey] = programValue;
-  getDefectProps[roleKey] = roleValue;
-
+  const testStage = document.getElementById("testStageForFilter").value;
   const majorCategory = document.getElementById("majorCategoryForFilter").value;
   const subCategory = document.getElementById("subCategoryForFilter").value;
-  const programType = document.getElementById("programTypeForFilter").value;
-  const programStatus = document.getElementById("programStatusForFilter").value;
-  const developer = document.getElementById("developerForFilter").value;
-  const devStatus = document.getElementById("devStatusForFilter").value;
-  const devStartDate = document.getElementById("actualEndDateFromForFilter").value;
-  const devEndDate = document.getElementById("actualEndDateToForFilter").value;
+  const defectSeverity = document.getElementById("defectSeverityForFilter").value;
+  const defectNumber = document.getElementById("defectNumberForFilter").value;
+  const defectStatus = document.getElementById("defectStatusForFilter").value;
 
-  getDefectProps = {
-    ...getDefectProps,
+  getDefectsProps = {
+    ...getDefectsProps,
+    testStage,
     majorCategory,
     subCategory,
-    programType,
-    programStatus,
-    developer,
-    devStatus,
-    devStartDate,
-    devEndDate,
+    defectSeverity,
+    defectNumber,
+    defectStatus,
   };
 
-  return getDefectProps;
+  return getDefectsProps;
 }
 
 async function initializeFilterForm() {
-  const [{ majorCategoryCodes }, { programTypes }, { programStatusList }, { devStatusList }] = await Promise.all([
+  const [{ testStageList }, { majorCategoryCodes }, { defectSeverityList }, { defectStatusList }] = await Promise.all([
+    getTestStageList(),
     getMajorCategoryCodes(),
-    getProgramTypes(),
-    getProgramStatusList(),
-    getDevStatusList(),
+    getDefectSeverityList(),
+    getDefectStatusList(),
   ]);
 
   const SELECT_ID = {
+    TEST_STAGE: "testStageForFilter",
     MAJOR_CATEGORY: "majorCategoryForFilter",
-    PROGRAM_TYPE: "programTypeForFilter",
-    PROGRAM_STATUS: "programStatusForFilter",
-    DEV_STATUS: "devStatusForFilter",
+    DEFECT_SEVERITY: "defectSeverityForFilter",
+    DEFECT_STATUS: "defectStatusForFilter",
   };
 
   const SELECT_DATA = {
+    [SELECT_ID.TEST_STAGE]: testStageList,
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
-    [SELECT_ID.PROGRAM_TYPE]: programTypes,
-    [SELECT_ID.PROGRAM_STATUS]: programStatusList,
-    [SELECT_ID.DEV_STATUS]: devStatusList,
+    [SELECT_ID.DEFECT_SEVERITY]: defectSeverityList,
+    [SELECT_ID.DEFECT_STATUS]: defectStatusList,
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
@@ -334,41 +314,31 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
   }
 }
 
-/** 결함현황  필터링 폼의 값을 다운로드 폼으로 복사하는 함수 */
+/** 결함현황 필터링 폼의 값을 다운로드 폼으로 복사하는 함수 */
 function copyFilterValuesToDownloadForm() {
   // 조회 필터링 폼의 값을 가져옴
   const {
+    testStage,
     majorCategory,
     subCategory,
-    programType,
-    programId = "",
-    programName = "",
-    programStatus,
-    developer,
+    defectSeverity,
+    defectNumber,
+    defectStatus,
+    defectRegistrar = "",
+    defectHandler = "",
     pl = "",
-    thirdPartyTestMgr = "",
-    itMgr = "",
-    busiMgr = "",
-    devStatus,
-    devStartDate,
-    devEndDate,
   } = getCurrentFilterValues();
 
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
+  document.getElementById("testStageForDownload").value = testStage;
   document.getElementById("majorCategoryForDownload").value = majorCategory;
   document.getElementById("subCategoryForDownload").value = subCategory;
-  document.getElementById("programTypeForDownload").value = programType;
-  document.getElementById("programIdForDownload").value = programId;
-  document.getElementById("programNameForDownload").value = programName;
-  document.getElementById("programStatusForDownload").value = programStatus;
-  document.getElementById("developerForDownload").value = developer;
+  document.getElementById("defectSeverityForDownload").value = defectSeverity;
+  document.getElementById("defectRegistrarForDownload").value = defectRegistrar;
+  document.getElementById("defectHandlerForDownload").value = defectHandler;
   document.getElementById("plForDownload").value = pl;
-  document.getElementById("thirdPartyTestMgrForDownload").value = thirdPartyTestMgr;
-  document.getElementById("itMgrForDownload").value = itMgr;
-  document.getElementById("busiMgrForDownload").value = busiMgr;
-  document.getElementById("devStatusForDownload").value = devStatus;
-  document.getElementById("actualEndDateFromForDownload").value = devStartDate;
-  document.getElementById("actualEndDateToForDownload").value = devEndDate;
+  document.getElementById("defectNumberForDownload").value = defectNumber;
+  document.getElementById("defectStatusForDownload").value = defectStatus;
 }
 
 // 체크박스 전체 선택/해제
@@ -379,18 +349,7 @@ function toggleAllCheckboxes() {
 
 // API 함수
 
-// 개발자 목록 조회
-export async function getDevelopers() {
-  try {
-    const { developer: developers } = await tmsFetch(`/developer`);
-
-    return { developers };
-  } catch (error) {
-    console.error(error.message, "개발자 목록을 불러오지 못 했습니다.");
-  }
-}
-
-// 개발  파일 업로드
+// 결함현황 파일 업로드
 async function uploadDefectFile() {
   if (uploadDefectFileInput.files.length <= 0) return;
 
@@ -402,7 +361,7 @@ async function uploadDefectFile() {
   try {
     showSpinner();
 
-    const response = await tmsFetch("/devupload", {
+    const response = await tmsFetch("/defectupload", {
       method: "POST",
       body: formData,
     });
