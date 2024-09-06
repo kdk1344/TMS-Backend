@@ -1,3 +1,12 @@
+/** @global */
+export const REFERER = {
+  DEV_PROGRESS: "devProgress",
+  TEST_PROGRESS: "testProgress",
+  DEFECT: "defect",
+};
+
+Object.freeze(REFERER);
+
 // DOM 요소
 const spinner = document.getElementById("spinner");
 
@@ -613,6 +622,15 @@ export function goBack(message) {
   if (!confirmed) return;
 
   window.history.back();
+}
+
+/** HTTP Referer 헤더에서 이전 경로 값을 가져와서 판별하는 함수 */
+export function getReferer(referer) {
+  if (referer.includes(REFERER.DEV_PROGRESS)) return REFERER.DEV_PROGRESS; // 개발진행관리 > 결함 등록/수정
+  if (referer.includes(REFERER.TEST_PROGRESS)) return REFERER.TEST_PROGRESS; // 테스트 진행관리 > 결함 등록/수정
+  if (referer.includes(REFERER.DEFECT)) return REFERER.DEFECT; // 결함 > 결함 등록/수정
+
+  return null;
 }
 
 /* API 함수 */
