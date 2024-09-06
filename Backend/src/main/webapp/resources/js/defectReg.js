@@ -124,6 +124,8 @@ async function initializeRegisterForm() {
 
   document.getElementById("defectRegistrar").value = userID;
   document.getElementById("defectDiscoveryDate").value = getCurrentDate();
+
+  await initializeSubCategorySelect(majorCategoryCodes[0]?.code);
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {

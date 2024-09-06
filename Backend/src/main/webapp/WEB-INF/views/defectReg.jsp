@@ -28,16 +28,12 @@
 
               <div class="form-group">
                 <label for="majorCategory">업무 대분류<span class="required-indicator">*</span></label>
-                <select id="majorCategory" name="majorCategory" required>
-                  <option value="" disabled selected>대분류 선택</option>
-                </select>
+                <select id="majorCategory" name="majorCategory" required></select>
               </div>
 
               <div class="form-group">
                 <label for="subCategory">업무 중분류<span class="required-indicator">*</span></label>
-                <select id="subCategory" name="subCategory" required>
-                  <option value="" disabled selected>중분류 선택</option>
-                </select>
+                <select id="subCategory" name="subCategory" required></select>
               </div>
             </div>
           </div>
@@ -49,9 +45,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testStage">테스트 단계<span class="required-indicator">*</span></label>
-                <select id="testStage" name="testStage" required>
-                  <option value="" disabled selected>테스트 단계 선택</option>
-                </select>
+                <select id="testStage" name="testStage" required></select>
               </div>
 
               <div class="form-group">
@@ -68,16 +62,12 @@
 
               <div class="form-group">
                 <label for="defectType">결함유형<span class="required-indicator">*</span></label>
-                <select id="defectType" name="defectType" required>
-                  <option value="" disabled selected>결함유형 선택</option>
-                </select>
+                <select id="defectType" name="defectType" required></select>
               </div>
 
               <div class="form-group">
                 <label for="defectSeverity">결함심각도<span class="required-indicator">*</span></label>
-                <select id="defectSeverity" name="defectSeverity" required>
-                  <option value="" disabled selected>결함심각도 선택</option>
-                </select>
+                <select id="defectSeverity" name="defectSeverity" required></select>
               </div>
 
               <div class="form-group">
@@ -116,9 +106,7 @@
 
               <div class="form-group">
                 <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
-                <select id="programType" name="programType" required>
-                  <option value="" disabled selected>프로그램 구분 선택</option>
-                </select>
+                <select id="programType" name="programType" required></select>
               </div>
             </div>
           </div>
