@@ -124,3 +124,13 @@ legend {
   color: blue;
   font-weight: 500;
 }
+
+.file-preview {
+  height: 100px;
+
+  padding: 0;
+}
+
+.file-preview ul {
+  padding: 0;
+}

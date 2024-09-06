@@ -764,3 +764,14 @@ export async function getDefectStatusList() {
     console.error(error.message, "결함 처리상태 목록을 불러오지 못 했습니다.");
   }
 }
+
+// 결함 유형 목록 조회
+export async function getDefectTypeList() {
+  try {
+    const { defectType: defectTypeList } = await tmsFetch(`/defectType`);
+
+    return { defectTypeList };
+  } catch (error) {
+    console.error(error.message, "결함 유형 목록을 불러오지 못 했습니다.");
+  }
+}

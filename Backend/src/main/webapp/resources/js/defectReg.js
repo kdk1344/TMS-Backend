@@ -4,33 +4,29 @@ import {
   initializeSelect,
   getMajorCategoryCodes,
   getSubCategoryCodes,
+  getTestStageList,
+  getDefectTypeList,
+  getDefectSeverityList,
   getProgramTypes,
-  getProgramDetailTypes,
-  getLevels,
-  getProgramStatusList,
-  getTestResultList,
+  getDefectStatusList,
   addFiles,
   updateFilePreview,
   showSpinner,
   hideSpinner,
   goBack,
+  checkSession,
+  getCurrentDate,
 } from "./common.js";
 
 /** @global */
 const SELECT_ID = {
   MAJOR_CATEGORY: "majorCategory",
   SUB_CATEGORY: "subCategory",
+  TEST_STAGE: "testStage",
+  DEFECT_TYPE: "defectType",
+  DEFECT_SEVERITY: "defectSeverity",
   PROGRAM_TYPE: "programType",
-  PROGRAM_DETAIL_TYPE: "programDetailType",
-  PROGRAM_NAME: "programName",
-  PRIORITY: "priority",
-  DIFFICULTY: "difficulty",
-  PROGRAM_STATUS: "programStatus",
-  PL_TEST_RESULT: "plTestResult",
-  THIRD_PARTY_TEST_RESULT: "thirdTestResult",
-  IT_TEST_RESULT: "itTestResult",
-  BUSI_TEST_RESULT: "busiTestResult",
-  DEV_STATUS: "devStatus",
+  DEFECT_STATUS: "defectStatus",
 };
 
 // DOM 요소들
@@ -38,8 +34,11 @@ const defectRegisterForm = document.getElementById("defectRegisterForm");
 const majorCategorySelect = document.getElementById("majorCategory");
 const goBackButton = document.getElementById("goBackButton");
 
-const fileInput = document.getElementById("fileInput");
-const fileSelectButton = document.getElementById("fileSelectButton");
+const defectFileInput = document.getElementById("defectFileInput");
+const defectFileSelectButton = document.getElementById("defectFileSelectButton");
+
+const defectFixFileInput = document.getElementById("defectFixFileInput");
+const defectFixFileSelectButton = document.getElementById("defectFixFileSelectButton");
 
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
@@ -47,8 +46,8 @@ document.addEventListener("DOMContentLoaded", init);
 // 초기화 함수
 function init() {
   renderTMSHeader();
-  //   initializeRegisterForm();
-  //   setupEventListeners();
+  initializeRegisterForm();
+  setupEventListeners();
 }
 
 // 이벤트 핸들러 설정
@@ -59,17 +58,29 @@ function setupEventListeners() {
   }
 
   // 파일 선택 버튼 클릭 시 파일 입력 필드 클릭
-  fileSelectButton.addEventListener("click", () => {
-    fileInput.click();
+  defectFileSelectButton.addEventListener("click", () => {
+    defectFileInput.click();
+  });
+
+  defectFixFileSelectButton.addEventListener("click", () => {
+    defectFixFileInput.click();
   });
 
   // 파일 입력 필드에서 파일이 선택되면 파일 목록 업데이트
-  fileInput.addEventListener("change", () => {
-    const fileInputId = "fileInput";
-    const fileOutputId = "fileOutput";
+  defectFileInput.addEventListener("change", () => {
+    const defectFileInputId = "defectFileInput";
+    const defectFileOutputId = "defectFileOutput";
 
-    addFiles(fileInputId);
-    updateFilePreview(fileInputId, fileOutputId);
+    addFiles(defectFileInputId);
+    updateFilePreview(defectFileInputId, defectFileOutputId);
+  });
+
+  defectFixFileInput.addEventListener("change", () => {
+    const defectFixFileInputId = "defectFixFileInput";
+    const defectFixFileOutputId = "defectFixFileOutput";
+
+    addFiles(defectFixFileInputId);
+    updateFilePreview(defectFixFileInputId, defectFixFileOutputId);
   });
 
   // 프로그램 개발 정보 등록
@@ -84,34 +95,35 @@ async function initializeRegisterForm() {
   // 모든 비동기 호출을 병렬로 실행
   const [
     { majorCategoryCodes },
+    { testStageList },
+    { defectTypeList },
+    { defectSeverityList },
     { programTypes },
-    { programDetailTypes },
-    { levels },
-    { programStatusList },
-    { testResultList },
+    { defectStatusList },
+    { userID },
   ] = await Promise.all([
     getMajorCategoryCodes(),
+    getTestStageList(),
+    getDefectTypeList(),
+    getDefectSeverityList(),
     getProgramTypes(),
-    getProgramDetailTypes(),
-    getLevels(),
-    getProgramStatusList(),
-    getTestResultList(),
+    getDefectStatusList(),
+    checkSession(),
   ]);
 
   const SELECT_DATA = {
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
+    [SELECT_ID.TEST_STAGE]: testStageList,
+    [SELECT_ID.DEFECT_TYPE]: defectTypeList,
+    [SELECT_ID.DEFECT_SEVERITY]: defectSeverityList,
     [SELECT_ID.PROGRAM_TYPE]: programTypes,
-    [SELECT_ID.PROGRAM_DETAIL_TYPE]: programDetailTypes,
-    [SELECT_ID.PRIORITY]: levels,
-    [SELECT_ID.DIFFICULTY]: levels,
-    [SELECT_ID.PROGRAM_STATUS]: programStatusList,
-    [SELECT_ID.PL_TEST_RESULT]: testResultList,
-    [SELECT_ID.THIRD_PARTY_TEST_RESULT]: testResultList,
-    [SELECT_ID.IT_TEST_RESULT]: testResultList,
-    [SELECT_ID.BUSI_TEST_RESULT]: testResultList,
+    [SELECT_ID.DEFECT_STATUS]: defectStatusList,
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
+
+  document.getElementById("defectRegistrar").value = userID;
+  document.getElementById("defectDiscoveryDate").value = getCurrentDate();
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {
@@ -124,11 +136,11 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
   }
 }
 
-// 프로그램 개발 등록
+// 결함 등록
 async function register(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
-  const confirmed = confirm("프로그램 개발 정보를 등록하시겠습니까?");
+  const confirmed = confirm("결함 정보를 등록하시겠습니까?");
   if (!confirmed) return;
 
   // 기존 FormData 객체 생성
@@ -138,13 +150,14 @@ async function register(event) {
   const newFormData = new FormData();
 
   // 파일 추출 (다중 파일 지원)
-  const files = formData.getAll("file"); // 다중 파일을 배열로 가져오기
+  const files = formData.getAll("defectAttachments"); // 다중 파일을 배열로 가져오기
+  const fixFiles = formData.getAll("defectFixAttachments"); // 다중 파일을 배열로 가져오기
 
   // 파일을 제외한 나머지 데이터 추출
   const defectData = {};
 
   formData.forEach((value, key) => {
-    if (key !== "file") {
+    if (key !== "defectAttachments" && key !== "defectFixAttachments") {
       defectData[key] = value;
     }
   });
@@ -154,7 +167,11 @@ async function register(event) {
 
   // 파일 추가
   files.forEach((file) => {
-    newFormData.append("file", file); // Blob으로 감싸지 않고 File 객체 그대로 추가
+    newFormData.append("defectAttachments", file); // Blob으로 감싸지 않고 File 객체 그대로 추가
+  });
+
+  fixFiles.forEach((file) => {
+    newFormData.append("defectFixAttachments", file);
   });
 
   showSpinner();
@@ -168,9 +185,9 @@ async function register(event) {
     const success = status === "success";
 
     if (success) {
-      alert(`프로그램 개발 정보 등록이 완료되었습니다.`);
+      alert(`결함 정보 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
-      window.location.href = "/tms/defect"; // 프로그램 개발 목록으로 이동
+      window.location.href = "/tms/defect"; // 결함 목록으로 이동
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");

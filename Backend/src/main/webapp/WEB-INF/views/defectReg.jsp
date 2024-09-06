@@ -92,13 +92,13 @@
             </div>
 
             <div class="form-group">
-              <label for="attachments">첨부파일</label>
+              <label for="defectFileInput">첨부파일</label>
               <div class="file-box">
                 <button type="button" class="file-button" id="defectFileSelectButton">파일 선택</button>
 
                 <div class="file-preview-container">
-                  <input type="file" id="defectFileInput" class="hidden" name="attachments" multiple />
-                  <div id="defectFileOutput" class="file-preview"></div>
+                  <input type="file" id="defectFileInput" class="hidden" name="defectAttachments" multiple />
+                  <div id="defectFileOutput" class="file-preview custom-scroll"></div>
                 </div>
               </div>
             </div>
@@ -150,13 +150,13 @@
             </div>
 
             <div class="form-group">
-              <label for="fixAttachments">첨부파일</label>
+              <label for="defectFixFileInput">첨부파일</label>
               <div class="file-box">
                 <button type="button" class="file-button" id="defectFixFileSelectButton">파일 선택</button>
 
                 <div class="file-preview-container">
-                  <input type="file" id="defectFixFileInput" class="hidden" name="fixAttachments" multiple />
-                  <div id="defectFixFileOutput" class="file-preview"></div>
+                  <input type="file" id="defectFixFileInput" class="hidden" name="defectFixAttachments" multiple />
+                  <div id="defectFixFileOutput" class="file-preview custom-scroll"></div>
                 </div>
               </div>
             </div>

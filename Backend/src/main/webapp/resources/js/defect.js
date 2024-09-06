@@ -396,7 +396,7 @@ async function deleteDefect() {
 
     showSpinner();
 
-    const { status } = await tmsFetch("/deletedev", {
+    const { status } = await tmsFetch("/deleteDefect", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(selectedDefectIds),
