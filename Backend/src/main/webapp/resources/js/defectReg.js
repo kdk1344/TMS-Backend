@@ -39,6 +39,7 @@ const referer = getReferer(document.referrer);
 // DOM 요소들
 const defectRegisterForm = document.getElementById("defectRegisterForm");
 const majorCategorySelect = document.getElementById("majorCategory");
+const defectRegistrarInfo = document.getElementById("defectRegistrarInfo");
 const goBackButton = document.getElementById("goBackButton");
 
 const programSearchButton = document.getElementById("programSearchButton");
@@ -111,6 +112,22 @@ function setupEventListeners() {
     if (checkBeforeDefectNumberSearching()) openModal("defectNumberSearchModal");
   });
 
+  // PL
+  const plRadioButtons = document.querySelectorAll('input[name="plDefectJudgeClass"]');
+
+  // 각 radio 버튼에 change 이벤트 리스너 추가
+  plRadioButtons.forEach((radio) => {
+    radio.addEventListener("change", function () {
+      if (this.value === "결함수용") {
+        defectRegistrarInfo.textContent =
+          "※ [ 유의사항 ] 결함조치결과 재테스트 후 이상이 없는 경우 “등록자 확인일” 입력 - 재결함 발생한 경우 결함내용과 첨부파일에 추가";
+      } else if (this.value === "결함아님") {
+        defectRegistrarInfo.textContent =
+          "※ [ 유의사항 ] PL의 결함아님 의견을 수용하는 경우 “등록자 확인일을”을 입력하시고, 수용하지 않는 경우는 PL에게 결함 조치요청하시기 바랍니다.";
+      }
+    });
+  });
+
   closeDefectNumberSearchModalButton.addEventListener("click", () => closeModal("defectNumberSearchModal"));
 
   setupModalEventListeners(["defectNumberSearchModal", "programSearchModal"]);
@@ -150,6 +167,8 @@ async function initializeRegisterForm() {
 
   document.getElementById("defectRegistrar").value = userID;
   document.getElementById("defectDiscoveryDate").value = getCurrentDate();
+  document.getElementById("defectRegistrarInfo").textContent =
+    "※ [ 유의사항 ] 결함조치결과 재테스트 후 이상이 없는 경우 “등록자 확인일” 입력 - 재결함 발생한 경우 결함내용과 첨부파일에 추가";
 
   await initializeSubCategorySelect(majorCategoryCodes[0]?.code);
 }

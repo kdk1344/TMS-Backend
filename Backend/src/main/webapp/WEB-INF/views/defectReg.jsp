@@ -212,7 +212,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="defectHandler">조치담당자<span class="required-indicator">*</span></label>
-                <input id="defectHandler" name="defectHandler" required placeholder="이름" />
+                <input id="defectHandler" name="defectHandler" required placeholder="개발자 이름" />
               </div>
 
               <div class="form-group">
@@ -302,10 +302,7 @@
               <textarea id="defectRegistrarComment" name="defectRegistrarComment" class="hidden-scroll"></textarea>
             </div>
 
-            <p class="notice-info">
-              ※ [ 유의사항 ] 결함조치결과 재테스트 후 이상이 없는 경우 “등록자 확인일” 입력 - 재결함 발생한 경우
-              결함내용과 첨부파일에 추가
-            </p>
+            <p id="defectRegistrarInfo" class="notice-info"></p>
           </div>
         </fieldset>
 
