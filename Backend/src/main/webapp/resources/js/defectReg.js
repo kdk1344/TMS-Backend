@@ -7,8 +7,8 @@ import {
   getTestStageList,
   getDefectTypeList,
   getDefectSeverityList,
-  getProgramTypes,
   getDefectStatusList,
+  getProgramTypes,
   addFiles,
   updateFilePreview,
   showSpinner,
@@ -16,6 +16,10 @@ import {
   goBack,
   checkSession,
   getCurrentDate,
+  openModal,
+  closeModal,
+  setupModalEventListeners,
+  getReferer,
 } from "./common.js";
 
 /** @global */
@@ -25,14 +29,23 @@ const SELECT_ID = {
   TEST_STAGE: "testStage",
   DEFECT_TYPE: "defectType",
   DEFECT_SEVERITY: "defectSeverity",
-  PROGRAM_TYPE: "programType",
   DEFECT_STATUS: "defectStatus",
+  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForPrgoram",
 };
+
+// 이전 페이지
+const referer = getReferer(document.referrer);
 
 // DOM 요소들
 const defectRegisterForm = document.getElementById("defectRegisterForm");
 const majorCategorySelect = document.getElementById("majorCategory");
 const goBackButton = document.getElementById("goBackButton");
+
+const programSearchButton = document.getElementById("programSearchButton");
+const closeProgramSearchModalButton = document.getElementById("closeProgramSearchModalButton");
+
+const defectNumberSearchButton = document.getElementById("defectNumberSearchButton");
+const closeDefectNumberSearchModalButton = document.getElementById("closeDefectNumberSearchModalButton");
 
 const defectFileInput = document.getElementById("defectFileInput");
 const defectFileSelectButton = document.getElementById("defectFileSelectButton");
@@ -88,6 +101,19 @@ function setupEventListeners() {
 
   // 뒤로가기
   goBackButton.addEventListener("click", () => goBack("등록을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
+
+  // 프로그램 검색
+  programSearchButton.addEventListener("click", () => openModal("programSearchModal"));
+  closeProgramSearchModalButton.addEventListener("click", () => closeModal("programSearchModal"));
+
+  // 기발생 결함번호 검색
+  defectNumberSearchButton.addEventListener("click", () => {
+    if (checkBeforeDefectNumberSearching()) openModal("defectNumberSearchModal");
+  });
+
+  closeDefectNumberSearchModalButton.addEventListener("click", () => closeModal("defectNumberSearchModal"));
+
+  setupModalEventListeners(["defectNumberSearchModal", "programSearchModal"]);
 }
 
 /**  등록 폼 초기화 함수 */
@@ -98,17 +124,17 @@ async function initializeRegisterForm() {
     { testStageList },
     { defectTypeList },
     { defectSeverityList },
-    { programTypes },
     { defectStatusList },
     { userID },
+    { programTypes },
   ] = await Promise.all([
     getMajorCategoryCodes(),
     getTestStageList(),
     getDefectTypeList(),
     getDefectSeverityList(),
-    getProgramTypes(),
     getDefectStatusList(),
     checkSession(),
+    getProgramTypes(),
   ]);
 
   const SELECT_DATA = {
@@ -116,8 +142,8 @@ async function initializeRegisterForm() {
     [SELECT_ID.TEST_STAGE]: testStageList,
     [SELECT_ID.DEFECT_TYPE]: defectTypeList,
     [SELECT_ID.DEFECT_SEVERITY]: defectSeverityList,
-    [SELECT_ID.PROGRAM_TYPE]: programTypes,
     [SELECT_ID.DEFECT_STATUS]: defectStatusList,
+    [SELECT_ID.PROGRAM_TYPE_FOR_PROGRAM]: programTypes,
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
@@ -136,6 +162,24 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
 
     initializeSelect(SELECT_ID.SUB_CATEGORY, subCategoryCodes);
   }
+}
+
+function checkBeforeDefectNumberSearching() {
+  const programId = document.getElementById("programId").value;
+  const programName = document.getElementById("programName").value;
+
+  if (programId === "" || programName === "") {
+    alert("먼저 프로그램ID와 프로그램명을 입력해 주세요.");
+    return false;
+  }
+
+  const programIdBox = document.getElementById("programIdBox");
+  const programNameBox = document.getElementById("programNameBox");
+
+  programIdBox.textContent = programId;
+  programNameBox.textContent = programName;
+
+  return true;
 }
 
 // 결함 등록

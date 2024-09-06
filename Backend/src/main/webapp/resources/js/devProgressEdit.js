@@ -39,6 +39,7 @@ const SELECT_ID = {
 const devProgressEditForm = document.getElementById("devProgressEditForm");
 const majorCategorySelect = document.getElementById("majorCategory");
 const goBackButton = document.getElementById("goBackButton");
+const goDefectRegisterPageButton = document.getElementById("goDefectRegisterPageButton");
 
 const fileInput = document.getElementById("fileInput");
 const fileSelectButton = document.getElementById("fileSelectButton");
@@ -76,6 +77,11 @@ function setupEventListeners() {
 
   // 프로그램 개발 정보 수정
   devProgressEditForm.addEventListener("submit", edit);
+
+  // 결함 등록 페이지로 이동
+  goDefectRegisterPageButton.addEventListener("click", () => {
+    window.location.href = "/tms/defectReg";
+  });
 
   // 뒤로가기
   goBackButton.addEventListener("click", () => goBack("수정을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));

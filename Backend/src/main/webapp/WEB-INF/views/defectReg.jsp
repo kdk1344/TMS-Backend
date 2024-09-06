@@ -17,6 +17,94 @@
 
     <main class="content">
       <h1 class="page-title">결함 등록</h1>
+
+      <!-- 프로그램 검색 모달 -->
+      <div id="programSearchModal" class="modal">
+        <div class="modal-content">
+          <div class="flex-box justify-between">
+            <h2>프로그램 조회</h2>
+            <button type="button" id="closeProgramSearchModalButton" class="modal-close-button">
+              <img src="../../resources/images/close_icon.png" alt="닫기" />
+            </button>
+          </div>
+
+          <!-- 프로그램 필터링 -->
+          <form id="programFilterForm">
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="programTypeForPrgoram">프로그램 구분</label>
+                <select id="programTypeForPrgoram" name="programType">
+                  <option value="" selected>전체</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="developerForPrgoram">개발자</label>
+                <input id="developerForPrgoram" name="developer" />
+              </div>
+
+              <div class="form-group">
+                <label for="programIdForPrgoram">프로그램ID</label>
+                <input id="programIdForPrgoram" name="programId" />
+              </div>
+
+              <div class="form-group">
+                <label for="programNameForPrgoram">프로그램명</label>
+                <input id="programNameForPrgoram" name="programName" />
+              </div>
+            </div>
+
+            <button>조회</button>
+          </form>
+          <table id="programTable">
+            <thead>
+              <th>번호</th>
+              <th>프로그램 구분</th>
+              <th>프로그램ID</th>
+              <th>프로그램명</th>
+              <th>상태</th>
+              <th>개발자</th>
+              <th>PL</th>
+            </thead>
+            <tbody id="programTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 기발생 결함번호 검색 모달 -->
+      <div id="defectNumberSearchModal" class="modal">
+        <div class="modal-content">
+          <div class="flex-box justify-between">
+            <h2>기발생 결함번호 조회</h2>
+            <button type="button" id="closeDefectNumberSearchModalButton" class="modal-close-button">
+              <img src="../../resources/images/close_icon.png" alt="닫기" />
+            </button>
+          </div>
+          <dl class="definition-container">
+            <div class="definition-item">
+              <dt>프로그램ID:</dt>
+              <dd id="programIdBox"></dd>
+            </div>
+
+            <div class="definition-item">
+              <dt>프로그램명:</dt>
+              <dd id="programNameBox"></dd>
+            </div>
+          </dl>
+          <table id="defectNumberTable">
+            <thead>
+              <th>결함번호</th>
+              <th>프로그램ID</th>
+              <th>프로그램명</th>
+              <th>개발자</th>
+              <th>결함심각도</th>
+              <th>결함내용</th>
+            </thead>
+            <tbody id="defectNumberTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <form id="defectRegisterForm">
         <fieldset>
           <div class="form-group-container">
@@ -96,17 +184,23 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
-                <input id="programId" name="programId" required placeholder="프로그램ID 입력" />
+                <div class="search-input-wrapper">
+                  <input id="programId" name="programId" required readonly />
+
+                  <button type="button" class="search-button" id="programSearchButton">
+                    <img src="../../resources/images/search_icon.png" alt="프로그램 검색" />
+                  </button>
+                </div>
               </div>
 
               <div class="form-group">
                 <label for="programName">프로그램명<span class="required-indicator">*</span></label>
-                <input id="programName" name="programName" required placeholder="프로그램명 입력" />
+                <input id="programName" name="programName" required readonly />
               </div>
 
               <div class="form-group">
                 <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
-                <select id="programType" name="programType" required></select>
+                <input id="programType" name="programType" required readonly />
               </div>
             </div>
           </div>
@@ -157,7 +251,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="pl">PL<span class="required-indicator">*</span></label>
-                <input id="pl" name="pl" required placeholder="이름" />
+                <input id="pl" name="pl" required placeholder="이름" readonly />
               </div>
 
               <div class="form-group">
@@ -228,7 +322,13 @@
 
               <div class="form-group">
                 <label for="originalDefectNumber">기발생 결함번호</label>
-                <input id="originalDefectNumber" name="originalDefectNumber" readonly />
+                <div class="search-input-wrapper">
+                  <input id="originalDefectNumber" name="originalDefectNumber" readonly />
+
+                  <button type="button" class="search-button" id="defectNumberSearchButton">
+                    <img src="../../resources/images/search_icon.png" alt="기발생 결함번호 검색" />
+                  </button>
+                </div>
               </div>
             </div>
 

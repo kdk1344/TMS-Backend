@@ -381,7 +381,7 @@ async function uploadDefectFile() {
 // 결함현황 정보 삭제
 async function deleteDefect() {
   try {
-    const confirmed = confirm("결함현황 정보를 삭제하시겠습니까?");
+    const confirmed = confirm("결함 정보를 삭제하시겠습니까?");
 
     if (!confirmed) return;
 
@@ -390,7 +390,7 @@ async function deleteDefect() {
     );
 
     if (selectedDefectIds.length === 0) {
-      alert("삭제할 결함현황 정보를 선택해주세요.");
+      alert("삭제할 결함 정보를 선택해주세요.");
       return;
     }
 
@@ -405,7 +405,7 @@ async function deleteDefect() {
     const success = status === "success";
 
     if (success) {
-      alert(`결함현황 정보 삭제가 완료되었습니다.`);
+      alert(`결함 정보 삭제가 완료되었습니다.`);
       location.reload(); // 페이지 새로고침
     }
   } catch (error) {

@@ -228,6 +228,12 @@ input[readonly] {
   background-color: var(--super-light-gray);
 }
 
+select.readonly {
+  pointer-events: none; /* 클릭 차단 */
+
+  background-color: var(--super-light-gray);
+}
+
 textarea {
   resize: none; /* 크기 조절을 완전히 막음 */
 }
