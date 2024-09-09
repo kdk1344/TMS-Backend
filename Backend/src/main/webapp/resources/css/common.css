@@ -234,12 +234,21 @@ select.readonly {
   background-color: var(--super-light-gray);
 }
 
+button[disabled] {
+  cursor: not-allowed;
+
+  background-color: var(--super-light-gray);
+}
+
+button[disabled]:hover {
+  box-shadow: none;
+}
+
 textarea {
   resize: none; /* 크기 조절을 완전히 막음 */
 }
 
-button:hover,
-button:focus {
+button:hover {
   box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);
 }
 

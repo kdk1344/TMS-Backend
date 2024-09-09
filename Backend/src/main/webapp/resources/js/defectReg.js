@@ -7,7 +7,6 @@ import {
   getTestStageList,
   getDefectTypeList,
   getDefectSeverityList,
-  getDefectStatusList,
   getProgramTypes,
   addFiles,
   updateFilePreview,
@@ -20,6 +19,7 @@ import {
   closeModal,
   setupModalEventListeners,
   getReferer,
+  REFERER,
 } from "./common.js";
 
 /** @global */
@@ -29,12 +29,8 @@ const SELECT_ID = {
   TEST_STAGE: "testStage",
   DEFECT_TYPE: "defectType",
   DEFECT_SEVERITY: "defectSeverity",
-  DEFECT_STATUS: "defectStatus",
   PROGRAM_TYPE_FOR_PROGRAM: "programTypeForPrgoram",
 };
-
-// 이전 페이지
-const referer = getReferer(document.referrer);
 
 // DOM 요소들
 const defectRegisterForm = document.getElementById("defectRegisterForm");
@@ -141,7 +137,6 @@ async function initializeRegisterForm() {
     { testStageList },
     { defectTypeList },
     { defectSeverityList },
-    { defectStatusList },
     { userID },
     { programTypes },
   ] = await Promise.all([
@@ -149,7 +144,6 @@ async function initializeRegisterForm() {
     getTestStageList(),
     getDefectTypeList(),
     getDefectSeverityList(),
-    getDefectStatusList(),
     checkSession(),
     getProgramTypes(),
   ]);
@@ -159,7 +153,6 @@ async function initializeRegisterForm() {
     [SELECT_ID.TEST_STAGE]: testStageList,
     [SELECT_ID.DEFECT_TYPE]: defectTypeList,
     [SELECT_ID.DEFECT_SEVERITY]: defectSeverityList,
-    [SELECT_ID.DEFECT_STATUS]: defectStatusList,
     [SELECT_ID.PROGRAM_TYPE_FOR_PROGRAM]: programTypes,
   };
 
@@ -171,6 +164,7 @@ async function initializeRegisterForm() {
     "※ [ 유의사항 ] 결함조치결과 재테스트 후 이상이 없는 경우 “등록자 확인일” 입력 - 재결함 발생한 경우 결함내용과 첨부파일에 추가";
 
   await initializeSubCategorySelect(majorCategoryCodes[0]?.code);
+  await initializePageByReferer();
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {
@@ -199,6 +193,85 @@ function checkBeforeDefectNumberSearching() {
   programNameBox.textContent = programName;
 
   return true;
+}
+
+/** 이전 페이지 경로에 따라 현재 페이지 초기값 할당 */
+async function initializePageByReferer() {
+  // 이전 페이지
+  const referer = getReferer(document.referrer);
+
+  // 현재 URL에서 쿼리 파라미터를 가져옴
+  const { majorCategory, subCategory, programId, programName, programType, developer, pl, testStage, testId } =
+    Object.fromEntries(new URLSearchParams(window.location.search).entries());
+
+  const majorCategorySelect = document.getElementById("majorCategory");
+  const subCategorySelect = document.getElementById("subCategory");
+  const testStageSelect = document.getElementById("testStage");
+  const testIdInput = document.getElementById("testId");
+
+  if (referer === REFERER.DEV_PROGRESS || referer === REFERER.TEST_PROGRESS) {
+    document.getElementById("programId").value = programId;
+    document.getElementById("programName").value = programName;
+    document.getElementById("programType").value = programType;
+    document.getElementById("defectHandler").value = developer;
+    document.getElementById("pl").value = pl;
+
+    for (let option of majorCategorySelect.options) {
+      if (option.textContent === majorCategory) {
+        option.selected = true;
+
+        // 대분류 선택 후 중분류 fetch
+        await initializeSubCategorySelect(option.value);
+
+        break;
+      }
+    }
+
+    for (let option of subCategorySelect.options) {
+      if (option.textContent === subCategory) {
+        option.selected = true;
+        break;
+      }
+    }
+  }
+
+  // 개발진행관리 > 결함 등록
+  if (referer === REFERER.DEV_PROGRESS) {
+    const programSearchButton = document.getElementById("programSearchButton");
+
+    testIdInput.value = `UT-${programId}`;
+
+    for (let option of testStageSelect.options) {
+      if (option.textContent === "단위테스트") {
+        option.selected = true;
+        break;
+      }
+    }
+
+    // 자동 세팅 값 수정 막기
+    testStageSelect.classList.add("readonly");
+    majorCategorySelect.classList.add("readonly");
+    subCategorySelect.classList.add("readonly");
+
+    testIdInput.readOnly = true;
+    programSearchButton.disabled = true;
+  }
+
+  // 테스트 진행관리 > 결함 등록
+  if (referer === REFERER.TEST_PROGRESS) {
+    testIdInput.value = testId;
+
+    for (let option of testStageSelect.options) {
+      if (option.textContent === testStage) {
+        option.selected = true;
+        break;
+      }
+    }
+
+    // 자동 세팅 값 수정 막기
+    testIdInput.readOnly = true;
+    testStageSelect.classList.add("readonly");
+  }
 }
 
 // 결함 등록

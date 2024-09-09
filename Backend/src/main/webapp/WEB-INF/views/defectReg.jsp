@@ -282,7 +282,12 @@
 
             <div class="form-group">
               <label for="plComments">PL의견</label>
-              <textarea id="plComments" name="plComments" class="hidden-scroll"></textarea>
+              <textarea
+                id="plComments"
+                name="plComments"
+                class="hidden-scroll"
+                placeholder="'결함아님'인 경우 필수로 입력해 주세요."
+              ></textarea>
             </div>
           </div>
         </fieldset>
@@ -310,12 +315,11 @@
           <legend>▣ 결함 처리상태</legend>
           <div class="form-group-container">
             <div class="form-group-row">
-              <div class="form-group">
+              <!-- 수정 시 필요 -->
+              <!-- <div class="form-group">
                 <label for="defectStatus">처리상태</label>
-                <select id="defectStatus" name="defectStatus">
-                  <option value="" selected>처리상태 선택</option>
-                </select>
-              </div>
+                <input id="defectStatus" name="defectStatus" readonly />
+              </div> -->
 
               <div class="form-group">
                 <label for="originalDefectNumber">기발생 결함번호</label>
@@ -329,7 +333,6 @@
               </div>
             </div>
 
-            <p class="notice-info">※ [ 유의사항 ] 재결함이 발생한 경우 처리상태를 "재결함"으로 선택해 주세요.</p>
             <p class="notice-info">
               ※ [ 유의사항 ] 다수 테스터가 동일한 결함을 등록하는 경우 "기발생 결함번호"를 선택해 주세요.
             </p>
