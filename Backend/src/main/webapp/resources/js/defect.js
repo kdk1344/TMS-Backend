@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", init);
 
 // 모달 아이디
 const MODAL_ID = {
-  DEFECT_REGISTER: "defectRegisterModal",
   DEFECT_EDIT: "defectEditModal",
   DEFECT_FILE_UPLOAD: "defectFileUploadModal",
   DEFECT_FILE_DOWNLOAD: "defectFileDownloadModal",

@@ -4,71 +4,222 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/devProgress.css" />
+    <link rel="stylesheet" type="text/css" href="../../resources/css/testProgress.css" />
 
-    <title>TMS 개발진행 관리</title>
-    <script type="module" src="../../resources/js/devProgress.js"></script>
+    <title>TMS 테스트 진행관리</title>
+    <script type="module" src="../../resources/js/testProgress.js"></script>
   </head>
 
   <body>
-    <h1>Test Progress</h1>
+    <header class="header">
+      <!-- 공통 헤더 정보 동적으로 삽입-->
+    </header>
 
-    <table border="1">
-        <thead>
+    <main class="content">
+      <h1 class="page-title">테스트 진행현황</h1>
+
+      <!-- File Upload Modal -->
+      <div id="testProgressFileUploadModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <h2>엑셀 업로드</h2>
+          <div class="excel-template-download-box">
+            <pre>
+엑셀로 업로드하여 다수의 목록을 한번에 입력할 수 있습니다. 
+엑셀 양식에 데이터를 입력하여 업로드하세요. (파일 형식: xls, xlsx)</pre
+            >
+            <form
+              id="downloadTemplateForm"
+              action="testProgressexampleexcel"
+              method="get"
+              class="flex-box align-center"
+            >
+              <button type="submit" class="excel-button">
+                <img src="../../resources/images/download_icon.png" />엑셀 양식 다운로드
+              </button>
+            </form>
+          </div>
+
+          <!-- 파일 선택 input -->
+          <input
+            type="file"
+            id="uploadTestProgressFileInput"
+            class="excel-upload-input"
+            name="file"
+            accept=".xlsx, .xls"
+          />
+
+          <div class="flex-box justify-end">
+            <button type="button" class="cancel-button" id="closeTestProgressFileUploadModalButton">취소</button>
+            <button type="button" class="save-button" id="uploadTestProgressFileButton">저장</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Download Modal -->
+      <div id="testProgressFileDownloadModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <h2>엑셀 다운로드</h2>
+          <div class="download-box">
+            <form
+              id="downloadAllTestProgressForm"
+              action="testProgressdownloadAll"
+              method="get"
+              class="flex-box align-center"
+            >
+              <button type="submit" id="downloadAllTestProgressButton" class="excel-button">
+                <img src="../../resources/images/download_icon.png" />전체자료 다운로드
+              </button>
+              전체 데이터를 주별로 다운로드 받아 실적 집계로 활용
+            </form>
+
+            <form
+              id="downloadFilteredTestProgressForm"
+              action="testProgressdownloadFiltered"
+              method="get"
+              id="downloadFilteredForm"
+              class="flex-box align-center"
+            >
+              <!-- 숨겨진 input 필드 -->
+              <input type="hidden" id="testStageForDownload" name="testStage" />
+              <input type="hidden" id="majorCategoryForDownload" name="majorCategory" />
+              <input type="hidden" id="subCategoryForDownload" name="subCategory" />
+              <input type="hidden" id="defectSeverityForDownload" name="defectSeverity" />
+              <input type="hidden" id="defectRegistrarForDownload" name="defectRegistrar" />
+              <input type="hidden" id="defectHandlerForDownload" name="defectHandler" />
+              <input type="hidden" id="plForDownload" name="pl" />
+              <input type="hidden" id="defectNumberForDownload" name="seq" />
+              <input type="hidden" id="defectStatusForDownload" name="defectStatus" />
+
+              <button type="submit" id="downloadFilteredDefectButton" class="excel-button">
+                <img src="../../resources/images/download_icon.png" />
+                조회결과 다운로드
+              </button>
+              조회조건에 의한 결과만 다운로드
+            </form>
+          </div>
+
+          <div class="flex-box justify-end">
+            <button type="button" class="cancel-button" id="closeTestProgressFileDownloadModalButton">닫기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 테스트 진행현황 조회 필터링 폼 -->
+      <form id="testProgressFilterForm">
+        <div class="filter-container">
+          <div class="form-group">
+            <label for="testTypeForFilter">테스트 구분</label>
+            <select id="testTypeForFilter" name="testType">
+              <option value="" selected>전체</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="majorCategoryForFilter">업무 대분류</label>
+            <select id="majorCategoryForFilter" name="majorCategory">
+              <option value="" selected>전체</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subCategoryForFilter">업무 중분류</label>
+            <select id="subCategoryForFilter" name="subCategory">
+              <option value="" selected>전체</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="programTypeForFilter">프로그램 구분</label>
+            <select id="programTypeForFilter" name="programType">
+              <option value="" selected>전체</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <select id="testKeySelect" name="testKey">
+              <option value="testId" selected>테스트ID</option>
+              <option value="programId">프로그램ID</option>
+              <option value="programName">프로그램명</option>
+            </select>
+            <input type="text" id="testValueInput" name="testValue" />
+          </div>
+
+          <div class="form-group">
+            <select id="testRoleKeySelect" name="testRoleKey">
+              <option value="developer" selected>개발자</option>
+              <option value="pl">PL</option>
+              <option value="testMgr">테스트 담당자</option>
+              <option value="itMgr">고객IT 담당자</option>
+              <option value="busiMgr">고객현업 담당자</option>
+            </select>
+            <input type="text" id="testRoleValueInput" name="testRoleValue" />
+          </div>
+
+          <div class="form-group">
+            <label for="testStatusForFilter">진행상태</label>
+            <select id="testStatusForFilter" name="testStatus">
+              <option value="" selected>전체</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex-box justify-end">
+          <button type="reset" id="resetButton" class="reset-button">초기화</button>
+          <button type="submit" id="searchTestProgressButton">조회</button>
+        </div>
+      </form>
+
+      <!-- 버튼 그룹 -->
+      <div class="button-group">
+        <div class="flex-box">
+          <button id="goTestProgressRegisterPageButton">등록</button>
+          <button id="deleteTestProgressButton" class="delete-button">삭제</button>
+        </div>
+        <div class="flex-box">
+          <button id="openTestProgressFileUploadModalButton" class="excel-button">
+            <img src="../../resources/images/upload_icon.png" />엑셀 업로드
+          </button>
+          <button id="openTestProgressFileDownloadModalButton" class="excel-button">
+            <img src="../../resources/images/download_icon.png" />엑셀 다운로드
+          </button>
+        </div>
+      </div>
+
+      <!-- 테스트 진행현황 테이블 -->
+      <div class="table-container">
+        <table id="testProgressTable">
+          <thead>
             <tr>
-                <th>SEQ</th>
-                <th>Test Stage</th>
-                <th>Major Category</th>
-                <th>Sub Category</th>
-                <th>Program Type</th>
-                <th>Test ID</th>
-                <th>Program Name</th>
-                <th>Developer</th>
-                <th>PL</th>
-                <th>Exec Company Manager</th>
-                <th>Test Status</th>
+              <th><input type="checkbox" id="selectAllTestProgressCheckbox" /></th>
+              <th class="sub-category">업무 중분류</th>
+              <th class="test-id">테스트ID</th>
+              <th class="">시나리오명</th>
+              <th class="">케이스명</th>
+              <th class="">스텝명</th>
+              <th class="program-type">프로그램<br />구분</th>
+              <th class="screen-id">화면ID</th>
+              <th class="screen-name">화면명</th>
+              <th class="">테스트<br />예정일</th>
+              <th class="">테스트<br />종료일</th>
+              <th class="pl">PL</th>
+              <th class="it-mgr">고객IT</th>
+              <th class="it-mgr-confirm-date">고객IT<br />확인일</th>
+              <th class="busi-mgr-confirm-date">고객현업<br />확인일</th>
+              <th class="test-status">진행상태</th>
             </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="testProgress1" items="${testProgress}">
-                <tr>
-                    <td>${testProgress1.seq}</td>
-                    <td>${testProgress1.testStage}</td>
-                    <td>${testProgress1.majorCategory}</td>
-                    <td>${testProgress1.subCategory}</td>
-                    <td>${testProgress1.programType}</td>
-                    <td>${testProgress1.testId}</td>
-                    <td>${testProgress1.programName}</td>
-                    <td>${testProgress1.developer}</td>
-                    <td>${testProgress1.pl}</td>
-                    <td>${testProgress1.execCompanyMgr}</td>
-                    <td>${testProgress1.testStatus}</td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+          </thead>
+          <tbody id="testProgressTableBody">
+            <!-- 테스트 진행 정보 동적으로 삽입-->
+          </tbody>
+        </table>
+      </div>
 
-    <!-- Pagination -->
-    <div class="pagination">
-        <c:if test="${currentPage > 1}">
-            <a href="?page=${currentPage - 1}">&laquo; Previous</a>
-        </c:if>
-        
-        <c:forEach begin="1" end="${totalPages}" var="i">
-            <c:choose>
-                <c:when test="${i == currentPage}">
-                    <span>${i}</span>
-                </c:when>
-                <c:otherwise>
-                    <a href="?page=${i}">${i}</a>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
-        
-        <c:if test="${currentPage < totalPages}">
-            <a href="?page=${currentPage + 1}">Next &raquo;</a>
-        </c:if>
-    </div>
-
-</body>
+      <!-- 페이지네이션 -->
+      <div id="testProgressPagination" class="pagination">
+        <!-- 페이지네이션 버튼 동적으로 삽입 -->
+      </div>
+    </main>
+  </body>
 </html>
