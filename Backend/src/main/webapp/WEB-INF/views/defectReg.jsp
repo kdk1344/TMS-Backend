@@ -251,7 +251,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="pl">PL<span class="required-indicator">*</span></label>
-                <input id="pl" name="pl" required placeholder="이름" readonly />
+                <input id="pl" name="pl" required placeholder="이름" />
               </div>
 
               <div class="form-group">

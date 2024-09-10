@@ -208,13 +208,15 @@ async function initializePageByReferer() {
   const subCategorySelect = document.getElementById("subCategory");
   const testStageSelect = document.getElementById("testStage");
   const testIdInput = document.getElementById("testId");
+  const plInput = document.getElementById("pl");
 
   if (referer === REFERER.DEV_PROGRESS || referer === REFERER.TEST_PROGRESS) {
     document.getElementById("programId").value = programId;
     document.getElementById("programName").value = programName;
     document.getElementById("programType").value = programType;
     document.getElementById("defectHandler").value = developer;
-    document.getElementById("pl").value = pl;
+
+    plInput.value = pl;
 
     for (let option of majorCategorySelect.options) {
       if (option.textContent === majorCategory) {
@@ -233,6 +235,10 @@ async function initializePageByReferer() {
         break;
       }
     }
+
+    // 자동 세팅 값 수정 막기
+    plInput.readOnly = true;
+    testIdInput.readOnly = true;
   }
 
   // 개발진행관리 > 결함 등록
@@ -253,7 +259,6 @@ async function initializePageByReferer() {
     majorCategorySelect.classList.add("readonly");
     subCategorySelect.classList.add("readonly");
 
-    testIdInput.readOnly = true;
     programSearchButton.disabled = true;
   }
 
@@ -269,7 +274,6 @@ async function initializePageByReferer() {
     }
 
     // 자동 세팅 값 수정 막기
-    testIdInput.readOnly = true;
     testStageSelect.classList.add("readonly");
   }
 }
