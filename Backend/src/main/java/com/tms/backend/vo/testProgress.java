@@ -17,6 +17,8 @@ public class testProgress {
     private String testScenarioName;               // 테스트시나리오명
     private String testCaseName;                   // 테스트케이스명
     private String testStepName;                   // 테스트스텝명
+    private String screenId;					   // 화면ID
+    private String screenName;					   // 화면명
     private String programType;                    // 프로그램구분
     private String programId;                      // 프로그램ID
     private String programName;                    // 프로그램명

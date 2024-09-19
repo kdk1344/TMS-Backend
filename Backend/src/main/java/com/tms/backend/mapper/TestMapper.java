@@ -36,6 +36,7 @@ public interface TestMapper {
             @Param("ItMgr") String ItMgr,
             @Param("BusiMgr") String BusiMgr,
             @Param("execCompanyMgr") String execCompanyMgr,
+            @Param("thirdPartyTestMgr") String thirdPartyTestMgr,
             @Param("offset") int offset,
             @Param("size") int size
     );
@@ -54,6 +55,7 @@ public interface TestMapper {
             @Param("pl") String pl,
             @Param("ItMgr") String ItMgr,
             @Param("BusiMgr") String BusiMgr,
-            @Param("execCompanyMgr") String execCompanyMgr
+            @Param("execCompanyMgr") String execCompanyMgr,
+            @Param("thirdPartyTestMgr") String thirdPartyTestMgr
     );
 }

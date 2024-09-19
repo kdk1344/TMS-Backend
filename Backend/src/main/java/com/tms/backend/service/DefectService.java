@@ -82,7 +82,7 @@ public class DefectService {
     // 특정 아이디 결함 조치 완료 건수
     public int countDefectSoultions(String programId, String managerType) {
     	return defectmapper.countDefectSoultions(programId, managerType);
-    }	
+    }
 	
 
     

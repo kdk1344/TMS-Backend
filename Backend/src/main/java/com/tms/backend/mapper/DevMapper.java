@@ -62,6 +62,7 @@ public interface DevMapper {
     public void insertdevProgress(devProgress devProgress);
     public devProgress getDevById(int Seq);
     public int checkCountProgramId(String programId);
+    //프로그램 ID 확보를 위한 프로그램 목록 조회
     public List<devProgress> checkProgramId(@Param("programType") String programType,
 											@Param("developer") String developer,
 											@Param("programId") String programId,

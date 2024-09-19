@@ -61,6 +61,7 @@ import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Criteria;
+import com.tms.backend.vo.Defect;
 import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.PageDTO;
@@ -222,23 +223,23 @@ public class devProgressController {
     }
 	
 	//프로그램 ID 확인
-	@GetMapping(value = "api/programId", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "api/programList", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getprogramId(
+    public ResponseEntity<Map<String, Object>> getprogramList(
     		@RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "developer", required = false) String developer,
             @RequestParam(value = "programId", required = false) String programId,
             @RequestParam(value = "programName", required = false) String programName,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size) {
     	Map<String, Object> response = new HashMap<>();
-    	List<devProgress> programID = devservice.checkProgramId(programType, developer, programId, programName, page, size);
+    	List<devProgress> programList = devservice.checkProgramId(programType, developer, programId, programName, page, size);
     	int totalprogramId = devservice.checkProgramIdCounts(programType, developer, programId, programName);
 
         // 응답 데이터 생성
-        if (programId != null && !programId.isEmpty()) {
+        if (programList != null && !programList.isEmpty()) {
             response.put("status", "success");
-            response.put("programId", programID);
+            response.put("programList", programList);
             response.put("totalprogramId", totalprogramId);
         } else {
             response.put("status", "failure");
@@ -447,6 +448,7 @@ public class devProgressController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 			}
 		String UserID = (String) session.getAttribute("id");
+		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		try {
 			//코드로 들어오는 데이터를 코드명으로 변경
@@ -493,7 +495,7 @@ public class devProgressController {
 	        
 	        //프로그램 상태가 삭제일때 삭제처리자는 자동으로 사용자 ID, 삭제처리일은 오늘 일자
 	        if (("삭제".equals(devProgress.getProgramStatus())) && (devProgress.getDeletionHandler() == null)) {
-	        	devProgress.setDeletionHandler(UserID);
+	        	devProgress.setDeletionHandler(UserName);
 	        	devProgress.setDeletionDate(new Date());
 	        }
 	        // 개발자 단테종료일 +2를 테스트 예정일이 Null일 경우 대입
@@ -530,8 +532,8 @@ public class devProgressController {
 	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	        }
 	        //최초 등록자, 변경자 로그인 ID 세팅
-	        devProgress.setInitRegistrar(UserID);
-	        devProgress.setLastModifier(UserID);
+	        devProgress.setInitRegistrar(UserName);
+	        devProgress.setLastModifier(UserName);
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
         	
         	// 새로운 파일 업로드 처리
@@ -626,6 +628,7 @@ public class devProgressController {
 //			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 //			}
 		String UserID = (String) session.getAttribute("id");
+		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		
 		log.info("devProgress: " + devProgress);
@@ -677,7 +680,7 @@ public class devProgressController {
 	        
 	        //프로그램 상태가 삭제일때 삭제처리자는 자동으로 사용자 ID, 삭제처리일은 오늘 일자
 	        if (("삭제".equals(devProgress.getProgramStatus())) && (devProgress.getDeletionHandler() == null)) {
-	        	devProgress.setDeletionHandler(UserID);
+	        	devProgress.setDeletionHandler(UserName);
 	        	devProgress.setDeletionDate(new Date());
 	        }
 	        // 개발자 단테종료일 +2를 테스트 예정일이 Null일 경우 대입

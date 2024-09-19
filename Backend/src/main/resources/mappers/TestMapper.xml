@@ -45,6 +45,9 @@
         <if test="execCompanyMgr != null and execCompanyMgr != ''">
             AND EXEC_COMPANY_MGR = #{execCompanyMgr}
         </if>
+        <if test="thirdPartyTestMgr != null and thirdPartyTestMgr != ''">
+            AND THIRD_PARTY_TEST_MGR = #{thirdPartyTestMgr}
+        </if>
         LIMIT #{offset}, #{size}
     </select>
 	
@@ -89,6 +92,9 @@
         </if>
         <if test="execCompanyMgr != null and execCompanyMgr != ''">
             AND EXEC_COMPANY_MGR = #{execCompanyMgr}
+        </if>
+        <if test="thirdPartyTestMgr != null and thirdPartyTestMgr != ''">
+            AND THIRD_PARTY_TEST_MGR = #{thirdPartyTestMgr}
         </if>
 	</select>
 	

@@ -39,20 +39,21 @@ public class TestService {
 	public List<testProgress> searchTestProgress(String testStage, String majorCategory, String subCategory,
 										        String programType, String testId, String programName, String programId,
 										        String developer, String testStatus, String pl, 
-										        String ItMgr, String BusiMgr, String execCompanyMgr, int page, int size) {
+										        String ItMgr, String BusiMgr, String execCompanyMgr, String thirdPartyTestMgr,
+										        int page, int size) {
 		int offset = (page - 1) * size;
 		return testmapper.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, programName, 
-	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, offset, size);
+	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr, offset, size);
 	}
 	
 	public int getTotalTestCount(String testStage, String majorCategory, String subCategory,
 						        String programType, String testId, String programName, String programId,
 						        String developer, String testStatus, String pl, 
-						        String ItMgr, String BusiMgr, String execCompanyMgr) {
+						        String ItMgr, String BusiMgr, String execCompanyMgr, String thirdPartyTestMgr) {
 	    
 	    return testmapper.getTotalTestCount(
 	            testStage, majorCategory, subCategory, programType, testId, programName, 
-	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr);
+	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr);
 	}
 	
 

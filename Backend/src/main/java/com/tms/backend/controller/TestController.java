@@ -96,6 +96,7 @@ public class TestController {
 	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
             @RequestParam(value = "Pl", required = false) String pl,
             @RequestParam(value = "execCompanyMgr", required = false) String execCompanyMgr,
+            @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
             @RequestParam(value = "testStatus", required = false) String testStatus,
             @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "15") int size) {
@@ -106,11 +107,11 @@ public class TestController {
 		subCategory = adminService.getStageCodes("중", subCategory);
 		
 		// 결함 목록 조회
-		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, page, size);
+		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr, page, size);
 
 	    // 총 결함 수 조회
 	    int totalDefects = testService.getTotalTestCount(testStage, majorCategory, subCategory, programType, testId,
-				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr);
+				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr);
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
 	    
