@@ -231,3 +231,11 @@ legend {
 
   overflow-y: auto;
 }
+
+#programTableBody td {
+  text-align: center;
+}
+
+#programTableBody > tr:hover {
+  background-color: var(--super-light-gray);
+}

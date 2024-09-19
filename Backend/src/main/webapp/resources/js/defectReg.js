@@ -111,6 +111,9 @@ function setupEventListeners() {
 
   programFilterForm.addEventListener("submit", submitProgramFilter);
 
+  // 프로그램 목록 테이블 클릭 이벤트 핸들러
+  programTableBody.addEventListener("click", selectProgramFromTable);
+
   // 기발생 결함번호 검색
   defectNumberSearchButton.addEventListener("click", () => {
     if (checkBeforeDefectNumberSearching()) openModal("defectNumberSearchModal");
@@ -145,7 +148,7 @@ async function initializeRegisterForm() {
     { testStageList },
     { defectTypeList },
     { defectSeverityList },
-    { userID },
+    { userName },
     { programTypes },
   ] = await Promise.all([
     getMajorCategoryCodes(),
@@ -166,7 +169,7 @@ async function initializeRegisterForm() {
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
 
-  document.getElementById("defectRegistrar").value = userID;
+  document.getElementById("defectRegistrar").value = userName;
   document.getElementById("defectDiscoveryDate").value = getCurrentDate();
   document.getElementById("defectRegistrarInfo").textContent =
     "※ [ 유의사항 ] 결함조치결과 재테스트 후 이상이 없는 경우 “등록자 확인일” 입력 - 재결함 발생한 경우 결함내용과 첨부파일에 추가";
@@ -367,12 +370,12 @@ async function renderProgramList(
 
       row.innerHTML = `
         <td>${index + 1}</td>
-        <td>${programType}</td>
-        <td>${programId}</td>
-        <td>${programName}</td>
-        <td>${programStatus}</td>
-        <td>${developer}</td>
-        <td>${pl}</td>
+        <td class="program-type">${programType}</td>
+        <td class="program-id">${programId}</td>
+        <td class="program-name">${programName}</td>
+        <td class="program-status">${programStatus}</td>
+        <td class="developer">${developer}</td>
+        <td class="pl">${pl}</td>
       `;
 
       programTableBody.appendChild(row);
@@ -402,4 +405,25 @@ function getCurrentProgramFilterValues() {
     programId,
     programName,
   };
+}
+
+// 프로그램 정보 세팅
+function selectProgramFromTable(event) {
+  const row = event.target.closest("tr");
+
+  if (row) {
+    const programId = row.getElementsByClassName("program-id")[0].textContent;
+    const programName = row.getElementsByClassName("program-name")[0].textContent;
+    const programType = row.getElementsByClassName("program-type")[0].textContent;
+    const developer = row.getElementsByClassName("developer")[0].textContent;
+    const pl = row.getElementsByClassName("pl")[0].textContent;
+
+    document.getElementById("programId").value = programId;
+    document.getElementById("programName").value = programName;
+    document.getElementById("programType").value = programType;
+    document.getElementById("defectHandler").value = developer;
+    document.getElementById("pl").value = pl;
+  }
+
+  closeModal("programSearchModal");
 }

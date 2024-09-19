@@ -642,9 +642,10 @@ export async function checkSession() {
     const response = await tmsFetch("/checkSession");
     const isLogin = response.status === "success";
 
-    if (isLogin) return { isLogin, userID: response.userID, authrityCode: response.authrityCode };
+    if (isLogin)
+      return { isLogin, userID: response.userID, authrityCode: response.authrityCode, userName: response.userName };
   } catch (error) {
-    if (error.statusCode === 401) return { isLogin: false, userID: null, authrityCode: null };
+    if (error.statusCode === 401) return { isLogin: false, userID: null, authrityCode: null, userName: null };
     else alert(error.message);
   }
 }
