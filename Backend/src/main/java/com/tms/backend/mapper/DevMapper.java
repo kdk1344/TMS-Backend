@@ -66,11 +66,10 @@ public interface DevMapper {
     public List<devProgress> checkProgramId(@Param("programType") String programType,
 											@Param("developer") String developer,
 											@Param("programId") String programId,
-											@Param("programName") String programName,
-											@Param("offset") int offset,
-											@Param("size") int size); //프로그램 ID 목록 퐉보
+											@Param("programName") String programName);
     public int checkProgramIdCounts(@Param("programType") String programType,
 	    							@Param("developer") String developer,
 	    							@Param("programId") String programId,
 	    							@Param("programName") String programName);
+    public List<devProgress> getprogramDetail(@Param("programId") String programId);
 }

@@ -74,6 +74,9 @@ public class TestController {
 	@Autowired
 	private TestService testService;
 	
+	@Autowired
+	private DevService devservice;
+	
 	@GetMapping("/testProgress")
 	public String TestProgressPage() {
 			
@@ -124,6 +127,30 @@ public class TestController {
 
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
+	
+	//개발자 확인
+	@GetMapping(value = "api/programDetail", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getprogramDetail(@RequestParam(value = "programId", required = false) String programId) {
+    	Map<String, Object> response = new HashMap<>();
+        List<devProgress> programDList = devservice.getprogramDetail(programId);
+        
+        log.info("확인중" + programDList);
+
+        // 응답 데이터 생성
+        if (programDList != null && !programDList.isEmpty()) {
+            response.put("status", "success");
+            response.put("programDList", programDList);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "프로그램 상세 정보를 찾을 수 없습니다.");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
+	
 	
 	
 

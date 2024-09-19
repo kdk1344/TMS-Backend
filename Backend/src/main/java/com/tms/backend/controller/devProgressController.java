@@ -229,18 +229,14 @@ public class devProgressController {
     		@RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "developer", required = false) String developer,
             @RequestParam(value = "programId", required = false) String programId,
-            @RequestParam(value = "programName", required = false) String programName,
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size) {
+            @RequestParam(value = "programName", required = false) String programName) {
     	Map<String, Object> response = new HashMap<>();
-    	List<devProgress> programList = devservice.checkProgramId(programType, developer, programId, programName, page, size);
-    	int totalprogramId = devservice.checkProgramIdCounts(programType, developer, programId, programName);
+    	List<devProgress> programList = devservice.checkProgramId(programType, developer, programId, programName);
 
         // 응답 데이터 생성
         if (programList != null && !programList.isEmpty()) {
             response.put("status", "success");
             response.put("programList", programList);
-            response.put("totalprogramId", totalprogramId);
         } else {
             response.put("status", "failure");
             response.put("message", "프로그램 ID 정보를 찾을 수 없습니다");

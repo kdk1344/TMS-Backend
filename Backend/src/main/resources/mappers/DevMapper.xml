@@ -256,25 +256,15 @@
 	    <if test="developer != null and developer != ''">
 	        AND DEVELOPER LIKE CONCAT('%', #{developer}, '%')
 	    </if>
-	    LIMIT #{offset}, #{size}
 	</select>
 	
-	<!--  프로그램 ID 목록 갯수 확인 -->
-	<select id="checkProgramIdCounts" resultType="devProgress">
-		SELECT COUNT(*)
+	<!-- 프로그램 상세 정보 확인 -->
+	<select id="getprogramDetail" resultType="devProgress">
+		SELECT PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, DEVELOPER, PL
 		FROM dev_progress
 		WHERE 1=1
-	    <if test="programType != null and programType != ''">
-	        AND PROGRAM_TYPE = #{programType}
-	    </if>
 	    <if test="programId != null and programId != ''">
 	        AND PROGRAM_ID LIKE CONCAT('%', #{programId}, '%')
-	    </if>
-	    <if test="programName != null and programName != ''">
-	        AND PROGRAM_NAME LIKE CONCAT('%', #{programName}, '%')
-	    </if>
-	    <if test="developer != null and developer != ''">
-	        AND DEVELOPER LIKE CONCAT('%', #{developer}, '%')
 	    </if>
 	</select>
 
