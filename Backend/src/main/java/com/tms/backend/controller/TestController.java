@@ -155,6 +155,26 @@ public class TestController {
         return ResponseEntity.ok(response);
     }
 	
+	//테스트 진행 상태 조회
+	@GetMapping(value = "api/testStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> gettestStatus() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<CommonCode> testStatus= adminService.getCCCode("12");
+
+        // 응답 데이터 생성
+        if (testStatus != null && !testStatus.isEmpty()) {
+            response.put("status", "success");
+            response.put("testStatus", testStatus);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "테스트 단계 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
 	
 	
 	
