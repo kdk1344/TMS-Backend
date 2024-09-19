@@ -114,19 +114,21 @@ public class TestController {
 		// 결함 목록 조회
 		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
 				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr, page, size);
+		 
+		 log.info("테스트 명단:"+testProgressList);
 
 	    // 총 결함 수 조회
-	    int totalDefects = testService.getTotalTestCount(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
+	    int totalTest = testService.getTotalTestCount(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
 				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr);
 	    // 총 페이지 수 계산
-	    int totalPages = (int) Math.ceil((double) totalDefects / size);
+	    int totalPages = (int) Math.ceil((double) totalTest / size);
 	    
 
 		// 응답 생성
 	    response.put("testProgress", testProgressList);
 	    response.put("currentPage", page);
 	    response.put("totalPages", totalPages);
-	    response.put("totalDefects", totalDefects);
+	    response.put("totalTest", totalTest);
 
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}

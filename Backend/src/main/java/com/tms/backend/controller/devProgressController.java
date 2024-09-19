@@ -448,6 +448,7 @@ public class devProgressController {
 			}
 		String UserID = (String) session.getAttribute("id");
 		String UserName = (String) session.getAttribute("name");
+		log.info("userName"+UserName);
 		Map<String, Object> response = new HashMap<>();
 		try {
 			//코드로 들어오는 데이터를 코드명으로 변경
