@@ -254,7 +254,8 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> defectReg(HttpServletRequest request,
 			@RequestPart("defect") Defect defect,
-			@RequestPart(value = "file", required = false) MultipartFile[] files) {
+			@RequestPart(value = "file", required = false) MultipartFile[] files,
+			@RequestPart(value = "fixfile", required = false) MultipartFile[] fixfiles) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		String UserID = (String) session.getAttribute("id");
 		String UserName = (String) session.getAttribute("name");
@@ -275,6 +276,7 @@ public class DefectController {
 			//테스트 결함등록자, 최초 결함 등록자 로그인 ID 세팅
 			defect.setDefectRegistrar(UserName);
 			defect.setInitCreater(UserName);
+			defect.setLastModifier(UserName);
 			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
 			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
 				defect.setDefectStatus("등록완료");}
@@ -285,8 +287,6 @@ public class DefectController {
 			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null && defect.getDefectRegConfirmDate() != null) {
 				defect.setDefectStatus("등록자 확인완료");}
 			
-	        //결함 정보 등록
-        	defectService.insertdefect(defect);
         	// 필수 항목 체크
 			validateRequiredField(defect.getMajorCategory(), "업무 대분류");
 			validateRequiredField(defect.getSubCategory(), "업무 중분류");
@@ -301,20 +301,25 @@ public class DefectController {
 			if(defect.getDefectDiscoveryDate() == null) {
 				throw new IllegalArgumentException("결함발생일은 필수 입력 항목입니다.");
 			}
-        	
+			//결함 정보 등록
+        	defectService.insertdefect(defect);
+        	log.info("1첨부"+files.length);
+        	log.info("2첨부"+fixfiles.length);
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
             	log.info("첨부중");
-                fileservice.handleFileUpload(files, "devProgress", defect.getSeq());
+                fileservice.handleFileUpload(files, "devfect", defect.getSeq());
             }
-            if (files != null && files.length > 0) {
+            if (fixfiles != null && fixfiles.length > 0) {
             	log.info("첨부중");
-                fileservice.handleFileUpload(files, "devProgressFix", defect.getSeq());
+                fileservice.handleFileUpload(fixfiles, "devfectFix", defect.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
             List<FileAttachment> fixattachments = adminService.getAttachments(defect.getSeq(),32);
             defect.setDefectFixAttachments(fixattachments);
+            
+            log.info(defect);
         	
             response.put("status", "success");
             response.put("message", "결함 정보가 등록되었습니다");
