@@ -239,6 +239,8 @@ public class UserController {
             
             log.info("Logged in user ID: " + check.getauthorityCode());
             
+            log.info("Logged in user Name: " + check.getuserName());
+            
             // 세션 ID를 쿠키로 저장
             Cookie sessionCookie = new Cookie("TMSESSIONID", session.getId());
             sessionCookie.setHttpOnly(true);  // XSS 공격 방지
@@ -251,6 +253,7 @@ public class UserController {
             response.put("status", "success");
             response.put("message", "로그인 성공");
             response.put("userID", loginRequest.get("userID"));
+            response.put("userName", check.getuserName());
             response.put("authorityCode", check.getauthorityCode());
             
             return ResponseEntity.ok(response); // 200 OK
