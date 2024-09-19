@@ -181,6 +181,27 @@
 	        AND a.PROGRAM_ID = #{programId}
 	        AND a.DEFECT_COMPLETION_DATE is not null
 	</select>
+	
+	<select id="getdefectNumberList" parameterType="map" resultType="Defect">
+	    SELECT * 
+	    FROM DEFECT
+	    WHERE 1=1
+	    <if test="testStage != null and testStage != ''">
+	        AND TEST_STAGE = #{testStage}
+	    </if>
+	    <if test="testId != null and testId != ''">
+	        AND TEST_ID = #{testId}
+	    </if>
+	    <if test="programId != null and programId != ''">
+	        AND PROGRAM_ID = #{programId}
+	    </if>
+	    <if test="programType != null and programType != ''">
+	        AND PROGRAM_TYPE = #{programType}
+	    </if>
+	    ORDER BY SEQ DESC
+	</select>
+	
+	
 
 	
 </mapper>

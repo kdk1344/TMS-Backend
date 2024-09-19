@@ -83,6 +83,11 @@ public class DefectService {
     public int countDefectSoultions(String programId, String managerType) {
     	return defectmapper.countDefectSoultions(programId, managerType);
     }
+    
+    //기발생 결함번호 조회
+    public List<Defect> getdefectNumberList(String testStage, String testId, String programName, String programType){
+    	return defectmapper.getdefectNumberList(testStage, testId, programName, programType);
+    }
 	
 
     

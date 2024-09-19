@@ -214,6 +214,29 @@ public class DefectController {
         return ResponseEntity.ok(response);
     }
 	
+	//결함 번호 조회
+	@GetMapping(value = "api/defectNumberList", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getdefectNumberList(@RequestParam(value = "testStage", required = false) String testStage,
+            @RequestParam(value = "testId", required = false) String testId,
+            @RequestParam(value = "programName", required = false) String programName,
+            @RequestParam(value = "programType", required = false) String programType) {
+    	Map<String, Object> response = new HashMap<>();
+    	List<Defect> defectNumberList= defectService.getdefectNumberList(testStage, testId, programName, programType);
+
+        // 응답 데이터 생성
+        if (defectNumberList != null && !defectNumberList.isEmpty()) {
+            response.put("status", "success");
+            response.put("defectNumberList", defectNumberList);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "기발생 결함 번호 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
 	//결함 등록 페이지
 	@GetMapping("/defectReg")
 	public String defectRegPage() {
@@ -466,7 +489,7 @@ public class DefectController {
     	defectexportToExcel(response, defects, "example.xlsx");
     }
     
-    // 조회된 개발 진행 현황 정보를 엑셀로 다운로드
+    // 조회된 결함 정보를 엑셀로 다운로드
     @GetMapping("/defectdownloadFiltered")
     public void downloadFiltereddefects(
     		@RequestParam(value = "testStage", required = false) String testStage,

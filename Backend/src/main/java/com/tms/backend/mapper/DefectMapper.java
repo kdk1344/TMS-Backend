@@ -46,5 +46,9 @@ public interface DefectMapper {
 	public List<Defect> searchAllDefects();
 	public int countDefect(@Param("programId") String programId, @Param("managerType") String managerType);
 	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType);
+	public List<Defect> getdefectNumberList(@Param("testStage") String testStage, 
+								            @Param("testId") String testId, 
+								            @Param("programId") String programId, 
+								            @Param("programType") String programType); //기발생 결함 번호 조회
 
 }
