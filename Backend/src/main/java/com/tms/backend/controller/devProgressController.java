@@ -230,6 +230,9 @@ public class devProgressController {
             @RequestParam(value = "developer", required = false) String developer,
             @RequestParam(value = "programId", required = false) String programId,
             @RequestParam(value = "programName", required = false) String programName) {
+		if (programType != null && !programType.isEmpty()) {
+			programType = adminService.getStageCCodes("02", programType);}
+		
     	Map<String, Object> response = new HashMap<>();
     	List<devProgress> programList = devservice.checkProgramId(programType, developer, programId, programName);
 

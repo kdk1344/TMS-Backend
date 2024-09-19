@@ -21,6 +21,12 @@
         <if test="testId != null and testId != ''">
             AND TEST_ID LIKE CONCAT('%', #{testId}, '%')
         </if>
+        <if test="screenId != null and screenId != ''">
+            AND SCREEN_ID LIKE CONCAT('%', #{screenId}, '%')
+        </if>
+        <if test="screenName != null and screenName != ''">
+            AND SCREEN_Name LIKE CONCAT('%', #{screenName}, '%')
+        </if>
         <if test="programId != null and programId != ''">
             AND PROGRAM_ID LIKE CONCAT('%', #{programId}, '%')
         </if>
