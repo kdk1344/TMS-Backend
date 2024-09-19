@@ -234,6 +234,7 @@ public class DefectController {
 			@RequestPart(value = "file", required = false) MultipartFile[] files) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		String UserID = (String) session.getAttribute("id");
+		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		
 		//코드로 들어오는 데이터를 코드명으로 변경
@@ -249,8 +250,8 @@ public class DefectController {
 				defect.setTestId(defect.getProgramId());
 			}
 			//테스트 결함등록자, 최초 결함 등록자 로그인 ID 세팅
-			defect.setDefectRegistrar(UserID);
-			defect.setInitCreater(UserID);
+			defect.setDefectRegistrar(UserName);
+			defect.setInitCreater(UserName);
 			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
 			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
 				defect.setDefectStatus("등록완료");}
@@ -351,6 +352,7 @@ public class DefectController {
 //			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 //			}
 		String UserID = (String) session.getAttribute("id");
+		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		
 		//코드로 들어오는 데이터를 코드명으로 변경
@@ -366,8 +368,7 @@ public class DefectController {
 				defect.setTestId(defect.getProgramId());
 			}
 			//최초 결함 등록자 로그인 ID 세팅
-			defect.setDefectRegistrar(UserID);
-			defect.setInitCreater(UserID);
+			defect.setDefectRegistrar(UserName);
 			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
 			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
 				defect.setDefectStatus("등록완료");}
@@ -383,7 +384,7 @@ public class DefectController {
 			// devProgress의 필드를 DevProgressEdit에 복사
 		    BeanUtils.copyProperties(defect, DefectEdit);
 		    //최종변경자 세팅
-			DefectEdit.setLastModifier(UserID);
+			DefectEdit.setLastModifier(UserName);
 		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),31);
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),32);

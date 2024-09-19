@@ -81,7 +81,7 @@ public class TestController {
 	}
 	
 	
-	@GetMapping("api/testProgress")
+	@GetMapping(value= "api/testProgress", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> TestProgress(HttpServletRequest request,
 			@RequestParam(value = "testStage", required = false) String testStage,

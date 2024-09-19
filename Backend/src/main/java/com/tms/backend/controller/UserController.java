@@ -175,13 +175,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
-        // 세션에서 ID와 권한 코드 가져오기
+        // 세션에서 ID와 이름, 권한 코드 가져오기
         String userID = (String) session.getAttribute("id");
+        String userName = (String) session.getAttribute("name");
         Integer authorityCode = (Integer) session.getAttribute("authorityCode");
 
         // 클라이언트에 사용자 정보 전송
         response.put("status", "success");
         response.put("userID", userID);
+        response.put("userName", userName);
         response.put("authorityCode", authorityCode);
         
         return ResponseEntity.ok(response);
@@ -196,6 +198,8 @@ public class UserController {
 				log.info("로그인 성공");
 		        // 사용자 ID 세션에 저장
 		        session.setAttribute("id", check.getuserID());
+		        // 사용자 이름 세션에 저장
+		        session.setAttribute("name", check.getuserName());
 		        // 사용자 권한 코드 세션에 저장
 		        session.setAttribute("authorityCode", check.getauthorityCode());
 		        // 대시보드로 리다이렉트
@@ -226,8 +230,9 @@ public class UserController {
         if (check != null) {
             log.info("로그인 성공");
             
-            // 사용자 ID와 권한 코드를 세션에 저장
+            // 사용자 ID와 이름, 권한 코드를 세션에 저장
             session.setAttribute("id", loginRequest.get("userID"));
+	        session.setAttribute("name", check.getuserName());
             session.setAttribute("authorityCode", check.getauthorityCode());
             
             log.info("Logged in user ID: " + loginRequest.get("userID"));
