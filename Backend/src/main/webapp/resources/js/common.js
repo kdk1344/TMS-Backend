@@ -201,6 +201,7 @@ export function openModal(modalId) {
 
   if (modal) {
     modal.style.display = "block";
+    document.body.style.overflow = "hidden";
   } else {
     console.error(`Modal with ID "${modalId}" not found.`);
   }
@@ -212,6 +213,7 @@ export function closeModal(modalId) {
 
   if (modal) {
     modal.style.display = "none";
+    document.body.style.overflow = "auto"; // 또는 "initial"로도 가능
 
     const form = modal.querySelector("form");
     const filePreview = modal.querySelector(".file-preview");
@@ -791,5 +793,48 @@ export async function getDefectTypeList() {
     return { defectTypeList };
   } catch (error) {
     console.error(error.message, "결함 유형 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 테스트 구분 목록 조회
+/** @todo API 요청 */
+export async function getTestTypeList() {
+  try {
+    const { testType: testTypeList } = await tmsFetch(`/testType`);
+
+    return { testTypeList };
+  } catch (error) {
+    console.error(error.message, "테스트 구분 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 테스트 진행상태 목록 조회
+/** @todo API 요청 */
+export async function getTestStatusList() {
+  try {
+    const { testStatus: testStatusList } = await tmsFetch(`/testStatus`);
+
+    return { testStatusList };
+  } catch (error) {
+    console.error(error.message, "테스트 진행상태 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 프로그램 목록 조회
+export async function getProgramList(
+  getProgramListProps = {
+    programType: "",
+    developer: "",
+    programId: "",
+    programName: "",
+  }
+) {
+  try {
+    const query = new URLSearchParams(getProgramListProps).toString();
+    const { programList } = await tmsFetch(`/programList?${query}`);
+
+    return { programList };
+  } catch (error) {
+    console.error(error.message, "프로그램 목록을 불러오지 못 했습니다.");
   }
 }

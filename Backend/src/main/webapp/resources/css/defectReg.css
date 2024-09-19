@@ -223,3 +223,11 @@ legend {
 #programFilterForm select {
   width: fit-content;
 }
+
+#programTableWrapper {
+  display: block;
+
+  height: 35vh;
+
+  overflow-y: auto;
+}

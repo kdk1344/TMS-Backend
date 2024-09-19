@@ -8,6 +8,7 @@ import {
   getDefectTypeList,
   getDefectSeverityList,
   getProgramTypes,
+  getProgramList,
   addFiles,
   updateFilePreview,
   showSpinner,
@@ -38,6 +39,7 @@ const majorCategorySelect = document.getElementById("majorCategory");
 const defectRegistrarInfo = document.getElementById("defectRegistrarInfo");
 const goBackButton = document.getElementById("goBackButton");
 
+const programFilterForm = document.getElementById("programFilterForm");
 const programSearchButton = document.getElementById("programSearchButton");
 const closeProgramSearchModalButton = document.getElementById("closeProgramSearchModalButton");
 
@@ -100,8 +102,14 @@ function setupEventListeners() {
   goBackButton.addEventListener("click", () => goBack("등록을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
 
   // 프로그램 검색
-  programSearchButton.addEventListener("click", () => openModal("programSearchModal"));
+  programSearchButton.addEventListener("click", () => {
+    renderProgramList();
+    openModal("programSearchModal");
+  });
+
   closeProgramSearchModalButton.addEventListener("click", () => closeModal("programSearchModal"));
+
+  programFilterForm.addEventListener("submit", submitProgramFilter);
 
   // 기발생 결함번호 검색
   defectNumberSearchButton.addEventListener("click", () => {
@@ -336,4 +344,62 @@ async function register(event) {
   } finally {
     hideSpinner();
   }
+}
+
+// 프로그램 목록 테이블 렌더링
+async function renderProgramList(
+  getProgramListProps = {
+    programType: "",
+    developer: "",
+    programId: "",
+    programName: "",
+  }
+) {
+  const { programList } = await getProgramList(getProgramListProps);
+
+  if (programTableBody) {
+    programTableBody.innerHTML = "";
+
+    programList.forEach((program, index) => {
+      const { programType, programId, programName, programStatus, developer, pl } = program;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${programType}</td>
+        <td>${programId}</td>
+        <td>${programName}</td>
+        <td>${programStatus}</td>
+        <td>${developer}</td>
+        <td>${pl}</td>
+      `;
+
+      programTableBody.appendChild(row);
+    });
+  }
+}
+
+// 프로그램 목록 필터링
+function submitProgramFilter(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  const getProgramListProps = getCurrentProgramFilterValues();
+
+  renderProgramList(getProgramListProps);
+}
+
+// 프로그램 필터 값 조회
+function getCurrentProgramFilterValues() {
+  const programType = document.getElementById("programTypeForPrgoram").value;
+  const developer = document.getElementById("developerForPrgoram").value;
+  const programId = document.getElementById("programIdForPrgoram").value;
+  const programName = document.getElementById("programNameForPrgoram").value;
+
+  return {
+    programType,
+    developer,
+    programId,
+    programName,
+  };
 }

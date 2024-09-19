@@ -56,18 +56,22 @@
 
             <button>조회</button>
           </form>
-          <table id="programTable">
-            <thead>
-              <th>번호</th>
-              <th>프로그램 구분</th>
-              <th>프로그램ID</th>
-              <th>프로그램명</th>
-              <th>상태</th>
-              <th>개발자</th>
-              <th>PL</th>
-            </thead>
-            <tbody id="programTableBody"></tbody>
-          </table>
+          <div id="programTableWrapper" class="hidden-scroll">
+            <table id="programTable">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>프로그램 구분</th>
+                  <th>프로그램ID</th>
+                  <th>프로그램명</th>
+                  <th>상태</th>
+                  <th>개발자</th>
+                  <th>PL</th>
+                </tr>
+              </thead>
+              <tbody id="programTableBody" class="hidden-scroll"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
