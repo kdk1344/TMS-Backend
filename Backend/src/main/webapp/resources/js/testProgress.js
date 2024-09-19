@@ -156,12 +156,12 @@ async function renderTestProgress(
     busiMgr: "",
   }
 ) {
-  const { testProgresss, totalPages } = await getTestProgressList(getTestProgressListProps);
+  const { testProgressList, totalPages } = await getTestProgressList(getTestProgressListProps);
 
   if (testProgressTableBody) {
     testProgressTableBody.innerHTML = "";
 
-    testProgresss.forEach((testProgress) => {
+    testProgressList.forEach((testProgress) => {
       const {
         seq,
         subCategory,
