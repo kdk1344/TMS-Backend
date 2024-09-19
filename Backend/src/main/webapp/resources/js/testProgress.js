@@ -4,8 +4,11 @@ import {
   setupPagination,
   convertDate,
   initializeSelect,
+  getTestTypeList,
   getMajorCategoryCodes,
   getSubCategoryCodes,
+  getProgramTypes,
+  getTestStatusList,
   openModal,
   closeModal,
   setupModalEventListeners,
@@ -147,7 +150,8 @@ async function renderTestProgress(
     programName: "",
     developer: "",
     pl: "",
-    testMgr: "",
+    execCompanyMgr: "",
+    thirdPartyTestMgr: "",
     itMgr: "",
     busiMgr: "",
   }
@@ -161,40 +165,53 @@ async function renderTestProgress(
       const {
         seq,
         subCategory,
+        testId,
+        testScenarioName,
+        testCaseName,
+        testStepName,
+        screenId,
+        screenName,
+        programType,
         programId,
         programName,
-        testProgressRegistrar,
-        testProgressDiscoveryDate,
-        testProgressSeverity,
-        testProgressDescription,
-        testProgressHandler,
-        testProgressScheduledDate,
-        testProgressCompletionDate,
+        execCompanyTestDate,
+        execCompanyConfirmDate,
+        developer,
         pl,
-        plConfirmDate,
-        testProgressRegConfirmDate,
-        testProgressStatus,
+        thirdPartyTestMgr,
+        thirdPartyConfirmDate,
+        itMgr,
+        itConfirmDate,
+        busiMgr,
+        busiConfirmDate,
+        testStatus,
       } = testProgress;
 
       const row = document.createElement("tr");
 
       row.innerHTML = `
         <td><input type="checkbox" name="testProgress" value="${seq}"></td>
-        <td class="testProgress-number">${seq}</td>
         <td class="sub-category">${subCategory}</td>
+        <td class="test-id">${testId}</td>
+        <td class="test-scenario-name">${testScenarioName}</td>
+        <td class="test-case-name">${testCaseName}</td>
+        <td class="test-step-name">${testStepName}</td>
+        <td class="screen-id">${screenId}</th>
+        <td class="screen-name">${screenName}</td>
+        <td class="program-type">${programType}</td>
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
-        <td class="testProgress-registrar">${testProgressRegistrar}</td>
-        <td class="testProgress-discovery-date">${convertDate(testProgressDiscoveryDate)}</td>
-        <td class="testProgress-severity">${testProgressSeverity}</td>
-        <td class="testProgress-description ellipsis">${testProgressDescription}</th>
-        <td class="testProgress-handler">${testProgressHandler}</td>
-        <td class="testProgress-scheduled-date">${convertDate(testProgressScheduledDate)}</td>
-        <td class="testProgress-completion-date">${convertDate(testProgressCompletionDate)}</td>
+        <td class="exec-company-test-date">${convertDate(execCompanyTestDate)}</td>
+        <td class="exec-company-confirm-date">${convertDate(execCompanyConfirmDate)}</td>
+        <td class="developer">${developer}</td>
         <td class="pl">${pl}</td>
-        <td class="pl-confirm-date">${convertDate(plConfirmDate)}</td>
-        <td class="testProgress-reg-confirm-date">${convertDate(testProgressRegConfirmDate)}</td>
-        <td class="testProgress-status">${testProgressStatus}</td>
+        <td class="third-party-test-mgr">${thirdPartyTestMgr}</td>
+        <td class="third-party-confirm-date">${convertDate(thirdPartyConfirmDate)}</td>
+        <td class="it-mgr">${itMgr}</td>
+        <td class="it-confirm-date">${convertDate(itConfirmDate)}</td>
+        <td class="busi-mgr">${busiMgr}</td>
+        <td class="busi-confirm-date">${convertDate(busiConfirmDate)}</td>
+        <td class="test-status">${testStatus}</td>
       `;
       testProgressTableBody.appendChild(row);
     });
@@ -258,26 +275,25 @@ function getCurrentFilterValues() {
 }
 
 async function initializeFilterForm() {
-  const [{ testStageList }, { majorCategoryCodes }, { testProgressSeverityList }, { testProgressStatusList }] =
-    await Promise.all([
-      getTestStageList(),
-      getMajorCategoryCodes(),
-      getTestProgressSeverityList(),
-      getTestProgressStatusList(),
-    ]);
+  const [{ testTypeList }, { majorCategoryCodes }, { programTypes }, { testStatusList }] = await Promise.all([
+    getTestTypeList(),
+    getMajorCategoryCodes(),
+    getProgramTypes(),
+    getTestStatusList(),
+  ]);
 
   const SELECT_ID = {
-    TEST_STAGE: "testStageForFilter",
+    TEST_TYPE: "testTypeForFilter",
     MAJOR_CATEGORY: "majorCategoryForFilter",
-    TEST_PROGRESS_SEVERITY: "testProgressSeverityForFilter",
-    TEST_PROGRESS_STATUS: "testProgressStatusForFilter",
+    PROGRAM_TYPE: "programTypeForFilter",
+    TEST_STATUS: "testStatusForFilter",
   };
 
   const SELECT_DATA = {
-    [SELECT_ID.TEST_STAGE]: testStageList,
+    [SELECT_ID.TEST_TYPE]: testTypeList,
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
-    [SELECT_ID.TEST_PROGRESS_SEVERITY]: testProgressSeverityList,
-    [SELECT_ID.TEST_PROGRESS_STATUS]: testProgressStatusList,
+    [SELECT_ID.PROGRAM_TYPE]: programTypes,
+    [SELECT_ID.TEST_STATUS]: testStatusList,
   };
 
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
@@ -299,27 +315,38 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
 function copyFilterValuesToDownloadForm() {
   // 조회 필터링 폼의 값을 가져옴
   const {
-    testStage,
+    testType,
     majorCategory,
     subCategory,
-    testProgressSeverity,
-    seq,
-    testProgressStatus,
-    testProgressRegistrar = "",
-    testProgressHandler = "",
+    programType,
+    testId = "",
+    programId = "",
+    programName = "",
+    developer = "",
     pl = "",
+    execCompanyMgr = "",
+    thirdPartyTestMgr = "",
+    itMgr = "",
+    busiMgr = "",
+    testStatus = "",
   } = getCurrentFilterValues();
 
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
-  document.getElementById("testStageForDownload").value = testStage;
+  document.getElementById("testTypeForDownload").value = testType;
   document.getElementById("majorCategoryForDownload").value = majorCategory;
   document.getElementById("subCategoryForDownload").value = subCategory;
-  document.getElementById("testProgressSeverityForDownload").value = testProgressSeverity;
-  document.getElementById("testProgressRegistrarForDownload").value = testProgressRegistrar;
-  document.getElementById("testProgressHandlerForDownload").value = testProgressHandler;
+  document.getElementById("programTypeForDownload").value = programType;
+  document.getElementById("testIdForDownload").value = testId;
+  document.getElementById("programIdForDownload").value = programId;
+  document.getElementById("programNameForDownload").value = programName;
+  document.getElementById("developerForDownload").value = developer;
   document.getElementById("plForDownload").value = pl;
-  document.getElementById("testProgressNumberForDownload").value = seq;
-  document.getElementById("testProgressStatusForDownload").value = testProgressStatus;
+  document.getElementById("execCompanyMgrForDownload").value = execCompanyMgr;
+  document.getElementById("thirdPartyTestMgrForDownload").value = thirdPartyTestMgr;
+  document.getElementById("itMgrForDownload").value = itMgr;
+
+  document.getElementById("busiMgrForDownload").value = busiMgr;
+  document.getElementById("testStatusForDownload").value = testStatus;
 }
 
 // 체크박스 전체 선택/해제
@@ -342,14 +369,16 @@ async function getTestProgressList(
     programName,
     developer,
     pl,
-    testMgr,
+    execCompanyMgr,
+    thirdPartyTestMgr,
     itMgr,
     busiMgr,
+    testStatus,
   }
 ) {
   try {
     const query = new URLSearchParams(getTestProgressListProps).toString();
-    const { testProgressList, totalPages } = await tmsFetch(`/testProgress?${query}`);
+    const { testProgress: testProgressList, totalPages } = await tmsFetch(`/testProgress?${query}`);
 
     return { testProgressList, totalPages };
   } catch (error) {

@@ -82,17 +82,24 @@
               class="flex-box align-center"
             >
               <!-- 숨겨진 input 필드 -->
-              <input type="hidden" id="testStageForDownload" name="testStage" />
+              <input type="hidden" id="testTypeForDownload" name="testType" />
               <input type="hidden" id="majorCategoryForDownload" name="majorCategory" />
               <input type="hidden" id="subCategoryForDownload" name="subCategory" />
-              <input type="hidden" id="defectSeverityForDownload" name="defectSeverity" />
-              <input type="hidden" id="defectRegistrarForDownload" name="defectRegistrar" />
-              <input type="hidden" id="defectHandlerForDownload" name="defectHandler" />
+              <input type="hidden" id="programTypeForDownload" name="programType" />
+              <input type="hidden" id="testIdForDownload" name="testId" />
+              <input type="hidden" id="screenIdForDownload" name="screenId" />
+              <input type="hidden" id="screenNameForDownload" name="screenName" />
+              <input type="hidden" id="programIdForDownload" name="programId" />
+              <input type="hidden" id="programNameForDownload" name="programName" />
+              <input type="hidden" id="developerForDownload" name="developer" />
               <input type="hidden" id="plForDownload" name="pl" />
-              <input type="hidden" id="defectNumberForDownload" name="seq" />
-              <input type="hidden" id="defectStatusForDownload" name="defectStatus" />
+              <input type="hidden" id="execCompanyMgrForDownload" name="execCompanyMgr" />
+              <input type="hidden" id="thirdPartyTestMgrForDownload" name="thirdPartyTestMgr" />
+              <input type="hidden" id="itMgrForDownload" name="itMgr" />
+              <input type="hidden" id="busiMgrForDownload" name="busiMgr" />
+              <input type="hidden" id="testStatusForDownload" name="testStatus" />
 
-              <button type="submit" id="downloadFilteredDefectButton" class="excel-button">
+              <button type="submit" id="downloadFilteredTestProgressButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />
                 조회결과 다운로드
               </button>
@@ -140,8 +147,10 @@
           <div class="form-group">
             <select id="testKeySelect" name="testKey">
               <option value="testId" selected>테스트ID</option>
-              <option value="programId">프로그램ID</option>
-              <option value="programName">프로그램명</option>
+              <option value="screenId">화면ID</option>
+              <option value="screenName">화면명</option>
+              <option value="programId">호출프로그램ID</option>
+              <option value="programName">호출프로그램명</option>
             </select>
             <input type="text" id="testValueInput" name="testValue" />
           </div>
@@ -150,9 +159,10 @@
             <select id="testRoleKeySelect" name="testRoleKey">
               <option value="developer" selected>개발자</option>
               <option value="pl">PL</option>
-              <option value="testMgr">테스트 담당자</option>
-              <option value="itMgr">고객IT 담당자</option>
-              <option value="busiMgr">고객현업 담당자</option>
+              <option value="execCompanyMgr">수행사담당자</option>
+              <option value="thirdPartyTestMgr">제3자테스터</option>
+              <option value="itMgr">고객IT담당자</option>
+              <option value="busiMgr">고객현업담당자</option>
             </select>
             <input type="text" id="testRoleValueInput" name="testRoleValue" />
           </div>
@@ -195,18 +205,24 @@
               <th><input type="checkbox" id="selectAllTestProgressCheckbox" /></th>
               <th class="sub-category">업무 중분류</th>
               <th class="test-id">테스트ID</th>
-              <th class="">시나리오명</th>
-              <th class="">케이스명</th>
-              <th class="">스텝명</th>
-              <th class="program-type">프로그램<br />구분</th>
+              <th class="test-scenario-name">시나리오명</th>
+              <th class="test-case-name">케이스명</th>
+              <th class="test-step-name">스텝명</th>
               <th class="screen-id">화면ID</th>
               <th class="screen-name">화면명</th>
-              <th class="">테스트<br />예정일</th>
-              <th class="">테스트<br />종료일</th>
+              <th class="program-type">프로그램<br />구분</th>
+              <th class="program-id">호출<br />프로그램ID</th>
+              <th class="program-name">호출<br />프로그램명</th>
+              <th class="exec-company-test-date">수행사<br />완료예정일</th>
+              <th class="exec-company-confirm-date">수행사<br />완료일</th>
+              <th class="developer">개발자</th>
               <th class="pl">PL</th>
+              <th class="third-party-test-mgr">제3자<br />테스터</th>
+              <th class="third-party-confirm-date">제3자<br />완료일</th>
               <th class="it-mgr">고객IT</th>
-              <th class="it-mgr-confirm-date">고객IT<br />확인일</th>
-              <th class="busi-mgr-confirm-date">고객현업<br />확인일</th>
+              <th class="it-confirm-date">고객IT<br />완료일</th>
+              <th class="busi-mgr">고객현업</th>
+              <th class="busi-confirm-date">고객현업<br />완료일</th>
               <th class="test-status">진행상태</th>
             </tr>
           </thead>
