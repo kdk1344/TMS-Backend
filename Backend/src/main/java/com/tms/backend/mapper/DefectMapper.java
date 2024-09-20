@@ -28,6 +28,7 @@ public interface DefectMapper {
             @Param("defectHandler") String defectHandler,
             @Param("pl") String pl,
             @Param("defectStatus") String defectStatus,
+            @Param("programId") String programId,
             @Param("testId") String testId,
             @Param("programName") String programName,
             @Param("programType") String programType,
@@ -42,6 +43,7 @@ public interface DefectMapper {
 		  @Param("defectHandler") String defectHandler,
 		  @Param("pl") String pl,
 		  @Param("defectStatus") String defectStatus,
+		  @Param("programId") String programId,
 		  @Param("testId") String testId,
 		  @Param("programName") String programName,
 		  @Param("programType") String programType);

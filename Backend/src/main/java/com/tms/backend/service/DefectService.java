@@ -37,17 +37,18 @@ public class DefectService {
 	private AdminMapper adminmapper;
 
     public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
-    		String defectRegistrar, String defectHandler, String pl, String defectStatus, String testId, String programName, String programType,
-    		int page, int size) {
+    		String defectRegistrar, String defectHandler, String pl, String defectStatus, String programId, String testId, String programName,
+    		String programType, int page, int size) {
     	int offset = (page - 1) * size;
         return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
-        		testId, programName, programType, defectStatus, offset, size);
+        		programId, testId, programName, programType, defectStatus, offset, size);
     }
 
     public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
-    		String defectRegistrar, String defectHandler, String pl, String defectStatus, String testId, String programName, String programType) {
+    		String defectRegistrar, String defectHandler, String pl, String defectStatus, String programId,
+    		String testId, String programName, String programType) {
         return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
-        		defectStatus, testId, programName, programType);
+        		defectStatus, programId, testId, programName, programType);
     }
     
     //결함 업데이트

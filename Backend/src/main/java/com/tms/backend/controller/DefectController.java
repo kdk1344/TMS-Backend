@@ -93,6 +93,7 @@ public class DefectController {
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
             @RequestParam(value = "defectStatus", required = false) String defectStatus,
+            @RequestParam(value = "programId", required = false) String programId,
             @RequestParam(value = "testId", required = false) String testId,
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
@@ -120,11 +121,11 @@ public class DefectController {
 						
 		// 결함 목록 조회
 		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
-				defectHandler, pl,  defectStatus, testId, programName, programType, page, size);
+				defectHandler, pl,  defectStatus, programId, testId, programName, programType, page, size);
 	    
 	    // 총 결함 수 조회
 	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
-	    		defectHandler, pl, defectStatus, testId, programName, programType);
+	    		defectHandler, pl, defectStatus, programId, testId, programName, programType);
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -496,7 +497,7 @@ public class DefectController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/defectsexampleexcel")
     public void downloadExdefects(HttpServletResponse response) throws IOException {
-    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, null, null,null, null, 1, 15);  	
+    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, null, null,null, null, null, 1, 15);  	
     	defectexportToExcel(response, defects, "example.xlsx");
     }
     
@@ -512,6 +513,7 @@ public class DefectController {
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
             @RequestParam(value = "defectStatus", required = false) String defectStatus,
+            @RequestParam(value = "programId", required = false) String programId,
             @RequestParam(value = "testId", required = false) String testId,
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
@@ -530,7 +532,7 @@ public class DefectController {
 		
 		// 결함 목록 조회
 	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
-				defectHandler, pl,  defectStatus, testId, programName, programType, page, size);
+				defectHandler, pl,  defectStatus, programId, testId, programName, programType, page, size);
 
 
     	log.info("확인중"+defects);
