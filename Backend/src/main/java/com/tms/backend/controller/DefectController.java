@@ -255,7 +255,7 @@ public class DefectController {
 	    return "defectEdit"; // JSP 페이지로 이동
 	}
 		
-	//개발 진행 현황 수정
+	//개발 진행 현황 등록
     @PostMapping(value = "api/defectReg", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> defectReg(HttpServletRequest request,
@@ -273,6 +273,7 @@ public class DefectController {
 		defect.setDefectType(adminService.getStageCCodes("13", defect.getDefectType()));
 		defect.setDefectSeverity(adminService.getStageCCodes("14", defect.getDefectSeverity()));
 		defect.setDefectStatus(adminService.getStageCCodes("15", defect.getDefectStatus()));
+		defect.setTestStage(adminService.getStageCCodes("11", defect.getTestStage()));
 		
 		try {
 			// 테스트 ID 비어있을 경우 프로그램 ID 입력
@@ -322,11 +323,11 @@ public class DefectController {
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
             	log.info("첨부중");
-                fileservice.handleFileUpload(files, "devfect", defect.getSeq());
+                fileservice.handleFileUpload(files, "defect", defect.getSeq());
             }
             if (fixfiles != null && fixfiles.length > 0) {
             	log.info("첨부중");
-                fileservice.handleFileUpload(fixfiles, "devfectFix", defect.getSeq());
+                fileservice.handleFileUpload(fixfiles, "defectFix", defect.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
@@ -366,11 +367,14 @@ public class DefectController {
   		Map<String, Object> response = new HashMap<>();
   		
   		Defect defectDetail = defectService.getDefectById(seq);
-  		
+  		log.info("Seq"+seq);
   		List<FileAttachment> attachments = adminService.getAttachments(seq, 31);
   		defectDetail.setDefectAttachment(attachments);
   		List<FileAttachment> fixAttachments = adminService.getAttachments(seq, 32);
   		defectDetail.setDefectFixAttachments(fixAttachments);
+  		
+  		log.info("첨부확인"+attachments);
+  		log.info("첨부확인"+fixAttachments);
 
   	    // 응답 생성
   		response.put("status", "success");
@@ -404,6 +408,7 @@ public class DefectController {
 		defect.setDefectType(adminService.getStageCCodes("13", defect.getDefectType()));
 		defect.setDefectSeverity(adminService.getStageCCodes("14", defect.getDefectSeverity()));
 		defect.setDefectStatus(adminService.getStageCCodes("15", defect.getDefectStatus()));
+		defect.setTestStage(adminService.getStageCCodes("11", defect.getTestStage()));
 				
 		try {
 			// 테스트 ID 비어있을 경우 프로그램 ID 입력
