@@ -393,6 +393,8 @@ async function edit(event) {
 
   // 파일을 제외한 나머지 데이터 추출
   const defectData = {};
+  const defectId = new URLSearchParams(window.location.search).get("seq");
+  defectData["seq"] = defectId;
 
   formData.forEach((value, key) => {
     if (key !== "defectAttachments" && key !== "defectFixAttachments") {
@@ -415,7 +417,7 @@ async function edit(event) {
   showSpinner();
 
   try {
-    const { status } = await tmsFetch("/defectReg", {
+    const { status } = await tmsFetch("/defectEdit", {
       method: "POST",
       body: newFormData,
     });
