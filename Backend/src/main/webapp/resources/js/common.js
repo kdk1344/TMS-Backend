@@ -797,18 +797,6 @@ export async function getDefectTypeList() {
   }
 }
 
-// 테스트 구분 목록 조회
-/** @todo API 요청 */
-export async function getTestTypeList() {
-  try {
-    const { testType: testTypeList } = await tmsFetch(`/testType`);
-
-    return { testTypeList };
-  } catch (error) {
-    console.error(error.message, "테스트 구분 목록을 불러오지 못 했습니다.");
-  }
-}
-
 // 테스트 진행상태 목록 조회
 /** @todo API 요청 */
 export async function getTestStatusList() {

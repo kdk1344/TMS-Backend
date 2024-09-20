@@ -4,7 +4,7 @@ import {
   setupPagination,
   convertDate,
   initializeSelect,
-  getTestTypeList,
+  getTestStageList,
   getMajorCategoryCodes,
   getSubCategoryCodes,
   getProgramTypes,
@@ -141,7 +141,7 @@ function setupEventListeners() {
 async function renderTestProgress(
   getTestProgressListProps = {
     page: 1,
-    testType: "",
+    testStage: "",
     majorCategory: "",
     subCategory: "",
     programType: "",
@@ -249,48 +249,51 @@ function changePage(page) {
 function getCurrentFilterValues() {
   let getTestProgressListProps = { page: currentPage };
 
-  const testProgressRoleKey = document.getElementById("testProgressRoleKeySelect").value;
-  const testProgressRoleValue = document.getElementById("testProgressRoleValueInput").value.trim();
+  const testKey = document.getElementById("testKeySelect").value;
+  const testValue = document.getElementById("testValueInput").value.trim();
 
-  getTestProgressListProps[testProgressRoleKey] = testProgressRoleValue;
+  getTestProgressListProps[testKey] = testValue;
+
+  const testRoleKey = document.getElementById("testRoleKeySelect").value;
+  const testRoleValue = document.getElementById("testRoleValueInput").value.trim();
+
+  getTestProgressListProps[testRoleKey] = testRoleValue;
 
   const testStage = document.getElementById("testStageForFilter").value;
   const majorCategory = document.getElementById("majorCategoryForFilter").value;
   const subCategory = document.getElementById("subCategoryForFilter").value;
-  const testProgressSeverity = document.getElementById("testProgressSeverityForFilter").value;
-  const testProgressNumber = document.getElementById("testProgressNumberForFilter").value;
-  const testProgressStatus = document.getElementById("testProgressStatusForFilter").value;
+  const programType = document.getElementById("programTypeForFilter").value;
+  const testStatus = document.getElementById("testStatusForFilter").value;
 
   getTestProgressListProps = {
     ...getTestProgressListProps,
     testStage,
     majorCategory,
     subCategory,
-    testProgressSeverity,
-    seq: testProgressNumber,
-    testProgressStatus,
+    programType,
+    testStatus,
   };
 
   return getTestProgressListProps;
 }
 
 async function initializeFilterForm() {
-  const [{ testTypeList }, { majorCategoryCodes }, { programTypes }, { testStatusList }] = await Promise.all([
-    getTestTypeList(),
+  const [{ testStageList }, { majorCategoryCodes }, { programTypes }, { testStatusList }] = await Promise.all([
+    getTestStageList(),
     getMajorCategoryCodes(),
     getProgramTypes(),
     getTestStatusList(),
   ]);
 
   const SELECT_ID = {
-    TEST_TYPE: "testTypeForFilter",
+    TEST_STAGE: "testStageForFilter",
     MAJOR_CATEGORY: "majorCategoryForFilter",
     PROGRAM_TYPE: "programTypeForFilter",
     TEST_STATUS: "testStatusForFilter",
   };
 
   const SELECT_DATA = {
-    [SELECT_ID.TEST_TYPE]: testTypeList,
+    [SELECT_ID.TEST_STAGE]: testStageList,
     [SELECT_ID.MAJOR_CATEGORY]: majorCategoryCodes,
     [SELECT_ID.PROGRAM_TYPE]: programTypes,
     [SELECT_ID.TEST_STATUS]: testStatusList,
@@ -315,7 +318,7 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode) {
 function copyFilterValuesToDownloadForm() {
   // 조회 필터링 폼의 값을 가져옴
   const {
-    testType,
+    testStage,
     majorCategory,
     subCategory,
     programType,
@@ -332,7 +335,7 @@ function copyFilterValuesToDownloadForm() {
   } = getCurrentFilterValues();
 
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
-  document.getElementById("testTypeForDownload").value = testType;
+  document.getElementById("testStageForDownload").value = testStage;
   document.getElementById("majorCategoryForDownload").value = majorCategory;
   document.getElementById("subCategoryForDownload").value = subCategory;
   document.getElementById("programTypeForDownload").value = programType;
@@ -344,7 +347,6 @@ function copyFilterValuesToDownloadForm() {
   document.getElementById("execCompanyMgrForDownload").value = execCompanyMgr;
   document.getElementById("thirdPartyTestMgrForDownload").value = thirdPartyTestMgr;
   document.getElementById("itMgrForDownload").value = itMgr;
-
   document.getElementById("busiMgrForDownload").value = busiMgr;
   document.getElementById("testStatusForDownload").value = testStatus;
 }
@@ -360,7 +362,7 @@ function toggleAllCheckboxes() {
 async function getTestProgressList(
   getTestProgressListProps = {
     page: 1,
-    testType,
+    testStage,
     majorCategory,
     subCategory,
     programType,

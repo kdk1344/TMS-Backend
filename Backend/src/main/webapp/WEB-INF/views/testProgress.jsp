@@ -82,7 +82,7 @@
               class="flex-box align-center"
             >
               <!-- 숨겨진 input 필드 -->
-              <input type="hidden" id="testTypeForDownload" name="testType" />
+              <input type="hidden" id="testStageForDownload" name="testStage" />
               <input type="hidden" id="majorCategoryForDownload" name="majorCategory" />
               <input type="hidden" id="subCategoryForDownload" name="subCategory" />
               <input type="hidden" id="programTypeForDownload" name="programType" />
@@ -117,8 +117,8 @@
       <form id="testProgressFilterForm">
         <div class="filter-container">
           <div class="form-group">
-            <label for="testTypeForFilter">테스트 구분</label>
-            <select id="testTypeForFilter" name="testType">
+            <label for="testStageForFilter">테스트 단계</label>
+            <select id="testStageForFilter" name="testStage">
               <option value="" selected>전체</option>
             </select>
           </div>
