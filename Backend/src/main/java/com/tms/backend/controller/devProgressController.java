@@ -477,9 +477,15 @@ public class devProgressController {
 	        	(devProgress.getDeletionReason() == null || devProgress.getDeletionReason().trim().isEmpty())) {
 	        	throw new IllegalArgumentException("프로그램 상태가 '삭제'인 경우 삭제처리사유 입력은 필수입니다.");
 	        }
-	        // Date 필드 체크
+	        // Date 필수값 필드 체크
 	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
 	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
+	        // 시작예정일이 종료예정일보다 뒤일 경우 에러
+ 			if (devProgress.getPlannedStartDate() != null && devProgress.getPlannedEndDate() != null) {
+ 			    if (devProgress.getPlannedStartDate().after(devProgress.getPlannedEndDate())) {
+ 			        throw new IllegalArgumentException("개발 착수 예정일의 시작일은 종료일보다 앞서야 합니다.");
+ 			    }
+ 			}
 	        //테스트 완료일이 있을때 테스트 결과가 null 체크
 	        TestEndDateNullCheck(devProgress.getPlTestCmpDate(), devProgress.getPlTestResult(), "PL");
 	        TestEndDateNullCheck(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdTestResult(), "제3자");
@@ -667,6 +673,12 @@ public class devProgressController {
 	        // Date 필드 체크
 	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
 	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
+	        // 시작예정일이 종료예정일보다 뒤일 경우 에러
+			if (devProgress.getPlannedStartDate() != null && devProgress.getPlannedEndDate() != null) {
+			    if (devProgress.getPlannedStartDate().after(devProgress.getPlannedEndDate())) {
+			        throw new IllegalArgumentException("개발 착수 예정일의 시작일은 종료일보다 앞서야 합니다.");
+			    }
+			}
 	        //테스트 완료일이 있을때 테스트 결과가 null 체크
 	        TestEndDateNullCheck(devProgress.getPlTestCmpDate(), devProgress.getPlTestResult(), "PL");
 	        TestEndDateNullCheck(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdTestResult(), "제3자");

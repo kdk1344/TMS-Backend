@@ -290,8 +290,16 @@ public class DefectController {
 				defect.setDefectStatus("조치완료");}
 			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
 				defect.setDefectStatus("PL 확인완료");}
-			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null && defect.getDefectRegConfirmDate() != null) {
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() != null) {
 				defect.setDefectStatus("등록자 확인완료");}
+			
+			// 시작예정일이 종료예정일보다 뒤일 경우 에러
+			if (defect.getDefectScheduledDate() != null && defect.getDefectCompletionDate() != null) {
+			    if (defect.getDefectScheduledDate().after(defect.getDefectCompletionDate())) {
+			    	log.info("Error!!!!!");
+			        throw new IllegalArgumentException("결함 조치 예정일의 시작일은 종료일보다 앞서야 합니다.");
+			    }
+			}
 			
         	// 필수 항목 체크
 			validateRequiredField(defect.getMajorCategory(), "업무 대분류");
@@ -411,8 +419,16 @@ public class DefectController {
 				defect.setDefectStatus("조치완료");}
 			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
 				defect.setDefectStatus("PL 확인완료");}
-			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null && defect.getDefectRegConfirmDate() != null) {
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() != null) {
 				defect.setDefectStatus("등록자 확인완료");}
+			
+			// 시작예정일이 종료예정일보다 뒤일 경우 에러
+			if (defect.getDefectScheduledDate() != null && defect.getDefectCompletionDate() != null) {
+			    if (defect.getDefectScheduledDate().after(defect.getDefectCompletionDate())) {
+			    	log.info("error!!!!");
+			        throw new IllegalArgumentException("결함 조치 예정일의 시작일은 종료일보다 앞서야 합니다.");
+			    }
+			}
 			
 			//등록된 결함 파일 가져오기
 			Defect DefectEdit = defectService.getDefectById(defect.getSeq());
@@ -461,7 +477,7 @@ public class DefectController {
 	        return new ResponseEntity<>(response, HttpStatus.OK);
 	    } catch (IllegalArgumentException e) {
 	        response.put("status", "failure");
-	        response.put("message", "결함 현황 수정 중에 오류 발생했습니다");
+	        response.put("message", e.getMessage());
 	        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	    } catch (Exception e) {
 	        e.printStackTrace();
