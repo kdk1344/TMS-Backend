@@ -1,0 +1,241 @@
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+
+  margin-bottom: 24px;
+}
+
+#defectEditForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+fieldset {
+  width: 100%;
+}
+
+legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  margin-bottom: 8px;
+}
+
+.form-group-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 8px;
+
+  background-color: var(--super-light-gray);
+  padding: 8px;
+
+  border: 1px solid var(--light-gray);
+  border-collapse: collapse;
+}
+
+.form-group-row {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group label {
+  display: block;
+
+  min-width: 96px;
+
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 200px;
+}
+
+.form-group textarea {
+  flex: 1;
+}
+
+.radio-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.radio-group label,
+.radio-group input {
+  width: fit-content;
+  min-width: fit-content;
+
+  font-weight: 500;
+}
+
+.radio-group label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-box {
+  height: 100%;
+
+  padding: 8px;
+
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+
+  font-size: inherit;
+
+  flex: 1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  gap: 8px;
+
+  width: 100%;
+}
+
+.file-preview {
+  height: 80px;
+}
+
+.notice-info {
+  color: blue;
+  font-weight: 500;
+}
+
+.file-preview {
+  height: 100px;
+
+  padding: 0;
+}
+
+.file-preview ul {
+  padding: 0;
+}
+
+.search-button {
+  display: flex; /* 이미지가 버튼에 맞게 조정되도록 설정 */
+  align-items: center; /* 버튼 내부의 콘텐츠를 중앙 정렬 */
+  justify-content: center; /* 버튼 내부의 콘텐츠를 중앙 정렬 */
+
+  width: 36px;
+  min-width: fit-content;
+  height: 36px;
+
+  padding: 8px;
+
+  border: 1px solid var(--gray);
+  background-color: var(--white);
+}
+
+.search-button img {
+  max-width: 100%; /* 이미지의 너비를 버튼 너비에 맞게 조정 */
+  max-height: 100%; /* 이미지의 높이를 버튼 높이에 맞게 조정 */
+  display: block; /* 이미지가 버튼 너비에 맞게 조정되도록 설정 */
+}
+
+.modal table {
+  table-layout: auto;
+
+  min-width: fit-content;
+  width: 70vw;
+}
+
+.modal th {
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.modal-content {
+  height: 50vh;
+}
+
+.definition-container {
+  display: flex;
+  gap: 16px;
+
+  margin-bottom: 16px;
+}
+
+.definition-item {
+  display: flex;
+  gap: 4px;
+}
+
+.definition-item dt {
+  font-weight: 600;
+}
+
+.search-input-wrapper {
+  display: flex;
+  gap: 1px;
+}
+
+#programFilterForm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  max-width: 70vw;
+  margin-bottom: 16px;
+}
+
+#programFilterForm .form-group-row {
+  width: auto;
+}
+
+#programFilterForm label {
+  min-width: fit-content;
+}
+
+#programFilterForm input {
+  width: 150px;
+}
+
+#programFilterForm select {
+  width: fit-content;
+}
+
+#programTableWrapper {
+  display: block;
+
+  height: 35vh;
+
+  overflow-y: auto;
+}
+
+#programTableBody td {
+  text-align: center;
+}
+
+#programTableBody > tr:hover {
+  background-color: var(--super-light-gray);
+}

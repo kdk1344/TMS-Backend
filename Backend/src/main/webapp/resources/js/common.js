@@ -632,6 +632,18 @@ export function initializeSelect(selectElementId, options = [], valueKey = "code
   });
 }
 
+export function setSelectValueByText(selectId, text) {
+  const selectElement = document.getElementById(selectId);
+  const options = selectElement.options ?? [];
+
+  for (let i = 0; i < options.length; i++) {
+    if (options[i].textContent === text) {
+      selectElement.value = options[i].value;
+      break;
+    }
+  }
+}
+
 export function goBack(message) {
   const confirmed = confirm(message ? message : "뒤로가시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
 
@@ -839,5 +851,31 @@ export async function getProgramList(
     return { programList };
   } catch (error) {
     console.error(error.message, "프로그램 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 결함목록 조회
+export async function getDefectList(
+  getDefectsProps = {
+    page: 1,
+    size: 15,
+    testStage,
+    majorCategory,
+    subCategory,
+    defectSeverity,
+    defectNumber,
+    defectStatus,
+    defectRegistrar: "",
+    defectHandler: "",
+    pl: "",
+  }
+) {
+  try {
+    const query = new URLSearchParams(getDefectsProps).toString();
+    const { defects: defectList, totalPages } = await tmsFetch(`/defect?${query}`);
+
+    return { defectList, totalPages };
+  } catch (error) {
+    console.error(error.message, "결함현황 목록을 불러오지 못 했습니다.");
   }
 }

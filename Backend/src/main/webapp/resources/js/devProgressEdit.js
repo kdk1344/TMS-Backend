@@ -16,6 +16,7 @@ import {
   showSpinner,
   hideSpinner,
   goBack,
+  setSelectValueByText,
 } from "./common.js";
 
 /** @global */
@@ -223,18 +224,6 @@ async function fillFormValues(data) {
 
   addFiles(fileInputId); // 전역변수에 가져온 첨부파일 저장
   updateFilePreview(fileInputId, fileOutputId); // 파일 목록 렌더링
-}
-
-function setSelectValueByText(selectId, text) {
-  const selectElement = document.getElementById(selectId);
-  const options = selectElement.options ?? [];
-
-  for (let i = 0; i < options.length; i++) {
-    if (options[i].textContent === text) {
-      selectElement.value = options[i].value;
-      break;
-    }
-  }
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {

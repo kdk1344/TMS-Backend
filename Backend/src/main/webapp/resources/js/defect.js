@@ -4,6 +4,7 @@ import {
   setupPagination,
   convertDate,
   initializeSelect,
+  getDefectList,
   getTestStageList,
   getMajorCategoryCodes,
   getSubCategoryCodes,
@@ -133,7 +134,7 @@ function setupEventListeners() {
 
 // 결함현황 목록 테이블 렌더링
 async function renderDefect(
-  getDefectsProps = {
+  getDefectListProps = {
     page: 1,
     size: 15,
     testStage: "",
@@ -147,12 +148,12 @@ async function renderDefect(
     pl: "",
   }
 ) {
-  const { defects, totalPages } = await getDefects(getDefectsProps);
+  const { defectList, totalPages } = await getDefectList(getDefectListProps);
 
   if (defectTableBody) {
     defectTableBody.innerHTML = "";
 
-    defects.forEach((defect) => {
+    defectList.forEach((defect) => {
       const {
         seq,
         subCategory,
@@ -205,9 +206,9 @@ function submitDefectFilter(event) {
   // 페이지를 1로 초기화하고 테이블 렌더링
   currentPage = 1;
 
-  const getDefectsProps = getCurrentFilterValues();
+  const getDefectListProps = getCurrentFilterValues();
 
-  renderDefect(getDefectsProps);
+  renderDefect(getDefectListProps);
 }
 
 // 결함현황 필터 리셋
@@ -215,47 +216,22 @@ function resetDefectFilter() {
   this.reset(); // 폼 초기화
 }
 
-async function getDefects(
-  getDefectsProps = {
-    page: 1,
-    size: 15,
-    testStage,
-    majorCategory,
-    subCategory,
-    defectSeverity,
-    defectNumber,
-    defectStatus,
-    defectRegistrar: "",
-    defectHandler: "",
-    pl: "",
-  }
-) {
-  try {
-    const query = new URLSearchParams(getDefectsProps).toString();
-    const { defects, totalPages } = await tmsFetch(`/defect?${query}`);
-
-    return { defects, totalPages };
-  } catch (error) {
-    console.error(error.message, "결함현황 목록을 불러오지 못 했습니다.");
-  }
-}
-
 // 페이지 변경
 function changePage(page) {
   currentPage = page;
 
-  const getDefectsProps = getCurrentFilterValues();
+  const getDefectListProps = getCurrentFilterValues();
 
-  renderDefect(getDefectsProps);
+  renderDefect(getDefectListProps);
 }
 
 function getCurrentFilterValues() {
-  let getDefectsProps = { page: currentPage };
+  let getDefectListProps = { page: currentPage };
 
   const defectRoleKey = document.getElementById("defectRoleKeySelect").value;
   const defectRoleValue = document.getElementById("defectRoleValueInput").value.trim();
 
-  getDefectsProps[defectRoleKey] = defectRoleValue;
+  getDefectListProps[defectRoleKey] = defectRoleValue;
 
   const testStage = document.getElementById("testStageForFilter").value;
   const majorCategory = document.getElementById("majorCategoryForFilter").value;
@@ -264,8 +240,8 @@ function getCurrentFilterValues() {
   const defectNumber = document.getElementById("defectNumberForFilter").value;
   const defectStatus = document.getElementById("defectStatusForFilter").value;
 
-  getDefectsProps = {
-    ...getDefectsProps,
+  getDefectListProps = {
+    ...getDefectListProps,
     testStage,
     majorCategory,
     subCategory,
@@ -274,7 +250,7 @@ function getCurrentFilterValues() {
     defectStatus,
   };
 
-  return getDefectsProps;
+  return getDefectListProps;
 }
 
 async function initializeFilterForm() {
