@@ -329,13 +329,13 @@ public class DefectController {
             	log.info("첨부중");
                 fileservice.handleFileUpload(fixfiles, "defectFix", defect.getSeq());
             }
+            
+            //첨부파일 등록
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
             List<FileAttachment> fixAttachments = adminService.getAttachments(defect.getSeq(),32);
             defect.setDefectFixAttachments(fixAttachments);
-            
-            log.info(defect);
-        	
+                    	
             response.put("status", "success");
             response.put("message", "결함 정보가 등록되었습니다");
             response.put("defect", defect);  // 등록된 개발 현황 진행 정보 반환
@@ -437,9 +437,11 @@ public class DefectController {
 			
 			//등록된 결함 파일 가져오기
 			Defect DefectEdit = defectService.getDefectById(defect.getSeq());
-			// devProgress의 필드를 DevProgressEdit에 복사
+			//최초변경자 가져오기
+			defect.setInitCreater(DefectEdit.getInitCreater());
+			// defect의 필드를 DefectEdit에 복사
 		    BeanUtils.copyProperties(defect, DefectEdit);
-		    //최종변경자 세팅
+		    //최초등록자, 최종변경자 세팅
 			DefectEdit.setLastModifier(UserName);
 		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),31);
@@ -471,9 +473,9 @@ public class DefectController {
             	fileservice.handleFileUpload(files, "defectFix", defect.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
-            defect.setDefectAttachment(attachments);
+            DefectEdit.setDefectAttachment(attachments);
             List<FileAttachment> fixAttachments = adminService.getAttachments(defect.getSeq(),32);
-            defect.setDefectFixAttachments(fixAttachments);
+            DefectEdit.setDefectFixAttachments(fixAttachments);
 	
 	        // 성공 응답 생성
 	        response.put("status", "success");
