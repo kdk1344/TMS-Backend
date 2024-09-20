@@ -330,8 +330,8 @@ public class DefectController {
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
-            List<FileAttachment> fixattachments = adminService.getAttachments(defect.getSeq(),32);
-            defect.setDefectFixAttachments(fixattachments);
+            List<FileAttachment> fixAttachments = adminService.getAttachments(defect.getSeq(),32);
+            defect.setDefectFixAttachments(fixAttachments);
             
             log.info(defect);
         	
