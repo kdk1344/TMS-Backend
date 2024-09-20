@@ -320,11 +320,11 @@ async function register(event) {
 
   // 파일 추가
   files.forEach((file) => {
-    newFormData.append("defectAttachments", file); // Blob으로 감싸지 않고 File 객체 그대로 추가
+    newFormData.append("file", file); // Blob으로 감싸지 않고 File 객체 그대로 추가
   });
 
   fixFiles.forEach((file) => {
-    newFormData.append("defectFixAttachments", file);
+    newFormData.append("fixfile", file);
   });
 
   showSpinner();

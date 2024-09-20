@@ -7,6 +7,9 @@ export const REFERER = {
 
 Object.freeze(REFERER);
 
+/** @global 파일 목록을 메모리에서 관리할 Map 객체 (file input id 별로 관리) */
+const fileListStore = new Map();
+
 // DOM 요소
 const spinner = document.getElementById("spinner");
 
@@ -274,9 +277,6 @@ export function getCurrentDate() {
   return `${year}-${month}-${day}`; // yyyy-mm-dd 형식
 }
 
-// 파일 목록을 메모리에서 관리할 배열
-const fileListStore = new Map();
-
 // 파일 목록 프리뷰 업데이트 함수
 export function updateFilePreview(fileInputId, fileListOutputId) {
   const fileInput = document.getElementById(fileInputId);
@@ -339,16 +339,25 @@ export function addFiles(fileInputId) {
   // 새로 선택된 파일들을 가져옴
   const newFiles = Array.from(fileInput.files);
 
-  // 새로 선택된 파일들을 fileListStore에 추가
+  console.log(fileListStore);
+
+  // 해당 fileInputId에 해당하는 파일 목록이 있는지 확인하고 없으면 새로 생성
+  if (!fileListStore.has(fileInputId)) {
+    fileListStore.set(fileInputId, new Map());
+  }
+
+  const currentFileList = fileListStore.get(fileInputId);
+
+  // 새로 선택된 파일들을 currentFileList에 추가
   newFiles.forEach((file) => {
-    fileListStore.set(file.name, file);
+    currentFileList.set(file.name, file);
   });
 
   // 새로운 파일들을 저장하기 위한 DataTransfer 객체 생성
   const dt = new DataTransfer();
 
-  // fileListStore에 있는 파일들을 DataTransfer 객체에 추가
-  fileListStore.forEach((file) => dt.items.add(file));
+  // currentFileList에 있는 파일들을 DataTransfer 객체에 추가
+  currentFileList.forEach((file) => dt.items.add(file));
 
   // 파일 입력 필드의 파일 목록을 DataTransfer 객체의 파일로 업데이트
   fileInput.files = dt.files;
@@ -358,8 +367,13 @@ export function addFiles(fileInputId) {
 export function removeFile(fileName, fileInputId, fileListOutputId) {
   const fileInput = document.getElementById(fileInputId);
 
+  // 해당 fileInputId에 대한 파일 목록을 가져옴
+  const currentFileList = fileListStore.get(fileInputId);
+
   // 기존 파일 목록에서 삭제
-  fileListStore.delete(fileName);
+  if (currentFileList) {
+    currentFileList.delete(fileName);
+  }
 
   // DataTransfer 객체를 사용하여 새로운 파일 목록 생성
   const dt = new DataTransfer();
