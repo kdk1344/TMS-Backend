@@ -135,6 +135,7 @@ function setupEventListeners() {
 async function renderDefect(
   getDefectsProps = {
     page: 1,
+    size: 15,
     testStage: "",
     majorCategory: "",
     subCategory: "",
@@ -217,6 +218,7 @@ function resetDefectFilter() {
 async function getDefects(
   getDefectsProps = {
     page: 1,
+    size: 15,
     testStage,
     majorCategory,
     subCategory,
