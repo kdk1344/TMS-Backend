@@ -357,19 +357,19 @@ public class DefectController {
   		
   		Map<String, Object> response = new HashMap<>();
   		
-  		Defect DefectEdit = defectService.getDefectById(seq);
+  		Defect defectDetail = defectService.getDefectById(seq);
   		
   		List<FileAttachment> attachments = adminService.getAttachments(seq, 31);
-  		DefectEdit.setDefectAttachment(attachments);
-  		List<FileAttachment> fixattachments = adminService.getAttachments(seq, 32);
-  		DefectEdit.setDefectFixAttachments(fixattachments);
+  		defectDetail.setDefectAttachment(attachments);
+  		List<FileAttachment> fixAttachments = adminService.getAttachments(seq, 32);
+  		defectDetail.setDefectFixAttachments(fixAttachments);
 
   	    // 응답 생성
   		response.put("status", "success");
         response.put("message", "개발 진행 현황 정보 전달.");
-  	    response.put("defectEdit", DefectEdit);
+  	    response.put("defectDetail", defectDetail);
   	    response.put("attachments", attachments);
-  	    response.put("fixattachments", fixattachments);
+  	    response.put("fixAttachments", fixAttachments);
   	    
   	    return ResponseEntity.ok(response); // JSON으로 응답 반환
   	}	
@@ -379,7 +379,8 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> defectEdit(HttpServletRequest request,
 			@RequestPart("defect") Defect defect,
-			@RequestPart(value = "file", required = false) MultipartFile[] files) {
+			@RequestPart(value = "file", required = false) MultipartFile[] files,
+			@RequestPart(value = "fixfile", required = false) MultipartFile[] fixfiles) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
 //			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
@@ -444,14 +445,14 @@ public class DefectController {
             	log.info("첨부중");
             	fileservice.handleFileUpload(files, "defect", defect.getSeq());
             }
-            if (files != null && files.length > 0) {
+            if (fixfiles != null && fixfiles.length > 0) {
             	log.info("첨부중");
             	fileservice.handleFileUpload(files, "defectFix", defect.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             defect.setDefectAttachment(attachments);
-            List<FileAttachment> fixattachments = adminService.getAttachments(defect.getSeq(),32);
-            defect.setDefectFixAttachments(fixattachments);
+            List<FileAttachment> fixAttachments = adminService.getAttachments(defect.getSeq(),32);
+            defect.setDefectFixAttachments(fixAttachments);
 	
 	        // 성공 응답 생성
 	        response.put("status", "success");
