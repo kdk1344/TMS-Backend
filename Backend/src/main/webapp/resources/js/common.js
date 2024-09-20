@@ -339,8 +339,6 @@ export function addFiles(fileInputId) {
   // 새로 선택된 파일들을 가져옴
   const newFiles = Array.from(fileInput.files);
 
-  console.log(fileListStore);
-
   // 해당 fileInputId에 해당하는 파일 목록이 있는지 확인하고 없으면 새로 생성
   if (!fileListStore.has(fileInputId)) {
     fileListStore.set(fileInputId, new Map());
@@ -669,7 +667,7 @@ export async function checkSession() {
     const isLogin = response.status === "success";
 
     if (isLogin)
-      return { isLogin, userID: response.userID, authrityCode: response.authrityCode, userName: response.userName };
+      return { isLogin, userID: response.userID, authorityCode: response.authorityCode, userName: response.userName };
   } catch (error) {
     if (error.statusCode === 401) return { isLogin: false, userID: null, authrityCode: null, userName: null };
     else alert(error.message);

@@ -222,12 +222,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-input[readonly] {
+input[readonly],
+textarea[readonly] {
   cursor: default; /* 기본 커서로 설정 */
 
   background-color: var(--super-light-gray);
 }
 
+.readonly,
+label.readonly,
+input[type="radio"].readonly,
 select.readonly {
   pointer-events: none; /* 클릭 차단 */
 

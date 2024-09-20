@@ -120,12 +120,12 @@
 
               <div class="form-group">
                 <label for="majorCategory">업무 대분류<span class="required-indicator">*</span></label>
-                <select id="majorCategory" name="majorCategory" required></select>
+                <select id="majorCategory" name="majorCategory" required class="readonly"></select>
               </div>
 
               <div class="form-group">
                 <label for="subCategory">업무 중분류<span class="required-indicator">*</span></label>
-                <select id="subCategory" name="subCategory" required></select>
+                <select id="subCategory" name="subCategory" required class="readonly"></select>
               </div>
             </div>
           </div>
@@ -137,29 +137,29 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testStage">테스트 단계<span class="required-indicator">*</span></label>
-                <select id="testStage" name="testStage" required></select>
+                <select id="testStage" name="testStage" required class="readonly"></select>
               </div>
 
               <div class="form-group">
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
-                <input id="testId" name="testId" required placeholder="테스트ID 입력" />
+                <input id="testId" name="testId" required placeholder="테스트ID 입력" readonly />
               </div>
             </div>
 
             <div class="form-group-row">
               <div class="form-group">
                 <label for="defectDiscoveryDate">결함발생일<span class="required-indicator">*</span></label>
-                <input id="defectDiscoveryDate" name="defectDiscoveryDate" type="date" required />
+                <input id="defectDiscoveryDate" name="defectDiscoveryDate" type="date" required readonly />
               </div>
 
               <div class="form-group">
                 <label for="defectType">결함유형<span class="required-indicator">*</span></label>
-                <select id="defectType" name="defectType" required></select>
+                <select id="defectType" name="defectType" required class="readonly"></select>
               </div>
 
               <div class="form-group">
                 <label for="defectSeverity">결함심각도<span class="required-indicator">*</span></label>
-                <select id="defectSeverity" name="defectSeverity" required></select>
+                <select id="defectSeverity" name="defectSeverity" required class="readonly"></select>
               </div>
 
               <div class="form-group">
@@ -170,13 +170,19 @@
 
             <div class="form-group">
               <label for="defectDescription">결함내용<span class="required-indicator">*</span></label>
-              <textarea id="defectDescription" name="defectDescription" required class="hidden-scroll"></textarea>
+              <textarea
+                id="defectDescription"
+                name="defectDescription"
+                required
+                class="hidden-scroll"
+                readonly
+              ></textarea>
             </div>
 
             <div class="form-group">
               <label for="defectFileInput">첨부파일</label>
               <div class="file-box">
-                <button type="button" class="file-button" id="defectFileSelectButton">파일 선택</button>
+                <button type="button" class="file-button" id="defectFileSelectButton" hidden>파일 선택</button>
 
                 <div class="file-preview-container">
                   <input type="file" id="defectFileInput" class="hidden" name="defectAttachments" multiple />
@@ -191,7 +197,7 @@
                 <div class="search-input-wrapper">
                   <input id="programId" name="programId" required readonly />
 
-                  <button type="button" class="search-button" id="programSearchButton">
+                  <button type="button" class="search-button" id="programSearchButton" disabled>
                     <img src="../../resources/images/search_icon.png" alt="프로그램 검색" />
                   </button>
                 </div>
@@ -216,29 +222,34 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="defectHandler">조치담당자<span class="required-indicator">*</span></label>
-                <input id="defectHandler" name="defectHandler" required placeholder="개발자 이름" />
+                <input id="defectHandler" name="defectHandler" required placeholder="개발자 이름" readonly />
               </div>
 
               <div class="form-group">
                 <label for="defectScheduledDate">조치예정일</label>
-                <input id="defectScheduledDate" name="defectScheduledDate" type="date" />
+                <input id="defectScheduledDate" name="defectScheduledDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="defectCompletionDate">조치완료일</label>
-                <input id="defectCompletionDate" name="defectCompletionDate" type="date" />
+                <input id="defectCompletionDate" name="defectCompletionDate" type="date" readonly />
               </div>
             </div>
 
             <div class="form-group">
               <label for="defectResolutionDetails">조치내역</label>
-              <textarea id="defectResolutionDetails" name="defectResolutionDetails" class="hidden-scroll"></textarea>
+              <textarea
+                id="defectResolutionDetails"
+                name="defectResolutionDetails"
+                class="hidden-scroll"
+                readonly
+              ></textarea>
             </div>
 
             <div class="form-group">
               <label for="defectFixFileInput">첨부파일</label>
               <div class="file-box">
-                <button type="button" class="file-button" id="defectFixFileSelectButton">파일 선택</button>
+                <button type="button" class="file-button" id="defectFixFileSelectButton" hidden>파일 선택</button>
 
                 <div class="file-preview-container">
                   <input type="file" id="defectFixFileInput" class="hidden" name="defectFixAttachments" multiple />
@@ -255,17 +266,17 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="pl">PL<span class="required-indicator">*</span></label>
-                <input id="pl" name="pl" required placeholder="이름" />
+                <input id="pl" name="pl" required placeholder="이름" readonly />
               </div>
 
               <div class="form-group">
                 <label for="plConfirmDate">PL 확인일</label>
-                <input id="plConfirmDate" name="plConfirmDate" type="date" />
+                <input id="plConfirmDate" name="plConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="plDefectJudgeClassAccepted">PL 결함 판단구분</label>
-                <div class="radio-group">
+                <div id="plDefectJudgeClassRadioButtonGroup" class="radio-group readonly">
                   <label>
                     <input
                       type="radio"
@@ -291,6 +302,7 @@
                 name="plComments"
                 class="hidden-scroll"
                 placeholder="'결함아님'인 경우 필수로 입력해 주세요."
+                readonly
               ></textarea>
             </div>
           </div>
@@ -302,13 +314,18 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="defectRegConfirmDate">등록자 확인일</label>
-                <input id="defectRegConfirmDate" name="defectRegConfirmDate" type="date" />
+                <input id="defectRegConfirmDate" name="defectRegConfirmDate" type="date" readonly />
               </div>
             </div>
 
             <div class="form-group">
               <label for="defectRegistrarComment">등록자 의견</label>
-              <textarea id="defectRegistrarComment" name="defectRegistrarComment" class="hidden-scroll"></textarea>
+              <textarea
+                id="defectRegistrarComment"
+                name="defectRegistrarComment"
+                class="hidden-scroll"
+                readonly
+              ></textarea>
             </div>
 
             <p id="defectRegistrarInfo" class="notice-info"></p>
@@ -329,7 +346,7 @@
                 <div class="search-input-wrapper">
                   <input id="originalDefectNumber" name="originalDefectNumber" readonly />
 
-                  <button type="button" class="search-button" id="defectNumberSearchButton">
+                  <button type="button" class="search-button" id="defectNumberSearchButton" disabled>
                     <img src="../../resources/images/search_icon.png" alt="기발생 결함번호 검색" />
                   </button>
                 </div>

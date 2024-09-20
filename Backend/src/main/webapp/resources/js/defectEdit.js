@@ -11,6 +11,7 @@ import {
   getProgramList,
   addFiles,
   updateFilePreview,
+  loadFilesToInput,
   showSpinner,
   hideSpinner,
   goBack,
@@ -150,7 +151,7 @@ async function initializeEditForm() {
     { testStageList },
     { defectTypeList },
     { defectSeverityList },
-    { userName },
+    { userName, authorityCode },
     { programTypes },
     { defectDetail, attachments, fixAttachments },
   ] = await Promise.all([
@@ -180,6 +181,8 @@ async function initializeEditForm() {
 
   await initializePageByReferer();
   await fillDefectEditFormValues({ ...defectDetail, attachments, fixAttachments });
+
+  determineEditableFields(userName, authorityCode);
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode) {
@@ -497,15 +500,107 @@ function selectProgramFromTable(event) {
     const programId = row.getElementsByClassName("program-id")[0].textContent;
     const programName = row.getElementsByClassName("program-name")[0].textContent;
     const programType = row.getElementsByClassName("program-type")[0].textContent;
-    const developer = row.getElementsByClassName("developer")[0].textContent;
-    const pl = row.getElementsByClassName("pl")[0].textContent;
 
     document.getElementById("programId").value = programId;
     document.getElementById("programName").value = programName;
     document.getElementById("programType").value = programType;
-    document.getElementById("defectHandler").value = developer;
-    document.getElementById("pl").value = pl;
   }
 
   closeModal("programSearchModal");
+}
+
+/** 로그인 이름과 비교하여 인풋 수정 권한 설정 */
+function determineEditableFields(loginName, authorityCode) {
+  const defectRegistrar = document.getElementById("defectRegistrar").value;
+  const defectHandler = document.getElementById("defectHandler").value;
+  const pl = document.getElementById("pl").value;
+  const AUTHORITY_CODE = { ADMIN: 1, PL: 4 };
+
+  const fileRemoveButtons = document.querySelectorAll(".file-remove-button");
+  fileRemoveButtons.forEach((button) => button.classList.add("hidden")); // 삭제 버튼 가리기
+
+  // 로그인 직무 = “04” AND  로그인 이름 = PL명 : 전부 수정 가능
+  if (authorityCode === AUTHORITY_CODE.ADMIN || (loginName === pl && authorityCode === AUTHORITY_CODE.PL)) {
+    const plConfirmDateInput = document.getElementById("plConfirmDate");
+    const plCommentsInput = document.getElementById("plComments");
+    const plDefectJudgeClassRadioButtonGroup = document.getElementById("plDefectJudgeClassRadioButtonGroup");
+    const defectNumberSearchButton = document.getElementById("defectNumberSearchButton");
+
+    plConfirmDateInput.removeAttribute("readonly");
+    plCommentsInput.removeAttribute("readonly");
+    plDefectJudgeClassRadioButtonGroup.classList.remove("readonly");
+    defectNumberSearchButton.removeAttribute("disabled");
+
+    enableDefectRegistrarFields();
+    enableDefectHandlerFields();
+    return;
+  }
+
+  // 로그인 이름 = 결함 등록자
+  if (loginName === defectRegistrar) {
+    enableDefectRegistrarFields();
+  }
+
+  // 로그인 이름 = 조치담당자
+  if (loginName === defectHandler) {
+    enableDefectHandlerFields();
+  }
+}
+
+// 결함 등록자 관련 필드 활성화: 결함기본정보 + 결함등록자 재테스트 결과 항목 수정 가능
+function enableDefectRegistrarFields() {
+  // 결함기본정보
+  const majorCategorySelect = document.getElementById("majorCategory");
+  const subCategorySelect = document.getElementById("subCategory");
+  const testStageSelect = document.getElementById("testStage");
+  const testIdInput = document.getElementById("testId");
+  const defectDiscoveryDateInput = document.getElementById("defectDiscoveryDate");
+  const defectTypeSelect = document.getElementById("defectType");
+  const defectSeveritySelect = document.getElementById("defectSeverity");
+  const defectRegistrarInput = document.getElementById("defectRegistrar");
+  const defectDescriptionInput = document.getElementById("defectDescription");
+  const defectFileSelectButton = document.getElementById("defectFileSelectButton");
+  const programSearchButton = document.getElementById("programSearchButton");
+  const fileInputId = "defectFileInput";
+  const fileOutputId = "defectFileOutput";
+
+  majorCategorySelect.classList.remove("readonly");
+  subCategorySelect.classList.remove("readonly");
+  testStageSelect.classList.remove("readonly");
+  defectTypeSelect.classList.remove("readonly");
+  defectSeveritySelect.classList.remove("readonly");
+
+  testIdInput.removeAttribute("readonly");
+  defectDiscoveryDateInput.removeAttribute("readonly");
+  defectRegistrarInput.removeAttribute("readonly");
+  defectDescriptionInput.removeAttribute("readonly");
+
+  defectFileSelectButton.removeAttribute("hidden");
+  programSearchButton.removeAttribute("disabled");
+
+  updateFilePreview(fileInputId, fileOutputId);
+
+  // 결함등록자 재테스트 결과
+  const defectRegConfirmDateInput = document.getElementById("defectRegConfirmDate");
+  const defectRegistrarCommentInput = document.getElementById("defectRegistrarComment");
+
+  defectRegConfirmDateInput.removeAttribute("readonly");
+  defectRegistrarCommentInput.removeAttribute("readonly");
+}
+
+// 조치 담당자 관련 필드 활성화: 개발자 조치결과 – 조치예정일(yyyy-mm-dd), 조치완료일, 조치내역, 조치 첨부파일
+function enableDefectHandlerFields() {
+  const defectScheduledDateInput = document.getElementById("defectScheduledDate");
+  const defectCompletionDateInput = document.getElementById("defectCompletionDate");
+  const defectResolutionDetailsInput = document.getElementById("defectResolutionDetails");
+  const defectFixFileSelectButton = document.getElementById("defectFixFileSelectButton");
+  const fixFileInputId = "defectFixFileInput";
+  const fixFileOutputId = "defectFixFileOutput";
+
+  defectScheduledDateInput.removeAttribute("readonly");
+  defectCompletionDateInput.removeAttribute("readonly");
+  defectResolutionDetailsInput.removeAttribute("readonly");
+
+  defectFixFileSelectButton.removeAttribute("hidden");
+  updateFilePreview(fixFileInputId, fixFileOutputId);
 }
