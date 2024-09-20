@@ -585,9 +585,12 @@ public class devProgressController {
 			}
 //		Integer authorityCode = (Integer) session.getAttribute("authorityCode");
 		
+		
 		Map<String, Object> response = new HashMap<>();
+		//결함 수정 내용 가져오기
 		devProgress DevProgressEdit = devservice.getDevById(seq);
 		
+		//결함 수정 버튼제한을 위한 defectCounts
 		Map<String, Integer> defectCounts = new HashMap<>();
 		defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
 		String[] types = { "thirdParty", "it", "busi" };
@@ -595,6 +598,7 @@ public class devProgressController {
 		    defectCounts.put(type + "DefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), type));
 		    defectCounts.put(type + "SolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), type));
 		}
+		//첨부파일 가져오기
 		List<FileAttachment> attachments = adminService.getAttachments(seq, 1);
 		DevProgressEdit.setDevProgAttachment(attachments);
 
@@ -772,7 +776,7 @@ public class devProgressController {
         Map<String, Object> response = new HashMap<>();
         
         for (int seq : seqs) {
-            devservice.deleteDevProgress(seq);
+            devservice.deleteDevProgress(seq, 1);
         }
         
         response.put("status", "success");

@@ -93,8 +93,11 @@ public class DefectController {
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
             @RequestParam(value = "defectStatus", required = false) String defectStatus,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "15") int size) {
+            @RequestParam(value = "testId", required = false) String testId,
+            @RequestParam(value = "programName", required = false) String programName,
+            @RequestParam(value = "programType", required = false) String programType,
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size) {
 		
 //		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
@@ -116,10 +119,12 @@ public class DefectController {
 			testStage = adminService.getStageCCodes("11", testStage);}
 						
 		// 결함 목록 조회
-		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,  defectStatus, page, size);
+		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
+				defectHandler, pl,  defectStatus, testId, programName, programType, page, size);
 	    
 	    // 총 결함 수 조회
-	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus);
+	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
+	    		defectHandler, pl, defectStatus, testId, programName, programType);
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
@@ -214,28 +219,28 @@ public class DefectController {
         return ResponseEntity.ok(response);
     }
 	
-	//결함 번호 조회
-	@GetMapping(value = "api/defectNumberList", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> getdefectNumberList(@RequestParam(value = "testStage", required = false) String testStage,
-            @RequestParam(value = "testId", required = false) String testId,
-            @RequestParam(value = "programName", required = false) String programName,
-            @RequestParam(value = "programType", required = false) String programType) {
-    	Map<String, Object> response = new HashMap<>();
-    	List<Defect> defectNumberList= defectService.getdefectNumberList(testStage, testId, programName, programType);
-
-        // 응답 데이터 생성
-        if (defectNumberList != null && !defectNumberList.isEmpty()) {
-            response.put("status", "success");
-            response.put("defectNumberList", defectNumberList);
-        } else {
-            response.put("status", "failure");
-            response.put("message", "기발생 결함 번호 정보를 찾을 수 없습니다");
-        }
-
-        // 조회된 결과를 반환
-        return ResponseEntity.ok(response);
-    }
+//	//결함 번호 조회
+//	@GetMapping(value = "api/defectNumberList", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> getdefectNumberList(@RequestParam(value = "testStage", required = false) String testStage,
+//            @RequestParam(value = "testId", required = false) String testId,
+//            @RequestParam(value = "programName", required = false) String programName,
+//            @RequestParam(value = "programType", required = false) String programType) {
+//    	Map<String, Object> response = new HashMap<>();
+//    	List<Defect> defectNumberList= defectService.getdefectNumberList(testStage, testId, programName, programType);
+//
+//        // 응답 데이터 생성
+//        if (defectNumberList != null && !defectNumberList.isEmpty()) {
+//            response.put("status", "success");
+//            response.put("defectNumberList", defectNumberList);
+//        } else {
+//            response.put("status", "failure");
+//            response.put("message", "기발생 결함 번호 정보를 찾을 수 없습니다");
+//        }
+//
+//        // 조회된 결과를 반환
+//        return ResponseEntity.ok(response);
+//    }
 	
 	//결함 등록 페이지
 	@GetMapping("/defectReg")
@@ -363,7 +368,7 @@ public class DefectController {
         response.put("message", "개발 진행 현황 정보 전달.");
   	    response.put("defectEdit", DefectEdit);
   	    response.put("attachments", attachments);
-  	  response.put("fixattachments", fixattachments);
+  	    response.put("fixattachments", fixattachments);
   	    
   	    return ResponseEntity.ok(response); // JSON으로 응답 반환
   	}	
@@ -471,7 +476,8 @@ public class DefectController {
         Map<String, Object> response = new HashMap<>();
         
         for (Integer seq : seqs) {
-            defectService.deleteDefect(seq);
+            defectService.deleteDefect(seq,31);
+            defectService.deleteDefect(seq,32);
         }
         
         response.put("status", "success");
@@ -490,7 +496,7 @@ public class DefectController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/defectsexampleexcel")
     public void downloadExdefects(HttpServletResponse response) throws IOException {
-    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, null, 1, 15);  	
+    	List<Defect> defects = defectService.searchDefects("no_value", null, null, null, 999999, null, null, null, null, null,null, null, 1, 15);  	
     	defectexportToExcel(response, defects, "example.xlsx");
     }
     
@@ -506,6 +512,9 @@ public class DefectController {
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
             @RequestParam(value = "Pl", required = false) String pl,
             @RequestParam(value = "defectStatus", required = false) String defectStatus,
+            @RequestParam(value = "testId", required = false) String testId,
+            @RequestParam(value = "programName", required = false) String programName,
+            @RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             HttpServletResponse response) throws IOException {
@@ -520,7 +529,8 @@ public class DefectController {
 			testStage = adminService.getStageCCodes("11", testStage);}
 		
 		// 결함 목록 조회
-	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, page, size);
+	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
+				defectHandler, pl,  defectStatus, testId, programName, programType, page, size);
 
 
     	log.info("확인중"+defects);

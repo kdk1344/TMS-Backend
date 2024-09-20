@@ -32,14 +32,22 @@ public class DefectService {
 	
 	@Autowired
     private DefectMapper defectmapper;
+	
+	@Autowired
+	private AdminMapper adminmapper;
 
-    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq, String defectRegistrar, String defectHandler, String pl, String defectStatus, int page, int size) {
+    public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
+    		String defectRegistrar, String defectHandler, String pl, String defectStatus, String testId, String programName, String programType,
+    		int page, int size) {
     	int offset = (page - 1) * size;
-        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus, offset, size);
+        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
+        		testId, programName, programType, defectStatus, offset, size);
     }
 
-    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq, String defectRegistrar, String defectHandler, String pl, String defectStatus) {
-        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus);
+    public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
+    		String defectRegistrar, String defectHandler, String pl, String defectStatus, String testId, String programName, String programType) {
+        return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
+        		defectStatus, testId, programName, programType);
     }
     
     //결함 업데이트
@@ -53,8 +61,9 @@ public class DefectService {
     }
     
     //결함 삭제
-    public void deleteDefect(Integer seq) {
+    public void deleteDefect(Integer seq, int type) {
     	defectmapper.deleteDefect(seq);
+    	adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
     
     //seq에 따른 결함 현황 가져오기
@@ -84,10 +93,10 @@ public class DefectService {
     	return defectmapper.countDefectSoultions(programId, managerType);
     }
     
-    //기발생 결함번호 조회
-    public List<Defect> getdefectNumberList(String testStage, String testId, String programName, String programType){
-    	return defectmapper.getdefectNumberList(testStage, testId, programName, programType);
-    }
+//    //기발생 결함번호 조회
+//    public List<Defect> getdefectNumberList(String testStage, String testId, String programName, String programType){
+//    	return defectmapper.getdefectNumberList(testStage, testId, programName, programType);
+//    }
 	
 
     

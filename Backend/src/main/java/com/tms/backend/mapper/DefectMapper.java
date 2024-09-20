@@ -28,17 +28,23 @@ public interface DefectMapper {
             @Param("defectHandler") String defectHandler,
             @Param("pl") String pl,
             @Param("defectStatus") String defectStatus,
+            @Param("testId") String testId,
+            @Param("programName") String programName,
+            @Param("programType") String programType,
             @Param("offset") int offset, 
             @Param("size") int size);
 	public int countDefects(@Param("testStage") String testStage, 
-	  @Param("majorCategory") String majorCategory, 
-	  @Param("subCategory") String subCategory, 
-	  @Param("defectSeverity") String defectSeverity,
-	  @Param("seq") Integer seq,
-	  @Param("defectRegistrar") String defectRegistrar,
-	  @Param("defectHandler") String defectHandler,
-	  @Param("pl") String pl,
-	  @Param("defectStatus") String defectStatus);
+		  @Param("majorCategory") String majorCategory, 
+		  @Param("subCategory") String subCategory, 
+		  @Param("defectSeverity") String defectSeverity,
+		  @Param("seq") Integer seq,
+		  @Param("defectRegistrar") String defectRegistrar,
+		  @Param("defectHandler") String defectHandler,
+		  @Param("pl") String pl,
+		  @Param("defectStatus") String defectStatus,
+		  @Param("testId") String testId,
+		  @Param("programName") String programName,
+		  @Param("programType") String programType);
 	public void deleteDefect(Integer seq);
 	public void insertdefect(Defect def);
 	public void updateDefect(Defect def);
@@ -46,9 +52,9 @@ public interface DefectMapper {
 	public List<Defect> searchAllDefects();
 	public int countDefect(@Param("programId") String programId, @Param("managerType") String managerType);
 	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType);
-	public List<Defect> getdefectNumberList(@Param("testStage") String testStage, 
-								            @Param("testId") String testId, 
-								            @Param("programId") String programId, 
-								            @Param("programType") String programType); //기발생 결함 번호 조회
+//	public List<Defect> getdefectNumberList(@Param("testStage") String testStage, 
+//								            @Param("testId") String testId, 
+//								            @Param("programId") String programId, 
+//								            @Param("programType") String programType); //기발생 결함 번호 조회
 
 }

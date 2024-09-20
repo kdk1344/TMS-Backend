@@ -33,6 +33,9 @@ public class DevService {
 	
 	@Autowired
     private DevMapper devMapper;
+	
+	@Autowired
+	private AdminMapper adminmapper;
 
 	public List<devProgress> searchDevProgress(String majorCategory, String subCategory, String programType, 
 	            String programName, String programId, String programStatus, String developer, 
@@ -59,8 +62,10 @@ public class DevService {
 		devMapper.updatedevProgress(devProgress);
 	}
 	
-	public void deleteDevProgress(int seq) {
+	//개발 진행현황 목록 삭제
+	public void deleteDevProgress(int seq , int type) {
 		devMapper.deleteDevProgress(seq);
+		adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
 	
 	// 카테고리 코드 일괄 저장

@@ -34,6 +34,15 @@
 	    <if test="defectStatus != null and defectStatus != ''">
 	        AND DEFECT_STATUS = #{defectStatus}
 	    </if>
+	    <if test="testId != null and testId != ''">
+	        AND TEST_ID = #{testId}
+	    </if>
+	    <if test="programId != null and programId != ''">
+	        AND PROGRAM_ID = #{programId}
+	    </if>
+	    <if test="programType != null and programType != ''">
+	        AND PROGRAM_TYPE = #{programType}
+	    </if>
 	    ORDER BY SEQ DESC
 	    LIMIT #{offset}, #{size}
 	</select>
@@ -68,6 +77,15 @@
 	    </if>
 	    <if test="defectStatus != null and defectStatus != ''">
 	        AND DEFECT_STATUS = #{defectStatus}
+	    </if>
+	    <if test="testId != null and testId != ''">
+	        AND TEST_ID = #{testId}
+	    </if>
+	    <if test="programId != null and programId != ''">
+	        AND PROGRAM_ID = #{programId}
+	    </if>
+	    <if test="programType != null and programType != ''">
+	        AND PROGRAM_TYPE = #{programType}
 	    </if>
 	</select>
 	
