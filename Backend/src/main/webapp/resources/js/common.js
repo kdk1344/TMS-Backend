@@ -650,6 +650,144 @@ export function goBack(message) {
   window.history.back();
 }
 
+/** 프로그램 목록 테이블 렌더링 */
+export async function renderProgramList(
+  getProgramListProps = {
+    programType: "",
+    developer: "",
+    programId: "",
+    programName: "",
+  }
+) {
+  const { programList } = await getProgramList(getProgramListProps);
+
+  if (programTableBody) {
+    programTableBody.innerHTML = "";
+
+    programList.forEach((program, index) => {
+      const { programType, programId, programName, programStatus, developer, pl } = program;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td class="program-type">${programType}</td>
+        <td class="program-id">${programId}</td>
+        <td class="program-name">${programName}</td>
+        <td class="program-status">${programStatus}</td>
+        <td class="developer">${developer}</td>
+        <td class="pl">${pl}</td>
+      `;
+
+      programTableBody.appendChild(row);
+    });
+  }
+}
+
+/** 프로그램 목록 필터링 */
+export function submitProgramFilter(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  const getProgramListProps = getCurrentProgramFilterValues();
+
+  renderProgramList(getProgramListProps);
+}
+
+/** 프로그램 필터 값 조회 */
+function getCurrentProgramFilterValues() {
+  const programType = document.getElementById("programTypeForPrgoram").value;
+  const developer = document.getElementById("developerForPrgoram").value;
+  const programId = document.getElementById("programIdForPrgoram").value;
+  const programName = document.getElementById("programNameForPrgoram").value;
+
+  return {
+    programType,
+    developer,
+    programId,
+    programName,
+  };
+}
+
+/** 프로그램 정보 세팅 */
+export function selectProgramFromTable(event) {
+  const row = event.target.closest("tr");
+
+  if (row) {
+    const programId = row.getElementsByClassName("program-id")[0].textContent;
+    const programName = row.getElementsByClassName("program-name")[0].textContent;
+    const programType = row.getElementsByClassName("program-type")[0].textContent;
+
+    document.getElementById("programId").value = programId;
+    document.getElementById("programName").value = programName;
+    document.getElementById("programType").value = programType;
+
+    document.getElementById("originalDefectNumber").value = ""; // 기발생결함번호 초기화
+  }
+
+  closeModal("programSearchModal");
+}
+
+/** 기발생 결함번호 목록 테이블 렌더링 */
+export async function renderDefectNumberList(
+  getDefectListProps = {
+    testStage: "",
+    majorCategory: "",
+    subCategory: "",
+    defectSeverity: "",
+    seq: "",
+    defectStatus: "",
+    defectRegistrar: "",
+    defectHandler: "",
+    pl: "",
+    programId: document.getElementById("programId").value ?? "",
+    programName: document.getElementById("programName").value ?? "",
+  }
+) {
+  const { defectList } = await getDefectList(getDefectListProps);
+  const defectNumberTableBody = document.getElementById("defectNumberTableBody");
+
+  if (defectNumberTableBody) {
+    defectNumberTableBody.innerHTML = "";
+
+    if (defectList.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="6">조건에 맞는 기발생 결함번호가 없습니다.</td>`;
+      defectNumberTableBody.appendChild(row);
+      return;
+    }
+
+    defectList.forEach((defect) => {
+      const { seq, programId, programName, developer, defectSeverity, defectDescription } = defect;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td class="seq">${seq}</td>
+        <td class="program-id">${programId}</td>
+        <td class="program-name">${programName}</td>
+        <td class="developer">${developer}</td>
+        <td class="defect-severity">${defectSeverity}</td>
+        <td class="defect-description ellipsis">${defectDescription}</td>
+      `;
+
+      defectNumberTableBody.appendChild(row);
+    });
+  }
+}
+
+/** 기발생결함번호 세팅 */
+export function selectOriginalDefectNumberFromTable(event) {
+  const row = event.target.closest("tr");
+
+  if (row) {
+    const defectNumber = row.getElementsByClassName("seq")[0].textContent;
+
+    document.getElementById("originalDefectNumber").value = defectNumber;
+  }
+
+  closeModal("defectNumberSearchModal");
+}
+
 /** HTTP Referer 헤더에서 이전 경로 값을 가져와서 판별하는 함수 */
 export function getReferer(referer) {
   if (referer.includes(REFERER.DEV_PROGRESS)) return REFERER.DEV_PROGRESS; // 개발진행관리 > 결함 등록/수정
@@ -822,7 +960,6 @@ export async function getDefectTypeList() {
 }
 
 // 테스트 진행상태 목록 조회
-/** @todo API 요청 */
 export async function getTestStatusList() {
   try {
     const { testStatus: testStatusList } = await tmsFetch(`/testStatus`);

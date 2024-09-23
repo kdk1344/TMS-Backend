@@ -161,10 +161,11 @@ legend {
 }
 
 .modal table {
-  table-layout: auto;
+  table-layout: fixed;
 
   min-width: fit-content;
   width: 70vw;
+  overflow: auto;
 }
 
 .modal th {
@@ -236,6 +237,12 @@ legend {
   text-align: center;
 }
 
-#programTableBody > tr:hover {
+#programTableBody > tr:hover,
+#defectNumberTableBody > tr:hover {
   background-color: var(--super-light-gray);
+}
+
+#defectNumberTable th.seq,
+#defectNumberTable td.seq {
+  width: fit-content;
 }
