@@ -226,7 +226,7 @@ function changePage(page) {
 }
 
 function getCurrentFilterValues() {
-  let getDefectListProps = { page: currentPage };
+  let getDefectListProps = { page: currentPage, size: 15 };
 
   const defectRoleKey = document.getElementById("defectRoleKeySelect").value;
   const defectRoleValue = document.getElementById("defectRoleValueInput").value.trim();
