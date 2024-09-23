@@ -47,9 +47,7 @@
 	        AND PROGRAM_TYPE = #{programType}
 	    </if>
 	    ORDER BY SEQ DESC
-	    <if test="offset != '' and offset != null and size != '' and size != null">
-	    	LIMIT #{offset}, #{size}
-	    </if>
+	    LIMIT #{offset}, #{size}
 	</select>
 	
 	<select id="countDefects" parameterType="map" resultType="int">
