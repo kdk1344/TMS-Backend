@@ -8,7 +8,6 @@ import {
   getDefectTypeList,
   getDefectSeverityList,
   getProgramTypes,
-  getProgramList,
   addFiles,
   updateFilePreview,
   showSpinner,
@@ -21,6 +20,11 @@ import {
   setupModalEventListeners,
   getReferer,
   REFERER,
+  renderProgramList,
+  submitProgramFilter,
+  selectProgramFromTable,
+  renderDefectNumberList,
+  selectOriginalDefectNumberFromTable,
 } from "./common.js";
 
 /** @global */
@@ -116,8 +120,12 @@ function setupEventListeners() {
 
   // 기발생 결함번호 검색
   defectNumberSearchButton.addEventListener("click", () => {
+    renderDefectNumberList();
     if (checkBeforeDefectNumberSearching()) openModal("defectNumberSearchModal");
   });
+
+  // 기발생 결함번호 목록 테이블 클릭
+  defectNumberTableBody.addEventListener("click", selectOriginalDefectNumberFromTable);
 
   // PL
   const plRadioButtons = document.querySelectorAll('input[name="plDefectJudgeClass"]');
@@ -347,83 +355,4 @@ async function register(event) {
   } finally {
     hideSpinner();
   }
-}
-
-// 프로그램 목록 테이블 렌더링
-async function renderProgramList(
-  getProgramListProps = {
-    programType: "",
-    developer: "",
-    programId: "",
-    programName: "",
-  }
-) {
-  const { programList } = await getProgramList(getProgramListProps);
-
-  if (programTableBody) {
-    programTableBody.innerHTML = "";
-
-    programList.forEach((program, index) => {
-      const { programType, programId, programName, programStatus, developer, pl } = program;
-
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td class="program-type">${programType}</td>
-        <td class="program-id">${programId}</td>
-        <td class="program-name">${programName}</td>
-        <td class="program-status">${programStatus}</td>
-        <td class="developer">${developer}</td>
-        <td class="pl">${pl}</td>
-      `;
-
-      programTableBody.appendChild(row);
-    });
-  }
-}
-
-// 프로그램 목록 필터링
-function submitProgramFilter(event) {
-  event.preventDefault(); // 폼 제출 기본 동작 방지
-
-  const getProgramListProps = getCurrentProgramFilterValues();
-
-  renderProgramList(getProgramListProps);
-}
-
-// 프로그램 필터 값 조회
-function getCurrentProgramFilterValues() {
-  const programType = document.getElementById("programTypeForPrgoram").value;
-  const developer = document.getElementById("developerForPrgoram").value;
-  const programId = document.getElementById("programIdForPrgoram").value;
-  const programName = document.getElementById("programNameForPrgoram").value;
-
-  return {
-    programType,
-    developer,
-    programId,
-    programName,
-  };
-}
-
-// 프로그램 정보 세팅
-function selectProgramFromTable(event) {
-  const row = event.target.closest("tr");
-
-  if (row) {
-    const programId = row.getElementsByClassName("program-id")[0].textContent;
-    const programName = row.getElementsByClassName("program-name")[0].textContent;
-    const programType = row.getElementsByClassName("program-type")[0].textContent;
-    const developer = row.getElementsByClassName("developer")[0].textContent;
-    const pl = row.getElementsByClassName("pl")[0].textContent;
-
-    document.getElementById("programId").value = programId;
-    document.getElementById("programName").value = programName;
-    document.getElementById("programType").value = programType;
-    document.getElementById("defectHandler").value = developer;
-    document.getElementById("pl").value = pl;
-  }
-
-  closeModal("programSearchModal");
 }

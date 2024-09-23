@@ -97,7 +97,7 @@
           </dl>
           <table id="defectNumberTable">
             <thead>
-              <th>결함번호</th>
+              <th class="seq">결함번호</th>
               <th>프로그램ID</th>
               <th>프로그램명</th>
               <th>개발자</th>
