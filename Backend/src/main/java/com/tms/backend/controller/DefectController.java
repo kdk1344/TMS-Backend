@@ -98,7 +98,7 @@ public class DefectController {
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "page" , defaultValue = "1") int page,
-            @RequestParam(value = "size" , defaultValue = "99999999") int size) {
+            @RequestParam(value = "size" , defaultValue = "99999") int size) {
 		
 //		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
@@ -108,8 +108,6 @@ public class DefectController {
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
-		log.info("테스트 스테이지"+testStage);
-
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
 		if (defectSeverity != null && !defectSeverity.isEmpty()) {
@@ -119,12 +117,17 @@ public class DefectController {
 		if (testStage != null && !testStage.isEmpty()) {
 			testStage = adminService.getStageCCodes("11", testStage);}
 		
-		log.info(programName);
-		log.info(programType);
-						
+		List<Defect> defects;
+		
+		if ((programId != null && !programId.isEmpty()) && 
+			    (programName != null && !programName.isEmpty())){
+			defects = defectService.searchDefectOriginal(programId, programName);
+		} else {
+				
 		// 결함 목록 조회
-		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
+		defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
 				defectHandler, pl,  defectStatus, programId, testId, programName, programType, page, size);
+		}
 	    
 	    // 총 결함 수 조회
 	    int totalDefects = defectService.getTotalDefectsCount(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
@@ -133,6 +136,7 @@ public class DefectController {
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
 	    
+	    log.info(defects);
 	    	    
 	    // 응답 생성
 	    response.put("defects", defects);

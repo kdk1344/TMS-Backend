@@ -175,6 +175,21 @@ public class TestController {
         return ResponseEntity.ok(response);
     }
 	
+	//테스트 진행 현황 삭제
+	@DeleteMapping(value= "api/deletetest", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deletetest(@RequestBody List<Integer> seqs) {
+        Map<String, Object> response = new HashMap<>();
+//        
+//        for (int seq : seqs) {
+//            devservice.deleteTestProgress(seq, 1);
+//        }
+        
+        response.put("status", "success");
+        response.put("message", "테스트 진행 현황 정보가 성공적으로 삭제되었습니다.");
+        return ResponseEntity.ok(response);
+    }
+	
 	
 	
 	

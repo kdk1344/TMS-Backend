@@ -47,6 +47,8 @@ public interface DefectMapper {
 		  @Param("testId") String testId,
 		  @Param("programName") String programName,
 		  @Param("programType") String programType);
+	public List<Defect> searchDefectOriginal(@Param("programId") String programId,
+            								 @Param("programName") String programName);
 	public void deleteDefect(Integer seq);
 	public void insertdefect(Defect def);
 	public void updateDefect(Defect def);

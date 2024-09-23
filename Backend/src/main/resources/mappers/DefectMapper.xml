@@ -20,10 +20,10 @@
 	        AND DEFECT_SEVERITY = #{defectSeverity}
 	    </if>
 	    <if test="seq != null and seq != ''">
-	    	AND SEQ = #{seq}
+	        AND SEQ = #{seq}
 	    </if>
 	    <if test="pl != null and pl != ''">
-	        AND PL LIKE CONCAT('%', #{pl}, '%')
+	        AND PL LIKE CONCAT('%', #{pl}, '%')}
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
 	        AND DEFECT_REGISTRAR LIKE CONCAT('%', #{defectRegistrar}, '%')
@@ -34,7 +34,7 @@
 	    <if test="defectStatus != null and defectStatus != ''">
 	        AND DEFECT_STATUS = #{defectStatus}
 	    </if>
-   	    <if test="programId != null and programId != ''">
+	    <if test="programId != null and programId != ''">
 	        AND PROGRAM_ID = #{programId}
 	    </if>
 	    <if test="testId != null and testId != ''">
@@ -92,6 +92,18 @@
 	    </if>
 	    <if test="programType != null and programType != ''">
 	        AND PROGRAM_TYPE = #{programType}
+	    </if>
+	</select>
+		
+	<select id="searchDefectOriginal" parameterType="map" resultType="Defect">
+		SELECT * 
+	    FROM DEFECT
+	    WHERE 1=1
+		<if test="programId != null and programId != ''">
+	        AND PROGRAM_ID = #{programId}
+	    </if>
+	    <if test="programName != null and programName != ''">
+	        AND PROGRAM_NAME = #{programName}
 	    </if>
 	</select>
 	

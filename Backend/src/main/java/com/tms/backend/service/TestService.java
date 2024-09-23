@@ -58,6 +58,17 @@ public class TestService {
 	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr);
 	}
 	
+//	//테스트 진행 현황 수정
+//	public void updatetestProgress(testProgress testProgress) {
+//		testmapper.updatedevProgress(testProgress);
+//	}
+//	
+//	//개발 진행현황 목록 삭제
+//	public void deleteDevProgress(int seq , int type) {
+//		devMapper.deleteDevProgress(seq);
+//		adminmapper.deleteAttachmentsByNoticeId(seq, type);
+//    }
+	
 
     
     

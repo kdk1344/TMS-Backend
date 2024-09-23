@@ -39,8 +39,11 @@ public class DefectService {
     public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
     		String defectRegistrar, String defectHandler, String pl, String defectStatus, String programId, String testId, String programName,
     		String programType, int page, int size) {
-    	Integer offset = (page - 1) * size;
-    	log.info("check"+programId);
+    	int offset = (page - 1) * size;
+    	log.info("check"+offset+"size:"+size);
+    	log.info(programName);
+    	log.info(programId);
+    	
         return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
         		programId, testId, programName, programType, defectStatus, offset, size);
     }
@@ -50,6 +53,10 @@ public class DefectService {
     		String testId, String programName, String programType) {
         return defectmapper.countDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
         		defectStatus, programId, testId, programName, programType);
+    }
+    
+    public List<Defect> searchDefectOriginal(String programId, String programName){
+    	return defectmapper.searchDefectOriginal(programId, programName);
     }
     
     //결함 업데이트
