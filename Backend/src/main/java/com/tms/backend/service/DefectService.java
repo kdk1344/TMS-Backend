@@ -39,7 +39,8 @@ public class DefectService {
     public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
     		String defectRegistrar, String defectHandler, String pl, String defectStatus, String programId, String testId, String programName,
     		String programType, int page, int size) {
-    	int offset = (page - 1) * size;
+    	Integer offset = (page - 1) * size;
+    	log.info("check"+programId);
         return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
         		programId, testId, programName, programType, defectStatus, offset, size);
     }

@@ -97,8 +97,8 @@ public class DefectController {
             @RequestParam(value = "testId", required = false) String testId,
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
-            @RequestParam(value = "page" , required = false) int page,
-            @RequestParam(value = "size" , required = false) int size) {
+            @RequestParam(value = "page" , defaultValue = "1") int page,
+            @RequestParam(value = "size" , defaultValue = "99999999") int size) {
 		
 //		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
@@ -118,6 +118,9 @@ public class DefectController {
 			defectStatus = adminService.getStageCCodes("15", defectStatus);}
 		if (testStage != null && !testStage.isEmpty()) {
 			testStage = adminService.getStageCCodes("11", testStage);}
+		
+		log.info(programName);
+		log.info(programType);
 						
 		// 결함 목록 조회
 		List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
@@ -129,6 +132,7 @@ public class DefectController {
 	    
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalDefects / size);
+	    
 	    	    
 	    // 응답 생성
 	    response.put("defects", defects);

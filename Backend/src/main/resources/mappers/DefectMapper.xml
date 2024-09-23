@@ -41,13 +41,15 @@
 	        AND TEST_ID = #{testId}
 	    </if>
 	    <if test="programName != null and programName != ''">
-	        AND PROGRAM_NAME = #{programNamee}
+	        AND PROGRAM_NAME = #{programName}
 	    </if>
 	    <if test="programType != null and programType != ''">
 	        AND PROGRAM_TYPE = #{programType}
 	    </if>
 	    ORDER BY SEQ DESC
-	    LIMIT #{offset}, #{size}
+	    <if test="offset != '' and offset != null and size != '' and size != null">
+	    	LIMIT #{offset}, #{size}
+	    </if>
 	</select>
 	
 	<select id="countDefects" parameterType="map" resultType="int">
@@ -88,7 +90,7 @@
 	        AND TEST_ID = #{testId}
 	    </if>
 	    <if test="programName != null and programName != ''">
-	        AND PROGRAM_NAME = #{programNamee}
+	        AND PROGRAM_NAME = #{programName}
 	    </if>
 	    <if test="programType != null and programType != ''">
 	        AND PROGRAM_TYPE = #{programType}
