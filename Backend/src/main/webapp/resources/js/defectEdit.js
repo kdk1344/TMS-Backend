@@ -46,9 +46,11 @@ const goBackButton = document.getElementById("goBackButton");
 const programFilterForm = document.getElementById("programFilterForm");
 const programSearchButton = document.getElementById("programSearchButton");
 const closeProgramSearchModalButton = document.getElementById("closeProgramSearchModalButton");
+const programTableBody = document.getElementById("programTableBody");
 
 const defectNumberSearchButton = document.getElementById("defectNumberSearchButton");
 const closeDefectNumberSearchModalButton = document.getElementById("closeDefectNumberSearchModalButton");
+const defectNumberTableBody = document.getElementById("defectNumberTableBody");
 
 const defectFileInput = document.getElementById("defectFileInput");
 const defectFileSelectButton = document.getElementById("defectFileSelectButton");
@@ -115,7 +117,7 @@ function setupEventListeners() {
 
   programFilterForm.addEventListener("submit", submitProgramFilter);
 
-  // 프로그램 목록 테이블 클릭 이벤트 핸들러
+  // 프로그램 목록 테이블 클릭
   programTableBody.addEventListener("click", selectProgramFromTable);
 
   // 기발생 결함번호 검색
@@ -125,6 +127,9 @@ function setupEventListeners() {
       openModal("defectNumberSearchModal");
     }
   });
+
+  // 기발생 결함번호 목록 테이블 클릭
+  defectNumberTableBody.addEventListener("click", selectoriginalDefectNumberFromTable);
 
   // PL
   const plRadioButtons = document.querySelectorAll('input[name="plDefectJudgeClass"]');
@@ -537,7 +542,14 @@ async function renderDefectNumberList(
   if (defectNumberTableBody) {
     defectNumberTableBody.innerHTML = "";
 
-    defectList.forEach((defect, index) => {
+    if (defectList.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="6">조건에 맞는 기발생 결함번호가 없습니다.</td>`;
+      defectNumberTableBody.appendChild(row);
+      return;
+    }
+
+    defectList.forEach((defect) => {
       const { seq, programId, programName, developer, defectSeverity, defectDescription } = defect;
 
       const row = document.createElement("tr");
@@ -554,6 +566,19 @@ async function renderDefectNumberList(
       defectNumberTableBody.appendChild(row);
     });
   }
+}
+
+/** 기발생결함번호 세팅 */
+function selectoriginalDefectNumberFromTable(event) {
+  const row = event.target.closest("tr");
+
+  if (row) {
+    const defectNumber = row.getElementsByClassName("seq")[0].textContent;
+
+    document.getElementById("originalDefectNumber").value = defectNumber;
+  }
+
+  closeModal("defectNumberSearchButton");
 }
 
 /** 로그인 이름과 비교하여 인풋 수정 권한 설정 */
