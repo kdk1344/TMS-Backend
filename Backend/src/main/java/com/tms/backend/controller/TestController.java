@@ -110,6 +110,9 @@ public class TestController {
 		
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
+		testStatus = adminService.getStageCCodes("12", testStatus);
+		testStage = adminService.getStageCCodes("11", testStage);
+		programType = adminService.getStageCCodes("05", programType);
 		
 		// 결함 목록 조회
 		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
@@ -180,10 +183,10 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deletetest(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
-//        
-//        for (int seq : seqs) {
-//            devservice.deleteTestProgress(seq, 1);
-//        }
+        
+        for (int seq : seqs) {
+            testService.deleteTestProgress(seq, 1);
+        }
         
         response.put("status", "success");
         response.put("message", "테스트 진행 현황 정보가 성공적으로 삭제되었습니다.");

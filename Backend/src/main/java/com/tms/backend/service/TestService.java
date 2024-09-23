@@ -35,6 +35,9 @@ public class TestService {
 	
 	@Autowired
     private TestMapper testmapper;
+	
+	@Autowired
+	private AdminMapper adminmapper;
 
 	public List<testProgress> searchTestProgress(String testStage, String majorCategory, String subCategory,
 										        String programType, String testId, String screenId, String screenName,
@@ -63,11 +66,11 @@ public class TestService {
 //		testmapper.updatedevProgress(testProgress);
 //	}
 //	
-//	//개발 진행현황 목록 삭제
-//	public void deleteDevProgress(int seq , int type) {
-//		devMapper.deleteDevProgress(seq);
-//		adminmapper.deleteAttachmentsByNoticeId(seq, type);
-//    }
+	//개발 진행현황 목록 삭제
+	public void deleteTestProgress(int seq , int type) {
+		testmapper.deleteTestProgress(seq);
+		adminmapper.deleteAttachmentsByNoticeId(seq, type);
+    }
 	
 
     

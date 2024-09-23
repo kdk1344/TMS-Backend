@@ -104,6 +104,9 @@
         </if>
 	</select>
 	
-	
+	<!-- 테스트 진행 현황 삭제 -->
+	<delete id="deleteTestProgress" parameterType="int">
+		DELETE FROM TEST_PROGRESS WHERE SEQ = #{seq}
+	</delete>
 	
 </mapper>

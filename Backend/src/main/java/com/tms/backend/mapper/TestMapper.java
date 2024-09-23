@@ -62,4 +62,5 @@ public interface TestMapper {
             @Param("execCompanyMgr") String execCompanyMgr,
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr
     );
+    public void deleteTestProgress(int seq);//테스트 삭제
 }
