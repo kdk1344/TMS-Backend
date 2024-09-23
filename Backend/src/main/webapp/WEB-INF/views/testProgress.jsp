@@ -164,7 +164,7 @@
               <option value="itMgr">고객IT담당자</option>
               <option value="busiMgr">고객현업담당자</option>
             </select>
-            <input type="text" id="testRoleValueInput" name="testRoleValue" />
+            <input type="text" id="testRoleValueInput" name="testRoleValue" placeholder="이름" />
           </div>
 
           <div class="form-group">

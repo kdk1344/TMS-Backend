@@ -436,7 +436,7 @@ async function deleteTestProgress() {
 
     showSpinner();
 
-    const { status } = await tmsFetch("/deleteTestProgress", {
+    const { status } = await tmsFetch("/deletetest", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(selectedTestProgressIds),
