@@ -684,9 +684,7 @@ public class devProgressController {
 	        TestEndDateNullCheck(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdTestResult(), "제3자");
 	        TestEndDateNullCheck(devProgress.getItConfirmDate(), devProgress.getItTestResult(), "고객 IT");
 	        TestEndDateNullCheck(devProgress.getBusiConfirmDate(), devProgress.getBusiTestResult(), "고객 현업");        
-	        
-	        log.info("프ID1");
-	        
+	        	        
 	        // 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
 	        setIfNullDate(devProgress.getPlTestCmpDate(), devProgress.getPlTestScdDate(), devProgress::setPlTestScdDate);
 	        setIfNullDate(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdPartyTestDate(), 
@@ -730,8 +728,6 @@ public class devProgressController {
 
 	        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq());
 	        devProgress.setInitRegistrar(DevProgressEdit.getInitRegistrar());
-	        log.info("프ID1"+devProgress.getProgramId());
-	        log.info("프ID2"+DevProgressEdit.getProgramId());
 	        //프로그램 ID 중복체크
 	        if(!devProgress.getProgramId().equals(DevProgressEdit.getProgramId())) {
 		        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());

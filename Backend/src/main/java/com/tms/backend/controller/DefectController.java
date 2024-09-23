@@ -97,8 +97,8 @@ public class DefectController {
             @RequestParam(value = "testId", required = false) String testId,
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size) {
+            @RequestParam(value = "page" , required = false) int page,
+            @RequestParam(value = "size" , required = false) int size) {
 		
 //		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
