@@ -869,7 +869,7 @@ export async function getDefectList(
   }
 ) {
   try {
-    const query = new URLSearchParams({ page: 1, size: 15, ...getDefectsProps }).toString();
+    const query = new URLSearchParams(getDefectsProps).toString();
     const { defects: defectList, totalPages } = await tmsFetch(`/defect?${query}`);
 
     return { defectList, totalPages };

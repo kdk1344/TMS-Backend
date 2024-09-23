@@ -5,6 +5,7 @@ import {
   getMajorCategoryCodes,
   getSubCategoryCodes,
   getTestStageList,
+  getDefectList,
   getDefectTypeList,
   getDefectSeverityList,
   getProgramTypes,
@@ -119,7 +120,10 @@ function setupEventListeners() {
 
   // 기발생 결함번호 검색
   defectNumberSearchButton.addEventListener("click", () => {
-    if (checkBeforeDefectNumberSearching()) openModal("defectNumberSearchModal");
+    if (checkBeforeDefectNumberSearching()) {
+      renderDefectNumberList();
+      openModal("defectNumberSearchModal");
+    }
   });
 
   // PL
@@ -470,7 +474,7 @@ async function renderProgramList(
   }
 }
 
-// 프로그램 목록 필터링
+/** 프로그램 목록 필터링 */
 function submitProgramFilter(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
@@ -479,7 +483,7 @@ function submitProgramFilter(event) {
   renderProgramList(getProgramListProps);
 }
 
-// 프로그램 필터 값 조회
+/** 프로그램 필터 값 조회 */
 function getCurrentProgramFilterValues() {
   const programType = document.getElementById("programTypeForPrgoram").value;
   const developer = document.getElementById("developerForPrgoram").value;
@@ -494,7 +498,7 @@ function getCurrentProgramFilterValues() {
   };
 }
 
-// 프로그램 정보 세팅
+/** 프로그램 정보 세팅 */
 function selectProgramFromTable(event) {
   const row = event.target.closest("tr");
 
@@ -509,6 +513,47 @@ function selectProgramFromTable(event) {
   }
 
   closeModal("programSearchModal");
+}
+
+/** 기발생 결함번호 목록 테이블 렌더링 */
+async function renderDefectNumberList(
+  getDefectListProps = {
+    testStage: "",
+    majorCategory: "",
+    subCategory: "",
+    defectSeverity: "",
+    seq: "",
+    defectStatus: "",
+    defectRegistrar: "",
+    defectHandler: "",
+    pl: "",
+    programId: document.getElementById("programId").value ?? "",
+    programName: document.getElementById("programName").value ?? "",
+  }
+) {
+  const { defectList } = await getDefectList(getDefectListProps);
+  const defectNumberTableBody = document.getElementById("defectNumberTableBody");
+
+  if (defectNumberTableBody) {
+    defectNumberTableBody.innerHTML = "";
+
+    defectList.forEach((defect, index) => {
+      const { seq, programId, programName, developer, defectSeverity, defectDescription } = defect;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${seq}</td>
+        <td class="program-id">${programId}</td>
+        <td class="program-name">${programName}</td>
+        <td class="developer">${developer}</td>
+        <td class="defect-severity">${defectSeverity}</td>
+        <td class="defect-description ellipsis">${defectDescription}</td>
+      `;
+
+      defectNumberTableBody.appendChild(row);
+    });
+  }
 }
 
 /** 로그인 이름과 비교하여 인풋 수정 권한 설정 */
@@ -549,7 +594,7 @@ function determineEditableFields(loginName, authorityCode) {
   }
 }
 
-// 결함 등록자 관련 필드 활성화: 결함기본정보 + 결함등록자 재테스트 결과 항목 수정 가능
+/** 결함 등록자 관련 필드 활성화: 결함기본정보 + 결함등록자 재테스트 결과 항목 수정 가능 */
 function enableDefectRegistrarFields() {
   // 결함기본정보
   const majorCategorySelect = document.getElementById("majorCategory");
@@ -590,7 +635,7 @@ function enableDefectRegistrarFields() {
   defectRegistrarCommentInput.removeAttribute("readonly");
 }
 
-// 조치 담당자 관련 필드 활성화: 개발자 조치결과 – 조치예정일(yyyy-mm-dd), 조치완료일, 조치내역, 조치 첨부파일
+/** 조치 담당자 관련 필드 활성화: 개발자 조치결과 – 조치예정일(yyyy-mm-dd), 조치완료일, 조치내역, 조치 첨부파일 */
 function enableDefectHandlerFields() {
   const defectScheduledDateInput = document.getElementById("defectScheduledDate");
   const defectCompletionDateInput = document.getElementById("defectCompletionDate");
