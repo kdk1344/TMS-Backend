@@ -757,7 +757,7 @@ export async function renderDefectNumberList(
     }
 
     defectList.forEach((defect) => {
-      const { seq, programId, programName, developer, defectSeverity, defectDescription } = defect;
+      const { seq, programId, programName, defectRegistrar, defectSeverity, defectDescription } = defect;
 
       const row = document.createElement("tr");
 
@@ -765,7 +765,7 @@ export async function renderDefectNumberList(
         <td class="seq">${seq}</td>
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
-        <td class="developer">${developer}</td>
+        <td class="defect-registrar">${defectRegistrar}</td>
         <td class="defect-severity">${defectSeverity}</td>
         <td class="defect-description ellipsis">${defectDescription}</td>
       `;
