@@ -325,15 +325,18 @@ public class TestController {
     		}
         // 헤더 이름 배열
         String[] headers = {
-        	    "SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", 
-        	    "TEST_ID", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
-        	    "DEFECT_TYPE", "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", 
-        	    "DEFECT_DISCOVERY_DATE", "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", 
-        	    "DEFECT_COMPLETION_DATE", "DEFECT_RESOLUTION_DETAILS", "PL", 
-        	    "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", "PL_DEFECT_JUDGE_CLASS", 
-        	    "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", "DEFECT_REGISTRAR_COMMENT", 
-        	    "DEFECT_STATUS", "INIT_REG_DATE", "INIT_REGISTRAR", 
-        	    "LAST_MODIFIED_DATE", "LAST_MODIFIER"
+        		"SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
+        	    "TEST_ID", "TEST_SCENARIO_NAME", "TEST_CASE_NAME", "TEST_STEP_NAME", 
+        	    "SCREEN_ID", "SCREEN_NAME", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
+        	    "SCREEN_MENU_PATH", "EXECUTE_PROCEDURE", "INPUT_DATA", "EXPECTED_RESULT", 
+        	    "ACTUAL_RESULT", "DEVELOPER", "PL", "EXEC_COMPANY_MGR", "EXEC_COMPANY_TEST_DATE", 
+        	    "EXEC_COMPANY_CONFIRM_DATE", "EXEC_COMPANY_TEST_RESULT", "EXEC_COMPANY_TEST_NOTES", 
+        	    "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
+        	    "THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", 
+        	    "IT_CONFIRM_DATE", "IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", 
+        	    "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
+        	    "TEST_STATUS", "INIT_REG_DATE", "INIT_REGISTRAR", "LAST_MODIFIED_DATE", 
+        	    "LAST_MODIFIER"
         	};
 
         // 헤더 생성
@@ -341,21 +344,21 @@ public class TestController {
         if (!check.equals("")) {
         	// "SEQ"를 무시하고 다음 헤더부터 시작
         	log.info("check"+check);
-            for (int i = 1; i < headers.length; i++) {
+            for (int i = 1; i < headers.length-2; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
-            headerRow.createCell(25).setCellValue("INIT_REGISTRAR");
-            headerRow.createCell(26).setCellValue("LAST_MODIFIER");
+            headerRow.createCell(41).setCellValue("INIT_REGISTRAR");
+            headerRow.createCell(42).setCellValue("LAST_MODIFIER");
         }
         else {
         	// "SEQ"를 포함하여 모든 헤더 생성
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
-	        headerRow.createCell(25).setCellValue("INIT_REG_DATE");
-	        headerRow.createCell(26).setCellValue("INIT_REGISTRAR");
-	        headerRow.createCell(27).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(28).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(42).setCellValue("INIT_REG_DATE");
+	        headerRow.createCell(43).setCellValue("INIT_REGISTRAR");
+	        headerRow.createCell(44).setCellValue("LAST_MODIFIED_DATE");
+	        headerRow.createCell(45).setCellValue("LAST_MODIFIER");
         }
         
         // 헤더와 데이터 매핑
@@ -378,6 +381,7 @@ public class TestController {
         int rowNum = 1;
         for (testProgress testProgress : testProgressList) {
             Row row = sheet.createRow(rowNum++);
+            log.info(fields.length);
             for (int i = 0; i < fields.length; i++) {
                 try {
                     Method method = testProgress.getClass().getMethod(fields[i]);
@@ -388,14 +392,14 @@ public class TestController {
                 }
             }
             if (check != "") {
-	            row.createCell(25).setCellValue(testProgress.getInitRegistrar());
-	            row.createCell(26).setCellValue(testProgress.getLastModifier());
+	            row.createCell(41).setCellValue(testProgress.getInitRegistrar());
+	            row.createCell(42).setCellValue(testProgress.getLastModifier());
             }
             else {
-            	row.createCell(25).setCellValue(testProgress.getInitRegDate().toString());
-	            row.createCell(26).setCellValue(testProgress.getInitRegistrar());
-	            row.createCell(27).setCellValue(testProgress.getLastModifiedDate().toString());
-	            row.createCell(28).setCellValue(testProgress.getLastModifier());
+            	row.createCell(42).setCellValue(testProgress.getInitRegDate().toString());
+	            row.createCell(43).setCellValue(testProgress.getInitRegistrar());
+	            row.createCell(44).setCellValue(testProgress.getLastModifiedDate().toString());
+	            row.createCell(45).setCellValue(testProgress.getLastModifier());
             }
         }
         // 엑셀 파일을 HTTP 응답으로 내보내기
@@ -423,14 +427,17 @@ public class TestController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", 
-            	    "TEST_ID", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
-            	    "DEFECT_TYPE", "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", 
-            	    "DEFECT_DISCOVERY_DATE", "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", 
-            	    "DEFECT_COMPLETION_DATE", "DEFECT_RESOLUTION_DETAILS", "PL", 
-            	    "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", "PL_DEFECT_JUDGE_CLASS", 
-            	    "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", "DEFECT_REGISTRAR_COMMENT", 
-            	    "DEFECT_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
+            List<String> expectedHeaders = Arrays.asList("TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
+            	    "TEST_ID", "TEST_SCENARIO_NAME", "TEST_CASE_NAME", "TEST_STEP_NAME", 
+            	    "SCREEN_ID", "SCREEN_NAME", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
+            	    "SCREEN_MENU_PATH", "EXECUTE_PROCEDURE", "INPUT_DATA", "EXPECTED_RESULT", 
+            	    "ACTUAL_RESULT", "DEVELOPER", "PL", "EXEC_COMPANY_MGR", "EXEC_COMPANY_TEST_DATE", 
+            	    "EXEC_COMPANY_CONFIRM_DATE", "EXEC_COMPANY_TEST_RESULT", "EXEC_COMPANY_TEST_NOTES", 
+            	    "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
+            	    "THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", 
+            	    "IT_CONFIRM_DATE", "IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", 
+            	    "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
+            	    "TEST_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
             if (!isHeaderValid5(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
