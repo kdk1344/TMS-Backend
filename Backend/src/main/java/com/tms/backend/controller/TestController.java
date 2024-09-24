@@ -202,7 +202,37 @@ public class TestController {
 		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		try {
+			//완료일 등록 시 테스트결과 미등록 체크
+			EndDateResultCheck(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestResult(), "수행사");
+			EndDateResultCheck(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdTestResult(), "제3자");
+			EndDateResultCheck(testProgress.getItConfirmDate(), testProgress.getItTestResult(), "고객IT");
+			EndDateResultCheck(testProgress.getBusiConfirmDate(), testProgress.getBusiTestResult(), "고객현업");
+			
+			//테스트 완료일 등록인데 테스트 시작일 미등록인 경우
+			if ((testProgress.getItConfirmDate() != null) && (testProgress.getItTestDate() == null)){
+	        	testProgress.setItTestDate(testProgress.getItConfirmDate());
+	        }
+			if ((testProgress.getBusiConfirmDate() != null) && (testProgress.getBusiTestDate() == null)){
+	        	testProgress.setBusiTestDate(testProgress.getBusiConfirmDate());
+	        }
+			
+			// 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
+	        setIfNullDate2(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestDate(), testProgress::setExecCompanyTestDate);
+	        setIfNullDate2(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdPartyTestDate(), 
+	        			testProgress::setThirdPartyTestDate);
+	        setIfNullDate2(testProgress.getItConfirmDate(), testProgress.getItTestDate(), testProgress::setItTestDate);
+	        setIfNullDate2(testProgress.getBusiConfirmDate(), testProgress.getBusiTestDate(), testProgress::setBusiTestDate);
+			
 			//코드로 들어오는 데이터를 코드명으로 변경
+	        testProgress.setMajorCategory(adminService.getStageCodes("대", testProgress.getMajorCategory()));
+			testProgress.setSubCategory(adminService.getStageCodes("중", testProgress.getSubCategory()));
+			testProgress.setProgramType(adminService.getStageCCodes("02", testProgress.getProgramType()));
+			testProgress.setTestStatus(adminService.getStageCCodes("12", testProgress.getTestStatus()));
+			testProgress.setTestStage(adminService.getStageCCodes("11", testProgress.getTestStage()));
+			testProgress.setBusiTestResult(adminService.getStageCCodes("07", testProgress.getBusiTestResult()));
+			testProgress.setExecCompanyTestResult(adminService.getStageCCodes("07", testProgress.getExecCompanyTestResult()));
+			testProgress.setItTestResult(adminService.getStageCCodes("07", testProgress.getItTestResult()));
+			testProgress.setThirdTestResult(adminService.getStageCCodes("07", testProgress.getThirdTestResult()));
 			
 	        //최초 등록자, 변경자 로그인 ID 세팅
 			testProgress.setInitRegistrar(UserName);
@@ -612,5 +642,12 @@ public class TestController {
 	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
 	        	throw new IllegalArgumentException(dataName + " 테스트의 테스트 결과 항목이 입력되지 않았습니다.");
 	        }
+    }
+    
+    //테스트 완료일 체크해서 테스트 예정일 Null일 경우 자동 셋팅
+    private void setIfNullDate2(Date DateValue1, Date DateValue2, Consumer<Date> setDate) {
+        if (DateValue1 != null && DateValue2 == null) {
+            setDate.accept(DateValue1);
+        }
     }
 }
