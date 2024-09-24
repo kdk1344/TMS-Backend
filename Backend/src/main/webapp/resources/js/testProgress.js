@@ -404,7 +404,7 @@ async function uploadTestProgressFile() {
   try {
     showSpinner();
 
-    const response = await tmsFetch("/testProgressupload", {
+    const response = await tmsFetch("/testupload", {
       method: "POST",
       body: formData,
     });
