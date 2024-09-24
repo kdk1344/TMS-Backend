@@ -28,12 +28,7 @@
 엑셀로 업로드하여 다수의 목록을 한번에 입력할 수 있습니다. 
 엑셀 양식에 데이터를 입력하여 업로드하세요. (파일 형식: xls, xlsx)</pre
             >
-            <form
-              id="downloadTemplateForm"
-              action="testProgressexampleexcel"
-              method="get"
-              class="flex-box align-center"
-            >
+            <form id="downloadTemplateForm" action="testexampleexcel" method="get" class="flex-box align-center">
               <button type="submit" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />엑셀 양식 다운로드
               </button>
@@ -62,12 +57,7 @@
         <div class="modal-content">
           <h2>엑셀 다운로드</h2>
           <div class="download-box">
-            <form
-              id="downloadAllTestProgressForm"
-              action="testProgressdownloadAll"
-              method="get"
-              class="flex-box align-center"
-            >
+            <form id="downloadAllTestProgressForm" action="testdownloadAll" method="get" class="flex-box align-center">
               <button type="submit" id="downloadAllTestProgressButton" class="excel-button">
                 <img src="../../resources/images/download_icon.png" />전체자료 다운로드
               </button>
@@ -76,7 +66,7 @@
 
             <form
               id="downloadFilteredTestProgressForm"
-              action="testProgressdownloadFiltered"
+              action="testdownloadFiltered"
               method="get"
               id="downloadFilteredForm"
               class="flex-box align-center"

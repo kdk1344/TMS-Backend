@@ -323,6 +323,8 @@ function copyFilterValuesToDownloadForm() {
     subCategory,
     programType,
     testId = "",
+    screenId = "",
+    screenName = "",
     programId = "",
     programName = "",
     developer = "",
@@ -340,6 +342,8 @@ function copyFilterValuesToDownloadForm() {
   document.getElementById("subCategoryForDownload").value = subCategory;
   document.getElementById("programTypeForDownload").value = programType;
   document.getElementById("testIdForDownload").value = testId;
+  document.getElementById("screenIdForDownload").value = screenId;
+  document.getElementById("screenNameForDownload").value = screenName;
   document.getElementById("programIdForDownload").value = programId;
   document.getElementById("programNameForDownload").value = programName;
   document.getElementById("developerForDownload").value = developer;
