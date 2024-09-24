@@ -42,8 +42,9 @@ public interface TestMapper {
             @Param("offset") int offset,
             @Param("size") int size
     );
-
-    // 개발 진행 데이터 총 개수
+    // 테스트 현황 수정
+    public void updatetestProgress(testProgress testProgress);
+    // 테스트 진행 데이터 총 개수
     public int getTotalTestCount(
             @Param("testStage") String testStage,
             @Param("majorCategory") String majorCategory,
@@ -63,4 +64,6 @@ public interface TestMapper {
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr
     );
     public void deleteTestProgress(int seq);//테스트 삭제
+    public void inserttestProgress(testProgress testProgress); //테스트 저장
+    public testProgress getTestById(int seq);
 }

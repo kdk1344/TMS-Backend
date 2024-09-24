@@ -61,15 +61,32 @@ public class TestService {
 	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr);
 	}
 	
-//	//테스트 진행 현황 수정
-//	public void updatetestProgress(testProgress testProgress) {
-//		testmapper.updatedevProgress(testProgress);
-//	}
-//	
-	//개발 진행현황 목록 삭제
+	//테스트 진행 현황 수정
+	public void updatetestProgress(testProgress testProgress) {
+		testmapper.updatetestProgress(testProgress);
+	}
+	
+	//테스트 현황 목록 삭제
 	public void deleteTestProgress(int seq , int type) {
 		testmapper.deleteTestProgress(seq);
 		adminmapper.deleteAttachmentsByNoticeId(seq, type);
+    }
+	
+	//테스트 현황 일괄 저장
+    public void saveAllTestProgress(List<testProgress> testProgress) {
+        for (testProgress test : testProgress) {
+            testmapper.inserttestProgress(test);
+        }
+    }
+    
+    //테스트 현황 저장
+    public void inserttestProgress(testProgress testProgress) {
+    	testmapper.inserttestProgress(testProgress);
+    }
+    
+    //테스트 정보 가져오기
+    public testProgress getTestById(Integer seq) {
+    	return testmapper.getTestById(seq);
     }
 	
 

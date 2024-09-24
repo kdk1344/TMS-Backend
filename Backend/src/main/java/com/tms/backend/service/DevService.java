@@ -68,7 +68,7 @@ public class DevService {
 		adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
 	
-	// 카테고리 코드 일괄 저장
+	// 개발 진행현황 일괄 저장
     public void saveAllDevProgress(List<devProgress> devProgress) {
         for (devProgress dev : devProgress) {
             devMapper.insertdevProgress(dev);

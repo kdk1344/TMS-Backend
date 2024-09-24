@@ -104,9 +104,89 @@
         </if>
 	</select>
 	
+	<!-- 테스트 진행 현황 추가 -->
+    <insert id="inserttestProgress" parameterType="TestProgress" useGeneratedKeys="true" keyProperty="seq">
+	    INSERT INTO TEST_PROGRESS (
+	        TEST_STAGE, MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY,
+		    TEST_ID, PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME,
+		    DEFECT_TYPE, DEFECT_SEVERITY, DEFECT_DESCRIPTION, DEFECT_REGISTRAR,
+		    DEFECT_DISCOVERY_DATE, DEFECT_HANDLER, DEFECT_SCHEDULED_DATE,
+		    DEFECT_COMPLETION_DATE, DEFECT_RESOLUTION_DETAILS, PL,
+		    PL_CONFIRM_DATE, ORIGINAL_DEFECT_NUMBER, PL_DEFECT_JUDGE_CLASS,
+		    PL_COMMENTS, DEFECT_REG_CONFIRM_DATE, DEFECT_REGISTRAR_COMMENT,
+		    DEFECT_STATUS, INIT_REGISTRAR, LAST_MODIFIER
+		) VALUES (
+		    #{testStage}, #{majorCategory}, #{subCategory}, #{minorCategory},
+		    #{testId}, #{programType}, #{programId}, #{programName},
+		    #{defectType}, #{defectSeverity}, #{defectDescription}, #{defectRegistrar},
+		    #{defectDiscoveryDate}, #{defectHandler}, #{defectScheduledDate},
+		    #{defectCompletionDate}, #{defectResolutionDetails}, #{pl},
+		    #{plConfirmDate}, #{originalDefectNumber}, #{plDefectJudgeClass},
+		    #{plComments}, #{defectRegConfirmDate}, #{defectRegistrarComment},
+		    #{defectStatus}, #{initRegistrar}, #{lastModifier}
+		)
+	</insert>
+	
+	<!-- 테스트 현황 수정 -->
+	<update id="updatetestProgress" parameterType="TestProgress">
+		UPDATE TEST_PROGRESS
+        SET 
+            TEST_STAGE = #{testStage},
+	        MAJOR_CATEGORY = #{majorCategory},
+	        SUB_CATEGORY = #{subCategory},
+	        MINOR_CATEGORY = #{minorCategory},
+	        TEST_ID = #{testId},
+	        PROGRAM_TYPE = #{programType},
+	        PROGRAM_ID = #{programId},
+	        PROGRAM_NAME = #{programName},
+	        DEFECT_TYPE = #{defectType},
+	        DEFECT_SEVERITY = #{defectSeverity},
+	        DEFECT_DESCRIPTION = #{defectDescription},
+	        DEFECT_REGISTRAR = #{defectRegistrar},
+	        DEFECT_DISCOVERY_DATE = #{defectDiscoveryDate},
+	        DEFECT_HANDLER = #{defectHandler},
+	        DEFECT_SCHEDULED_DATE = #{defectScheduledDate},
+	        DEFECT_COMPLETION_DATE = #{defectCompletionDate},
+	        DEFECT_RESOLUTION_DETAILS = #{defectResolutionDetails},
+	        PL = #{pl},
+	        PL_CONFIRM_DATE = #{plConfirmDate},
+	        ORIGINAL_DEFECT_NUMBER = #{originalDefectNumber},
+	        PL_DEFECT_JUDGE_CLASS = #{plDefectJudgeClass},
+	        PL_COMMENTS = #{plComments},
+	        DEFECT_REG_CONFIRM_DATE = #{defectRegConfirmDate},
+	        DEFECT_REGISTRAR_COMMENT = #{defectRegistrarComment},
+	        DEFECT_STATUS = #{defectStatus},
+	        IT_MGR = #{itMgr},
+	        IT_TEST_DATE = #{itTestDate},
+	        IT_CONFIRM_DATE = #{itConfirmDate},
+	        IT_TEST_RESULT = #{itTestResult},
+	        IT_TEST_NOTES = #{itTestNotes},
+	        BUSI_MGR = #{busiMgr},
+	        BUSI_TEST_DATE = #{busiTestDate},
+	        BUSI_CONFIRM_DATE = #{busiConfirmDate},
+	        BUSI_TEST_RESULT = #{busiTestResult},
+	        BUSI_TEST_NOTES = #{busiTestNotes},
+	        THIRD_PARTY_TEST_MGR = #{thirdPartyTestMgr},
+	        THIRD_PARTY_TEST_DATE = #{thirdPartyTestDate},
+	        THIRD_PARTY_CONFIRM_DATE = #{thirdPartyConfirmDate},
+	        THIRD_TEST_RESULT = #{thirdTestResult},
+	        THIRD_PARTY_TEST_NOTES = #{thirdPartyTestNotes},
+	        DEV_STATUS = #{devStatus},
+	        INIT_REGISTRAR = #{initRegistrar},
+	        LAST_MODIFIED_DATE = CURRENT_TIMESTAMP,
+	        LAST_MODIFIER = #{lastModifier}
+        WHERE SEQ = #{seq}
+    </update>
+	
 	<!-- 테스트 진행 현황 삭제 -->
 	<delete id="deleteTestProgress" parameterType="int">
 		DELETE FROM TEST_PROGRESS WHERE SEQ = #{seq}
 	</delete>
+	
+	<!-- 테스트 정보 추출 -->
+	<select id="getTestById" resultType="TestProgress">
+		SELECT * FROM TEST_PROGRESS
+        WHERE SEQ = #{seq}
+	</select>
 	
 </mapper>

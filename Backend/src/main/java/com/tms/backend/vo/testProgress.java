@@ -54,8 +54,8 @@ public class testProgress {
     private String initRegistrar;                  // 최초 등록자
     private LocalDateTime lastModifiedDate;                 // 최종 변경일시
     private String lastModifier;                   // 최종 변경자
-    private String execCompanyAttachments;         // 수행사 증적 첨부
-    private String thirdAttachments;               // 제3자 증적 첨부
+    private List<FileAttachment> execCompanyAttachments;         // 수행사 증적 첨부
+    private List<FileAttachment> thirdAttachments;               // 제3자 증적 첨부
     
     
 	
