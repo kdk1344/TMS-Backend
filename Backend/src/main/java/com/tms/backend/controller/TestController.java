@@ -605,4 +605,12 @@ public class TestController {
             setDate.accept(DateValue1);
         }
     }
+    
+    // 완료일이 등록되었는데 테스트 결과가 미등록된 경우 메세지
+    private void EndDateResultCheck(Date dateValue, String ResultValue, String dataName) {
+	    if ((dateValue != null) && 
+	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
+	        	throw new IllegalArgumentException(dataName + " 테스트의 테스트 결과 항목이 입력되지 않았습니다.");
+	        }
+    }
 }

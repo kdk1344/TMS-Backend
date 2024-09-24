@@ -75,18 +75,36 @@ public class TestService {
 	//테스트 현황 일괄 저장
     public void saveAllTestProgress(List<testProgress> testProgress) {
         for (testProgress test : testProgress) {
+        	TestStatusCheck(test);
             testmapper.inserttestProgress(test);
         }
     }
     
     //테스트 현황 저장
     public void inserttestProgress(testProgress testProgress) {
+    	TestStatusCheck(testProgress);
     	testmapper.inserttestProgress(testProgress);
     }
     
     //테스트 정보 가져오기
     public testProgress getTestById(Integer seq) {
     	return testmapper.getTestById(seq);
+    }
+    
+    //테스트 진행 상태 자동 세팅
+    public void TestStatusCheck(testProgress testProgress) {    	
+    	if (testProgress.getExecCompanyConfirmDate() == null && testProgress.getItTestDate() == null && testProgress.getBusiTestDate() == null) {
+        	testProgress.setTestStatus("미착수");
+        } else if(testProgress.getExecCompanyConfirmDate() != null && testProgress.getItConfirmDate() == null
+        		&& testProgress.getBusiConfirmDate() == null) {
+        	testProgress.setTestStatus("수행사완료");
+        } else if(testProgress.getExecCompanyConfirmDate() != null && testProgress.getItConfirmDate() != null
+        		&& testProgress.getBusiConfirmDate() == null) {
+        	testProgress.setTestStatus("고객IT완료");
+        } else if(testProgress.getExecCompanyConfirmDate() != null && testProgress.getItConfirmDate() != null
+        		&& testProgress.getBusiConfirmDate() != null) {
+        	testProgress.setTestStatus("고객현업완료");
+        } 
     }
 	
 
