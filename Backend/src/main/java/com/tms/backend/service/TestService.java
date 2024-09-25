@@ -96,6 +96,11 @@ public class TestService {
     	return testmapper.getscreenList();
     }
     
+    //프로그램 타입 가져오기
+    public String getProgramType(String programId) {
+    	return testmapper.getProgramType(programId);
+    }
+    
     //테스트 진행 상태 자동 세팅
     public void TestStatusCheck(testProgress testProgress) {    	
     	if (testProgress.getExecCompanyConfirmDate() == null && testProgress.getItTestDate() == null && testProgress.getBusiTestDate() == null) {

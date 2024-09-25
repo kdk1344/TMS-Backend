@@ -254,6 +254,9 @@ public class TestController {
 			testProgress.setItTestResult(adminService.getStageCCodes("07", testProgress.getItTestResult()));
 			testProgress.setThirdTestResult(adminService.getStageCCodes("07", testProgress.getThirdTestResult()));
 			
+			//프로그램 구분 추가
+			testProgress.setProgramType(testService.getProgramType(testProgress.getProgramId()));
+			
 	        //최초 등록자, 변경자 로그인 ID 세팅
 			testProgress.setInitRegistrar(UserName);
 			testProgress.setLastModifier(UserName);

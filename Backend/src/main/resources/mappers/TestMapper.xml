@@ -195,10 +195,17 @@
         WHERE SEQ = #{seq}
 	</select>
 	
+	<!-- 프로그램 구분 가져오기 -->
+	<select id="getProgramType" resultType="String">
+		SELECT PROGRAM_TYPE FROM DEV_PROGRESS
+		WHERE PROGRAM_ID = #{programId}
+	</select>
+	
 	<!-- 화면 정보 가져오기 -->
 	<select id="getscreenList" resultType="devProgress">
 		SELECT DISTINCT SCREEN_ID, SCREEN_NAME, SCREEN_MENU_PATH
 		FROM DEV_PROGRESS
+		WHERE length(screen_ID) != 0;
 	</select>
 	
 </mapper>
