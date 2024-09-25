@@ -192,8 +192,8 @@ public class TestController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> testProgressReg(HttpServletRequest request,
 			@RequestPart("testProgress") testProgress testProgress,
-			@RequestPart(value = "file", required = false) MultipartFile[] files,
-			@RequestPart(value = "fixfile", required = false) MultipartFile[] fixfiles) {
+			@RequestPart(value = "execfile", required = false) MultipartFile[] execfiles,
+			@RequestPart(value = "thirdfile", required = false) MultipartFile[] thirdfiles) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		if (session == null || session.getAttribute("authorityCode") == null) {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
@@ -240,13 +240,13 @@ public class TestController {
 			testService.inserttestProgress(testProgress);  // 개발 현황 진행 정보 추가
 			
 			// 새로운 파일 업로드 처리
-            if (files != null && files.length > 0) {
+            if (execfiles != null && execfiles.length > 0) {
             	log.info("첨부중");
-            	fileservice.handleFileUpload(files, "testProgress", testProgress.getSeq());
+            	fileservice.handleFileUpload(execfiles, "testProgress", testProgress.getSeq());
             }
-            if (fixfiles != null && fixfiles.length > 0) {
+            if (thirdfiles != null && thirdfiles.length > 0) {
             	log.info("첨부중");
-                fileservice.handleFileUpload(files, "testProgressThird", testProgress.getSeq());
+                fileservice.handleFileUpload(thirdfiles, "testProgressThird", testProgress.getSeq());
             }
             
             //첨부파일 등록
