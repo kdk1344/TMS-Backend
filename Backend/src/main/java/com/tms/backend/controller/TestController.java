@@ -179,6 +179,26 @@ public class TestController {
         return ResponseEntity.ok(response);
     }
 	
+	//화면 ID 추출
+	@GetMapping(value = "api/screenList", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getscreenId() {
+    	Map<String, Object> response = new HashMap<>();
+    	List<devProgress> screenList= testService.getscreenList();
+
+        // 응답 데이터 생성
+        if (screenList != null && !screenList.isEmpty()) {
+            response.put("status", "success");
+            response.put("screenList", screenList);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "화면 관련 정보를 찾을 수 없습니다");
+        }
+
+        // 조회된 결과를 반환
+        return ResponseEntity.ok(response);
+    }
+	
 	//테스트 현황 등록
 	@GetMapping("/testProgressReg")
 	public String testProgressPage() {

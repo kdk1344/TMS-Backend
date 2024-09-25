@@ -24,6 +24,7 @@ public class testProgress {
     private String programName;                    // 프로그램명
     private String screenMenuPath;                 // 화면메뉴경로
     private String executeProcedure;               // 수행 절차
+    private String preConditions;				   // 사전 조건
     private String inputData;                      // 입력 데이터
     private String expectedResult;                 // 예상 결과
     private String actualResult;                   // 실제 결과

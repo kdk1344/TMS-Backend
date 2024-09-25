@@ -91,6 +91,11 @@ public class TestService {
     	return testmapper.getTestById(seq);
     }
     
+    //화면 리스트 가져오기
+    public List<devProgress> getscreenList() {
+    	return testmapper.getscreenList();
+    }
+    
     //테스트 진행 상태 자동 세팅
     public void TestStatusCheck(testProgress testProgress) {    	
     	if (testProgress.getExecCompanyConfirmDate() == null && testProgress.getItTestDate() == null && testProgress.getBusiTestDate() == null) {

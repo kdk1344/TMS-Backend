@@ -65,5 +65,6 @@ public interface TestMapper {
     );
     public void deleteTestProgress(int seq);//테스트 삭제
     public void inserttestProgress(testProgress testProgress); //테스트 저장
-    public testProgress getTestById(int seq);
+    public List<devProgress> getscreenList(); //화면 정보 가져오기
+    public testProgress getTestById(int seq); //테스트 시나리오 정보 가져오기
 }
