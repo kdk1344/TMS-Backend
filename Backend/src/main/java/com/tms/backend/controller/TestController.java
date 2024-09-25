@@ -203,10 +203,10 @@ public class TestController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			//완료일 등록 시 테스트결과 미등록 체크
-			EndDateResultCheck(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestResult(), "수행사");
-			EndDateResultCheck(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdTestResult(), "제3자");
-			EndDateResultCheck(testProgress.getItConfirmDate(), testProgress.getItTestResult(), "고객IT");
-			EndDateResultCheck(testProgress.getBusiConfirmDate(), testProgress.getBusiTestResult(), "고객현업");
+			fileservice.EndDateResultCheck(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestResult(), "수행사");
+			fileservice.EndDateResultCheck(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdTestResult(), "제3자");
+			fileservice.EndDateResultCheck(testProgress.getItConfirmDate(), testProgress.getItTestResult(), "고객IT");
+			fileservice.EndDateResultCheck(testProgress.getBusiConfirmDate(), testProgress.getBusiTestResult(), "고객현업");
 			
 			//테스트 완료일 등록인데 테스트 시작일 미등록인 경우
 			if ((testProgress.getItConfirmDate() != null) && (testProgress.getItTestDate() == null)){
@@ -217,11 +217,11 @@ public class TestController {
 	        }
 			
 			// 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
-	        setIfNullDate2(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestDate(), testProgress::setExecCompanyTestDate);
-	        setIfNullDate2(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdPartyTestDate(), 
+	        fileservice.setIfNullDate(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestDate(), testProgress::setExecCompanyTestDate);
+	        fileservice.setIfNullDate(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdPartyTestDate(), 
 	        			testProgress::setThirdPartyTestDate);
-	        setIfNullDate2(testProgress.getItConfirmDate(), testProgress.getItTestDate(), testProgress::setItTestDate);
-	        setIfNullDate2(testProgress.getBusiConfirmDate(), testProgress.getBusiTestDate(), testProgress::setBusiTestDate);
+	        fileservice.setIfNullDate(testProgress.getItConfirmDate(), testProgress.getItTestDate(), testProgress::setItTestDate);
+	        fileservice.setIfNullDate(testProgress.getBusiConfirmDate(), testProgress.getBusiTestDate(), testProgress::setBusiTestDate);
 			
 			//코드로 들어오는 데이터를 코드명으로 변경
 	        testProgress.setMajorCategory(adminService.getStageCodes("대", testProgress.getMajorCategory()));
@@ -468,11 +468,12 @@ public class TestController {
             	    "IT_CONFIRM_DATE", "IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", 
             	    "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
             	    "TEST_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
-            if (!isHeaderValid5(headerRow, expectedHeaders)) {
+            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+            
 
             List<testProgress> Testprogress = new ArrayList<>();
             
@@ -504,14 +505,14 @@ public class TestController {
 
                             switch (field.getType().getSimpleName()) {
                                 case "int":
-                                    field.set(testprogress, (int) getCellValueAsNumeric3(row.getCell(j)));
+                                    field.set(testprogress, (int) fileservice.getCellValueAsNumeric(row.getCell(j)));
                                     break;
                                 case "Date":
-                                    field.set(testprogress, getCellValueAsDate3(row.getCell(j)));
+                                    field.set(testprogress, fileservice.getCellValueAsDate(row.getCell(j)));
                                     break;
                                 default:
                                 	log.info(field.getType().getSimpleName());
-                                    field.set(testprogress, getCellValueAsString3(row.getCell(j)));
+                                    field.set(testprogress, fileservice.getCellValueAsString(row.getCell(j)));
                                     break;
                             }
                         }                    	
@@ -551,103 +552,5 @@ public class TestController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    
- // 액셀 유효헤더 확인
-    private boolean isHeaderValid5(Row headerRow, List<String> expectedHeaders) {
-        for (int i = 0; i < expectedHeaders.size(); i++) {
-            Cell cell = headerRow.getCell(i);
-            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    // 액셀 Cell값 String 변환 
-    private String getCellValueAsString3(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-        return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
-    }
-    
-    // 액셀 Cell값 Num 변환
-    private double getCellValueAsNumeric3(Cell cell) {
-        if (cell == null) {
-            return 0;
-        }
-        return cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() : Double.parseDouble(cell.toString());
-    }
-    
-    // 액셀 Cell값 Date 변환
-    private Date getCellValueAsDate3(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-
-        if (cell.getCellType() == CellType.NUMERIC) {
-            // 날짜가 숫자 형태로 저장되어 있을 때, 날짜로 변환
-            if (DateUtil.isCellDateFormatted(cell)) {
-                return cell.getDateCellValue();
-            } else {
-                return null;
-            }
-        } else if (cell.getCellType() == CellType.STRING) {
-            // 문자열로 되어 있는 경우, "YYYY-MM-DD" 형식 등을 처리
-            String dateStr = cell.getStringCellValue();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-				return dateFormat.parse(dateStr);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-        }
-
-        return null; // 다른 유형의 셀은 null 반환
-    }
-    
-    // String Value값 필수값 유효성 점검
-    private void validateRequiredField3(String fieldValue, String fieldName) {
-        if (fieldValue == null || fieldValue.trim().isEmpty()) {
-            throw new IllegalArgumentException(fieldName + "은(는) 필수 입력 항목입니다.");
-        }
-    }
-    
-    // Date Value값 유효성 점검
-    private void validateDate3(Date dateValue, String dateName) {
-        if (dateValue == null) {
-            throw new IllegalArgumentException(dateName + "은(는) 필수 입력 항목입니다.");
-        }
-    }
-    
-    // 테스트 완료일이 있을때 테스트 결과 null 체크
-    private void TestEndDateNullCheck3(Date dateValue, String ResultValue, String dataName) {
-	    if ((dateValue != null) && 
-	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
-	        	throw new IllegalArgumentException(dataName + " 단위테스트 수행 결과 '성공' 인지 '실패'인지 등록하시기 바랍니다.");
-	        }
-    }
-    
-    
-    private void setIfNullDate3(Date DateValue1, Date DateValue2, Consumer<Date> setDate) {
-        if (DateValue1 != null && DateValue2 == null) {
-            setDate.accept(DateValue1);
-        }
-    }
-    
-    // 완료일이 등록되었는데 테스트 결과가 미등록된 경우 메세지
-    private void EndDateResultCheck(Date dateValue, String ResultValue, String dataName) {
-	    if ((dateValue != null) && 
-	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
-	        	throw new IllegalArgumentException(dataName + " 테스트의 테스트 결과 항목이 입력되지 않았습니다.");
-	        }
-    }
-    
-    //테스트 완료일 체크해서 테스트 예정일 Null일 경우 자동 셋팅
-    private void setIfNullDate2(Date DateValue1, Date DateValue2, Consumer<Date> setDate) {
-        if (DateValue1 != null && DateValue2 == null) {
-            setDate.accept(DateValue1);
-        }
     }
 }

@@ -5,10 +5,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -144,6 +152,97 @@ public class FileService {
         return URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
     }
 	
+    
+    // 액셀 유효헤더 확인
+    public boolean isHeaderValid(Row headerRow, List<String> expectedHeaders) {
+        for (int i = 0; i < expectedHeaders.size(); i++) {
+            Cell cell = headerRow.getCell(i);
+            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    // 액셀 Cell값 String 변환 
+    public String getCellValueAsString(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
+    }
+    
+    // 액셀 Cell값 Num 변환
+    public double getCellValueAsNumeric(Cell cell) {
+        if (cell == null) {
+            return 0;
+        }
+        return cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() : Double.parseDouble(cell.toString());
+    }
+    
+    // 액셀 Cell값 Date 변환
+    public Date getCellValueAsDate(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+
+        if (cell.getCellType() == CellType.NUMERIC) {
+            // 날짜가 숫자 형태로 저장되어 있을 때, 날짜로 변환
+            if (DateUtil.isCellDateFormatted(cell)) {
+                return cell.getDateCellValue();
+            } else {
+                return null;
+            }
+        } else if (cell.getCellType() == CellType.STRING) {
+            // 문자열로 되어 있는 경우, "YYYY-MM-DD" 형식 등을 처리
+            String dateStr = cell.getStringCellValue();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+				return dateFormat.parse(dateStr);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        }
+
+        return null; // 다른 유형의 셀은 null 반환
+    }
+    
+    // String Value값 필수값 유효성 점검
+    public void validateRequiredField(String fieldValue, String fieldName) {
+        if (fieldValue == null || fieldValue.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + "은(는) 필수 입력 항목입니다.");
+        }
+    }
+    
+    // Date Value값 유효성 점검
+    public void validateDate(Date dateValue, String dateName) {
+        if (dateValue == null) {
+            throw new IllegalArgumentException(dateName + "은(는) 필수 입력 항목입니다.");
+        }
+    }
+    
+    // 테스트 완료일이 있을때 테스트 결과 null 체크
+    public void TestEndDateNullCheck(Date dateValue, String ResultValue, String dataName) {
+	    if ((dateValue != null) && 
+	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
+	        	throw new IllegalArgumentException(dataName + " 단위테스트 수행 결과 '성공' 인지 '실패'인지 등록하시기 바랍니다.");
+	        }
+    }
+    
+    // 완료일이 등록되었는데 테스트 결과가 미등록된 경우 메세지
+    public void EndDateResultCheck(Date dateValue, String ResultValue, String dataName) {
+	    if ((dateValue != null) && 
+	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
+	        	throw new IllegalArgumentException(dataName + " 테스트의 테스트 결과 항목이 입력되지 않았습니다.");
+	        }
+    }
+    
+    //테스트 완료일 체크해서 테스트 예정일 Null일 경우 자동 셋팅
+    public void setIfNullDate(Date DateValue1, Date DateValue2, Consumer<Date> setDate) {
+        if (DateValue1 != null && DateValue2 == null) {
+            setDate.accept(DateValue1);
+        }
+    }
 	
 	
 

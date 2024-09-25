@@ -667,7 +667,7 @@ public class DefectController {
             	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
             	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
             	    "DEFECT_REGISTRAR_COMMENT", "DEFECT_STATUS", "INIT_CREATER", "LAST_MODIFIER");
-            if (!isHeaderValid5(headerRow, expectedHeaders)) {
+            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -701,14 +701,14 @@ public class DefectController {
 
                             switch (field.getType().getSimpleName()) {
                             case "int":
-                                field.set(deFect, (int) getCellValueAsNumeric2(row.getCell(j)));
+                                field.set(deFect, (int) fileservice.getCellValueAsNumeric(row.getCell(j)));
                                 break;
                             case "Date":
-                                field.set(deFect, getCellValueAsDate2(row.getCell(j)));
+                                field.set(deFect, fileservice.getCellValueAsDate(row.getCell(j)));
                                 break;
                             default:
                             	log.info(field.getType().getSimpleName());
-                                field.set(deFect, getCellValueAsString2(row.getCell(j)));
+                                field.set(deFect, fileservice.getCellValueAsString(row.getCell(j)));
                                 break;
                         }
                         }
@@ -748,62 +748,6 @@ public class DefectController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    
-    
-    // 액셀 유효헤더 확인
-    private boolean isHeaderValid5(Row headerRow, List<String> expectedHeaders) {
-        for (int i = 0; i < expectedHeaders.size(); i++) {
-            Cell cell = headerRow.getCell(i);
-            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    // 액셀 Cell값 String 변환 
-    private String getCellValueAsString2(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-        log.info(cell);
-        return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
-    }
-    
-    // 액셀 Cell값 Num 변환
-    private double getCellValueAsNumeric2(Cell cell) {
-        if (cell == null) {
-            return 0;
-        }
-        return cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() : Double.parseDouble(cell.toString());
-    }
-    
-    // 액셀 Cell값 Date 변환
-    private Date getCellValueAsDate2(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-
-        if (cell.getCellType() == CellType.NUMERIC) {
-            // 날짜가 숫자 형태로 저장되어 있을 때, 날짜로 변환
-            if (DateUtil.isCellDateFormatted(cell)) {
-                return cell.getDateCellValue();
-            } else {
-                return null;
-            }
-        } else if (cell.getCellType() == CellType.STRING) {
-            // 문자열로 되어 있는 경우, "YYYY-MM-DD" 형식 등을 처리
-            String dateStr = cell.getStringCellValue();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-				return dateFormat.parse(dateStr);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-        }
-
-        return null; // 다른 유형의 셀은 null 반환
     }
     
     // String Value값 필수값 유효성 점검

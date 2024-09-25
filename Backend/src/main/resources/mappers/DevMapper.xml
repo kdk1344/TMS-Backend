@@ -241,7 +241,7 @@
 	
 	<!--  프로그램 ID 목록 확인 -->
 	<select id="checkProgramId" resultType="devProgress">
-		SELECT PROGRAM_TYPE, PROGRAM_ID, PROGRAM_NAME, DEVELOPER, PROGRAM_STATUS, PL
+		SELECT *
 		FROM dev_progress
 		WHERE 1=1
 	    <if test="programType != null and programType != ''">

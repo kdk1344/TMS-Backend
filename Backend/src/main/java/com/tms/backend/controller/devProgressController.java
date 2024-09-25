@@ -466,20 +466,20 @@ public class devProgressController {
 			devProgress.setDevStatus(adminService.getStageCCodes("06", devProgress.getDevStatus()));
 			
 			// 필수 항목 체크
-			validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
-			validateRequiredField(devProgress.getSubCategory(), "업무 중분류");
-			validateRequiredField(devProgress.getProgramId(), "프로그램 ID");
-			validateRequiredField(devProgress.getProgramName(), "프로그램명");
-			validateRequiredField(devProgress.getDeveloper(), "개발자");
-			validateRequiredField(devProgress.getPriority(), "우선순위");
-			validateRequiredField(devProgress.getProgramStatus(), "프로그램 상태");
+			fileservice.validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
+			fileservice.validateRequiredField(devProgress.getSubCategory(), "업무 중분류");
+			fileservice.validateRequiredField(devProgress.getProgramId(), "프로그램 ID");
+			fileservice.validateRequiredField(devProgress.getProgramName(), "프로그램명");
+			fileservice.validateRequiredField(devProgress.getDeveloper(), "개발자");
+			fileservice.validateRequiredField(devProgress.getPriority(), "우선순위");
+			fileservice.validateRequiredField(devProgress.getProgramStatus(), "프로그램 상태");
 	        if ("삭제".equals(devProgress.getProgramStatus()) &&
 	        	(devProgress.getDeletionReason() == null || devProgress.getDeletionReason().trim().isEmpty())) {
 	        	throw new IllegalArgumentException("프로그램 상태가 '삭제'인 경우 삭제처리사유 입력은 필수입니다.");
 	        }
 	        // Date 필수값 필드 체크
-	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
-	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
+	        fileservice.validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
+	        fileservice.validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
 	        // 시작예정일이 종료예정일보다 뒤일 경우 에러
  			if (devProgress.getPlannedStartDate() != null && devProgress.getPlannedEndDate() != null) {
  			    if (devProgress.getPlannedStartDate().after(devProgress.getPlannedEndDate())) {
@@ -493,11 +493,11 @@ public class devProgressController {
 	        TestEndDateNullCheck(devProgress.getBusiConfirmDate(), devProgress.getBusiTestResult(), "고객 현업");        
 	        
 	        // 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
-	        setIfNullDate(devProgress.getPlTestCmpDate(), devProgress.getPlTestScdDate(), devProgress::setPlTestScdDate);
-	        setIfNullDate(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdPartyTestDate(), 
+	        fileservice.setIfNullDate(devProgress.getPlTestCmpDate(), devProgress.getPlTestScdDate(), devProgress::setPlTestScdDate);
+	        fileservice.setIfNullDate(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdPartyTestDate(), 
 	        			devProgress::setThirdPartyTestDate);
-	        setIfNullDate(devProgress.getItConfirmDate(), devProgress.getItTestDate(), devProgress::setItTestDate);
-	        setIfNullDate(devProgress.getBusiConfirmDate(), devProgress.getBusiTestDate(), devProgress::setBusiTestDate);
+	        fileservice.setIfNullDate(devProgress.getItConfirmDate(), devProgress.getItTestDate(), devProgress::setItTestDate);
+	        fileservice.setIfNullDate(devProgress.getBusiConfirmDate(), devProgress.getBusiTestDate(), devProgress::setBusiTestDate);
 	        
 	        //프로그램 상태가 삭제일때 삭제처리자는 자동으로 사용자 ID, 삭제처리일은 오늘 일자
 	        if (("삭제".equals(devProgress.getProgramStatus())) && (devProgress.getDeletionHandler() == null)) {
@@ -659,20 +659,20 @@ public class devProgressController {
 		
 		try {
 			// 필수 항목 체크
-			validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
-			validateRequiredField(devProgress.getSubCategory(), "업무 중분류");
-			validateRequiredField(devProgress.getProgramId(), "프로그램 ID");
-			validateRequiredField(devProgress.getProgramName(), "프로그램명");
-			validateRequiredField(devProgress.getDeveloper(), "개발자");
-			validateRequiredField(devProgress.getPriority(), "우선순위");
-			validateRequiredField(devProgress.getProgramStatus(), "프로그램 상태");
+			fileservice.validateRequiredField(devProgress.getMajorCategory(), "업무 대분류");
+			fileservice.validateRequiredField(devProgress.getSubCategory(), "업무 중분류");
+			fileservice.validateRequiredField(devProgress.getProgramId(), "프로그램 ID");
+			fileservice.validateRequiredField(devProgress.getProgramName(), "프로그램명");
+			fileservice.validateRequiredField(devProgress.getDeveloper(), "개발자");
+			fileservice.validateRequiredField(devProgress.getPriority(), "우선순위");
+			fileservice.validateRequiredField(devProgress.getProgramStatus(), "프로그램 상태");
 	        if ("삭제".equals(devProgress.getProgramStatus()) &&
 	        	(devProgress.getDeletionReason() == null || devProgress.getDeletionReason().trim().isEmpty())) {
 	        	throw new IllegalArgumentException("프로그램 상태가 '삭제'인 경우 삭제처리사유 입력은 필수입니다.");
 	        }
 	        // Date 필드 체크
-	        validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
-	        validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
+	        fileservice.validateDate(devProgress.getPlannedStartDate(), "시작 예정일");
+	        fileservice.validateDate(devProgress.getPlannedEndDate(), "완료 예정일");
 	        // 시작예정일이 종료예정일보다 뒤일 경우 에러
 			if (devProgress.getPlannedStartDate() != null && devProgress.getPlannedEndDate() != null) {
 			    if (devProgress.getPlannedStartDate().after(devProgress.getPlannedEndDate())) {
@@ -686,11 +686,11 @@ public class devProgressController {
 	        TestEndDateNullCheck(devProgress.getBusiConfirmDate(), devProgress.getBusiTestResult(), "고객 현업");        
 	        	        
 	        // 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
-	        setIfNullDate(devProgress.getPlTestCmpDate(), devProgress.getPlTestScdDate(), devProgress::setPlTestScdDate);
-	        setIfNullDate(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdPartyTestDate(), 
+	        fileservice.setIfNullDate(devProgress.getPlTestCmpDate(), devProgress.getPlTestScdDate(), devProgress::setPlTestScdDate);
+	        fileservice.setIfNullDate(devProgress.getThirdPartyConfirmDate(), devProgress.getThirdPartyTestDate(), 
 	        			devProgress::setThirdPartyTestDate);
-	        setIfNullDate(devProgress.getItConfirmDate(), devProgress.getItTestDate(), devProgress::setItTestDate);
-	        setIfNullDate(devProgress.getBusiConfirmDate(), devProgress.getBusiTestDate(), devProgress::setBusiTestDate);
+	        fileservice.setIfNullDate(devProgress.getItConfirmDate(), devProgress.getItTestDate(), devProgress::setItTestDate);
+	        fileservice.setIfNullDate(devProgress.getBusiConfirmDate(), devProgress.getBusiTestDate(), devProgress::setBusiTestDate);
 	        
 	        //프로그램 상태가 삭제일때 삭제처리자는 자동으로 사용자 ID, 삭제처리일은 오늘 일자
 	        if (("삭제".equals(devProgress.getProgramStatus())) && (devProgress.getDeletionHandler() == null)) {
@@ -977,7 +977,7 @@ public class devProgressController {
             		"IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", 
             		"BUSI_TEST_NOTES", "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
             		"THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "DEV_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
-            if (!isHeaderValid4(headerRow, expectedHeaders)) {
+            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -1013,14 +1013,14 @@ public class devProgressController {
 
                             switch (field.getType().getSimpleName()) {
                                 case "int":
-                                    field.set(devprogress, (int) getCellValueAsNumeric(row.getCell(j)));
+                                    field.set(devprogress, (int) fileservice.getCellValueAsNumeric(row.getCell(j)));
                                     break;
                                 case "Date":
-                                    field.set(devprogress, getCellValueAsDate(row.getCell(j)));
+                                    field.set(devprogress, fileservice.getCellValueAsDate(row.getCell(j)));
                                     break;
                                 default:
                                 	log.info(field.getType().getSimpleName());
-                                    field.set(devprogress, getCellValueAsString(row.getCell(j)));
+                                    field.set(devprogress, fileservice.getCellValueAsString(row.getCell(j)));
                                     break;
                             }
                         }                    	
@@ -1060,76 +1060,7 @@ public class devProgressController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    
-    
-    // 액셀 유효헤더 확인
-    private boolean isHeaderValid4(Row headerRow, List<String> expectedHeaders) {
-        for (int i = 0; i < expectedHeaders.size(); i++) {
-            Cell cell = headerRow.getCell(i);
-            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    // 액셀 Cell값 String 변환 
-    private String getCellValueAsString(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-        return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
-    }
-    
-    // 액셀 Cell값 Num 변환
-    private double getCellValueAsNumeric(Cell cell) {
-        if (cell == null) {
-            return 0;
-        }
-        return cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() : Double.parseDouble(cell.toString());
-    }
-    
-    // 액셀 Cell값 Date 변환
-    private Date getCellValueAsDate(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-
-        if (cell.getCellType() == CellType.NUMERIC) {
-            // 날짜가 숫자 형태로 저장되어 있을 때, 날짜로 변환
-            if (DateUtil.isCellDateFormatted(cell)) {
-                return cell.getDateCellValue();
-            } else {
-                return null;
-            }
-        } else if (cell.getCellType() == CellType.STRING) {
-            // 문자열로 되어 있는 경우, "YYYY-MM-DD" 형식 등을 처리
-            String dateStr = cell.getStringCellValue();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-				return dateFormat.parse(dateStr);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-        }
-
-        return null; // 다른 유형의 셀은 null 반환
-    }
-    
-    // String Value값 필수값 유효성 점검
-    private void validateRequiredField(String fieldValue, String fieldName) {
-        if (fieldValue == null || fieldValue.trim().isEmpty()) {
-            throw new IllegalArgumentException(fieldName + "은(는) 필수 입력 항목입니다.");
-        }
-    }
-    
-    // Date Value값 유효성 점검
-    private void validateDate(Date dateValue, String dateName) {
-        if (dateValue == null) {
-            throw new IllegalArgumentException(dateName + "은(는) 필수 입력 항목입니다.");
-        }
-    }
+    }    
     
     // 테스트 완료일이 있을때 테스트 결과 null 체크
     private void TestEndDateNullCheck(Date dateValue, String ResultValue, String dataName) {
@@ -1137,13 +1068,6 @@ public class devProgressController {
 	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
 	        	throw new IllegalArgumentException(dataName + " 단위테스트 수행 결과 '성공' 인지 '실패'인지 등록하시기 바랍니다.");
 	        }
-    }
-    
-    
-    private void setIfNullDate(Date DateValue1, Date DateValue2, Consumer<Date> setDate) {
-        if (DateValue1 != null && DateValue2 == null) {
-            setDate.accept(DateValue1);
-        }
     }
     
     
