@@ -75,6 +75,31 @@
         </div>
       </div>
 
+      <!-- 화면 검색 모달 -->
+      <div id="screenSearchModal" class="modal">
+        <div class="modal-content">
+          <div class="flex-box justify-between">
+            <h2>화면 조회</h2>
+            <button type="button" id="closeScreenSearchModalButton" class="modal-close-button">
+              <img src="../../resources/images/close_icon.png" alt="닫기" />
+            </button>
+          </div>
+
+          <div id="screenTableWrapper" class="hidden-scroll">
+            <table id="screenTable">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>화면ID</th>
+                  <th>화면명</th>
+                </tr>
+              </thead>
+              <tbody id="screenTableBody" class="hidden-scroll"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <form id="testProgressRegisterForm">
         <fieldset>
           <div class="form-group-container">
@@ -144,8 +169,8 @@
                 <div class="search-input-wrapper">
                   <input id="screenId" name="screenId" required readonly />
 
-                  <button type="button" class="search-button" id="programSearchButton">
-                    <img src="../../resources/images/search_icon.png" alt="프로그램 검색" />
+                  <button type="button" class="search-button" id="screenSearchButton">
+                    <img src="../../resources/images/search_icon.png" alt="화면 검색" />
                   </button>
                 </div>
               </div>
@@ -380,7 +405,7 @@
                   <button type="button" class="file-button" id="execFileSelectButton">파일 선택</button>
 
                   <div class="file-preview-container">
-                    <input type="file" id="execFileInput" class="hidden" name="execFiles" multiple />
+                    <input type="file" id="execFileInput" class="hidden" name="execFile" multiple />
                     <div id="execFileOutput" class="file-preview custom-scroll"></div>
                   </div>
                 </div>
@@ -394,7 +419,7 @@
                   <button type="button" class="file-button" id="thirdFileSelectButton">파일 선택</button>
 
                   <div class="file-preview-container">
-                    <input type="file" id="thirdFileInput" class="hidden" name="thirdFiles" multiple />
+                    <input type="file" id="thirdFileInput" class="hidden" name="thirdFile" multiple />
                     <div id="thirdFileOutput" class="file-preview custom-scroll"></div>
                   </div>
                 </div>
