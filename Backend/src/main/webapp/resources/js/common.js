@@ -650,6 +650,44 @@ export function goBack(message) {
   window.history.back();
 }
 
+/** 화면 목록 테이블 렌더링 */
+export async function renderScreenList() {
+  const { screenList } = await getScreenList();
+
+  if (screenTableBody) {
+    screenTableBody.innerHTML = "";
+
+    screenList.forEach((screen, index) => {
+      const { screenId, screenName } = screen;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td class="screen-id">${screenId}</td>
+        <td class="screen-name">${screenName}</td>
+      `;
+
+      screenTableBody.appendChild(row);
+    });
+  }
+}
+
+/** 화면 정보 세팅 */
+export function selectScreenFromTable(event) {
+  const row = event.target.closest("tr");
+
+  if (row) {
+    const screenId = row.getElementsByClassName("screen-id")[0].textContent;
+    const screenName = row.getElementsByClassName("screen-name")[0].textContent;
+
+    document.getElementById("screenId").value = screenId;
+    document.getElementById("screenName").value = screenName;
+  }
+
+  closeModal("screenSearchModal");
+}
+
 /** 프로그램 목록 테이블 렌더링 */
 export async function renderProgramList(
   getProgramListProps = {
@@ -665,7 +703,18 @@ export async function renderProgramList(
     programTableBody.innerHTML = "";
 
     programList.forEach((program, index) => {
-      const { programType, programId, programName, programStatus, developer, pl } = program;
+      const {
+        programType,
+        programId,
+        programName,
+        programStatus,
+        developer,
+        pl,
+        screenMenuPath,
+        reqId,
+        itMgr,
+        busiMgr,
+      } = program;
 
       const row = document.createElement("tr");
 
@@ -677,6 +726,12 @@ export async function renderProgramList(
         <td class="program-status">${programStatus}</td>
         <td class="developer">${developer}</td>
         <td class="pl">${pl}</td>
+
+        <!-- input 자동 세팅을 위한 요소들 숨김처리 -->
+        <td class="screen-menu-path" style="display: none;">${screenMenuPath}</td>
+        <td class="req-id" style="display: none;">${reqId}</td>
+        <td class="it-mgr" style="display: none;">${itMgr}</td>
+        <td class="busi-mgr" style="display: none;">${busiMgr}</td>
       `;
 
       programTableBody.appendChild(row);
@@ -716,12 +771,33 @@ export function selectProgramFromTable(event) {
     const programId = row.getElementsByClassName("program-id")[0].textContent;
     const programName = row.getElementsByClassName("program-name")[0].textContent;
     const programType = row.getElementsByClassName("program-type")[0].textContent;
+    const pl = row.getElementsByClassName("pl")[0].textContent;
+    const developer = row.getElementsByClassName("developer")[0].textContent;
+
+    const screenMenuPath = row.getElementsByClassName("screen-menu-path")[0].textContent;
+    const reqId = row.getElementsByClassName("req-id")[0].textContent;
+    const itMgr = row.getElementsByClassName("it-mgr")[0].textContent;
+    const busiMgr = row.getElementsByClassName("busi-mgr")[0].textContent;
 
     document.getElementById("programId").value = programId;
     document.getElementById("programName").value = programName;
-    document.getElementById("programType").value = programType;
+    document.getElementById("pl").value = pl;
 
-    document.getElementById("originalDefectNumber").value = ""; // 기발생결함번호 초기화
+    const programTypeInput = document.getElementById("programType");
+    const developerInput = document.getElementById("developer");
+    const screenMenuPathInput = document.getElementById("screenMenuPath");
+    const reqIdInput = document.getElementById("reqId");
+    const execCompanyMgrInput = document.getElementById("execCompanyMgr");
+    const itMgrInput = document.getElementById("itMgr");
+    const busiMgrInput = document.getElementById("busiMgr");
+
+    if (programTypeInput) programTypeInput.value = programType;
+    if (developerInput) developerInput.value = developer;
+    if (screenMenuPathInput) screenMenuPathInput.value = screenMenuPath === "null" ? "" : screenMenuPath;
+    if (reqIdInput) reqIdInput.value = reqId === "null" ? "" : reqId;
+    if (execCompanyMgrInput) execCompanyMgrInput.value = developer;
+    if (itMgrInput) itMgrInput.value = itMgr === "null" ? "" : itMgr;
+    if (busiMgrInput) busiMgrInput.value = busiMgr === "null" ? "" : busiMgr;
   }
 
   closeModal("programSearchModal");
@@ -967,6 +1043,17 @@ export async function getTestStatusList() {
     return { testStatusList };
   } catch (error) {
     console.error(error.message, "테스트 진행상태 목록을 불러오지 못 했습니다.");
+  }
+}
+
+// 화면 목록 조회
+export async function getScreenList() {
+  try {
+    const { screenList } = await tmsFetch("/screenList");
+
+    return { screenList };
+  } catch (error) {
+    console.error(error.message, "화면 목록을 불러오지 못 했습니다.");
   }
 }
 
