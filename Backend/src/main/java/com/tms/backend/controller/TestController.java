@@ -192,8 +192,8 @@ public class TestController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> testProgressReg(HttpServletRequest request,
 			@RequestPart("testProgress") testProgress testProgress,
-			@RequestPart(value = "execfile", required = false) MultipartFile[] execfiles,
-			@RequestPart(value = "thirdfile", required = false) MultipartFile[] thirdfiles) {
+			@RequestPart(value = "execFile", required = false) MultipartFile[] execfiles,
+			@RequestPart(value = "thirdFile", required = false) MultipartFile[] thirdfiles) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 		if (session == null || session.getAttribute("authorityCode") == null) {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
