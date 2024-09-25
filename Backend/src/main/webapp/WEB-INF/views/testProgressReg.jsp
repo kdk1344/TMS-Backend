@@ -108,12 +108,12 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
-                <input id="testId" name="testId" required />
+                <input id="testId" name="testId" required placeholder="테스트ID" />
               </div>
 
               <div class="form-group">
                 <label for="testStepName">스텝명<span class="required-indicator">*</span></label>
-                <input id="testStepName" name="testStepName" required />
+                <input id="testStepName" name="testStepName" required placeholder="테스트 스텝명" />
               </div>
 
               <div class="form-group">
@@ -136,7 +136,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testScenarioName">시나리오명<span class="required-indicator">*</span></label>
-                <input id="testScenarioName" name="testScenarioName" required />
+                <input id="testScenarioName" name="testScenarioName" required placeholder="테스트 시나리오명" />
               </div>
 
               <div class="form-group">
@@ -164,7 +164,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testCaseName">케이스명<span class="required-indicator">*</span></label>
-                <input id="testCaseName" name="testCaseName" required />
+                <input id="testCaseName" name="testCaseName" required placeholder="테스트 케이스명" />
               </div>
 
               <div class="form-group">
@@ -187,29 +187,35 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="executeProcedure">수행절차<span class="required-indicator">*</span></label>
-                <textarea id="executeProcedure" name="executeProcedure" required class="custom-scroll"></textarea>
+                <textarea
+                  id="executeProcedure"
+                  name="executeProcedure"
+                  required
+                  class="custom-scroll"
+                  placeholder="테스트 수행절차를 입력해 주세요."
+                ></textarea>
               </div>
             </div>
 
             <div class="form-group-row">
               <div class="form-group">
                 <label for="preConditions">사전조건</label>
-                <input id="preConditions" name="preConditions" />
+                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" />
               </div>
 
               <div class="form-group">
                 <label for="inputData">입력 데이터<span class="required-indicator">*</span></label>
-                <input id="inputData" name="inputData" required />
+                <input id="inputData" name="inputData" required placeholder="테스트 입력 데이터" />
               </div>
 
               <div class="form-group">
                 <label for="expectedResult">예상결과<span class="required-indicator">*</span></label>
-                <input id="expectedResult" name="expectedResult" required />
+                <input id="expectedResult" name="expectedResult" required placeholder="테스트 예상결과" />
               </div>
 
               <div class="form-group">
                 <label for="actualResult">실제결과</label>
-                <input id="actualResult" name="actualResult" />
+                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" />
               </div>
             </div>
           </div>
