@@ -425,15 +425,6 @@ public class DefectController {
 			}
 			//최초 결함 등록자 로그인 ID 세팅
 			defect.setDefectRegistrar(UserName);
-			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
-			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
-				defect.setDefectStatus("등록완료");}
-			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null) {
-				defect.setDefectStatus("조치완료");}
-			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
-				defect.setDefectStatus("PL 확인완료");}
-			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() != null) {
-				defect.setDefectStatus("등록자 확인완료");}
 			
 			// 시작예정일이 종료예정일보다 뒤일 경우 에러
 			if (defect.getDefectScheduledDate() != null && defect.getDefectCompletionDate() != null) {

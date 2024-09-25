@@ -23,6 +23,7 @@ import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
 import com.tms.backend.vo.devProgress;
+import com.tms.backend.vo.testProgress;
 
 import lombok.extern.log4j.Log4j;
 
@@ -66,6 +67,7 @@ public class DefectService {
     
     //결함 등록
     public void insertdefect(Defect defect) {
+    	DefectStatusCheck(defect);
     	defectmapper.insertdefect(defect);
     }
     
@@ -88,6 +90,7 @@ public class DefectService {
     // 결함 여러개 등록
     public void saveAllDefect(List<Defect> defect) {
         for (Defect def : defect) {
+        	DefectStatusCheck(def);
             defectmapper.insertdefect(def);
         }	
     }
@@ -101,6 +104,19 @@ public class DefectService {
     public int countDefectSoultions(String programId, String managerType) {
     	return defectmapper.countDefectSoultions(programId, managerType);
     }
+    
+    // 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
+    public void DefectStatusCheck(Defect defect) {    	
+		if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
+			defect.setDefectStatus("등록완료");}
+		if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null) {
+			defect.setDefectStatus("조치완료");}
+		if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
+			defect.setDefectStatus("PL 확인완료");}
+		if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() != null) {
+			defect.setDefectStatus("등록자 확인완료");
+			}
+		}
     
 //    //기발생 결함번호 조회
 //    public List<Defect> getdefectNumberList(String testStage, String testId, String programName, String programType){
