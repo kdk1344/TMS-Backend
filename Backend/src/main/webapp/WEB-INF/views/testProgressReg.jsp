@@ -133,12 +133,12 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
-                <input id="testId" name="testId" required placeholder="테스트ID" />
+                <input id="testId" name="testId" required placeholder="테스트ID" tabindex="1" autofocus />
               </div>
 
               <div class="form-group">
                 <label for="testStepName">스텝명<span class="required-indicator">*</span></label>
-                <input id="testStepName" name="testStepName" required placeholder="테스트 스텝명" />
+                <input id="testStepName" name="testStepName" required placeholder="테스트 스텝명" tabindex="4" />
               </div>
 
               <div class="form-group">
@@ -161,7 +161,13 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testScenarioName">시나리오명<span class="required-indicator">*</span></label>
-                <input id="testScenarioName" name="testScenarioName" required placeholder="테스트 시나리오명" />
+                <input
+                  id="testScenarioName"
+                  name="testScenarioName"
+                  required
+                  placeholder="테스트 시나리오명"
+                  tabindex="2"
+                />
               </div>
 
               <div class="form-group">
@@ -189,7 +195,7 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testCaseName">케이스명<span class="required-indicator">*</span></label>
-                <input id="testCaseName" name="testCaseName" required placeholder="테스트 케이스명" />
+                <input id="testCaseName" name="testCaseName" required placeholder="테스트 케이스명" tabindex="3" />
               </div>
 
               <div class="form-group">
@@ -218,6 +224,7 @@
                   required
                   class="custom-scroll"
                   placeholder="테스트 수행절차를 입력해 주세요."
+                  tabindex="5"
                 ></textarea>
               </div>
             </div>
@@ -225,22 +232,22 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="preConditions">사전조건</label>
-                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" />
+                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" tabindex="6" />
               </div>
 
               <div class="form-group">
                 <label for="inputData">입력 데이터<span class="required-indicator">*</span></label>
-                <input id="inputData" name="inputData" required placeholder="테스트 입력 데이터" />
+                <input id="inputData" name="inputData" required placeholder="테스트 입력 데이터" tabindex="7" />
               </div>
 
               <div class="form-group">
                 <label for="expectedResult">예상결과<span class="required-indicator">*</span></label>
-                <input id="expectedResult" name="expectedResult" required placeholder="테스트 예상결과" />
+                <input id="expectedResult" name="expectedResult" required placeholder="테스트 예상결과" tabindex="8" />
               </div>
 
               <div class="form-group">
                 <label for="actualResult">실제결과</label>
-                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" />
+                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" tabindex="9" />
               </div>
             </div>
           </div>
@@ -252,7 +259,13 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="execCompanyMgr">수행사 테스터<span class="required-indicator">*</span></label>
-                <input id="execCompanyMgr" name="execCompanyMgr" required placeholder="이름을 입력해 주세요." />
+                <input
+                  id="execCompanyMgr"
+                  name="execCompanyMgr"
+                  required
+                  placeholder="이름을 입력해 주세요."
+                  tabindex="10"
+                />
               </div>
 
               <div class="form-group">
@@ -279,6 +292,7 @@
                   name="execCompanyTestNotes"
                   class="custom-scroll"
                   placeholder="테스트 의견을 입력해 주세요."
+                  tabindex="11"
                 ></textarea>
               </div>
             </div>
@@ -289,7 +303,12 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="thirdPartyTestMgr">제3자 테스터</label>
-                <input id="thirdPartyTestMgr" name="thirdPartyTestMgr" placeholder="이름을 입력해 주세요." />
+                <input
+                  id="thirdPartyTestMgr"
+                  name="thirdPartyTestMgr"
+                  placeholder="이름을 입력해 주세요."
+                  tabindex="12"
+                />
               </div>
 
               <div class="form-group">
@@ -316,6 +335,7 @@
                   name="thirdPartyTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
+                  tabindex="13"
                 ></textarea>
               </div>
             </div>
@@ -326,7 +346,7 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="itMgr">고객 IT 담당자</label>
-                <input id="itMgr" name="itMgr" placeholder="이름을 입력해 주세요." />
+                <input id="itMgr" name="itMgr" placeholder="이름을 입력해 주세요." tabindex="14" />
               </div>
 
               <div class="form-group">
@@ -353,6 +373,7 @@
                   name="itTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
+                  tabindex="15"
                 ></textarea>
               </div>
             </div>
@@ -363,7 +384,7 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="busiMgr">현업 담당자</label>
-                <input id="busiMgr" name="busiMgr" placeholder="이름을 입력해 주세요." />
+                <input id="busiMgr" name="busiMgr" placeholder="이름을 입력해 주세요." tabindex="16" />
               </div>
 
               <div class="form-group">
@@ -390,6 +411,7 @@
                   name="busiTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
+                  tabindex="17"
                 ></textarea>
               </div>
             </div>
