@@ -300,6 +300,50 @@ public class TestController {
         }
 	}
 	
+	//개발 진행 현황 수정 페이지
+	@GetMapping(value="api/testProgressDetail" , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> testProgressEditPage2(HttpServletRequest request,
+			@RequestParam("seq") Integer seq) {
+		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		if (session == null || session.getAttribute("authorityCode") == null) {
+			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+			}
+//				Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+		
+		
+		Map<String, Object> response = new HashMap<>();
+		//결함 수정 내용 가져오기
+		testProgress TestProgressEdit = testService.getTestById(seq);
+		
+		//첨부파일 가져오기
+		List<FileAttachment> execAttachments = adminService.getAttachments(seq, 21);
+		List<FileAttachment> thirdAttachments = adminService.getAttachments(seq, 22);
+		TestProgressEdit.setExecCompanyAttachments(execAttachments);
+		TestProgressEdit.setThirdAttachments(thirdAttachments);
+		
+		//결함 수정 버튼제한을 위한 defectCounts
+		Map<String, Integer> defectCounts = new HashMap<>();
+
+//			defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
+//			defectCounts.put("thirdPartyDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "thirdParty"));
+//			defectCounts.put("itDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "it"));
+//			defectCounts.put("busiDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "busi"));
+//			defectCounts.put("thirdPartySolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "thirdParty"));
+//			defectCounts.put("itSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "it"));
+//			defectCounts.put("busiSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "busi"));
+
+	    // 응답 생성
+		response.put("status", "success");
+        response.put("message", "개발 진행 현황 정보 전달.");
+        response.put("defectCounts", defectCounts);
+	    response.put("testProgress", TestProgressEdit);
+	    response.put("execAttachments", execAttachments);
+	    response.put("thirdAttachments", thirdAttachments);
+	    
+	    return ResponseEntity.ok(response); // JSON으로 응답 반환
+	}
 	
 	
 	//테스트 진행 현황 삭제
