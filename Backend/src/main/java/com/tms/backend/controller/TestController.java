@@ -294,13 +294,23 @@ public class TestController {
 		//결함 수정 버튼제한을 위한 defectCounts
 		Map<String, Integer> defectCounts = new HashMap<>();
 
-//			defectCounts.put("totalDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "All"));
-//			defectCounts.put("thirdPartyDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "thirdParty"));
-//			defectCounts.put("itDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "it"));
-//			defectCounts.put("busiDefectCount", defectservice.countDefect(DevProgressEdit.getProgramId(), "busi"));
-//			defectCounts.put("thirdPartySolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "thirdParty"));
-//			defectCounts.put("itSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "it"));
-//			defectCounts.put("busiSolutionCount", defectservice.countDefectSoultions(DevProgressEdit.getProgramId(), "busi"));
+		defectCounts.put("totalDefectCount", testService.countDefect(TestProgressEdit.getTestId(), TestProgressEdit.getTestStage(), null, null, null));
+		defectCounts.put("thirdPartyDefectCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "thirdParty", null)); // 제3자 결함발생건수
+		defectCounts.put("itDefectCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "it", null)); //it 결함 발생건수
+		defectCounts.put("busiDefectCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "busi", null)); //현업 결함 발생건수
+		defectCounts.put("execDefectCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "exec", null)); //수행사 결함 발생건수
+		defectCounts.put("thirdPartySolutionCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "thirdParty", "End")); //제3자 조치완료건수
+		defectCounts.put("itSolutionCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "it", "End")); //it 조치완료건수
+		defectCounts.put("busiSolutionCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "busi", "End")); //현업 조치완료건수
+		defectCounts.put("execSolutionCount", testService.countDefect(null, TestProgressEdit.getTestStage(),
+				TestProgressEdit.getProgramId(), "exec", "End")); //수행사 조치완료건수
 
 	    // 응답 생성
 		response.put("status", "success");

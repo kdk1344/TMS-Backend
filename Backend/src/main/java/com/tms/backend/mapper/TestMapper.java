@@ -65,6 +65,11 @@ public interface TestMapper {
     );
     public void deleteTestProgress(int seq);//테스트 삭제
     public void inserttestProgress(testProgress testProgress); //테스트 저장
+    public int countDefect(@Param("testId") String testId, 
+			    		@Param("programId") String programId, 
+			    		@Param("testStage") String testStage,
+			    		@Param("managerType") String managerType,
+			    		@Param("defectStatus") String defectStatus);
     public List<devProgress> getscreenList(); //화면 정보 가져오기
     public String getProgramType(String programId); //프로그램 구분 가져오기
     public testProgress getTestById(int seq); //테스트 시나리오 정보 가져오기

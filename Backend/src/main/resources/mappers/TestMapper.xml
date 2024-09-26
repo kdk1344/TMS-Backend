@@ -201,6 +201,44 @@
 		WHERE PROGRAM_ID = #{programId}
 	</select>
 	
+	<!-- 테스트 아이디에 따른 결함 숫자 세기 -->
+	<select id="countDefect" parameterType="String" resultType="int">
+	    SELECT COUNT(*)
+	    FROM defect a
+	    INNER JOIN test_progress b
+	    <if test="testId != null and testId != ''">
+	    	ON a.TEST_ID = b.TEST_ID
+	    </if>
+	    <if test="programId != null and programId != ''">
+	    	ON a.PROGRAM_ID = b.PROGRAM_ID
+	    </if>
+	    <if test="managerType == 'thirdParty'">
+            AND a.DEFECT_REGISTRAR = b.THIRD_PARTY_TEST_MGR
+        </if>
+        <if test="managerType == 'it'">
+            AND a.DEFECT_REGISTRAR = b.IT_MGR
+        </if>
+        <if test="managerType == 'busi'">
+            AND a.DEFECT_REGISTRAR = b.BUSI_MGR
+        </if>
+        <if test="managerType == 'exec'">
+            AND a.DEFECT_REGISTRAR = b.EXEC_COMPANY_MGR
+        </if>
+        WHERE 1=1
+        <if test="testStage != null and testStage != ''">
+            AND a.TEST_STAGE = #{testStage}
+        </if>
+        <if test="programId != null and programId != ''">
+            AND a.PROGRAM_ID = #{programId}
+        </if>
+        <if test="testId != null and testId != ''">
+            AND a.TEST_ID = #{testId}
+        </if>
+        <if test="defectStatus == 'End'">
+        	AND a.DEFECT_STATUS IN ("조치완료", "PL 확인완료", "등록자 확인완료")
+        </if>
+	</select>
+	
 	<!-- 화면 정보 가져오기 -->
 	<select id="getscreenList" resultType="devProgress">
 		SELECT DISTINCT SCREEN_ID, SCREEN_NAME, SCREEN_MENU_PATH

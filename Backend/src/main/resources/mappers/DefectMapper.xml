@@ -179,6 +179,7 @@
 		WHERE SEQ = #{seq}
 	</select>
 	
+	<!-- 프로그램 아이디에 따른 결함 숫자 세기 -->
 	<select id="countDefect" parameterType="String" resultType="int">
 	    SELECT COUNT(*)
 	    FROM defect a
@@ -215,7 +216,7 @@
 	    WHERE 1=1
 	        AND a.TEST_STAGE = "단위테스트"
 	        AND a.PROGRAM_ID = #{programId}
-	        AND a.DEFECT_COMPLETION_DATE is not null
+	        AND a.DEFECT_STATUS IN ("조치완료", "PL 확인완료", "등록자 확인완료")
 	</select>
 	
 	<select id="getdefectNumberList" parameterType="map" resultType="Defect">

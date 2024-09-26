@@ -101,6 +101,11 @@ public class TestService {
     	return testmapper.getProgramType(programId);
     }
     
+    // 특정 테스트 아이디 결함 건수
+    public int countDefect(String testId, String programId, String testStage, String managerType, String defectStatus) {
+    	return testmapper.countDefect(testId, programId, testStage, managerType, defectStatus);
+    }
+    
     //테스트 진행 상태 자동 세팅
     public void TestStatusCheck(testProgress testProgress) {    	
     	if (testProgress.getExecCompanyConfirmDate() == null && testProgress.getItTestDate() == null && testProgress.getBusiTestDate() == null) {
