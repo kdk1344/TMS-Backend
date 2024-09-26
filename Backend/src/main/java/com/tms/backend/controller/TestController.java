@@ -228,40 +228,8 @@ public class TestController {
 		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		try {
-			//완료일 등록 시 테스트결과 미등록 체크
-			fileservice.EndDateResultCheck(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestResult(), "수행사");
-			fileservice.EndDateResultCheck(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdTestResult(), "제3자");
-			fileservice.EndDateResultCheck(testProgress.getItConfirmDate(), testProgress.getItTestResult(), "고객IT");
-			fileservice.EndDateResultCheck(testProgress.getBusiConfirmDate(), testProgress.getBusiTestResult(), "고객현업");
-			
-			//테스트 완료일 등록인데 테스트 시작일 미등록인 경우
-			if ((testProgress.getItConfirmDate() != null) && (testProgress.getItTestDate() == null)){
-	        	testProgress.setItTestDate(testProgress.getItConfirmDate());
-	        }
-			if ((testProgress.getBusiConfirmDate() != null) && (testProgress.getBusiTestDate() == null)){
-	        	testProgress.setBusiTestDate(testProgress.getBusiConfirmDate());
-	        }
-			
-			// 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
-	        fileservice.setIfNullDate(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestDate(), testProgress::setExecCompanyTestDate);
-	        fileservice.setIfNullDate(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdPartyTestDate(), 
-	        			testProgress::setThirdPartyTestDate);
-	        fileservice.setIfNullDate(testProgress.getItConfirmDate(), testProgress.getItTestDate(), testProgress::setItTestDate);
-	        fileservice.setIfNullDate(testProgress.getBusiConfirmDate(), testProgress.getBusiTestDate(), testProgress::setBusiTestDate);
-			
-			//코드로 들어오는 데이터를 코드명으로 변경
-	        testProgress.setMajorCategory(adminService.getStageCodes("대", testProgress.getMajorCategory()));
-			testProgress.setSubCategory(adminService.getStageCodes("중", testProgress.getSubCategory()));
-			testProgress.setProgramType(adminService.getStageCCodes("02", testProgress.getProgramType()));
-			testProgress.setTestStatus(adminService.getStageCCodes("12", testProgress.getTestStatus()));
-			testProgress.setTestStage(adminService.getStageCCodes("11", testProgress.getTestStage()));
-			testProgress.setBusiTestResult(adminService.getStageCCodes("07", testProgress.getBusiTestResult()));
-			testProgress.setExecCompanyTestResult(adminService.getStageCCodes("07", testProgress.getExecCompanyTestResult()));
-			testProgress.setItTestResult(adminService.getStageCCodes("07", testProgress.getItTestResult()));
-			testProgress.setThirdTestResult(adminService.getStageCCodes("07", testProgress.getThirdTestResult()));
-						
-			//프로그램 구분 추가
-			testProgress.setProgramType(testService.getProgramType(testProgress.getProgramId()));
+			//테스트 시나리오 등록 시 권한 문제 및 필요한 값 체크
+			TestProgressCheck(testProgress);
 			
 	        //최초 등록자, 변경자 로그인 ID 세팅
 			testProgress.setInitRegistrar(UserName);
@@ -344,6 +312,68 @@ public class TestController {
 	    
 	    return ResponseEntity.ok(response); // JSON으로 응답 반환
 	}
+	
+	//개발 진행 현황 수정
+    @PostMapping(value = "api/testProgressEdit", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> testProgressEdit(HttpServletRequest request,
+			@RequestPart("testProgress") testProgress testProgress,
+			@RequestPart(value = "file", required = false) MultipartFile[] files,
+			@RequestPart(value = "fixfile", required = false) MultipartFile[] fixfiles) {
+		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+//		if (session == null || session.getAttribute("authorityCode") == null) {
+//			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+//			}
+		String UserName = (String) session.getAttribute("name");
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+	        testProgress TestProgressEdit = testService.getTestById(testProgress.getSeq());
+	        testProgress.setInitRegistrar(TestProgressEdit.getInitRegistrar());
+	        
+        	// testProgress의 필드를 testProgressEdit에 복사
+    	    BeanUtils.copyProperties(testProgress, TestProgressEdit);
+    	    
+    	    //테스트 시나리오 등록 시 권한 문제 및 필요한 값 체크
+    	    TestProgressCheck(TestProgressEdit);
+			
+	        //변경자 로그인 ID 세팅
+			TestProgressEdit.setLastModifier(UserName);
+    	    
+    	    // 공지사항에 등록된 기존 첨부파일 전부 삭제
+            adminService.deleteAttachmentsByNoticeId(TestProgressEdit.getSeq(), 1);
+            
+
+            // 새로운 파일 업로드 처리
+            fileservice.handleFileUpload(files, "testProgress", testProgress.getSeq());
+            fileservice.handleFileUpload(files, "testProgressThird", testProgress.getSeq());
+
+            //첨부파일 등록
+            List<FileAttachment> execattachments = adminService.getAttachments(testProgress.getSeq(),21);
+            testProgress.setExecCompanyAttachments(execattachments);
+            List<FileAttachment> thirdAttachments = adminService.getAttachments(testProgress.getSeq(),22);
+            testProgress.setThirdAttachments(thirdAttachments);
+            
+            // 업데이트된 공지사항을 저장
+            testService.updatetestProgress(TestProgressEdit);
+
+            // 성공 응답 생성
+            response.put("status", "success");
+            response.put("message", "개발 진행 현황이 성공적으로 수정되었습니다.");
+            response.put("TestProgressEdit", TestProgressEdit);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            response.put("status", "failure");
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "테스트 개발목록 수정 중에 오류 발생");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	
 	//테스트 진행 현황 삭제
@@ -625,5 +655,43 @@ public class TestController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
+    //테스트 시나리오 등록 시 권한 문제 및 필요한 값 체크
+    private void TestProgressCheck(testProgress testProgress) {
+    	//완료일 등록 시 테스트결과 미등록 체크
+		fileservice.EndDateResultCheck(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestResult(), "수행사");
+		fileservice.EndDateResultCheck(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdTestResult(), "제3자");
+		fileservice.EndDateResultCheck(testProgress.getItConfirmDate(), testProgress.getItTestResult(), "고객IT");
+		fileservice.EndDateResultCheck(testProgress.getBusiConfirmDate(), testProgress.getBusiTestResult(), "고객현업");
+		
+		//테스트 완료일 등록인데 테스트 시작일 미등록인 경우
+		if ((testProgress.getItConfirmDate() != null) && (testProgress.getItTestDate() == null)){
+        	testProgress.setItTestDate(testProgress.getItConfirmDate());
+        }
+		if ((testProgress.getBusiConfirmDate() != null) && (testProgress.getBusiTestDate() == null)){
+        	testProgress.setBusiTestDate(testProgress.getBusiConfirmDate());
+        }
+		
+		// 데이터 체크 자동 세팅 - 테스트 예정이 Null일 경우 테스트 완료일을 대입 
+        fileservice.setIfNullDate(testProgress.getExecCompanyConfirmDate(), testProgress.getExecCompanyTestDate(), testProgress::setExecCompanyTestDate);
+        fileservice.setIfNullDate(testProgress.getThirdPartyConfirmDate(), testProgress.getThirdPartyTestDate(), 
+        			testProgress::setThirdPartyTestDate);
+        fileservice.setIfNullDate(testProgress.getItConfirmDate(), testProgress.getItTestDate(), testProgress::setItTestDate);
+        fileservice.setIfNullDate(testProgress.getBusiConfirmDate(), testProgress.getBusiTestDate(), testProgress::setBusiTestDate);
+		
+		//코드로 들어오는 데이터를 코드명으로 변경
+        testProgress.setMajorCategory(adminService.getStageCodes("대", testProgress.getMajorCategory()));
+		testProgress.setSubCategory(adminService.getStageCodes("중", testProgress.getSubCategory()));
+		testProgress.setProgramType(adminService.getStageCCodes("02", testProgress.getProgramType()));
+		testProgress.setTestStatus(adminService.getStageCCodes("12", testProgress.getTestStatus()));
+		testProgress.setTestStage(adminService.getStageCCodes("11", testProgress.getTestStage()));
+		testProgress.setBusiTestResult(adminService.getStageCCodes("07", testProgress.getBusiTestResult()));
+		testProgress.setExecCompanyTestResult(adminService.getStageCCodes("07", testProgress.getExecCompanyTestResult()));
+		testProgress.setItTestResult(adminService.getStageCCodes("07", testProgress.getItTestResult()));
+		testProgress.setThirdTestResult(adminService.getStageCCodes("07", testProgress.getThirdTestResult()));
+					
+		//프로그램 구분 추가
+		testProgress.setProgramType(testService.getProgramType(testProgress.getProgramId()));
     }
 }
