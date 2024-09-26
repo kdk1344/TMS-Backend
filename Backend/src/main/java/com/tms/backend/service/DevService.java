@@ -4,6 +4,9 @@ package com.tms.backend.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,9 @@ public class DevService {
 	
 	@Autowired
 	private AdminMapper adminmapper;
+	
+	@Autowired
+	private TestService testService;
 
 	public List<devProgress> searchDevProgress(String majorCategory, String subCategory, String programType, 
 	            String programName, String programId, String programStatus, String developer, 
@@ -71,7 +77,11 @@ public class DevService {
 	// 개발 진행현황 일괄 저장
     public void saveAllDevProgress(List<devProgress> devProgress) {
         for (devProgress dev : devProgress) {
-            devMapper.insertdevProgress(dev);
+        	try {
+                devMapper.insertdevProgress(dev);
+            } catch (DuplicateKeyException e) {
+                throw new IllegalArgumentException("프로그램 ID가 중복되었습니다.");
+            }
         }
     }
     

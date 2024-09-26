@@ -206,7 +206,13 @@ public class TestController {
 	    return "testProgressReg"; // JSP 페이지로 이동
 	}
 	
+	//테스트 수정 페이지
+	@GetMapping("/testProgressEdit")
+	public String testProgressEditPage() {
 
+	    return "testProgressEdit"; // JSP 페이지로 이동
+	}
+	
 	//개발 진행 현황 등록 페이지
 	@PostMapping(value="api/testProgressReg" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -253,7 +259,7 @@ public class TestController {
 			testProgress.setExecCompanyTestResult(adminService.getStageCCodes("07", testProgress.getExecCompanyTestResult()));
 			testProgress.setItTestResult(adminService.getStageCCodes("07", testProgress.getItTestResult()));
 			testProgress.setThirdTestResult(adminService.getStageCCodes("07", testProgress.getThirdTestResult()));
-			
+						
 			//프로그램 구분 추가
 			testProgress.setProgramType(testService.getProgramType(testProgress.getProgramId()));
 			
