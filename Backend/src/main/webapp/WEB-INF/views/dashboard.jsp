@@ -155,7 +155,7 @@
 		    
 		    // 각 요소마다 텍스트를 자르고 "..."을 추가
 		    Array.prototype.forEach.call(elements, function(element) {
-		      var text = element.textContent;
+    		  var text = element.textContent.trim(); // 공백 제거
 		      
 		      if (text.length > maxLength) {
 		        element.textContent = text.substring(0, maxLength) + "...";

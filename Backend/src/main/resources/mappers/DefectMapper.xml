@@ -179,6 +179,15 @@
 		WHERE SEQ = #{seq}
 	</select>
 	
+	<!-- 프로그램 결함 목록 총 결함 숫자 추출 -->
+	<select id="totalcountDefect" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM defect a
+	    INNER JOIN dev_progress b
+	    ON a.TEST_ID = b.PROGRAM_ID
+	    WHERE a.TEST_ID = #{programId}
+	</select>
+	
 	<!-- 프로그램 아이디에 따른 결함 숫자 세기 -->
 	<select id="countDefect" parameterType="String" resultType="int">
 	    SELECT COUNT(*)
@@ -195,8 +204,8 @@
             AND a.DEFECT_REGISTRAR = b.BUSI_MGR
         </if>
         WHERE 1=1
-	        AND a.TEST_STAGE = "단위테스트"
-	        AND a.PROGRAM_ID = #{programId}
+        AND a.TEST_STAGE = "단위테스트"
+        AND a.PROGRAM_ID = #{programId}
 	</select>
 	
 	<select id="countDefectSoultions" parameterType="String" resultType="int">

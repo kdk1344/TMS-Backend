@@ -60,28 +60,13 @@ public class CodeController {
 	
 	//공통코드 Controller
 	
+	//공통코드 페이지
 	@GetMapping("/commonCode")
-    public String commonCodePage(@RequestParam(value = "parentCode", required = false) String parentCode,
-	          @RequestParam(value = "code", required = false) String code,
-	          @RequestParam(value = "codeName", required = false) String codeName,
-	          @RequestParam(value = "page", defaultValue = "1") int page,
-	          @RequestParam(value = "size", defaultValue = "15") int size,
-	          Model model) {
-			// CommonCode 조회
-
-			List<CommonCode> commonCodes = adminService.searchCommonCodes(parentCode, code, codeName, page, size);
-			int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
-			int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
-			
-			// 응답 생성
-			model.addAttribute("commonCodes", commonCodes);
-	        model.addAttribute("currentPage", page);
-	        model.addAttribute("totalPages", totalPages);
-	        model.addAttribute("totalCommonCodes", totalCommonCodes);
+    public String commonCodePage() {
         return "commonCode";
         }
     
-   
+   //공통코드 추가
     @PostMapping(value= "api/ccwrite", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> ccWrite(@RequestBody CommonCode commonCode) {
@@ -108,18 +93,18 @@ public class CodeController {
         }
     }
     
+    //공통코드 수정
     @PostMapping(value= "api/ccmodify" , produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> ccModify(@RequestBody CommonCode commonCode) {
     	log.info("commonCode"+commonCode);
         Map<String, Object> response = new HashMap<>();
         try {
-        	String Seq = commonCode.getSeq();
-        	String parentCode = Seq.substring(0, 2);
-        	String code = Seq.substring(2, 4);
-        	commonCode.setParentCode(parentCode);
+        	String Seq = commonCode.getSeq(); // 공통코드 seq 추출
+        	String parentCode = Seq.substring(0, 2); // seq의 앞 2자리를 parentCode로 설정
+        	String code = Seq.substring(2, 4); // seq의 뒤 2자리를 일반 code로 설정
+        	commonCode.setParentCode(parentCode); // 공통코드 VO에 parentCode 추가
         	commonCode.setCode(code);
-        	log.info("commonCode"+commonCode);
             boolean success = adminService.updateCommonCode(commonCode);  // 공통코드 수정
             if (success) {
                 response.put("status", "success");
@@ -139,6 +124,7 @@ public class CodeController {
         }
     }
     
+    //공통코드 삭제
     @DeleteMapping(value= "api/deletecc", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deletecc(@RequestBody List<String> seqs) {

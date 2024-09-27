@@ -54,8 +54,9 @@ public interface DefectMapper {
 	public void updateDefect(Defect def);
 	public Defect getDefectById(Integer seq); 
 	public List<Defect> searchAllDefects();
-	public int countDefect(@Param("programId") String programId, @Param("managerType") String managerType);
-	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType);
+	public int totalcountDefect(String programId); // 프로그램 개발 목록 총 결함 갯수 추출
+	public int countDefect(@Param("programId") String programId, @Param("managerType") String managerType); // 여러 종류 결함 갯수 숫자
+	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType); //조치완료 건수 숫자
 //	public List<Defect> getdefectNumberList(@Param("testStage") String testStage, 
 //								            @Param("testId") String testId, 
 //								            @Param("programId") String programId, 

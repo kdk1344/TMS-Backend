@@ -60,15 +60,13 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
     
+	//사용자 관리자 화면
     @GetMapping("/adminUser")
     public String UserPage(Criteria criteria, Model model) {
-//    	log.info(adminService.getList(criteria));
-//        model.addAttribute("userList", adminService.getList(criteria));
-//        model.addAttribute("pageDTO", new PageDTO(adminService.getTotal(criteria), criteria));
         return "adminUser";
     }
     
-    
+    //사용자 등록
     @PostMapping(value= "api/join", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user,
@@ -90,8 +88,9 @@ public class AdminController {
 //        }
         
         Map<String, Object> response = new HashMap<>();
+        // join 메서드에서 성공 시 예외를 발생시키지 않음
         try {
-            adminService.join(user);  // join 메서드에서 성공 시 예외를 발생시키지 않음
+            adminService.join(user);  // 사용자 등록
             response.put("status", "success");
             response.put("message", "User successfully registered!");
             response.put("user", user); // 가입된 사용자 정보 반환
@@ -108,6 +107,7 @@ public class AdminController {
         }
     }
     
+    //사용자 수정
     @PostMapping(value= "api/idmodify" , produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> idModify(@RequestBody User user,
@@ -130,25 +130,27 @@ public class AdminController {
         
     	Map<String, Object> response = new HashMap<>();
         try {
+        	//사용자 수정
             boolean success = adminService.updateUser(user);
             if (success) {
                 response.put("status", "success");
-                response.put("message", "User updated successfully!");
+                response.put("message", "사용자 수정에 성공했습니다.");
                 response.put("user", user); // 업데이트된 사용자 정보 반환
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.put("status", "failure");
-                response.put("message", "Error updating user.");
+                response.put("message", "사용자 수정 중에 실패했습니다");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "Error occurred while updating user.");
+            response.put("message", "사용자 수정 중에 에러가 발생했습니다");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
+    //사용자 삭제
     @DeleteMapping(value= "api/deleteuser", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteUsers(@RequestBody List<String> IDList,
@@ -171,6 +173,7 @@ public class AdminController {
         
     	Map<String, Object> response = new HashMap<>();
         try {
+        	//사용자 삭제
             boolean success = adminService.deleteUser(IDList.toArray(new String[0]));
 
             if (success) {
@@ -190,19 +193,22 @@ public class AdminController {
         }
     }
     
+    //사용자 정보 가져오기
     @GetMapping(value = "api/users", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> getUserList(
         @RequestParam(value = "page", defaultValue = "1") int page,
         @RequestParam(value = "userName", required = false) String userName,
         @RequestParam(value = "authorityName", required = false) String authorityName) {
-
+    	
+    	//사용자 목록 정보를 가져오기 위한 파라미터 입력
         Criteria criteria = new Criteria();
         criteria.setPage(page);
         criteria.setPerPageNum(15);
         criteria.setuserName(userName);
         criteria.setauthorityName(authorityName);
-
+        
+        //사용자 목록 가져오기
         List<User> userList = adminService.getList(criteria);
         log.info(userList);
         int total = adminService.getTotal(criteria);
@@ -236,9 +242,8 @@ public class AdminController {
             // 권한이 없는 경우 예외 발생
         	return "redirect:/tms/adminUser"; // 관리자 페이지로 이동
         }
+        //모든 유저 정보 가져오기
         List<User> userList = userService.getAllUser();
-        log.info("check");
-        log.info(userList);
         exportToExcel(response, userList, "all_users.xlsx");
         return null;
     }
@@ -246,6 +251,7 @@ public class AdminController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/userexampleexcel")
     public void downloadExuser(HttpServletResponse response) throws IOException {
+    	//사용자 정보 액셀 예시 파일
     	List<User> ExampleDEV = adminService.findAuthorityCode(99999);  	
     	exportToExcel(response, ExampleDEV, "example.xlsx");
     }
@@ -273,11 +279,13 @@ public class AdminController {
             // 권한이 없는 경우 예외 발생
         	return "redirect:/tms/adminUser"; // 관리자 페이지로 이동
         }
-
+        
+        // 사용자 정보를 위한 파라미터 입력
         Criteria criteria = new Criteria();
         criteria.setuserName(userName);
         criteria.setauthorityName(authorityName);
-
+        
+        //필터링된 사용자 정보 가져오기
         List<User> filteredUserList = userService.getFilteredUsers(criteria);
         exportToExcel(response, filteredUserList, "filtered_users.xlsx");
         return null;
@@ -290,25 +298,29 @@ public class AdminController {
         String check = "";
         if (userList.isEmpty()) {
         	check = "no_value";
-    		log.info(check);
         }
-
+        
+        //액셀 Row 만들기
         Row headerRow = sheet.createRow(0);
+        //컬럼 만들기
         headerRow.createCell(0).setCellValue("UserID");
         headerRow.createCell(1).setCellValue("userName");
         headerRow.createCell(2).setCellValue("Password");
+        //사용자 예시 파일 생성을 위한 조건
         if (check != "") {
         	headerRow.createCell(3).setCellValue("AuthorityName");
         }
+        //그외 액셀 파일 생성을 위한 조건
         else {
 	        headerRow.createCell(3).setCellValue("AuthorityCode");
 	        headerRow.createCell(4).setCellValue("AuthorityName");
         }
-
+        
         int rowNum = 1;
+        //사용자 정보 차례대로 입력
         for (User user : userList) {
-        	log.info(user);
             Row row = sheet.createRow(rowNum++);
+            //사용자 정보 액셀에 입력
             row.createCell(0).setCellValue(user.getuserID());
             row.createCell(1).setCellValue(user.getuserName());
             row.createCell(2).setCellValue(user.getPassword());
@@ -329,6 +341,7 @@ public class AdminController {
         workbook.close();
     }
     
+    //액셀 업로드 기능
     @PostMapping(value = "api/userupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> uploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
@@ -361,7 +374,7 @@ public class AdminController {
             Sheet sheet = workbook.getSheetAt(0);
             Row headerRow = sheet.getRow(0);
             
-         // 예상하는 컬럼명 리스트
+            // 예상하는 컬럼명 리스트
             List<String> expectedHeaders = Arrays.asList("userID", "userName", "Password", "AuthorityName");
             if (!isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
@@ -377,6 +390,7 @@ public class AdminController {
                 if (row != null) {
                     User user = new User();
                     try {
+                    	//업로드한 사용자 정보 입력
 	                    user.setuserID(row.getCell(0).getStringCellValue());
 	                    user.setuserName(row.getCell(1).getStringCellValue());
 	                    if (row.getCell(2).getCellType() == CellType.NUMERIC ) {
@@ -419,6 +433,7 @@ public class AdminController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
+    //액셀 헤더 확인 함수
     private boolean isHeaderValid(Row headerRow, List<String> expectedHeaders) {
         for (int i = 0; i < expectedHeaders.size(); i++) {
             Cell cell = headerRow.getCell(i);
