@@ -95,17 +95,19 @@
               <dd id="programNameBox"></dd>
             </div>
           </dl>
-          <table id="defectNumberTable">
-            <thead>
-              <th class="seq">결함번호</th>
-              <th>프로그램ID</th>
-              <th>프로그램명</th>
-              <th>결함등록자</th>
-              <th>결함심각도</th>
-              <th>결함내용</th>
-            </thead>
-            <tbody id="defectNumberTableBody"></tbody>
-          </table>
+          <div id="defectNumberTableWrapper" class="hidden-scroll">
+            <table id="defectNumberTable">
+              <thead>
+                <th class="seq">결함번호</th>
+                <th>프로그램ID</th>
+                <th>프로그램명</th>
+                <th>결함등록자</th>
+                <th>결함심각도</th>
+                <th>결함내용</th>
+              </thead>
+              <tbody id="defectNumberTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 

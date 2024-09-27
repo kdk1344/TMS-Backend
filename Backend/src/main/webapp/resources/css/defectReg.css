@@ -225,7 +225,8 @@ legend {
   width: fit-content;
 }
 
-#programTableWrapper {
+#programTableWrapper,
+#defectNumberTableWrapper {
   display: block;
 
   height: 35vh;
