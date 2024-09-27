@@ -4,10 +4,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/testProgressReg.css" />
+    <link rel="stylesheet" type="text/css" href="../../resources/css/testProgressEdit.css" />
 
-    <title>TMS 테스트 진행관리 - 테스트 시나리오 등록</title>
-    <script type="module" src="../../resources/js/testProgressReg.js"></script>
+    <title>TMS 테스트 진행관리 - 테스트 시나리오 수정</title>
+    <script type="module" src="../../resources/js/testProgressEdit.js"></script>
   </head>
 
   <body>
@@ -16,7 +16,7 @@
     </header>
 
     <main class="content">
-      <h1 class="page-title">테스트 시나리오 등록</h1>
+      <h1 class="page-title">테스트 시나리오 수정</h1>
 
       <!-- 프로그램 검색 모달 -->
       <div id="programSearchModal" class="modal">
@@ -100,7 +100,7 @@
         </div>
       </div>
 
-      <form id="testProgressRegisterForm">
+      <form id="testProgressEditForm">
         <fieldset>
           <div class="form-group-container">
             <div class="form-group-row">
@@ -128,7 +128,13 @@
         </fieldset>
 
         <fieldset>
-          <legend>▣ 테스트 시나리오/케이스 설계 기본 정보</legend>
+          <div class="legend-container">
+            <legend>▣ 테스트 시나리오/케이스 설계 기본 정보</legend>
+            <div class="form-group">
+              <label for="testStatus">테스트 진행상태</label>
+              <input id="testStatus" name="testStatus" readonly />
+            </div>
+          </div>
 
           <div class="form-group-container">
             <div class="form-group-row">
@@ -256,7 +262,11 @@
 
         <div class="fieldset-container">
           <fieldset>
-            <legend>▣ 수행사 테스트</legend>
+            <div class="legend-container">
+              <legend>▣ 수행사 테스트</legend>
+              <div class="defect-box" id="execCompanyDefect" name="execCompanyDefect">결함0 / 조치0</div>
+            </div>
+
             <div class="form-group-container">
               <div class="form-group">
                 <label for="execCompanyMgr">수행사 테스터<span class="required-indicator">*</span></label>
@@ -300,7 +310,11 @@
           </fieldset>
 
           <fieldset>
-            <legend>▣ 제3자 테스트</legend>
+            <div class="legend-container">
+              <legend>▣ 제3자 테스트</legend>
+              <div class="defect-box" id="thirdPartyDefect" name="thirdPartyDefect">결함0 / 조치0</div>
+            </div>
+
             <div class="form-group-container">
               <div class="form-group">
                 <label for="thirdPartyTestMgr">제3자 테스터</label>
@@ -343,7 +357,11 @@
           </fieldset>
 
           <fieldset>
-            <legend>▣ 고객IT 테스트</legend>
+            <div class="legend-container">
+              <legend>▣ 고객IT 테스트</legend>
+              <div class="defect-box" id="itDefect" name="itDefect">결함0 / 조치0</div>
+            </div>
+
             <div class="form-group-container">
               <div class="form-group">
                 <label for="itMgr">고객 IT 담당자</label>
@@ -381,7 +399,11 @@
           </fieldset>
 
           <fieldset>
-            <legend>▣ 고객현업 테스트</legend>
+            <div class="legend-container">
+              <legend>▣ 고객현업 테스트</legend>
+              <div class="defect-box" id="busiDefect" name="busiDefect">결함0/조치0</div>
+            </div>
+
             <div class="form-group-container">
               <div class="form-group">
                 <label for="busiMgr">현업 담당자</label>
@@ -452,6 +474,8 @@
         </fieldset>
 
         <div class="button-container">
+          <button id="goDefectRegisterPageButton" class="defect-button" type="button">결함등록</button>
+          <button id="openDefectListModalButton" class="defect-button" type="button">결함수정</button>
           <button id="goBackButton" class="cancel-button" type="button">취소</button>
           <button class="save-button">저장</button>
         </div>
