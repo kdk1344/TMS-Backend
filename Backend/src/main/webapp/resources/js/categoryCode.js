@@ -201,7 +201,7 @@ async function initializeParentCodes(selectElementId) {
 }
 
 // 대분류 선택 시, 코드 목록을 가져와 select 요소에 옵션을 설정하는 함수
-async function initializeChildCodes(selectedParentCode) {
+async function initializeChildCodes(selectedParentCode = "") {
   const codeSelect = document.getElementById("codeForFilter");
 
   // 기존 옵션 초기화하고 "전체" 옵션은 남겨두기
@@ -297,6 +297,7 @@ function submitCategoryCodeFilter(event) {
 // 분류코드 필터 리셋
 function resetCategoryCodeFilter() {
   this.reset(); // 폼 초기화
+  initializeChildCodes(); // 중분류 초기화
 }
 
 // HTML 요소에서 분류코드 정보를 가져와서 분류코드 수정 폼에 미리 채우기

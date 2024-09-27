@@ -226,7 +226,7 @@ async function fillFormValues(data) {
   updateFilePreview(fileInputId, fileOutputId); // 파일 목록 렌더링
 }
 
-async function initializeSubCategorySelect(selectedMajorCategoryCode) {
+async function initializeSubCategorySelect(selectedMajorCategoryCode = "") {
   // 업무 대분류 '전체'를 선택한 경우 중분류 리셋
   if (selectedMajorCategoryCode === "") initializeSelect(SELECT_ID.SUB_CATEGORY, []);
   else {

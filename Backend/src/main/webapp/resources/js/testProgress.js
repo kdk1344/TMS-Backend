@@ -235,6 +235,7 @@ function submitTestProgressFilter(event) {
 // 테스트 진행현황 필터 리셋
 function resetTestProgressFilter() {
   this.reset(); // 폼 초기화
+  initializeSubCategorySelect(); // 업무 중분류 필터 초기화
 }
 
 // 페이지 변경
@@ -302,7 +303,7 @@ async function initializeFilterForm() {
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
 }
 
-async function initializeSubCategorySelect(selectedMajorCategoryCode) {
+async function initializeSubCategorySelect(selectedMajorCategoryCode = "") {
   const SUB_CATEGORY_SELECT_ID = "subCategoryForFilter";
 
   // 업무 대분류 '전체'를 선택한 경우

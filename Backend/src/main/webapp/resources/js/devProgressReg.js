@@ -114,7 +114,7 @@ async function initializeRegisterForm() {
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
 }
 
-async function initializeSubCategorySelect(selectedMajorCategoryCode) {
+async function initializeSubCategorySelect(selectedMajorCategoryCode = "") {
   // 업무 대분류 '전체'를 선택한 경우 중분류 리셋
   if (selectedMajorCategoryCode === "") initializeSelect(SELECT_ID.SUB_CATEGORY, []);
   else {

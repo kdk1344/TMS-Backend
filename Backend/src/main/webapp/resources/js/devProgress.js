@@ -250,6 +250,7 @@ function submitDevProgressFilter(event) {
 // 분류코드 필터 리셋
 function resetDevProgressFilter() {
   this.reset(); // 폼 초기화
+  initializeSubCategorySelect(); // 업무 중분류 필터 초기화
 
   /** @deprecated 개발자 검색 시 '이름'으로 검색 & 굳이 사용자 목록과 동기화되지 않아도 되므로 해당 기능 제외 */
   // const deverloperNameDisplay = document.getElementById("developerNameDisplay");
@@ -354,7 +355,7 @@ async function initializeFilterForm() {
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId]));
 }
 
-async function initializeSubCategorySelect(selectedMajorCategoryCode) {
+async function initializeSubCategorySelect(selectedMajorCategoryCode = "") {
   const SUB_CATEGORY_SELECT_ID = "subCategoryForFilter";
 
   // 업무 대분류 '전체'를 선택한 경우
