@@ -1,9 +1,24 @@
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+
+  margin-bottom: 24px;
+}
+
 #devProgressEditForm {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 8px;
+}
+
+#defectToEditTableWrapper {
+  display: block;
+
+  height: 35vh;
+
+  overflow-y: auto;
 }
 
 legend {
@@ -133,6 +148,14 @@ legend {
   min-width: 181px;
 }
 
+.form-group-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 16px;
+}
+
 .form-group {
   display: flex;
   justify-content: space-between;
@@ -218,4 +241,48 @@ legend .flex-box {
 /* 스크롤바 버튼 숨기기 */
 .file-preview::-webkit-scrollbar-button {
   display: none; /* 스크롤바 버튼 숨기기 */
+}
+
+#defectToEditFilterForm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  max-width: 70vw;
+  margin-bottom: 16px;
+}
+
+#defectToEditFilterForm .form-group-row {
+  width: auto;
+}
+
+#defectToEditFilterForm label {
+  min-width: fit-content;
+}
+
+#defectToEditFilterForm input {
+  width: 150px;
+}
+
+#defectToEditFilterForm select {
+  width: fit-content;
+}
+
+.modal table {
+  table-layout: fixed;
+
+  min-width: fit-content;
+  width: 70vw;
+  overflow: auto;
+}
+
+.modal th {
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.modal-content {
+  max-height: 50vh;
 }

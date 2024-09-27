@@ -17,6 +17,9 @@ import {
   hideSpinner,
   goBack,
   setSelectValueByText,
+  setupModalEventListeners,
+  openModal,
+  closeModal,
 } from "./common.js";
 
 /** @global */
@@ -104,6 +107,19 @@ function setupEventListeners() {
 
   // 뒤로가기
   goBackButton.addEventListener("click", () => goBack("수정을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
+
+  // 결함 수정대상 결함번호 조회
+  openDefectToEditSearchModalButton.addEventListener("click", () => {
+    const confirmed = confirm("수정대상 결함번호를 조회하시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
+
+    if (!confirmed) return;
+
+    openModal("defectToEditSearchModal");
+  });
+
+  closeDefectToEditSearchModalButton.addEventListener("click", () => closeModal("defectToEditSearchModal"));
+
+  setupModalEventListeners(["defectToEditSearchModal"]);
 }
 
 /**  수정 폼 초기화 함수 */

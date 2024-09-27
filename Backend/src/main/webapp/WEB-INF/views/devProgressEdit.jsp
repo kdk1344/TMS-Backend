@@ -17,6 +17,65 @@
 
     <main class="content">
       <h1 class="page-title">프로그램 개발 수정</h1>
+
+      <!-- 결함수정 대상 검색 모달 -->
+      <div id="defectToEditSearchModal" class="modal">
+        <div class="modal-content">
+          <div class="flex-box justify-between">
+            <h2>수정대상 결함번호 조회</h2>
+            <button type="button" id="closeDefectToEditSearchModalButton" class="modal-close-button">
+              <img src="../../resources/images/close_icon.png" alt="닫기" />
+            </button>
+          </div>
+
+          <!-- 결함 필터링 -->
+          <form id="defectToEditFilterForm">
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="testStageForDefectToEdit">테스트 단계</label>
+                <select id="testStageForDefectToEdit" name="testStage">
+                  <option value="" selected>전체</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="testIdForDefectToEdit">테스트ID</label>
+                <input id="testIdForDefectToEdit" name="testId" />
+              </div>
+
+              <div class="form-group">
+                <label for="programIdForDefectToEdit">프로그램ID</label>
+                <input id="programIdForDefectToEdit" name="programId" />
+              </div>
+
+              <div class="form-group">
+                <label for="programNameForDefectToEdit">프로그램명</label>
+                <input id="programNameForDefectToEdit" name="programName" />
+              </div>
+            </div>
+
+            <button>조회</button>
+          </form>
+          <div id="defectToEditTableWrapper" class="hidden-scroll">
+            <table id="defectToEditTable">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>테스트ID</th>
+                  <th>결함번호</th>
+                  <th>프로그램ID</th>
+                  <th>프로그램명</th>
+                  <th>결함등록자</th>
+                  <th>결함유형</th>
+                  <th>결함내용</th>
+                </tr>
+              </thead>
+              <tbody id="defectToEditTableBody" class="hidden-scroll"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <form id="devProgressEditForm">
         <!-- 프로그램 개발 Fieldset -->
         <fieldset class="important-box">
@@ -353,7 +412,7 @@
 
         <div class="button-container">
           <button id="goDefectRegisterPageButton" class="defect-button" type="button">결함등록</button>
-          <button id="openDefectListModalButton" class="defect-button" type="button">결함수정</button>
+          <button id="openDefectToEditSearchModalButton" class="defect-button" type="button">결함수정</button>
           <button id="goBackButton" class="cancel-button" type="button">취소</button>
           <button class="save-button">저장</button>
         </div>

@@ -475,7 +475,7 @@
 
         <div class="button-container">
           <button id="goDefectRegisterPageButton" class="defect-button" type="button">결함등록</button>
-          <button id="openDefectListModalButton" class="defect-button" type="button">결함수정</button>
+          <button id="openDefectToEditSearchModalButton" class="defect-button" type="button">결함수정</button>
           <button id="goBackButton" class="cancel-button" type="button">취소</button>
           <button class="save-button">저장</button>
         </div>
