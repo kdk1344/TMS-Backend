@@ -99,6 +99,12 @@
 		SELECT * 
 	    FROM DEFECT
 	    WHERE 1=1
+	    <if test="testId != null and testId != ''">
+	        AND TEST_ID = #{testId}
+	    </if>
+	    <if test="testStage != null and testStage != ''">
+	        AND TEST_STAGE = #{testStage}
+	    </if>
 		<if test="programId != null and programId != ''">
 	        AND PROGRAM_ID = #{programId}
 	    </if>

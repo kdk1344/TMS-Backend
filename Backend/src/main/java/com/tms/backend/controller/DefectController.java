@@ -119,17 +119,11 @@ public class DefectController {
 		
 		List<Defect> defects;
 		
-		if (programId != null && !programId.isEmpty()) {
-		    if (programName != null && !programName.isEmpty()) {
-		        // programId와 programName 둘 다 있을 때
-		        defects = defectService.searchDefectOriginal(programId, programName);
-		    } else {
-		        // programId만 있을 때
-		        defects = defectService.searchDefectOriginal(programId, programName);
-		    }
-		} else if (programName != null && !programName.isEmpty()) {
-		    // programName만 있을 때
-		    defects = defectService.searchDefectOriginal(programId, programName);
+		log.info(size);
+		
+		if (size == 99999) { // 결함 조회를 위해서는 size가 디폴트값에서 변하기에 기본 검색이 아니게 만들기 위한 조건으로 성립
+			log.info("size"+size);
+		    defects = defectService.searchDefectOriginal(testStage, testId, programId, programName);
 		} else { // 기본 검색
 				
 		// 결함 목록 조회
