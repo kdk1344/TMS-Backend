@@ -61,8 +61,8 @@
               <thead>
                 <tr>
                   <th>번호</th>
-                  <th>테스트ID</th>
                   <th>테스트 단계</th>
+                  <th>테스트ID</th>
                   <th>결함번호</th>
                   <th>프로그램ID</th>
                   <th>프로그램명</th>

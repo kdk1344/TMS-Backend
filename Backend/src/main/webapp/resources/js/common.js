@@ -951,8 +951,8 @@ export async function renderEditableDefectList(
 
       row.innerHTML = `
         <td>${index + 1}</td>
-        <td class="test-id">${testId}</td>
         <td class="test-stage">${testStage}</td>
+        <td class="test-id">${testId}</td>
         <td class="seq">${seq}</td>
         <td class="program-id">${programId}</td>
         <td class="program-name">${programName}</td>
