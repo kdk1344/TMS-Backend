@@ -13,7 +13,7 @@ h2 {
   gap: 8px;
 }
 
-#defectToEditTableWrapper {
+#editableDefectTableWrapper {
   display: block;
 
   height: 35vh;
@@ -241,33 +241,6 @@ legend .flex-box {
 /* 스크롤바 버튼 숨기기 */
 .file-preview::-webkit-scrollbar-button {
   display: none; /* 스크롤바 버튼 숨기기 */
-}
-
-#defectToEditFilterForm {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  gap: 20px;
-
-  max-width: 70vw;
-  margin-bottom: 16px;
-}
-
-#defectToEditFilterForm .form-group-row {
-  width: auto;
-}
-
-#defectToEditFilterForm label {
-  min-width: fit-content;
-}
-
-#defectToEditFilterForm input {
-  width: 150px;
-}
-
-#defectToEditFilterForm select {
-  width: fit-content;
 }
 
 .modal table {

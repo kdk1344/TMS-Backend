@@ -20,6 +20,7 @@ import {
   setupModalEventListeners,
   openModal,
   closeModal,
+  initializeEditableDefectList,
 } from "./common.js";
 
 /** @global */
@@ -109,17 +110,18 @@ function setupEventListeners() {
   goBackButton.addEventListener("click", () => goBack("수정을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
 
   // 결함 수정대상 결함번호 조회
-  openDefectToEditSearchModalButton.addEventListener("click", () => {
+  openEditableDefectSearchModalButton.addEventListener("click", () => {
     const confirmed = confirm("수정대상 결함번호를 조회하시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
 
     if (!confirmed) return;
 
-    openModal("defectToEditSearchModal");
+    initializeEditableDefectList();
+    openModal("editableDefectSearchModal");
   });
 
-  closeDefectToEditSearchModalButton.addEventListener("click", () => closeModal("defectToEditSearchModal"));
+  closeEditableDefectSearchModalButton.addEventListener("click", () => closeModal("editableDefectSearchModal"));
 
-  setupModalEventListeners(["defectToEditSearchModal"]);
+  setupModalEventListeners(["editableDefectSearchModal"]);
 }
 
 /**  수정 폼 초기화 함수 */

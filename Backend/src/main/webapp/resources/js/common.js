@@ -887,6 +887,100 @@ export function selectOriginalDefectNumberFromTable(event) {
   closeModal("defectNumberSearchModal");
 }
 
+export async function initializeEditableDefectList() {
+  // 프로그램ID, 프로그램명 초기화
+  document.getElementById("programIdForEditableDefect").value = document.getElementById("programId").value ?? "";
+  document.getElementById("programNameForEditableDefect").value = document.getElementById("programName").value ?? "";
+
+  // 수정대상 결함번호 필터링 이벤트 핸들러
+  document.getElementById("editableDefectFilterForm").addEventListener("submit", submitEditableDefectFilter);
+
+  // 테스트 단계 셀렉트박스 초기화
+  const { testStageList } = await getTestStageList();
+
+  initializeSelect("testStageForEditableDefect", testStageList);
+  renderEditableDefectList();
+}
+
+// 수정대상 결함번호 목록 필터링
+export function submitEditableDefectFilter(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  const formData = new FormData(event.target);
+
+  const getDefectListProps = Object.fromEntries(formData);
+
+  renderEditableDefectList(getDefectListProps);
+}
+
+/** 수정대상 결함번호 목록 테이블 렌더링 */
+export async function renderEditableDefectList(
+  getDefectListProps = {
+    testStage: "",
+    majorCategory: "",
+    subCategory: "",
+    defectSeverity: "",
+    seq: "",
+    defectStatus: "",
+    defectRegistrar: "",
+    defectHandler: "",
+    pl: "",
+    programId: document.getElementById("programId").value ?? "",
+    programName: document.getElementById("programName").value ?? "",
+  }
+) {
+  const { defectList } = await getDefectList(getDefectListProps);
+
+  // 수정대상 결함번호 조회 테이블 렌더링
+  const editableDefectTableBody = document.getElementById("editableDefectTableBody");
+
+  if (editableDefectTableBody) {
+    editableDefectTableBody.innerHTML = "";
+
+    if (defectList.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="8">조건에 맞는 결함번호가 없습니다.</td>`;
+      editableDefectTableBody.appendChild(row);
+      return;
+    }
+
+    defectList.forEach((defect, index) => {
+      const { testId, testStage, seq, programId, programName, defectRegistrar, defectType, defectDescription } = defect;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td class="test-id">${testId}</td>
+        <td class="test-stage">${testStage}</td>
+        <td class="seq">${seq}</td>
+        <td class="program-id">${programId}</td>
+        <td class="program-name">${programName}</td>
+        <td class="defect-registrar">${defectRegistrar}</td>
+        <td class="defect-type">${defectType}</td>
+        <td class="defect-description ellipsis">${defectDescription}</td>
+      `;
+
+      editableDefectTableBody.appendChild(row);
+
+      // 클릭 이벤트 핸들러 등록
+      editableDefectTableBody.addEventListener("click", (event) => {
+        const row = event.target.closest("tr");
+
+        if (row) {
+          const defectId = row.querySelector(".seq").textContent; // tr 내부의 결함번호 선택
+          goDefectEditPage(defectId);
+        }
+      });
+    });
+  }
+}
+
+/** 결함 수정 페이지 이동 */
+function goDefectEditPage(defectId = "") {
+  window.location.href = `/tms/defectEdit?seq=${defectId}`;
+}
+
 /** HTTP Referer 헤더에서 이전 경로 값을 가져와서 판별하는 함수 */
 export function getReferer(referer) {
   if (referer.includes(REFERER.DEV_PROGRESS)) return REFERER.DEV_PROGRESS; // 개발진행관리 > 결함 등록/수정

@@ -226,7 +226,7 @@ legend .flex-box {
 
 #screenTableWrapper,
 #programTableWrapper,
-#defectToEditTableWrapper {
+#editableDefectTableWrapper {
   display: block;
 
   height: 35vh;

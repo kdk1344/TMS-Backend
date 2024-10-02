@@ -693,3 +693,42 @@ button:hover {
 .hidden-scroll::-webkit-scrollbar {
   display: none;
 }
+
+#editableDefectFilterForm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  max-width: 70vw;
+  margin-bottom: 16px;
+}
+
+#editableDefectFilterForm .form-group-row {
+  width: auto;
+}
+
+#editableDefectFilterForm label {
+  min-width: fit-content;
+}
+
+#editableDefectFilterForm input {
+  width: 150px;
+}
+
+#editableDefectFilterForm select {
+  width: fit-content;
+}
+
+#editableDefectTableBody td {
+  text-align: center;
+}
+
+#editableDefectTableBody td.defect-description {
+  text-align: left;
+}
+
+#editableDefectTableBody > tr:hover {
+  background-color: var(--super-light-gray);
+}
