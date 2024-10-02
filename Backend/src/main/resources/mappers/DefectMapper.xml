@@ -100,7 +100,7 @@
 	    FROM DEFECT
 	    WHERE 1=1
 	    <if test="testId != null and testId != ''">
-	        AND TEST_ID = #{testId}
+	        AND TEST_ID LIKE CONCAT('%', #{testId}, '%')
 	    </if>
 	    <if test="testStage != null and testStage != ''">
 	        AND TEST_STAGE = #{testStage}
