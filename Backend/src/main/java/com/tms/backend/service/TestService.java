@@ -102,8 +102,8 @@ public class TestService {
     }
     
     // 특정 테스트 아이디 결함 건수
-    public int countDefect(String testId, String programId, String testStage, String managerType, String defectStatus) {
-    	return testmapper.countDefect(testId, programId, testStage, managerType, defectStatus);
+    public int countDefect(String testId, String testStage, String programId, String managerType, String defectStatus) {
+    	return testmapper.countDefect(testId, testStage, programId,  managerType, defectStatus);
     }
     
     //테스트 진행 상태 자동 세팅
