@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tms.backend.service.AdminService;
+import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.CommonCode;
 import com.tms.backend.vo.Criteria;
@@ -58,6 +59,9 @@ public class CodeController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private FileService fileService;
+	
 	//공통코드 Controller
 	
 	//공통코드 페이지
@@ -66,10 +70,11 @@ public class CodeController {
         return "commonCode";
         }
     
-   //공통코드 추가
+	//공통코드 추가
     @PostMapping(value= "api/ccwrite", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> ccWrite(@RequestBody CommonCode commonCode) {
+    	//json 데이터용 response
         Map<String, Object> response = new HashMap<>();
         try {
         	adminService.addCommonCode(commonCode);  // 공통코드 추가
@@ -77,15 +82,15 @@ public class CodeController {
             response.put("message", "CommonCode successfully registered!");
             response.put("commonCode", commonCode);  // 등록된 공통코드 정보 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) { 
             response.put("status", "failure");
             response.put("message", "공통 코드 등록중에 오류가 발생했습니다");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        } catch (DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) { //공통코드 중복 메세지용
             response.put("status", "failure");
             response.put("message", "공통 코드가 중복되었습니다.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
+        } catch (Exception e) { // 기타 오류 메시지 용
             e.printStackTrace();
             response.put("status", "error");
             response.put("message", "공통 코드 등록중에 오류가 발생했습니다");
@@ -97,7 +102,6 @@ public class CodeController {
     @PostMapping(value= "api/ccmodify" , produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> ccModify(@RequestBody CommonCode commonCode) {
-    	log.info("commonCode"+commonCode);
         Map<String, Object> response = new HashMap<>();
         try {
         	String Seq = commonCode.getSeq(); // 공통코드 seq 추출
@@ -132,19 +136,17 @@ public class CodeController {
 
         // CommonCode 삭제
         for (String seq : seqs) {
-        	String parentCode = seq.substring(0, 2);
-        	String code = seq.substring(2, 4);
-        	log.info(parentCode);
-        	if (parentCode.equals("00")) {
-        		int child = adminService.checkChildCodesExist(code);
-        		log.info("child:"+child);
+        	String parentCode = seq.substring(0, 2);// seq의 앞 2자리를 parentCode로 설정
+        	String code = seq.substring(2, 4); // seq의 뒤 2자리를 일반 code로 설정
+        	if (parentCode.equals("00")) { // 상위 코드가 없을 경우
+        		int child = adminService.checkChildCodesExist(code); //하위코드 존재 여부 확인
         		if (child > 0 ) {
         			response.put("status", "failure");
                     response.put("message", "하위 코드가 존재합니다. 하위 코드를 미리 삭제해주세요.");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         		}
         	}
-            adminService.deleteCommonCode(seq);
+            adminService.deleteCommonCode(seq); //공통코드 삭제
         }
         
         response.put("status", "success");
@@ -153,6 +155,7 @@ public class CodeController {
         
     }
    
+    //공통코드 조회
     @GetMapping(value = "api/commonCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> getCommonCodes(@RequestParam(value = "parentCode", required = false) String parentCode,
@@ -175,11 +178,9 @@ public class CodeController {
             commonCode.setSeq(seq);
         }
         
-        int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName);
-        int totalPages = (int) Math.ceil((double) totalCommonCodes / size);
+        int totalCommonCodes = adminService.getTotalCommonCodeCount(parentCode, code, codeName); //공통코드 총 갯수
+        int totalPages = (int) Math.ceil((double) totalCommonCodes / size); // 총 조회 페이지
         
-        log.info(commonCodes);
-
         // 응답 생성
         Map<String, Object> response = new HashMap<>();
         response.put("commonCodes", commonCodes);
@@ -190,21 +191,20 @@ public class CodeController {
         return response;
     }
     
+    //상위코드 정보 가져오기
     @GetMapping(value = "api/ccparentCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getParentCommonCodes() {
+    	//json 반응 생성
     	Map<String, Object> response = new HashMap<>();
         
         // CategoryService를 통해 대분류 코드를 조회
         List<CommonCode> parentCodes = adminService.getParentCommonCodes();
         
-        log.info("확인중" + parentCodes);
-
-        // 응답 데이터 생성
-        if (parentCodes != null && !parentCodes.isEmpty()) {
+        if (parentCodes != null && !parentCodes.isEmpty()) { // 상위코드가 있을 시
             response.put("status", "success");
             response.put("parentCodes", parentCodes);
-        } else {
+        } else { // 상위코드가 없을 시
             response.put("status", "failure");
             response.put("message", "상위 코드를 찾을 수 없습니다.");
         }
@@ -213,23 +213,24 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
     
+    //상위코드에 따른 공통코드 조회
     @GetMapping(value = "api/cccode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCCCommonCodes(@RequestParam("parentCode") String parentCode) {
-        List<CommonCode> CCCodes = adminService.getCCCode(parentCode);
-    	Map<String, Object> response = new HashMap<>();
+        List<CommonCode> CCCodes = adminService.getCCCode(parentCode); // 상위코드 입력해서 하위 공통코드 리스트 가져오기
+    	Map<String, Object> response = new HashMap<>(); // 반응 생성
         
     	 // 하위 코드가 없으면 204 상태와 함께 빈 배열 반환
         if (CCCodes.isEmpty()) {
             response.put("status", "no_content");
-            response.put("message", "No CCCodes found for the provided parentCode");
+            response.put("message", "상위 코드에 맞는 하위 공통 코드가 없습니다");
             response.put("CCCodes", CCCodes);
             return ResponseEntity.status(204).body(response);
         }
 
         // 하위 코드 목록 반환
         response.put("status", "success");
-        response.put("message", "CCCodes retrieved successfully");
+        response.put("message", "하위 공통 코드를 호출했습니다.");
         response.put("CCCodes", CCCodes);
         return ResponseEntity.ok(response); // 200 OK 상태 반환
     }
@@ -244,8 +245,8 @@ public class CodeController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/ccexampleexcel")
     public void downloadExcc(HttpServletResponse response) throws IOException {
+    	// 아무런 데이터도 안 가져오기 위한 변수
     	List<CommonCode> ExampleDEV = adminService.getFilteredCommonCodes(null, null, "No_value");
-    	log.info(ExampleDEV);
     	ccexportToExcel(response, ExampleDEV, "example.xlsx");
     }
 
@@ -256,7 +257,7 @@ public class CodeController {
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "codeName", required = false) String codeName,
             HttpServletResponse response) throws IOException {
-
+    	// 조건 조회 데이터 가져오기
     	List<CommonCode> filteredCommonCodeList = adminService.getFilteredCommonCodes(parentCode, code, codeName);
         ccexportToExcel(response, filteredCommonCodeList, "filtered_common_codes.xlsx");
     }
@@ -265,8 +266,9 @@ public class CodeController {
     private void ccexportToExcel(HttpServletResponse response, List<CommonCode> commonCodeList, String fileName) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("CommonCodes");
-
+        //액셀 Row 만들기
         Row headerRow = sheet.createRow(0);
+        //컬럼 만들기
         headerRow.createCell(0).setCellValue("ParentCode");
         headerRow.createCell(1).setCellValue("Code");
         headerRow.createCell(2).setCellValue("CodeName");
@@ -274,6 +276,7 @@ public class CodeController {
         int rowNum = 1;
         for (CommonCode commonCode : commonCodeList) {
             Row row = sheet.createRow(rowNum++);
+            //액셀에 데이터 입력
             row.createCell(0).setCellValue(commonCode.getParentCode());
             row.createCell(1).setCellValue(commonCode.getCode());
             row.createCell(2).setCellValue(commonCode.getCodeName());
@@ -287,11 +290,12 @@ public class CodeController {
         workbook.close();
     }
     
+    //액셀 업로드
     @PostMapping(value = "api/ccupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> ccuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
     	Map<String, Object> response = new HashMap<>();
-        if (file.isEmpty()) {
+        if (file.isEmpty()) { //업로드한 액셀 파일이 없을 경우
         	response.put("status", "failure");
             response.put("message", "파일이 없습니다. 다시 시도해 주세요.");
         	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -302,9 +306,9 @@ public class CodeController {
             Sheet sheet = workbook.getSheetAt(0);
             Row headerRow = sheet.getRow(0);
             
-         // 예상하는 컬럼명 리스트
+            // 예상하는 컬럼명 리스트
             List<String> expectedHeaders = Arrays.asList("ParentCode", "Code", "CodeName");
-            if (!isHeaderValid2(headerRow, expectedHeaders)) {
+            if (!fileService.isHeaderValid(headerRow, expectedHeaders)) { //컬럼 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -320,7 +324,7 @@ public class CodeController {
                     try {
                     	// ParentCode 처리
                         String parentCode;
-                        if (row.getCell(0).getCellType() == CellType.NUMERIC) {
+                        if (row.getCell(0).getCellType() == CellType.NUMERIC) { // 입력값이 정수일 경우
                             parentCode = String.format("%02d", (int) row.getCell(0).getNumericCellValue());
                         } else {
                             parentCode = row.getCell(0).getStringCellValue();
@@ -369,8 +373,8 @@ public class CodeController {
             response.put("status", "success");
             response.put("message", "파일 업로드가 성공적으로 완료되었습니다!");
             response.put("totalUploaded", commonCodes.size());
-
-        } catch (DuplicateKeyException e) {
+         
+        } catch (DuplicateKeyException e) { // 액셀로 입력한 공통코드가 중복일 경우
             e.printStackTrace();
             response.put("status", "error");
             response.put("message", "공통 코드가 중복되었습니다.");
@@ -385,49 +389,21 @@ public class CodeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
-    private boolean isHeaderValid2(Row headerRow, List<String> expectedHeaders) {
-        for (int i = 0; i < expectedHeaders.size(); i++) {
-            Cell cell = headerRow.getCell(i);
-            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
     // 분류코드 Controller
     
+    //분류코드 페이지
     @GetMapping("/categoryCode")
-    public String categoryCodePage(@RequestParam(value = "stageType", required = false) String stageType,
-                                   @RequestParam(value = "code", required = false) String code,
-                                   @RequestParam(value = "codeName", required = false) String codeName,
-                                   @RequestParam(value = "page", defaultValue = "1") int page,
-                                   @RequestParam(value = "size", defaultValue = "15") int size,
-                                   Model model) {
-        // categoryCode 조회
-        List<categoryCode> categoryCodes = adminService.searchCategoryCodes(stageType, code, codeName, page, size);
-        int totalCategoryCodes = adminService.getTotalCategoryCodeCount(stageType, code, codeName);
-        int totalPages = (int) Math.ceil((double) totalCategoryCodes / size);
-
-        log.info("categoryCodes: " + categoryCodes);
-        log.info("totalPages: " + totalPages);
-        log.info("currentPage: " + page);
-
-        // 응답 생성
-        model.addAttribute("categoryCodes", categoryCodes);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("totalCategoryCodes", totalCategoryCodes);
+    public String categoryCodePage() {
         return "categoryCode";
     }
     
-    // 카테고리 코드 등록
+    // 분류 코드 등록
     @PostMapping(value = "api/catwrite", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> catWrite(@RequestBody categoryCode categoryCode) {
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>(); //반응 생성
         try {
-        	if (categoryCode.getCode().length() > 2) {
+        	if (categoryCode.getCode().length() > 2) { // 분류코드 코드가 2자리 이상일 경우
         		response.put("status", "failure");
         		response.put("message", "코드는 2자리 이하로 입력해야 합니다.");
         		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -468,7 +444,8 @@ public class CodeController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    
+    //분류코드 수정
     @PostMapping(value= "api/catmodify" , produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> catModify(@RequestBody categoryCode categoryCode) {
@@ -512,24 +489,23 @@ public class CodeController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    
+    //분류코드 삭제
     @DeleteMapping(value= "api/catdelete", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deletecat(@RequestBody List<String> codeList) {
         Map<String, Object> response = new HashMap<>();        
         // CategoryCode 삭제
         for (String code : codeList) {
-        	log.info(code.length());
-        	if (code.length() == 2) {
-        		int child = adminService.checkChildCodesExist2(code);
-        		log.info("child:"+child);
+        	if (code.length() == 2) { //분류코드가 하위 코드 등록이 가능한 상위 코드일 경우
+        		int child = adminService.checkChildCodesExist2(code); // 하위 코드 여부 확인
         		if (child > 0 ) {
         			response.put("status", "failure");
                     response.put("message", "하위 코드가 존재합니다. 하위 코드를 미리 삭제해주세요.");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         	}
         }
-            adminService.deleteCategoryCode(code);
+            adminService.deleteCategoryCode(code); //분류코드 삭제
         }
         
         response.put("status", "success");
@@ -537,6 +513,7 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
     
+    //분류코드 조회
     @GetMapping(value = "api/categoryCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> getCategoryCodes(@RequestParam(value = "parentCode", required = false) String parentCode,
@@ -560,6 +537,7 @@ public class CodeController {
         return response;
     }
     
+    // 분류코드 부모코드 가져오기
     @GetMapping(value = "api/catparentCode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getParentCategoryCodes() {
@@ -581,10 +559,11 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
     
+    //상위 코드에 맞춘 하위 분류코드 가져오기
     @GetMapping(value = "api/catcode", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCTCategoryCodes(@RequestParam("parentCode") String parentCode) {
-        List<categoryCode> CTCodes = adminService.getCTCode(parentCode);
+        List<categoryCode> CTCodes = adminService.getCTCode(parentCode); //입력한 상위코드에 맞춘 하위 분류코드
     	Map<String, Object> response = new HashMap<>();
         
     	 // 하위 코드가 없으면 204 상태와 함께 빈 배열 반환
@@ -612,7 +591,7 @@ public class CodeController {
     // 액셀 파일 예시를 다운로드
     @GetMapping("/catexampleexcel")
     public void downloadExcat(HttpServletResponse response) throws IOException {
-    	List<categoryCode> ExampleDEV = adminService.searchCategoryCodes(null, null, "NO_VALUE", 1, 10);    	
+    	List<categoryCode> ExampleDEV = adminService.searchCategoryCodes(null, null, "NO_VALUE", 1, 10); //빈값을 받기 위한 변수  	
     	catexportToExcel(response, ExampleDEV, "example.xlsx");
     }
 
@@ -634,7 +613,8 @@ public class CodeController {
     private void catexportToExcel(HttpServletResponse response, List<categoryCode> categoryCodeList, String fileName) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("CategoryCodes");
-
+        
+        //로우 값 생성
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("StageType");
         headerRow.createCell(1).setCellValue("Code");
@@ -643,6 +623,7 @@ public class CodeController {
         int rowNum = 1;
         for (categoryCode categoryCode : categoryCodeList) {
             Row row = sheet.createRow(rowNum++);
+            // 데이터 입력
             row.createCell(0).setCellValue(categoryCode.getStageType());
             row.createCell(1).setCellValue(categoryCode.getCode());
             row.createCell(2).setCellValue(categoryCode.getCodeName());
@@ -656,6 +637,7 @@ public class CodeController {
         workbook.close();
     }
     
+    // 액셀 업로드
     @PostMapping(value = "api/catupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> catuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -673,7 +655,7 @@ public class CodeController {
 
             // 예상하는 컬럼명 리스트
             List<String> expectedHeaders = Arrays.asList("StageType", "Code", "CodeName");
-            if (!isHeaderValid3(headerRow, expectedHeaders)) {
+            if (!fileService.isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -747,16 +729,6 @@ public class CodeController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    
-    private boolean isHeaderValid3(Row headerRow, List<String> expectedHeaders) {
-        for (int i = 0; i < expectedHeaders.size(); i++) {
-            Cell cell = headerRow.getCell(i);
-            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
-                return false;
-            }
-        }
-        return true;
     }
     
 

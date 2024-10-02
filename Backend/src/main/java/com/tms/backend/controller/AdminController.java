@@ -36,6 +36,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tms.backend.exception.ForbiddenException;
 import com.tms.backend.exception.UnauthorizedException;
 import com.tms.backend.service.AdminService;
+import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
 import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.FileAttachment;
@@ -59,6 +60,9 @@ public class AdminController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private FileService fileService;
     
 	//사용자 관리자 화면
     @GetMapping("/adminUser")
@@ -376,7 +380,7 @@ public class AdminController {
             
             // 예상하는 컬럼명 리스트
             List<String> expectedHeaders = Arrays.asList("userID", "userName", "Password", "AuthorityName");
-            if (!isHeaderValid(headerRow, expectedHeaders)) {
+            if (!fileService.isHeaderValid(headerRow, expectedHeaders)) { // 컬럼 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -433,16 +437,7 @@ public class AdminController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
-    //액셀 헤더 확인 함수
-    private boolean isHeaderValid(Row headerRow, List<String> expectedHeaders) {
-        for (int i = 0; i < expectedHeaders.size(); i++) {
-            Cell cell = headerRow.getCell(i);
-            if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
+
     
     
 

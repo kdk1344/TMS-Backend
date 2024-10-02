@@ -119,10 +119,18 @@ public class DefectController {
 		
 		List<Defect> defects;
 		
-		if ((programId != null && !programId.isEmpty()) && 
-			    (programName != null && !programName.isEmpty())){
-			defects = defectService.searchDefectOriginal(programId, programName);
-		} else {
+		if (programId != null && !programId.isEmpty()) {
+		    if (programName != null && !programName.isEmpty()) {
+		        // programId와 programName 둘 다 있을 때
+		        defects = defectService.searchDefectOriginal(programId, programName);
+		    } else {
+		        // programId만 있을 때
+		        defects = defectService.searchDefectOriginal(programId, programName);
+		    }
+		} else if (programName != null && !programName.isEmpty()) {
+		    // programName만 있을 때
+		    defects = defectService.searchDefectOriginal(programId, programName);
+		} else { // 기본 검색
 				
 		// 결함 목록 조회
 		defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
