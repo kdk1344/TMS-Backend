@@ -21,6 +21,7 @@ import {
   selectProgramFromTable,
   renderScreenList,
   selectScreenFromTable,
+  AUTHORITY_CODE,
 } from "./common.js";
 
 /** @global */
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
 function init() {
+  checkAccessOrGoBack();
   renderTMSHeader();
   initializeRegisterForm();
   setupEventListeners();
@@ -126,17 +128,23 @@ function setupEventListeners() {
   setupModalEventListeners(["screenSearchModal", "programSearchModal"]);
 }
 
+async function checkAccessOrGoBack() {
+  const { authorityCode } = await checkSession();
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
+
+  if (!accessCode.has(authorityCode))
+    goBack("테스트 시나리오를 등록할 수 있는 권한이 없습니다. 필요 시 관리자에게 문의하세요.");
+}
+
 /**  등록 폼 초기화 함수 */
 async function initializeRegisterForm() {
   // 모든 비동기 호출을 병렬로 실행
-  const [{ userName }, { testStageList }, { majorCategoryCodes }, { testResultList }, { programTypes }] =
-    await Promise.all([
-      checkSession(),
-      getTestStageList(),
-      getMajorCategoryCodes(),
-      getTestResultList(),
-      getProgramTypes(),
-    ]);
+  const [{ testStageList }, { majorCategoryCodes }, { testResultList }, { programTypes }] = await Promise.all([
+    getTestStageList(),
+    getMajorCategoryCodes(),
+    getTestResultList(),
+    getProgramTypes(),
+  ]);
 
   const SELECT_DATA = {
     [SELECT_ID.TEST_STAGE]: testStageList,

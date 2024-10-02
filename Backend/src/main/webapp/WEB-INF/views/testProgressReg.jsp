@@ -314,17 +314,17 @@
 
               <div class="form-group">
                 <label for="thirdPartyTestDate">테스트 예정일</label>
-                <input id="thirdPartyTestDate" name="thirdPartyTestDate" type="date" />
+                <input id="thirdPartyTestDate" name="thirdPartyTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdPartyConfirmDate">테스트 완료일</label>
-                <input id="thirdPartyConfirmDate" name="thirdPartyConfirmDate" type="date" />
+                <input id="thirdPartyConfirmDate" name="thirdPartyConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdTestResult">테스트 결과</label>
-                <select id="thirdTestResult" name="thirdTestResult">
+                <select id="thirdTestResult" name="thirdTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -337,6 +337,7 @@
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
                   tabindex="13"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -352,17 +353,17 @@
 
               <div class="form-group">
                 <label for="itTestDate">테스트 시작일</label>
-                <input id="itTestDate" name="itTestDate" type="date" />
+                <input id="itTestDate" name="itTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itConfirmDate">테스트 완료일</label>
-                <input id="itConfirmDate" name="itConfirmDate" type="date" />
+                <input id="itConfirmDate" name="itConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itTestResult">테스트 결과</label>
-                <select id="itTestResult" name="itTestResult">
+                <select id="itTestResult" name="itTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -375,6 +376,7 @@
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
                   tabindex="15"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -390,17 +392,17 @@
 
               <div class="form-group">
                 <label for="busiTestDate">테스트 시작일</label>
-                <input id="busiTestDate" name="busiTestDate" type="date" />
+                <input id="busiTestDate" name="busiTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiConfirmDate">테스트 완료일</label>
-                <input id="busiConfirmDate" name="busiConfirmDate" type="date" />
+                <input id="busiConfirmDate" name="busiConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiTestResult">테스트 결과</label>
-                <select id="busiTestResult" name="busiTestResult">
+                <select id="busiTestResult" name="busiTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -413,6 +415,7 @@
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
                   tabindex="17"
+                  readonly
                 ></textarea>
               </div>
             </div>

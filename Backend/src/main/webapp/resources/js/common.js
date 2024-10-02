@@ -7,6 +7,29 @@ export const REFERER = {
 
 Object.freeze(REFERER);
 
+/** 권한코드
+  01	관리자
+  02	PM,사업/품질 
+  03	테스트관리자
+  04	PL
+  05	개발자
+  06	제3자테스터
+  07	고객 IT 담당자
+  08	고객 현업 담당자
+ */
+export const AUTHORITY_CODE = {
+  ADMIN: 1,
+  PM: 2,
+  TEST_MGR: 3,
+  PL: 4,
+  DEVELOPER: 5,
+  THIRD_PARTY_TESTER: 6,
+  IT_MGR: 7,
+  BUSI_MGR: 8,
+};
+
+Object.freeze(AUTHORITY_CODE);
+
 /** @global 파일 목록을 메모리에서 관리할 Map 객체 (file input id 별로 관리) */
 const fileListStore = new Map();
 
