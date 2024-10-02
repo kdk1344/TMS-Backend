@@ -456,6 +456,7 @@ button:hover {
 .file-button {
   margin-bottom: 16px;
   background-color: var(--extra-light-gray);
+  border: 1px solid var(--extra-light-gray);
 
   color: black;
 }

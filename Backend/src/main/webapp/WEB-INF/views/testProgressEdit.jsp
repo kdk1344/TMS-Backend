@@ -106,22 +106,22 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testStage">테스트 단계<span class="required-indicator">*</span></label>
-                <select id="testStage" name="testStage" required></select>
+                <select id="testStage" name="testStage" required class="readonly"></select>
               </div>
 
               <div class="form-group">
                 <label for="majorCategory">업무 대분류<span class="required-indicator">*</span></label>
-                <select id="majorCategory" name="majorCategory" required></select>
+                <select id="majorCategory" name="majorCategory" required class="readonly"></select>
               </div>
 
               <div class="form-group">
                 <label for="subCategory">업무 중분류<span class="required-indicator">*</span></label>
-                <select id="subCategory" name="subCategory" required></select>
+                <select id="subCategory" name="subCategory" required class="readonly"></select>
               </div>
 
               <div class="form-group">
                 <label for="minorCategory">업무 소분류</label>
-                <input id="minorCategory" name="minorCategory" />
+                <input id="minorCategory" name="minorCategory" readonly />
               </div>
             </div>
           </div>
@@ -140,12 +140,19 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
-                <input id="testId" name="testId" required placeholder="테스트ID" tabindex="1" autofocus />
+                <input id="testId" name="testId" required placeholder="테스트ID" tabindex="1" autofocus readonly />
               </div>
 
               <div class="form-group">
                 <label for="testStepName">스텝명<span class="required-indicator">*</span></label>
-                <input id="testStepName" name="testStepName" required placeholder="테스트 스텝명" tabindex="4" />
+                <input
+                  id="testStepName"
+                  name="testStepName"
+                  required
+                  placeholder="테스트 스텝명"
+                  tabindex="4"
+                  readonly
+                />
               </div>
 
               <div class="form-group">
@@ -153,7 +160,7 @@
                 <div class="search-input-wrapper">
                   <input id="programId" name="programId" required readonly />
 
-                  <button type="button" class="search-button" id="programSearchButton">
+                  <button type="button" class="search-button" id="programSearchButton" disabled>
                     <img src="../../resources/images/search_icon.png" alt="프로그램 검색" />
                   </button>
                 </div>
@@ -174,6 +181,7 @@
                   required
                   placeholder="테스트 시나리오명"
                   tabindex="2"
+                  readonly
                 />
               </div>
 
@@ -182,7 +190,7 @@
                 <div class="search-input-wrapper">
                   <input id="screenId" name="screenId" required readonly />
 
-                  <button type="button" class="search-button" id="screenSearchButton">
+                  <button type="button" class="search-button" id="screenSearchButton" disabled>
                     <img src="../../resources/images/search_icon.png" alt="화면 검색" />
                   </button>
                 </div>
@@ -202,7 +210,14 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testCaseName">케이스명<span class="required-indicator">*</span></label>
-                <input id="testCaseName" name="testCaseName" required placeholder="테스트 케이스명" tabindex="3" />
+                <input
+                  id="testCaseName"
+                  name="testCaseName"
+                  required
+                  placeholder="테스트 케이스명"
+                  tabindex="3"
+                  readonly
+                />
               </div>
 
               <div class="form-group">
@@ -232,6 +247,7 @@
                   class="custom-scroll"
                   placeholder="테스트 수행절차를 입력해 주세요."
                   tabindex="5"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -239,22 +255,36 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="preConditions">사전조건</label>
-                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" tabindex="6" />
+                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" tabindex="6" readonly />
               </div>
 
               <div class="form-group">
                 <label for="inputData">입력 데이터<span class="required-indicator">*</span></label>
-                <input id="inputData" name="inputData" required placeholder="테스트 입력 데이터" tabindex="7" />
+                <input
+                  id="inputData"
+                  name="inputData"
+                  required
+                  placeholder="테스트 입력 데이터"
+                  tabindex="7"
+                  readonly
+                />
               </div>
 
               <div class="form-group">
                 <label for="expectedResult">예상결과<span class="required-indicator">*</span></label>
-                <input id="expectedResult" name="expectedResult" required placeholder="테스트 예상결과" tabindex="8" />
+                <input
+                  id="expectedResult"
+                  name="expectedResult"
+                  required
+                  placeholder="테스트 예상결과"
+                  tabindex="8"
+                  readonly
+                />
               </div>
 
               <div class="form-group">
                 <label for="actualResult">실제결과</label>
-                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" tabindex="9" />
+                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" tabindex="9" readonly />
               </div>
             </div>
           </div>
@@ -276,22 +306,23 @@
                   required
                   placeholder="이름을 입력해 주세요."
                   tabindex="10"
+                  readonly
                 />
               </div>
 
               <div class="form-group">
                 <label for="execCompanyTestDate">테스트 예정일</label>
-                <input id="execCompanyTestDate" name="execCompanyTestDate" type="date" />
+                <input id="execCompanyTestDate" name="execCompanyTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="execCompanyConfirmDate">테스트 완료일</label>
-                <input id="execCompanyConfirmDate" name="execCompanyConfirmDate" type="date" />
+                <input id="execCompanyConfirmDate" name="execCompanyConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="execCompanyTestResult">테스트 결과</label>
-                <select id="execCompanyTestResult" name="execCompanyTestResult">
+                <select id="execCompanyTestResult" name="execCompanyTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -304,6 +335,7 @@
                   class="custom-scroll"
                   placeholder="테스트 의견을 입력해 주세요."
                   tabindex="11"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -323,22 +355,23 @@
                   name="thirdPartyTestMgr"
                   placeholder="이름을 입력해 주세요."
                   tabindex="12"
+                  readonly
                 />
               </div>
 
               <div class="form-group">
                 <label for="thirdPartyTestDate">테스트 예정일</label>
-                <input id="thirdPartyTestDate" name="thirdPartyTestDate" type="date" />
+                <input id="thirdPartyTestDate" name="thirdPartyTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdPartyConfirmDate">테스트 완료일</label>
-                <input id="thirdPartyConfirmDate" name="thirdPartyConfirmDate" type="date" />
+                <input id="thirdPartyConfirmDate" name="thirdPartyConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdTestResult">테스트 결과</label>
-                <select id="thirdTestResult" name="thirdTestResult">
+                <select id="thirdTestResult" name="thirdTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -351,6 +384,7 @@
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
                   tabindex="13"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -365,22 +399,22 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="itMgr">고객 IT 담당자</label>
-                <input id="itMgr" name="itMgr" placeholder="이름을 입력해 주세요." tabindex="14" />
+                <input id="itMgr" name="itMgr" placeholder="이름을 입력해 주세요." tabindex="14" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itTestDate">테스트 시작일</label>
-                <input id="itTestDate" name="itTestDate" type="date" />
+                <input id="itTestDate" name="itTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itConfirmDate">테스트 완료일</label>
-                <input id="itConfirmDate" name="itConfirmDate" type="date" />
+                <input id="itConfirmDate" name="itConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itTestResult">테스트 결과</label>
-                <select id="itTestResult" name="itTestResult">
+                <select id="itTestResult" name="itTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -393,6 +427,7 @@
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
                   tabindex="15"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -407,22 +442,22 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="busiMgr">현업 담당자</label>
-                <input id="busiMgr" name="busiMgr" placeholder="이름을 입력해 주세요." tabindex="16" />
+                <input id="busiMgr" name="busiMgr" placeholder="이름을 입력해 주세요." tabindex="16" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiTestDate">테스트 시작일</label>
-                <input id="busiTestDate" name="busiTestDate" type="date" />
+                <input id="busiTestDate" name="busiTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiConfirmDate">테스트 완료일</label>
-                <input id="busiConfirmDate" name="busiConfirmDate" type="date" />
+                <input id="busiConfirmDate" name="busiConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiTestResult">테스트 결과</label>
-                <select id="busiTestResult" name="busiTestResult">
+                <select id="busiTestResult" name="busiTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -435,6 +470,7 @@
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
                   tabindex="17"
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -447,7 +483,7 @@
               <div class="form-group">
                 <label for="execFileInput">수행사 증적</label>
                 <div class="file-box">
-                  <button type="button" class="file-button" id="execFileSelectButton">파일 선택</button>
+                  <button type="button" class="file-button" id="execFileSelectButton" disabled>파일 선택</button>
 
                   <div class="file-preview-container">
                     <input type="file" id="execFileInput" class="hidden" name="execFile" multiple />
@@ -461,7 +497,7 @@
               <div class="form-group">
                 <label for="thirdFileInput">제3자 증적</label>
                 <div class="file-box">
-                  <button type="button" class="file-button" id="thirdFileSelectButton">파일 선택</button>
+                  <button type="button" class="file-button" id="thirdFileSelectButton" disabled>파일 선택</button>
 
                   <div class="file-preview-container">
                     <input type="file" id="thirdFileInput" class="hidden" name="thirdFile" multiple />
