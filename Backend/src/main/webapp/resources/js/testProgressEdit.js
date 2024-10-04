@@ -22,6 +22,9 @@ import {
   renderScreenList,
   selectScreenFromTable,
   AUTHORITY_CODE,
+  setSelectValueByText,
+  convertDate,
+  loadFilesToInput,
 } from "./common.js";
 
 /** @global */
@@ -56,10 +59,10 @@ const thirdFileSelectButton = document.getElementById("thirdFileSelectButton");
 document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
-function init() {
-  renderTMSHeader();
-  initializeEditForm();
-  initializePageByUser();
+async function init() {
+  await renderTMSHeader();
+  await initializeEditForm();
+  await initializePageByUser();
   setupEventListeners();
 }
 
@@ -97,7 +100,7 @@ function setupEventListeners() {
   });
 
   // 테스트 시나리오 수정
-  testProgressEditForm.addEventListener("submit", register);
+  testProgressEditForm.addEventListener("submit", edit);
 
   // 뒤로가기
   goBackButton.addEventListener("click", () => goBack("수정을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
@@ -156,8 +159,17 @@ async function initializePageByUser() {
     "busiMgr",
   ];
 
+  const fileRemoveButtons = document.querySelectorAll(".file-remove-button");
+  fileRemoveButtons.forEach((button) => button.classList.add("hidden")); // 삭제 버튼 가리기
+
   // 관리자, PM, 테스트 관리자인 경우
   if (accessCode.has(authorityCode)) {
+    // 수행사 증적 파일 삭제 버튼 가림 해제
+    const execFileOutputBox = document.getElementById("execFileOutput");
+    const fileRemoveButtons = execFileOutputBox.querySelectorAll(".file-remove-button");
+
+    fileRemoveButtons.forEach((button) => button.classList.remove("hidden"));
+
     // 전체 Select요소 readonly 클래스 해제
     selectIds.forEach((selectId) => {
       document.getElementById(selectId).classList.remove("readonly");
@@ -198,6 +210,11 @@ async function initializePageByUser() {
     const inputIds = ["thirdPartyTestMgr", "thirdPartyTestDate", "thirdPartyConfirmDate", "thirdPartyTestNotes"];
     const selectIds = ["thirdTestResult"];
     const buttonIds = ["thirdFileSelectButton"];
+
+    // 제3자 증적 파일 삭제 버튼 가림 해제
+    const thirdFileOutputBox = document.getElementById("thirdFileOutput");
+    const fileRemoveButtons = thirdFileOutputBox.querySelectorAll(".file-remove-button");
+    fileRemoveButtons.forEach((button) => button.classList.remove("hidden"));
 
     selectIds.forEach((selectId) => {
       document.getElementById(selectId).classList.remove("readonly");
@@ -284,7 +301,96 @@ async function initializeSubCategorySelect(selectedMajorCategoryCode = "") {
   }
 }
 
-async function fillTestProgressEditFormValues(data) {}
+async function fillTestProgressEditFormValues(data) {
+  const {
+    execDefectCount,
+    execSolutionCount,
+    thirdPartyDefectCount,
+    thirdPartySolutionCount,
+    itDefectCount,
+    itSolutionCount,
+    busiDefectCount,
+    busiSolutionCount,
+  } = data.defectCounts;
+
+  setSelectValueByText("majorCategory", data.majorCategory || "");
+
+  // 업무 대분류에 따른 업무 중분류 초기화
+  const selectedMajorCategoryCode = document.getElementById("majorCategory").value;
+
+  await initializeSubCategorySelect(selectedMajorCategoryCode);
+
+  setSelectValueByText("testStage", data.testStage || "");
+  setSelectValueByText("subCategory", data.subCategory || "");
+  setSelectValueByText("execCompanyTestResult", data.execCompanyTestResult || "");
+  setSelectValueByText("thirdTestResult", data.thirdTestResult || "");
+  setSelectValueByText("itTestResult", data.itTestResult || "");
+  setSelectValueByText("busiTestResult", data.busiTestResult || "");
+
+  document.getElementById("minorCategory").value = data.minorCategory || "";
+  document.getElementById("testStatus").value = data.testStatus || "";
+  document.getElementById("testId").value = data.testId || "";
+  document.getElementById("testScenarioName").value = data.testScenarioName || "";
+  document.getElementById("testCaseName").value = data.testCaseName || "";
+  document.getElementById("testStepName").value = data.testStepName || "";
+  document.getElementById("screenId").value = data.screenId || "";
+  document.getElementById("screenName").value = data.screenName || "";
+  document.getElementById("programId").value = data.programId || "";
+  document.getElementById("programName").value = data.programName || "";
+  document.getElementById("screenMenuPath").value = data.screenMenuPath || "";
+  document.getElementById("pl").value = data.pl || "";
+  document.getElementById("developer").value = data.developer || "";
+  document.getElementById("reqId").value = data.reqId || "";
+  document.getElementById("executeProcedure").value = data.executeProcedure || "";
+  document.getElementById("preConditions").value = data.preConditions || "";
+  document.getElementById("inputData").value = data.inputData || "";
+  document.getElementById("expectedResult").value = data.expectedResult || "";
+  document.getElementById("actualResult").value = data.actualResult || "";
+
+  document.getElementById("execCompanyMgr").value = data.execCompanyMgr || "";
+  document.getElementById("execCompanyTestDate").value = convertDate(data.execCompanyTestDate);
+  document.getElementById("execCompanyConfirmDate").value = convertDate(data.execCompanyConfirmDate);
+  document.getElementById("execCompanyTestNotes").value = data.execCompanyTestNotes || "";
+  document.getElementById("execCompanyDefect").textContent = `결함${execDefectCount} / 조치${execSolutionCount}`;
+
+  document.getElementById("thirdPartyTestMgr").value = data.thirdPartyTestMgr || "";
+  document.getElementById("thirdPartyTestDate").value = convertDate(data.thirdPartyTestDate);
+  document.getElementById("thirdPartyConfirmDate").value = convertDate(data.thirdPartyConfirmDate);
+  document.getElementById("thirdPartyTestNotes").value = data.thirdPartyTestNotes || "";
+  document.getElementById(
+    "thirdPartyDefect"
+  ).textContent = `결함${thirdPartyDefectCount} / 조치${thirdPartySolutionCount}`;
+
+  document.getElementById("itMgr").value = data.itMgr || "";
+  document.getElementById("itTestDate").value = convertDate(data.itTestDate);
+  document.getElementById("itConfirmDate").value = convertDate(data.itConfirmDate);
+  document.getElementById("itTestNotes").value = data.itTestNotes || "";
+  document.getElementById("itDefect").textContent = `결함${itDefectCount} / 조치${itSolutionCount}`;
+
+  document.getElementById("busiMgr").value = data.busiMgr || "";
+  document.getElementById("busiTestDate").value = convertDate(data.busiTestDate);
+  document.getElementById("busiConfirmDate").value = convertDate(data.busiConfirmDate);
+  document.getElementById("busiTestNotes").value = data.busiTestNotes || "";
+  document.getElementById("busiDefect").textContent = `결함${busiDefectCount} / 조치${busiSolutionCount}`;
+
+  // 첨부파일 채우기
+  const execFileInputId = "execFileInput";
+  const execFileOutputId = "execFileOutput";
+  const thirdFileInputId = "thirdFileInput";
+  const thirdFileOutputId = "thirdFileOutput";
+
+  const execFileIds = data.execAttachments.map((file) => file.seq);
+  const thirdFileIds = data.thirdAttachments.map((file) => file.seq);
+
+  await loadFilesToInput(execFileInputId, execFileIds); // 파일 input에 가져온 파일들 채우기
+  await loadFilesToInput(thirdFileInputId, thirdFileIds); // 파일 input에 가져온 파일들 채우기
+
+  addFiles(execFileInputId); // 전역변수에 가져온 첨부파일 저장
+  addFiles(thirdFileInputId); // 전역변수에 가져온 첨부파일 저장
+
+  updateFilePreview(execFileInputId, execFileOutputId); // 파일 목록 렌더링
+  updateFilePreview(thirdFileInputId, thirdFileOutputId); // 파일 목록 렌더링
+}
 
 // 테스트 시나리오 상세 조회
 async function getTestProgressDetail() {
@@ -306,7 +412,7 @@ async function getTestProgressDetail() {
 }
 
 // 테스트 시나리오 수정
-async function register(event) {
+async function edit(event) {
   event.preventDefault(); // 폼 제출 기본 동작 방지
 
   const confirmed = confirm("테스트 시나리오를 수정하시겠습니까?");
@@ -323,16 +429,20 @@ async function register(event) {
   const thirdFiles = formData.getAll("thirdFile"); // 다중 파일을 배열로 가져오기
 
   // 파일을 제외한 나머지 데이터 추출
-  const defectData = {};
+  const testProgressData = {};
+  const testProgressId = new URLSearchParams(window.location.search).get("seq");
+
+  // seq 추가
+  testProgressData["seq"] = testProgressId;
 
   formData.forEach((value, key) => {
     if (key !== "execFile" && key !== "thirdFile") {
-      defectData[key] = value;
+      testProgressData[key] = value;
     }
   });
 
-  // notice 데이터 추가 (JSON 형태로 묶기)
-  newFormData.append("testProgress", new Blob([JSON.stringify(defectData)], { type: "application/json" }));
+  // testProgress 데이터 추가 (JSON 형태로 묶기)
+  newFormData.append("testProgress", new Blob([JSON.stringify(testProgressData)], { type: "application/json" }));
 
   // 파일 추가
   execFiles.forEach((file) => {
