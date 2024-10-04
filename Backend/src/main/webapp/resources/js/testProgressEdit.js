@@ -130,6 +130,32 @@ function setupEventListeners() {
   programTableBody.addEventListener("click", selectProgramFromTable);
 
   setupModalEventListeners(["screenSearchModal", "programSearchModal"]);
+
+  // 결함 등록 페이지로 이동
+  goDefectRegisterPageButton.addEventListener("click", async () => {
+    const confirmed = confirm("결함등록 페이지로 이동하시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
+
+    if (!confirmed) return;
+
+    // 업무 대분류, 업무 중분류, 프로그램ID, 프로그램명, 프로그램구분, 개발자, PL명, 테스트 단계, 테스트ID
+    const { testProgressDetail } = await getTestProgressDetail();
+    const { majorCategory, subCategory, programId, programName, programType, developer, pl, testStage, testId } =
+      testProgressDetail;
+
+    const query = new URLSearchParams({
+      majorCategory,
+      subCategory,
+      programId,
+      programName,
+      programType,
+      developer,
+      pl,
+      testStage,
+      testId,
+    }).toString();
+
+    window.location.href = `/tms/defectReg?${query}`;
+  });
 }
 
 /** 사용자 정보에 따른 권한 설정 */
