@@ -127,7 +127,8 @@
                 <input id="programName" name="programName" required placeholder="프로그램명을 입력해 주세요." />
               </div>
 
-              <div class="form-group">
+              <!-- 나중에 사용하는 경우 class="hidden" 제거 -->
+              <div class="form-group hidden">
                 <label for="className">클래스명</label>
                 <input id="className" name="className" placeholder="클래스명을 입력해 주세요." />
               </div>
@@ -140,6 +141,11 @@
               <div class="form-group">
                 <label for="screenName">화면명</label>
                 <input id="screenName" name="screenName" placeholder="화면명을 입력해 주세요." />
+              </div>
+
+              <div class="form-group">
+                <label for="screenMenuPath">화면경로</label>
+                <input id="screenMenuPath" name="screenMenuPath" placeholder="화면경로를 입력해 주세요." />
               </div>
             </div>
 

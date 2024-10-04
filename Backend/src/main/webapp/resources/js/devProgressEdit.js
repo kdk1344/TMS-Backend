@@ -189,6 +189,7 @@ async function fillFormValues(data) {
   document.getElementById("className").value = data.className || "";
   document.getElementById("screenId").value = data.screenId || "";
   document.getElementById("screenName").value = data.screenName || "";
+  document.getElementById("screenMenuPath").value = data.screenMenuPath || "";
   document.getElementById("developer").value = data.developer || "";
   document.getElementById("reqId").value = data.reqId || "";
   document.getElementById("deletionHandler").value = data.deletionHandler || "";
