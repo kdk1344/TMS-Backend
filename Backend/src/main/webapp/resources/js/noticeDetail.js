@@ -11,6 +11,8 @@ import {
   downloadFile,
   loadFilesToInput,
   addFiles,
+  checkSession,
+  AUTHORITY_CODE,
 } from "./common.js";
 
 // DOM 요소들
@@ -37,6 +39,7 @@ function init() {
   renderTMSHeader();
   setupEventListeners();
   loadInitialNoticeDetail();
+  initializePageByUser();
 }
 
 // 이벤트 핸들러 설정
@@ -84,6 +87,17 @@ function setupEventListeners() {
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
   setupModalEventListeners(Object.values(MODAL_ID));
+}
+
+async function initializePageByUser() {
+  const { authorityCode } = await checkSession();
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
+  const buttonIds = ["openNoticeEditModalButton", "deleteNoticeButton"];
+  const buttons = buttonIds.map((buttonId) => document.getElementById(buttonId));
+
+  if (accessCode.has(authorityCode)) return;
+
+  buttons.forEach((button) => button.classList.add("hidden")); // 수정, 삭제 버튼 가리기
 }
 
 // 공지사항 데이터 로드

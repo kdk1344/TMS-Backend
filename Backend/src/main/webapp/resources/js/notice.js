@@ -11,6 +11,8 @@ import {
   hideSpinner,
   initializeDateFields,
   setupPagination,
+  checkSession,
+  AUTHORITY_CODE,
 } from "./common.js";
 
 let currentPage = 1;
@@ -44,6 +46,7 @@ function init() {
   setupEventListeners();
   loadInitialNotices();
   initializeDateFields("startPostDateForFilter", "endPostDateForFilter");
+  initializePageByUser();
 }
 
 // 이벤트 핸들러 설정
@@ -123,6 +126,17 @@ function setupEventListeners() {
 // 초기 공지사항 목록 로드
 function loadInitialNotices() {
   getNotices();
+}
+
+async function initializePageByUser() {
+  const { authorityCode } = await checkSession();
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
+  const buttonIds = ["openNoticeRegisterModalButton", "deleteNoticeButton"];
+  const buttons = buttonIds.map((buttonId) => document.getElementById(buttonId));
+
+  if (accessCode.has(authorityCode)) return;
+
+  buttons.forEach((button) => button.classList.add("hidden")); // 등록, 삭제 버튼 가리기
 }
 
 async function getNotices({ page = 1, startDate = "", endDate = "", title = "", content = "" } = {}) {
