@@ -328,6 +328,10 @@ async function initializeEditForm() {
 
   await initializeSubCategorySelect(majorCategoryCodes[0]?.code);
   await fillTestProgressEditFormValues({ ...testProgressDetail, execAttachments, thirdAttachments, defectCounts });
+
+  if (defectCounts.totalDefectCount === 0) {
+    document.getElementById("openEditableDefectSearchModalButton").classList.add("hidden"); // 수정할 결함이 없는 경우 결함수정 버튼 숨김
+  }
 }
 
 async function initializeSubCategorySelect(selectedMajorCategoryCode = "") {

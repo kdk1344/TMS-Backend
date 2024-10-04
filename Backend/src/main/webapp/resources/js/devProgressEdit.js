@@ -162,6 +162,10 @@ async function initializeEditForm() {
 
   // 상세 정보 초기화
   fillFormValues({ ...devProgressDetail, ...defectCounts, attachments });
+
+  if (defectCounts.totalDefectCount === 0) {
+    document.getElementById("openEditableDefectSearchModalButton").classList.add("hidden"); // 수정할 결함이 없는 경우 결함수정 버튼 숨김
+  }
 }
 
 async function fillFormValues(data) {
