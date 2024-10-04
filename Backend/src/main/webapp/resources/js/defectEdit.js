@@ -21,6 +21,7 @@ import {
   setupModalEventListeners,
   getReferer,
   REFERER,
+  setTestIdIfUnitTest,
   setSelectValueByText,
   convertDate,
   renderProgramList,
@@ -43,6 +44,7 @@ const SELECT_ID = {
 // DOM 요소들
 const defectEditForm = document.getElementById("defectEditForm");
 const majorCategorySelect = document.getElementById("majorCategory");
+const testStageSelect = document.getElementById("testStage");
 const defectRegistrarInfo = document.getElementById("defectRegistrarInfo");
 const goBackButton = document.getElementById("goBackButton");
 
@@ -76,6 +78,13 @@ function setupEventListeners() {
   // 업무 대분류 이벤트 핸들러
   if (majorCategorySelect) {
     majorCategorySelect.addEventListener("change", () => initializeSubCategorySelect(majorCategorySelect.value));
+  }
+
+  // 테스트 단계 선택 이벤트 핸들러
+  if (testStageSelect) {
+    testStageSelect.addEventListener("change", (e) => {
+      setTestIdIfUnitTest(e.target.options[e.target.selectedIndex].textContent);
+    });
   }
 
   // 파일 선택 버튼 클릭 시 파일 입력 필드 클릭

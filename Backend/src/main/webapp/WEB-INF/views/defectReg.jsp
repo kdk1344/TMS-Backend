@@ -139,7 +139,7 @@
 
               <div class="form-group">
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
-                <input id="testId" name="testId" required placeholder="테스트ID 입력" />
+                <input id="testId" name="testId" required placeholder="UT-프로그램ID" />
               </div>
             </div>
 

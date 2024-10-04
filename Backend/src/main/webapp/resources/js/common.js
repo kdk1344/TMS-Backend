@@ -821,6 +821,14 @@ export function selectProgramFromTable(event) {
     if (execCompanyMgrInput) execCompanyMgrInput.value = developer;
     if (itMgrInput) itMgrInput.value = itMgr === "null" ? "" : itMgr;
     if (busiMgrInput) busiMgrInput.value = busiMgr === "null" ? "" : busiMgr;
+
+    // 테스트 단계가 단위테스트인 경우 테스트ID: UT-프로그램ID로 세팅
+    const testStageSelect = document.getElementById("testStage");
+    const testStage = testStageSelect.options[testStageSelect.selectedIndex].textContent;
+
+    if (testStage.includes("단위")) {
+      document.getElementById("testId").value = `UT-${programId}`;
+    }
   }
 
   closeModal("programSearchModal");
@@ -982,6 +990,20 @@ export async function renderEditableDefectList(
         }
       });
     });
+  }
+}
+
+/** 테스트단계가 단위테스트인 경우 테스트ID 설정하는 함수 */
+export function setTestIdIfUnitTest(testStage = "") {
+  const testIdInput = document.getElementById("testId");
+
+  if (testStage.includes("단위")) {
+    const programId = document.getElementById("programId")?.value ?? "";
+
+    testIdInput.value = `UT-${programId}`;
+    testIdInput?.setAttribute("readonly", true);
+  } else {
+    testIdInput?.removeAttribute("readonly");
   }
 }
 
