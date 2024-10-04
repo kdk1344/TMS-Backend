@@ -132,7 +132,7 @@ public class AdminController {
     	Map<String, Object> response = new HashMap<>();
         try {
         	//사용자 수정
-            boolean success = adminService.updateUser(user);
+            boolean success = adminService.updateUser(user, request);
             if (success) {
                 response.put("status", "success");
                 response.put("message", "사용자 수정에 성공했습니다.");

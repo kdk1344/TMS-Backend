@@ -4,6 +4,9 @@ package com.tms.backend.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,11 +54,28 @@ public class AdminService {
         adminmapper.insertUser(user);
     }
     
+    // 사용자 데이터 수정 
     @Transactional
-    public boolean updateUser(User user) {
+    public boolean updateUser(User user, HttpServletRequest request) {
+    	//비밀번호 암호화
     	String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        return adminmapper.updateUser(user) > 0;
+        
+        //DB에서 유저 정보 업데이트
+        boolean isUpdated = adminmapper.updateUser(user) > 0;
+        
+        //세션 정보가 존재하고, 해당 유저가 현재 세션에 로그인 중이면 세션 정보 업데이트
+        HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+        
+        if (session != null && user.getuserID().equals(session.getAttribute("id"))) {
+            // 세션에 저장된 사용자 이름과 다른 정보도 업데이트
+            session.setAttribute("name", user.getuserName());
+            // 세션에 저장된 권한 코드와 권한 코드명 업데이트
+            session.setAttribute("authorityCode", user.getauthorityCode());
+            session.setAttribute("authorityName", user.getauthorityName());
+        }
+        
+        return isUpdated;
     }
     
     public boolean deleteUser(String[] ids) {
