@@ -190,8 +190,9 @@
 		SELECT COUNT(*)
 		FROM defect a
 	    INNER JOIN dev_progress b
-	    ON a.TEST_ID = b.PROGRAM_ID
-	    WHERE a.TEST_ID = #{programId}
+	    ON a.PROGRAM_ID = b.PROGRAM_ID
+	    WHERE a.TEST_ID = CONCAT('UT-', #{programId})
+	    AND a.TEST_STAGE = "단위테스트"
 	</select>
 	
 	<!-- 프로그램 아이디에 따른 결함 숫자 세기 -->

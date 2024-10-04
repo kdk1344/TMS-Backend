@@ -291,6 +291,7 @@ public class NoticeController {
                 .body(resource);
     }
     
+    //공지사항 삭제
     @DeleteMapping(value = "api/ntdelete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> deleteNotice(@RequestBody List<Integer> seqs,
             HttpServletRequest request) {

@@ -153,13 +153,17 @@
 		    // 클래스 이름으로 모든 요소를 가져온다
 		    var elements = document.getElementsByClassName(className);
 		    
-		    // 각 요소마다 텍스트를 자르고 "..."을 추가
+			 // 각 요소마다 텍스트를 자르고 "..."을 추가
 		    Array.prototype.forEach.call(elements, function(element) {
-    		  var text = element.textContent.trim(); // 공백 제거
-		      
-		      if (text.length > maxLength) {
-		        element.textContent = text.substring(0, maxLength) + "...";
-		      }
+		        var anchor = element.querySelector('a'); // 링크 태그를 선택
+		        if (anchor) {
+		            var text = anchor.textContent.trim(); // 공백 제거
+		            
+		            if (text.length > maxLength) {
+		                // 링크 태그의 텍스트만 자르고, 링크 구조는 유지
+		                anchor.textContent = text.substring(0, maxLength) + "...";
+		            }
+		        }
 		    });
 		  }
 	
