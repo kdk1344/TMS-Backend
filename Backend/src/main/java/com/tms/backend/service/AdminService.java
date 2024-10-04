@@ -39,20 +39,13 @@ public class AdminService {
     
     @Autowired
     private FileAttachmentMapper fileAttachmentMapper;
-
+    
+    //회원가입 기능
     public void join(User user) {
-    	log.info(user);
-    	String encodedPassword = passwordEncoder.encode(user.getPassword());
-    	log.info(encodedPassword);
+    	String encodedPassword = passwordEncoder.encode(user.getPassword()); // 암호화 비밀번호
     	user.setPassword(encodedPassword);
-		adminmapper.insert(user);
+		adminmapper.insert(user); // 암호화 비밀번호 DB에 입력
 	}
-    
-    
-    
-    public void saveUser(User user) {
-        adminmapper.insertUser(user);
-    }
     
     // 사용자 데이터 수정 
     @Transactional
@@ -67,20 +60,21 @@ public class AdminService {
         //세션 정보가 존재하고, 해당 유저가 현재 세션에 로그인 중이면 세션 정보 업데이트
         HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
         
-        if (session != null && user.getuserID().equals(session.getAttribute("id"))) {
+        if (session != null && user.getUserID().equals(session.getAttribute("id"))) {
             // 세션에 저장된 사용자 이름과 다른 정보도 업데이트
-            session.setAttribute("name", user.getuserName());
+            session.setAttribute("name", user.getUserName());
             // 세션에 저장된 권한 코드와 권한 코드명 업데이트
-            session.setAttribute("authorityCode", user.getauthorityCode());
-            session.setAttribute("authorityName", user.getauthorityName());
+            session.setAttribute("authorityCode", user.getAuthorityCode());
+            session.setAttribute("authorityName", user.getAuthorityName());
         }
         
         return isUpdated;
     }
     
+    // 사용자 데이터 삭제
     public boolean deleteUser(String[] ids) {
     	try {
-            adminmapper.deleteUser(ids);
+            adminmapper.deleteUser(ids); // 삭제 성공시
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,97 +82,103 @@ public class AdminService {
         }
     }
     
+    // 사용자 데이터 총 숫자
     public int getTotal(Criteria criteria) {
 		return adminmapper.countUsers(criteria);
 	}
     
+    // 사용자 데이터 전부 불러오기
     public List<User> getList(Criteria criteria) {
-    	log.info(criteria);
 		return adminmapper.findAll(criteria);
 	}
     
     // 여러 사용자 정보를 데이터베이스에 저장
     public void saveAll(List<User> users) {
         for (User user : users) {
-        	log.info(user);
         	String encodedPassword = passwordEncoder.encode(user.getPassword());
-        	log.info(encodedPassword);
         	user.setPassword(encodedPassword);
-            adminmapper.insertUser(user);
+            adminmapper.insert(user);
         }
     }
     
+    // 권한 코드로 사용자 정보 불러오기
     public List<User> findAuthorityCode(int authorityCode) {
     	return adminmapper.findAuthorityCode(authorityCode);
     }
     
+    // 사용자 정보 불러오기
     public List<User> getUserList() {
     	return adminmapper.getUserList();
     }
     
-    //// 공지사항 서비스
-
+    // 공지사항 서비스
+    
+    //공지사항 정보 불러오기
     public List<Notice> searchNotices(String startDate, String endDate, String title, String content, int page, int size) {
         int offset = (page - 1) * size;
         List<Notice> notices = adminmapper.searchNotices(startDate, endDate, title, content, offset, size);
         return notices;
     }
-
+    
+    //공지사항 정보 총 숫자
     public int getTotalNoticesCount(String startDate, String endDate, String title, String content) {
         return adminmapper.getTotalNoticesCount(startDate, endDate, title, content);
     }
     
+    //최근 공지사항 데이터 불러오기
     public Notice getLatestNotice() {
         return adminmapper.getLatestNotice();
     }
     
+    //공지사항 등록
     public void createNotice(Notice notice) {
-    	log.info(notice);
         adminmapper.insertNotice(notice); // 공지사항 저장
         }
     
+    // seq에 해당하는 공지사항 데이터 가져오기
     public Notice getNoticeById(Integer seq) {
         return adminmapper.getNoticeById(seq);
     }
     
+    // 공지사항 수정
     public void updateNotice(Notice notice) {
     	adminmapper.updateNotice(notice);
     }
 
+    // 첨부파일 단체 저장
     public void saveAttachments(List<FileAttachment> attachments) {
         for (FileAttachment attachment : attachments) {
         	adminmapper.insertAttachment(attachment);
         }
     }
     
+    // 첨부파일 삭제
     public void deleteAttachmentsByNoticeId(Integer seq, int type) {
-    	log.info("삭제 진행중");
     	adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
     
-    public List<FileAttachment> getAttachments(Integer seq, int type) {
+    // type에 따른 첨부파일 저장
+    public List<FileAttachment> getAttachments(Integer seq, int type) { // type에 따라서 상위 게시판에 맞는 첨부파일이 저장됨
         return adminmapper.getAttachments(seq, type);
     }
     
+    // 입력한 seq에 맞는 첨부파일 호출
     public FileAttachment getAttachmentById(Integer seq) {
-        return adminmapper.getAttachmentById(seq);
+        return adminmapper.getAttachmentById(seq); // DB에서는 identifier로 인식되는 seq
     }
     
-    // 공지 삭제
+    // 공지사항 삭제
     public void deleteNotice(Integer seq, int type) {
-
         // 공지사항 삭제
         adminmapper.deleteNotice(seq);
-        adminmapper.deleteAttachmentsByNoticeId(seq, type);
+        adminmapper.deleteAttachmentsByNoticeId(seq, type); // 공지사항의 첨부파일도 같이 삭제
     }
-    
     
     //공통 코드 Service
     
     //공통 코드 조회
     public List<CommonCode> searchCommonCodes(String parentCode, String code, String codeName, int page, int size) {
         int offset = (page - 1) * size;
-        log.info(offset);
         return adminmapper.searchCommonCodes(parentCode, code, codeName, offset, size);
     }
     
@@ -200,7 +200,6 @@ public class AdminService {
     // 공통코드 단체 삽입
     public void saveAllCommonCodes(List<CommonCode> commonCodes) {
         for (CommonCode commonCode : commonCodes) {
-        	log.info("확인중"+commonCode);
             adminmapper.insertCommonCode(commonCode);
         }
     }
@@ -242,7 +241,6 @@ public class AdminService {
     
     //원하는 공통코드 이름 조회
     public String getStageCCodes(String parentCode, String code) {
-    	log.info("parentCode: " + parentCode + ", code: " + code);
     	return adminmapper.getStageCCodes(parentCode, code);
     }
     
@@ -250,9 +248,6 @@ public class AdminService {
     public boolean countdupliCCode(CommonCode commonCode) {
     	return adminmapper.countdupliCCode(commonCode) >0;
     }
-        
-    
-    
     
     // 분류코드 Service
     
@@ -261,7 +256,7 @@ public class AdminService {
         adminmapper.insertCategoryCode(categoryCode);
     }
     
- // 상위 대분류 코드 가져오기
+    // 상위 대분류 코드 가져오기
     public String getParentCode(String parentCode) {
         return adminmapper.getParentCode(parentCode);
     }

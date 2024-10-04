@@ -33,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.tms.backend.exception.ForbiddenException;
-import com.tms.backend.exception.UnauthorizedException;
 import com.tms.backend.service.AdminService;
 import com.tms.backend.service.FileService;
 import com.tms.backend.service.UserService;
@@ -206,8 +204,8 @@ public class AdminController {
         Criteria criteria = new Criteria();
         criteria.setPage(page);
         criteria.setPerPageNum(15);
-        criteria.setuserName(userName);
-        criteria.setauthorityName(authorityName);
+        criteria.setUserName(userName);
+        criteria.setAuthorityName(authorityName);
         
         //사용자 목록 가져오기
         List<User> userList = adminService.getList(criteria);
@@ -283,8 +281,8 @@ public class AdminController {
         
         // 사용자 정보를 위한 파라미터 입력
         Criteria criteria = new Criteria();
-        criteria.setuserName(userName);
-        criteria.setauthorityName(authorityName);
+        criteria.setUserName(userName);
+        criteria.setAuthorityName(authorityName);
         
         //필터링된 사용자 정보 가져오기
         List<User> filteredUserList = userService.getFilteredUsers(criteria);
@@ -322,15 +320,15 @@ public class AdminController {
         for (User user : userList) {
             Row row = sheet.createRow(rowNum++);
             //사용자 정보 액셀에 입력
-            row.createCell(0).setCellValue(user.getuserID());
-            row.createCell(1).setCellValue(user.getuserName());
+            row.createCell(0).setCellValue(user.getUserID());
+            row.createCell(1).setCellValue(user.getUserName());
             row.createCell(2).setCellValue(user.getPassword());
             if (check != "") {
-            	row.createCell(3).setCellValue(user.getauthorityName());
+            	row.createCell(3).setCellValue(user.getAuthorityName());
             }
             else {
-	            row.createCell(3).setCellValue(user.getauthorityCode());
-	            row.createCell(4).setCellValue(user.getauthorityName());
+	            row.createCell(3).setCellValue(user.getAuthorityCode());
+	            row.createCell(4).setCellValue(user.getAuthorityName());
             }
         }
 
@@ -392,15 +390,15 @@ public class AdminController {
                     User user = new User();
                     try {
                     	//업로드한 사용자 정보 입력
-	                    user.setuserID(row.getCell(0).getStringCellValue());
-	                    user.setuserName(row.getCell(1).getStringCellValue());
+	                    user.setUserID(row.getCell(0).getStringCellValue());
+	                    user.setUserName(row.getCell(1).getStringCellValue());
 	                    if (row.getCell(2).getCellType() == CellType.NUMERIC ) {
 	                    	user.setPassword(String.valueOf((int) row.getCell(2).getNumericCellValue()));
 	                    }
 	                    else{
 	                    	user.setPassword(row.getCell(2).getStringCellValue());
 	                    }
-                        user.setauthorityName(row.getCell(3).getStringCellValue());
+                        user.setAuthorityName(row.getCell(3).getStringCellValue());
 	                    adminService.join(user);
                     } catch (Exception e) {
                         // 형식 오류 또는 예상치 못한 컬럼 데이터 처리

@@ -49,48 +49,49 @@ public class FileService {
 	
 	@Autowired
     private AdminService adminService;
-
+	
+	// 첨부파일 관련 및 공통되게 사용되는 코드를 정리하는 Service
+	
+	//첨부파일 업로드
     public void handleFileUpload(MultipartFile[] files, String boardType, int identifier) {
         List<FileAttachment> attachments = new ArrayList<>();
         log.info(boardType + "첨부 체크" + identifier);
         // boardType에 따라 boardTypeNumber 설정
         Integer boardTypeNumber;
         switch (boardType) {
-	        case "devProgress":
+	        case "devProgress": // 프로그램 개발 진행 현황 첨부파일
 	            boardTypeNumber = 1;
 	            break;
-	        case "testProgress":
+	        case "testProgress": //테스트 시나리오 첨부파일
 	            boardTypeNumber = 21;
 	            break;
-	        case "testProgressThird":
+	        case "testProgressThird": //테스트 시나리오 제3자 첨부파일
 	            boardTypeNumber = 22;
 	            break;
-	        case "defect":
+	        case "defect": // 결함 첨부파일
 	            boardTypeNumber = 31;
 	            break;
-	        case "defectFix":
+	        case "defectFix": // 결함 조치 결과 첨부파일
 	            boardTypeNumber = 32;
 	            break;
-	        case "nt":
+	        case "nt": // 공지사항 첨부파일
 	            boardTypeNumber = 4;
 	            break;
             default:
-                boardTypeNumber = 0; // 기본값 (알 수 없는 boardType)
+                boardTypeNumber = 0; // 기본값 (알 수 없는 boardType), 오류 대비용
                 break;
         }
         
         for (MultipartFile file : files) {
 	        if (file != null && !file.isEmpty()) {
 	            try {
-	            	String fileType = getFileType(file.getContentType());
-	            	log.info(fileType);
-	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename());
-	                log.info(storageLocation);
-	                
+	            	String fileType = getFileType(file.getContentType()); // 파일 타입
+	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename()); // 파일 저장 장소
 	
 	                File destinationFile = new File(storageLocation);
 	                file.transferTo(destinationFile);
-	
+	                
+	                // 첨부파일 테이블 세팅
 	                FileAttachment attachment = new FileAttachment();
 	                attachment.setIdentifier(identifier);
 	                attachment.setType(boardTypeNumber);
@@ -98,19 +99,16 @@ public class FileService {
 	                attachment.setFileName(file.getOriginalFilename());
 	
 	                attachments.add(attachment);
-	
-	                log.info("File attached: " + file.getOriginalFilename() + " stored at " + storageLocation);
 	            } catch (IOException e) {
 	                log.error("File upload failed", e);
 	            }
 	        } else {
-	            log.info("No file attached");
 	        }
         }
-
-        adminService.saveAttachments(attachments);
+        adminService.saveAttachments(attachments); // 첨부파일 저장
     }
     
+    // 첨부파일 저장 장소 정리
     public String getStorageLocation(String fileType, String fileName) {
         String baseDir = "C:\\Users\\User\\Desktop\\TMS_DEV\\";
         String storageLocation;
@@ -139,7 +137,7 @@ public class FileService {
     return storageLocation + fileName;
     }
     
-    
+    // 첨부파일 저장 형태
     private String getFileType(String contentType) {
         if (contentType != null && contentType.startsWith("image/")) {
             return "IMAGE";
@@ -150,6 +148,7 @@ public class FileService {
         }
     }
     
+    // 첨부파일 인코딩
     public String encodeFileName(String fileName) throws UnsupportedEncodingException {
         return URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
     }

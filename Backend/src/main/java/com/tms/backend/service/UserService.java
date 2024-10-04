@@ -23,23 +23,26 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
-
+    
+    // 로그인 확인을 위한 아이디, 비밀번호 매칭
     public User authenticateUser(String userID, String Password) {
         User user = userMapper.getUserByUserID(userID);
         if(user == null) {
         	return null;
         }
-        if(passwordEncoder.matches(Password, user.getPassword())) {
+        if(passwordEncoder.matches(Password, user.getPassword())) { // 비밀번호 암호화 시킨 것과 매칭
         	return user;
         } else {
         	return null;
         }
     }
     
+    // 모든 사용자 데이터 추출
     public List<User> getAllUser() {
         return userMapper.UfindAll();
     }
     
+    // 모든 사용자 데이터 추출
     public List<User> getAllUsers() {
         return userMapper.findAll();
     }

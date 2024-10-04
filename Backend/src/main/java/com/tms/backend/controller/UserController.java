@@ -42,28 +42,28 @@ public class UserController {
 	
 	@Autowired
 	private AdminService adminService;
-	// 12345
-
+	
+	// 로그인 페이지
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
     
+    // 메인 화면 진입 페이지
     @GetMapping("/dashboard")
     public String getDashboard(@RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "10") int size //페이지 당 출력되는 공지사항 숫자
     		,Model model,
     		HttpSession session) {
-    	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size);
-    	log.info(noticeList);
-    	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
-        int totalPages = (int) Math.ceil((double) totalNotices / size);
+    	List<Notice> noticeList = adminService.searchNotices(startDate, endDate, title, content, page, size); // 화면에 출력되는 공지사항 리스트
+    	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content); // 총 공지사항 숫자
+        int totalPages = (int) Math.ceil((double) totalNotices / size); // 총 공지사항 페이지 숫자
         
-     // 페이지네이션 그룹 설정 (한 그룹에 10페이지씩)
+        // 페이지네이션 그룹 설정 (한 그룹에 10페이지씩)
         int pageGroupSize = 10;
         int startPage = (page - 1) / pageGroupSize * pageGroupSize + 1;
         int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
@@ -76,8 +76,8 @@ public class UserController {
         int prevPageGroupStart = startPage - pageGroupSize;
         int nextPageGroupStart = startPage + pageGroupSize;
         
-        Notice latestNotice = adminService.getLatestNotice();
-        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4);
+        Notice latestNotice = adminService.getLatestNotice(); // 윗 화면에 출력되는 최근 공지사항 내용
+        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4); // 최근 공지사항 첨부파일
         latestNotice.setAttachments(attachments);
 
         // 모델에 데이터 추가
@@ -92,55 +92,42 @@ public class UserController {
         model.addAttribute("hasNextPageGroup", hasNextPageGroup);
         model.addAttribute("prevPageGroupStart", prevPageGroupStart);
         model.addAttribute("nextPageGroupStart", nextPageGroupStart);
-        
-        log.info("Session ID after login: " + session.getId());
-        
+                
         return  "dashboard";
     }
     
-    // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
-    @GetMapping(value = "api/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Map<String, Object> getNotices(@RequestParam(value = "startDate", required = false) String startDate,
-                                          @RequestParam(value = "endDate", required = false) String endDate,
-                                          @RequestParam(value = "title", required = false) String title,
-                                          @RequestParam(value = "content", required = false) String content,
-                                          @RequestParam(value = "page", defaultValue = "1") int page,
-                                          @RequestParam(value = "size", defaultValue = "10") int size) {
-    	
-        // 공지사항 조회
-        List<Notice> notices = adminService.searchNotices(startDate, endDate, title, content, page, size);
-        int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
-        int totalPages = (int) Math.ceil((double) totalNotices / size);
-        
-        //최근 공지글
-        Notice latestNotice = adminService.getLatestNotice();
-        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4);
-        latestNotice.setAttachments(attachments);
-
-        // 응답 생성
-        Map<String, Object> response = new HashMap<>();
-        response.put("notices", notices);
-        response.put("currentPage", page);
-        response.put("totalPages", totalPages);
-        response.put("totalNotices", totalNotices);
-        response.put("latestNotice", latestNotice);
-
-        return response;
-    }
-    
-//    @GetMapping("/logout")
-//    public String logout(HttpServletRequest request) {
-//        // 세션 무효화
-//        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
-//        if (session != null) {
-//            session.invalidate(); // 세션 무효화
-//        }
+//    // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
+//    @GetMapping(value = "api/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public Map<String, Object> getNotices(@RequestParam(value = "startDate", required = false) String startDate,
+//                                          @RequestParam(value = "endDate", required = false) String endDate,
+//                                          @RequestParam(value = "title", required = false) String title,
+//                                          @RequestParam(value = "content", required = false) String content,
+//                                          @RequestParam(value = "page", defaultValue = "1") int page,
+//                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+//    	
+//        // 공지사항 조회
+//        List<Notice> notices = adminService.searchNotices(startDate, endDate, title, content, page, size);
+//        int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
+//        int totalPages = (int) Math.ceil((double) totalNotices / size);
+//        
+//        //최근 공지글
+//        Notice latestNotice = adminService.getLatestNotice();
+//        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4);
+//        latestNotice.setAttachments(attachments);
 //
-//        // 로그아웃 후 로그인 페이지로 리다이렉트
-//        return "redirect:/tms/login";
+//        // 응답 생성
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("notices", notices);
+//        response.put("currentPage", page);
+//        response.put("totalPages", totalPages);
+//        response.put("totalNotices", totalNotices);
+//        response.put("latestNotice", latestNotice);
+//
+//        return response;
 //    }
     
+    // 로그아웃 기능
     @GetMapping(value = "api/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> APIlogout(HttpServletRequest request) {
@@ -160,6 +147,7 @@ public class UserController {
         return ResponseEntity.ok(response); // JSON 형식의 응답 반환
     }
     
+    //유저명, 유저아이디를 담을 세션 체크
     @GetMapping(value = "api/checkSession", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> checkSession(HttpServletRequest request) {
@@ -185,29 +173,8 @@ public class UserController {
         
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping("/login")
-	public String login(@RequestParam(value="userID", required=false) String userID, HttpServletRequest req, @RequestParam("password") String password) throws Exception{
-		HttpSession session = req.getSession();
-		log.info(userID + " "+password);
-		User check = userService.authenticateUser(userID, password);
-		if(check != null) {
-				log.info("로그인 성공");
-		        // 사용자 ID 세션에 저장
-		        session.setAttribute("id", check.getuserID());
-		        // 사용자 이름 세션에 저장
-		        session.setAttribute("name", check.getuserName());
-		        // 사용자 권한 코드 세션에 저장
-		        session.setAttribute("authorityCode", check.getauthorityCode());
-		        // 대시보드로 리다이렉트
-				return "redirect:/tms/dashboard";}
-		else {
-				session.setAttribute("error", "Invalid userID or password.");
-				log.info("failcheck2!!");
-				return "redirect:/tms/login";
-			}
-		}
     
+    // 로그인 기능
     @PostMapping(value = "api/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest,
@@ -217,26 +184,18 @@ public class UserController {
     	Map<String, Object> response = new HashMap<>();
         HttpSession session = req.getSession();
         
+        // 로그인 정보 받아오기
         String userID = loginRequest.get("userID");
         String password = loginRequest.get("password");
-
-        log.info("로그인 시도: " + userID + " " + password);
-
+        
+        //로그인 확인
         User check = userService.authenticateUser(userID, password);
         
-        if (check != null) {
-            log.info("로그인 성공");
-            
+        if (check != null) {            
             // 사용자 ID와 이름, 권한 코드를 세션에 저장
             session.setAttribute("id", loginRequest.get("userID"));
-	        session.setAttribute("name", check.getuserName());
-            session.setAttribute("authorityCode", check.getauthorityCode());
-            
-            log.info("Logged in user ID: " + loginRequest.get("userID"));
-            
-            log.info("Logged in user ID: " + check.getauthorityCode());
-            
-            log.info("Logged in user Name: " + check.getuserName());
+	        session.setAttribute("name", check.getUserName());
+            session.setAttribute("authorityCode", check.getAuthorityCode());
             
             // 세션 ID를 쿠키로 저장
             Cookie sessionCookie = new Cookie("TMSESSIONID", session.getId());
@@ -250,13 +209,11 @@ public class UserController {
             response.put("status", "success");
             response.put("message", "로그인 성공");
             response.put("userID", loginRequest.get("userID"));
-            response.put("userName", check.getuserName());
-            response.put("authorityCode", check.getauthorityCode());
+            response.put("userName", check.getUserName());
+            response.put("authorityCode", check.getAuthorityCode());
             
             return ResponseEntity.ok(response); // 200 OK
-        } else {
-            log.info("로그인 실패");
-            
+        } else {            
             // 실패 응답 생성
             response.put("status", "error");
             response.put("message", "Invalid userID or password.");

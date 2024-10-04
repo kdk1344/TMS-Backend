@@ -6,27 +6,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PageDTO {
-    private int total;
-    private Criteria criteria;
+    private int total; // 페이지 총 숫자
+    private Criteria criteria; // 페이지 정보를 담은 Criteria
 
-    public PageDTO(int total, Criteria criteria) {
+    public PageDTO(int total, Criteria criteria) { // 페이지 정보
         this.total = total;
-        this.criteria = criteria;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public Criteria getCriteria() {
-        return criteria;
-    }
-
-    public void setCriteria(Criteria criteria) {
         this.criteria = criteria;
     }
 }

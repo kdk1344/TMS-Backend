@@ -3,6 +3,7 @@
 
 <!-- user-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.AdminMapper">
+	<!-- 사용자 정보 입력 -->
     <insert id="insert" parameterType="User">
 		INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
 		VALUES(#{userID}, #{userName}, #{password}, 
@@ -18,11 +19,7 @@
         END,
         #{authorityName})
 	</insert>
-	<insert id="insertUser" parameterType="User">
-        INSERT INTO users (USER_ID, USER_NAME, PASSWORD, AUTHORITY_CODE, AUTHORITY_NAME)
-        VALUES (#{userID}, #{userName}, #{password},#{authorityCode}, #{authorityName})
-    </insert>
-    
+    <!-- 사용자 정보 수정 -->
     <update id="updateUser" parameterType="User">
         UPDATE users
         SET USER_NAME = #{userName},
@@ -40,7 +37,7 @@
                       END
         WHERE User_ID = #{userID}
     </update>
-    
+    <!-- 사용자 정보 삭제 -->
     <delete id="deleteUser" parameterType="String">
         DELETE FROM Users
         WHERE USER_ID IN
@@ -49,7 +46,7 @@
             #{id}
         </foreach>
     </delete>
-    
+    <!-- 사용자 정보 전부 가져오기 -->
     <select id="findAll" resultType="User" parameterType="Criteria">
         SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_NAME as authorityName
         FROM users
@@ -63,7 +60,7 @@
         ORDER BY USER_ID
         LIMIT #{pageStart}, #{perPageNum}
     </select>
-
+	<!-- 사용자명과 권한명을 조건으로 사용자 데이터 숫자 추출 -->
     <select id="countUsers" resultType="int">
         SELECT COUNT(*)
         FROM Users
@@ -83,16 +80,15 @@
 		WHERE AUTHORITY_CODE = #{authorityCode}
     </select>
     
+    <!-- 사용자 정보 가져오기 -->
     <select id="getUserList" resultType="User">
     	SELECT USER_ID as userId, USER_NAME as userName, AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName
     	FROM Users
     </select>
  
- 
-	
-	
 	<!-- 공지사항 mapper.xml-->
 	
+	<!-- 공지사항 테이블 원활한 입력을 위한 매핑 -->
     <resultMap id="NoticeResultMap" type="Notice">
         <id column="SEQ" property="seq"/>
         <result column="POST_DATE" property="postDate"/>
@@ -103,6 +99,7 @@
         <collection property="attachments" ofType="FA" resultMap="FileAttachmentResultMap"/>
     </resultMap>
     
+    <!-- 첨부파일 원활한 입력을 위한 매핑 -->
     <resultMap id="FileAttachmentResultMap" type="FA">
         <id column="IDENTIFIER" property="identifier"/>
         <result column="TYPE" property="type"/>
@@ -110,7 +107,8 @@
         <result column="FILE_NAME" property="fileName"/>
         <result column="CREATED_DATE" property="createdDate"/>
     </resultMap>
-
+	
+	<!-- 공지사항 정보 추출 -->
     <select id="searchNotices" parameterType="map" resultMap="NoticeResultMap">
         SELECT n.*, a.*
         FROM notices n
@@ -132,13 +130,13 @@
         ORDER BY n.CREATED_DATE DESC, n.SEQ DESC
         LIMIT #{offset}, #{size}
     </select>
-
+	<!-- seq에 따른 첨부파일 정보 추출 -->
     <select id="getAttachmentsByNoticeSEQ" resultMap="FileAttachmentResultMap">
 	    SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME, CREATED_DATE
 	    FROM file_attachments
 	    WHERE SEQ = #{seq}
 	</select>
-
+	<!-- 총 공지사항 숫자 추출 -->
     <select id="getTotalNoticesCount" resultType="int">
         SELECT COUNT(*) FROM notices
         WHERE 1=1
@@ -156,19 +154,19 @@
             AND CONTENT LIKE CONCAT('%', #{content}, '%')
         </if>
     </select>
-    
+    <!-- 최근 공지사항 정보 추출 -->
     <select id="getLatestNotice" resultMap="NoticeResultMap">
 	    SELECT *
 	    FROM notices
 	    ORDER BY CREATED_DATE DESC
 	    LIMIT 1
 	</select>
-    
+    <!-- 공지사항 정보 입력 -->
     <insert id="insertNotice" useGeneratedKeys="true" keyProperty="seq">
         INSERT INTO notices (POST_DATE, TITLE, CONTENT)
         VALUES (#{postDate}, #{title}, #{content})
     </insert>
-
+	<!-- 첨부파일 입력 -->
     <insert id="insertAttachment">
         INSERT INTO file_attachments (IDENTIFIER, TYPE, STORAGE_LOCATION, FILE_NAME)
         VALUES (#{identifier}, #{type}, #{storageLocation}, #{fileName})
@@ -195,7 +193,7 @@
     <delete id="deleteAttachmentsByNoticeId">
         DELETE FROM file_attachments WHERE IDENTIFIER = #{seq} AND TYPE = #{type}
     </delete>
-    
+    <!-- 상위 게시판의 종류에 따른 첨부파일 정보 가져오기 -->
     <select id="getAttachments" resultType="FA">
         SELECT SEQ, IDENTIFIER, TYPE, STORAGE_LOCATION as storageLocation, FILE_NAME as filename, CREATED_DATE as createdDate
         FROM file_attachments
@@ -214,12 +212,8 @@
         DELETE FROM notices WHERE SEQ = #{seq}
     </delete>
     
-    
-    
-    
-    
     <!-- 공통코드 mapper.xml-->
-	
+	<!-- 공통코드 정보 조회 -->
 	<select id="searchCommonCodes" parameterType="map" resultType="CommonCode">
         SELECT Parent_Code, Code, Code_Name
         FROM common_codes
@@ -244,7 +238,7 @@
         WHERE CODE = #{parentCode} AND Parent_Code = '00'
     </select>
    
-   <!-- 특정 조건의  -->
+   	<!-- 공통코드 총 숫자 추출  -->
     <select id="getTotalCommonCodeCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM common_codes
@@ -281,18 +275,18 @@
             AND Code_Name LIKE CONCAT('%', #{codeName}, '%')
         </if>
     </select>
-    
+    <!-- 공통코드 정보 입력 -->
     <insert id="insertCommonCode" parameterType="CommonCode">
 	    INSERT INTO common_codes (Parent_Code, Code, Code_Name)
 	    VALUES (#{parentCode}, #{code}, #{codeName})
 	</insert>
-	
+	<!-- 공통코드 정보 수정 -->
 	<update id="updateCommonCode" parameterType="CommonCode">
 	    UPDATE common_codes
 	    SET Code_Name = #{codeName}
 	    WHERE Parent_Code = #{parentCode} AND Code = #{code}
 	</update>
-	
+	<!-- 공통코드 정보 삭제 -->
 	<delete id="deleteCommonCode" parameterType="String">
 		DELETE FROM common_codes WHERE CONCAT(Parent_Code, Code) = #{seq}
 	</delete>
@@ -331,10 +325,6 @@
     	FROM common_codes
     	WHERE parent_code = #{parentCode} and Code = #{code} and CODE_NAME = #{codeName} 
     </select>
-    
-    
-	
-	
 	
 	<!-- 분류코드 mapper.xml -->
 	
@@ -436,7 +426,7 @@
         WHERE Stage_Type = '대'
     </select>
     
-    <!-- 대분류 코드만 가져오기 -->
+    <!-- 중분류 코드만 가져오기 -->
     <select id="getsubCategoryCodes" resultType="categoryCode">
         SELECT CODE, Code_Name as CodeName
         FROM category_codes 
@@ -450,14 +440,14 @@
         WHERE Stage_Type = #{stageType} and Code = #{code}
     </select>
     
-      <!-- 상위 코드에 따른 하위 코드 목록을 조회하는 쿼리 -->
+      <!-- 상위 코드에 따른 하위 분류 코드 목록을 조회하는 쿼리 -->
     <select id="findMiddleCodesByParentCode" resultType="categoryCode" parameterType="string">
         SELECT Code, Code_Name as CodeName
         FROM category_codes 
         WHERE SUBSTRING(Code, 1, 2) = #{parentcode} and LENGTH(Code) = 4
     </select>
     
-    <!-- 상위 코드에 따른 하위 코드 갯수 확인 -->
+    <!-- 상위 코드에 따른 하위 분류 코드 갯수 확인 -->
 	<select id="checkChildCodesExist2" parameterType="String" resultType="int">
 	    SELECT COUNT(*) 
 	    FROM category_codes 
@@ -470,6 +460,4 @@
     	FROM category_code
     	WHERE Stage_Type = #{stageType} and Code = #{code} and CODE_NAME = #{codeName} 
     </select>
-
-	
 </mapper>

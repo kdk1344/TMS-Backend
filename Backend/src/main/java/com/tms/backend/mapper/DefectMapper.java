@@ -33,7 +33,7 @@ public interface DefectMapper {
             @Param("programName") String programName,
             @Param("programType") String programType,
             @Param("offset") int offset, 
-            @Param("size") int size);
+            @Param("size") int size); // 결함 현황 조회
 	public int countDefects(@Param("testStage") String testStage, 
 		  @Param("majorCategory") String majorCategory, 
 		  @Param("subCategory") String subCategory, 
@@ -46,22 +46,18 @@ public interface DefectMapper {
 		  @Param("programId") String programId,
 		  @Param("testId") String testId,
 		  @Param("programName") String programName,
-		  @Param("programType") String programType);
+		  @Param("programType") String programType); // 결함 현황 총 숫자
 	public List<Defect> searchDefectOriginal(@Param("testStage") String testStage,
 											 @Param("testId") String testId,
 											 @Param("programId") String programId,
-            								 @Param("programName") String programName);
-	public void deleteDefect(Integer seq);
-	public void insertdefect(Defect def);
-	public void updateDefect(Defect def);
-	public Defect getDefectById(Integer seq); 
-	public List<Defect> searchAllDefects();
+            								 @Param("programName") String programName); // 결함 수정을 위한 결함 내용 조회
+	public void deleteDefect(Integer seq); // 결함 현황 삭제
+	public void insertdefect(Defect def); // 결함 현황 입력
+	public void updateDefect(Defect def); // 결함 현황 수정
+	public Defect getDefectById(Integer seq);  // seq에 따른 결함 현황 추출
+	public List<Defect> searchAllDefects(); // 모든 결함 현황 가져오기
 	public int totalcountDefect(String programId); // 프로그램 개발 목록 총 결함 갯수 추출
 	public int countDefect(@Param("programId") String programId, @Param("managerType") String managerType); // 여러 종류 결함 갯수 숫자
 	public int countDefectSoultions(@Param("programId") String programId, @Param("managerType") String managerType); //조치완료 건수 숫자
-//	public List<Defect> getdefectNumberList(@Param("testStage") String testStage, 
-//								            @Param("testId") String testId, 
-//								            @Param("programId") String programId, 
-//								            @Param("programType") String programType); //기발생 결함 번호 조회
 
 }

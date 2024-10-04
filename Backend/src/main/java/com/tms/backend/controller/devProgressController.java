@@ -131,9 +131,7 @@ public class devProgressController {
 		if (programStatus != null && !programStatus.isEmpty()) {
 			programStatus = adminService.getStageCCodes("05", programStatus);}
 		if (devStatus != null && !devStatus.isEmpty()) {
-			log.info("major 진행중" + devStatus);
 			devStatus = adminService.getStageCCodes("06", devStatus);}
-			log.info(devStatus);
 		
 	    List<devProgress> devProgressList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName, programId, programStatus, developer,
@@ -405,7 +403,6 @@ public class devProgressController {
 			}
 		String UserID = (String) session.getAttribute("id");
 		String UserName = (String) session.getAttribute("name");
-		log.info("userName"+UserName);
 		Map<String, Object> response = new HashMap<>();
 		try {
 			//코드로 들어오는 데이터를 코드명으로 변경
@@ -498,10 +495,8 @@ public class devProgressController {
 	        devProgress.setInitRegistrar(UserName);
 	        devProgress.setLastModifier(UserName);
         	devservice.insertdevProgress(devProgress);  // 개발 현황 진행 정보 추가
-        	log.info(files.length);
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
-            	log.info("첨부중");
                 fileservice.handleFileUpload(files, "devProgress", devProgress.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(devProgress.getSeq(),1);
@@ -786,9 +781,7 @@ public class devProgressController {
 		if (programStatus != null && !programStatus.isEmpty()) {
 			programStatus = adminService.getStageCCodes("05", programStatus);}
 		if (devStatus != null && !devStatus.isEmpty()) {
-			log.info("major 진행중" + devStatus);
 			devStatus = adminService.getStageCCodes("06", devStatus);}
-			log.info(devStatus);
     	
     	List<devProgress> filteredDevCodeList = devservice.searchDevProgress(
 	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,

@@ -42,7 +42,8 @@ public class DevService {
 	
 	@Autowired
 	private TestService testService;
-
+	
+	// 프로그램 개발 진행 현황 조회
 	public List<devProgress> searchDevProgress(String majorCategory, String subCategory, String programType, 
 	            String programName, String programId, String programStatus, String developer, 
 	            String devStatus, String devStartDate, String devEndDate, 
@@ -54,6 +55,7 @@ public class DevService {
 		thirdPartyTestMgr, ItMgr, BusiMgr, offset, size);
 	}
 	
+	// 프로그램 개발 진행 현황 총 갯수
 	public int getTotalDevProgressCount(String majorCategory, String subCategory, String programType, 
 	     String programName, String programId, String programStatus, String developer, 
 	     String devStatus, String devStartDate, String devEndDate, 
@@ -64,17 +66,18 @@ public class DevService {
 		thirdPartyTestMgr, ItMgr, BusiMgr);
 	}
 	
+	// 프로그램 개발 진행 현황 수정
 	public void updatedevProgress(devProgress devProgress) {
 		devMapper.updatedevProgress(devProgress);
 	}
 	
-	//개발 진행현황 목록 삭제
+	//프로그램 개발 진행현황 목록 삭제
 	public void deleteDevProgress(int seq , int type) {
 		devMapper.deleteDevProgress(seq);
 		adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
 	
-	// 개발 진행현황 일괄 저장
+	// 프로그램 개발 진행현황 일괄 저장
     public void saveAllDevProgress(List<devProgress> devProgress) {
         for (devProgress dev : devProgress) {
         	try {
@@ -85,11 +88,12 @@ public class DevService {
         }
     }
     
+    // 프로그램 개발 진행 현황 입력
     public void insertdevProgress(devProgress devProgress) {
     	devMapper.insertdevProgress(devProgress);
     }
     
-    //seq에 따른 개발 진행 현황 정보 추출
+    //seq에 따른 프로그램 개발 진행 현황 정보 추출
     public devProgress getDevById(Integer seq) {
         return devMapper.getDevById(seq);
     }
@@ -108,9 +112,4 @@ public class DevService {
     public List<devProgress> getprogramDetail(String programId) {
     	return devMapper.getprogramDetail(programId);
     }
-    	
-	
-
-    
-    
 }

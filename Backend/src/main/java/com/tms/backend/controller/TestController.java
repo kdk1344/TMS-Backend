@@ -80,11 +80,10 @@ public class TestController {
 	
 	@GetMapping("/testProgress")
 	public String TestProgressPage() {
-			
 			return "testProgress"; // JSP 페이지 이동
 	}
 	
-	
+	//테스트 시나리오 조회
 	@GetMapping(value= "api/testProgress", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> TestProgress(HttpServletRequest request,
@@ -107,8 +106,9 @@ public class TestController {
             @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "15") int size) {
 		
-		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>(); // 응답 생성
 		
+		// 숫자로 된 데이터 문자로 변환
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
 		testStatus = adminService.getStageCCodes("12", testStatus);
@@ -116,17 +116,14 @@ public class TestController {
 		programType = adminService.getStageCCodes("02", programType);
 		
 		// 결함 목록 조회
-		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
+		List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
 				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr, page, size);
 		 
-		 log.info("테스트 명단:"+testProgressList);
-
 	    // 총 결함 수 조회
 	    int totalTest = testService.getTotalTestCount(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
 				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr);
 	    // 총 페이지 수 계산
 	    int totalPages = (int) Math.ceil((double) totalTest / size);
-	    
 
 		// 응답 생성
 	    response.put("testProgress", testProgressList);
@@ -144,8 +141,6 @@ public class TestController {
     	Map<String, Object> response = new HashMap<>();
         List<devProgress> programDList = devservice.getprogramDetail(programId);
         
-        log.info("확인중" + programDList);
-
         // 응답 데이터 생성
         if (programDList != null && !programDList.isEmpty()) {
             response.put("status", "success");
@@ -209,7 +204,6 @@ public class TestController {
 	//테스트 수정 페이지
 	@GetMapping("/testProgressEdit")
 	public String testProgressEditPage() {
-
 	    return "testProgressEdit"; // JSP 페이지로 이동
 	}
 	
@@ -279,7 +273,6 @@ public class TestController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 			}
 //				Integer authorityCode = (Integer) session.getAttribute("authorityCode");
-		
 		
 		Map<String, Object> response = new HashMap<>();
 		//결함 수정 내용 가져오기
@@ -393,8 +386,8 @@ public class TestController {
     public ResponseEntity<Map<String, Object>> deletetest(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
         
-        for (int seq : seqs) {
-            testService.deleteTestProgress(seq, 1);
+        for (int seq : seqs) { 
+            testService.deleteTestProgress(seq, 1); // 결함 삭제, 첨부파일의 삭제를 위해 type 변수를 1로 줌
         }
         
         response.put("status", "success");
@@ -407,7 +400,6 @@ public class TestController {
     public void downloadAlltest(HttpServletResponse response) throws IOException {
         List<testProgress> TestCodeList = testService.searchTestProgress(null, null, null, null, null, null, null, 
         		null, null, null, null, null, null, null, null, null, 1, Integer.MAX_VALUE);
-        log.info(TestCodeList);
         testexportToExcel(response, TestCodeList, "all_test_codes.xlsx");
     }
 	
@@ -451,9 +443,7 @@ public class TestController {
 		// 결함 목록 조회
 		 List<testProgress> testProgressList = testService.searchTestProgress(testStage, majorCategory, subCategory, programType, testId, screenId, screenName,
 				 programName, programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr, page, size);
-		 
 
-    	log.info("확인중"+testProgressList);
         testexportToExcel(response, testProgressList, "filtered_test_codes.xlsx");
     }
 	
@@ -462,10 +452,8 @@ public class TestController {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("TestProgress");
         String check = "";
-        log.info("체크중");
         if (testProgressList.isEmpty()) {
     		check = "no_value";
-    		log.info(check);
     		}
         // 헤더 이름 배열
         String[] headers = {
@@ -525,7 +513,6 @@ public class TestController {
         int rowNum = 1;
         for (testProgress testProgress : testProgressList) {
             Row row = sheet.createRow(rowNum++);
-            log.info(fields.length);
             for (int i = 0; i < fields.length; i++) {
                 try {
                     Method method = testProgress.getClass().getMethod(fields[i]);
@@ -555,6 +542,7 @@ public class TestController {
         workbook.close();
     }
     
+    //액셀 업로드
     @PostMapping(value = "api/testupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> testuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -582,13 +570,12 @@ public class TestController {
             	    "IT_CONFIRM_DATE", "IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", 
             	    "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
             	    "TEST_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
-            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) {
+            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) { //컬럼명 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             
-
             List<testProgress> Testprogress = new ArrayList<>();
             
             // 필드명 배열과 대응되는 셀 타입 배열

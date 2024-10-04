@@ -3,6 +3,7 @@
 
 <!-- user-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.DefectMapper">
+	<!-- 결함 현황 조회 -->
     <select id="searchDefects" parameterType="map" resultType="Defect">
 	    SELECT * 
 	    FROM DEFECT
@@ -49,7 +50,7 @@
 	    ORDER BY SEQ DESC
 	    LIMIT #{offset}, #{size}
 	</select>
-	
+	<!-- 결함 현황 총 갯수 -->
 	<select id="countDefects" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM DEFECT
@@ -94,7 +95,7 @@
 	        AND PROGRAM_TYPE = #{programType}
 	    </if>
 	</select>
-		
+	<!-- 결함 수정을 위한 결함 현황 데이터 조회 -->
 	<select id="searchDefectOriginal" parameterType="map" resultType="Defect">
 		SELECT * 
 	    FROM DEFECT
@@ -112,16 +113,16 @@
 	        AND PROGRAM_NAME = #{programName}
 	    </if>
 	</select>
-	
+	<!-- 결함 현황 데이터 전부 가져오기 -->
 	<select id="searchAllDefects" resultType="Defect">
 		SELECT * FROM DEFECT
 	</select>
-	
+	<!-- 결함 현황 삭제 -->
 	<delete id="deleteDefect" parameterType="int">
 		DELETE FROM DEFECT WHERE SEQ = #{seq}
 	</delete>
 	
-	<!-- 결함 입력 xml -->
+	<!-- 결함 현황 입력 -->
 	<insert id="insertdefect" parameterType="Defect" useGeneratedKeys="true" keyProperty="seq">
 		INSERT INTO DEFECT (
 	    TEST_STAGE, MAJOR_CATEGORY, SUB_CATEGORY, 
@@ -146,7 +147,7 @@
     )
 	</insert>
 	
-	<!-- 결함 수정 xml -->
+	<!-- 결함 현황 수정 -->
 	<update id="updateDefect" parameterType="Defect">
 	    UPDATE DEFECT
 	    SET 
@@ -179,6 +180,7 @@
 	    WHERE SEQ = #{seq}
 	</update>
 	
+	<!-- seq에 따른 결함 현황 데이터 얻기 -->
 	<select id="getDefectById" resultType="Defect">
 		SELECT *
 		FROM defect
@@ -215,6 +217,7 @@
         AND a.PROGRAM_ID = #{programId}
 	</select>
 	
+	<!-- 조치완료 결함 숫자 -->
 	<select id="countDefectSoultions" parameterType="String" resultType="int">
 	    SELECT COUNT(*)
 	    FROM defect a
@@ -234,27 +237,4 @@
 	        AND a.PROGRAM_ID = #{programId}
 	        AND a.DEFECT_STATUS IN ("조치완료", "PL 확인완료", "등록자 확인완료")
 	</select>
-	
-	<select id="getdefectNumberList" parameterType="map" resultType="Defect">
-	    SELECT * 
-	    FROM DEFECT
-	    WHERE 1=1
-	    <if test="testStage != null and testStage != ''">
-	        AND TEST_STAGE = #{testStage}
-	    </if>
-	    <if test="testId != null and testId != ''">
-	        AND TEST_ID = #{testId}
-	    </if>
-	    <if test="programId != null and programId != ''">
-	        AND PROGRAM_ID = #{programId}
-	    </if>
-	    <if test="programType != null and programType != ''">
-	        AND PROGRAM_TYPE = #{programType}
-	    </if>
-	    ORDER BY SEQ DESC
-	</select>
-	
-	
-
-	
 </mapper>

@@ -38,7 +38,8 @@ public class TestService {
 	
 	@Autowired
 	private AdminMapper adminmapper;
-
+	
+	// 테스트 시나리오 조회
 	public List<testProgress> searchTestProgress(String testStage, String majorCategory, String subCategory,
 										        String programType, String testId, String screenId, String screenName,
 										        String programName, String programId,
@@ -50,6 +51,7 @@ public class TestService {
 	            programId, developer, testStatus, pl, ItMgr, BusiMgr, execCompanyMgr, thirdPartyTestMgr, offset, size);
 	}
 	
+	// 테스트 시나리오 총 갯수
 	public int getTotalTestCount(String testStage, String majorCategory, String subCategory,
 						        String programType, String testId, String screenId, String screenName,
 						        String programName, String programId,
@@ -121,8 +123,4 @@ public class TestService {
         	testProgress.setTestStatus("고객현업완료");
         } 
     }
-	
-
-    
-    
 }

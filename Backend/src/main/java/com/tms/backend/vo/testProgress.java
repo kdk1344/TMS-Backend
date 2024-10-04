@@ -57,8 +57,4 @@ public class testProgress {
     private String lastModifier;                   // 최종 변경자
     private List<FileAttachment> execCompanyAttachments;         // 수행사 증적 첨부
     private List<FileAttachment> thirdAttachments;               // 제3자 증적 첨부
-    
-    
-	
-
 }

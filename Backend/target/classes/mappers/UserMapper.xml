@@ -3,22 +3,23 @@
 
 <!-- user-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.UserMapper">
+	<!-- 사용자 아이디에 맞춘 사용자 데이터 추출 -->
     <select id="getUserByUserID" parameterType="String" resultType="User">
         SELECT *
         FROM users
         WHERE USER_ID = #{userID}
     </select>
-    
+    <!-- 사용자 아이디, 사용자명, 권한명 데이터 전부 추출 -->
     <select id="findAll" resultType="User">
         SELECT USER_ID, USER_NAME, AUTHORITY_NAME FROM users
     </select>
-    
+    <!-- 모든 사용자 데이터 추출 -->
     <select id="UfindAll" resultType="User">
         SELECT USER_ID as userId, USER_NAME as userName, PASSWORD as password,
         AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName 
 		FROM users
     </select>
-    
+    <!-- Criteria 데이터에 맞춘 모든 사용자 데이터 추출 -->
     <select id="findUsersByCriteria" parameterType="Criteria" resultType="User">
         SELECT USER_ID AS userId, USER_NAME as userName, PASSWORD as password,
         AUTHORITY_CODE as authorityCode, AUTHORITY_NAME as authorityName  

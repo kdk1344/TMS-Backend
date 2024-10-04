@@ -332,51 +332,17 @@ public class NoticeController {
     }
     
     
-// 페이지
- 
-    
+    // 공지사항 페이지
     @GetMapping("/notice")
-    public String getNotices(@RequestParam(value = "startDate", required = false) String startDate,
-				            @RequestParam(value = "endDate", required = false) String endDate,
-				            @RequestParam(value = "title", required = false) String title,
-				            @RequestParam(value = "content", required = false) String content,
-				            @RequestParam(value = "page", defaultValue = "1") int page,
-				            @RequestParam(value = "size", defaultValue = "15") int size,
-                             Model model) {
+    public String getNotices() {
         return "notice"; // JSP 파일의 경로
     }
  
     
-    // 공지사항 상세보기 기능
+    // 공지사항 상세보기 페이지
     @GetMapping("/ntdetail")
-    public String getNoticeDetail2(@RequestParam("seq") Integer seq, Model model) {
-    	// 공지사항 조회
-        Notice notice = adminService.getNoticeById(seq);
-
-        // 공지사항이 존재하지 않는 경우 처리
-        if (notice == null) {
-            model.addAttribute("message", "해당 공지사항이 존재하지 않습니다.");
-            return "error"; // 에러 페이지로 이동
-        }
-
-        // 첨부파일 리스트 조회 및 설정
-        List<FileAttachment> attachments = adminService.getAttachments(seq,4);
-        log.info(attachments);
-        log.info(seq);
-        notice.setAttachments(attachments);
-        log.info(notice);
-        
-
-        // 모델에 공지사항 및 첨부파일 리스트 추가
-        model.addAttribute("notice", notice);
-        model.addAttribute("attachments", attachments);
-    	
+    public String getNoticeDetail2() {
         return "noticeDetail";  // noticeDetail.jsp 페이지로 이동
     }
-
-
-
-    
-    
     
 }

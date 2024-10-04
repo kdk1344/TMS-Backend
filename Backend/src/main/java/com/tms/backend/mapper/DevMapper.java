@@ -19,8 +19,6 @@ import lombok.extern.log4j.Log4j;
 
 @Mapper
 public interface DevMapper {
-
-	// 검색 필터에 따른 개발 진행 데이터 조회
     public List<devProgress> searchDevProgress(
             @Param("majorCategory") String majorCategory,
             @Param("subCategory") String subCategory,
@@ -38,9 +36,7 @@ public interface DevMapper {
             @Param("BusiMgr") String BusiMgr,
             @Param("offset") int offset,
             @Param("size") int size
-    );
-
-    // 개발 진행 데이터 총 개수
+    ); // 프로그램 개발 진행 현황 조회
     public int getTotalDevProgressCount(
             @Param("majorCategory") String majorCategory,
             @Param("subCategory") String subCategory,
@@ -56,20 +52,19 @@ public interface DevMapper {
             @Param("thirdPartyTestMgr") String thirdPartyTestMgr,
             @Param("ItMgr") String ItMgr,
             @Param("BusiMgr") String BusiMgr
-    );
-    public void updatedevProgress(devProgress devProgress);
-    public void deleteDevProgress(int seq);
-    public void insertdevProgress(devProgress devProgress);
-    public devProgress getDevById(int Seq);
-    public int checkCountProgramId(String programId);
-    //프로그램 ID 확보를 위한 프로그램 목록 조회
+    ); // 프로그램 개발 진행 현황 데이터 총 개수
+    public void updatedevProgress(devProgress devProgress); // 프로그램 개발 진행 현황 수정
+    public void deleteDevProgress(int seq); // 프로그램 개발 진행 현황 삭제
+    public void insertdevProgress(devProgress devProgress); // 프로그램 개발 진행 현황 입력
+    public devProgress getDevById(int Seq); // seq에 따른 프로그램 개발 진행 현황 가져오기
+    public int checkCountProgramId(String programId); // 프로그램 ID 갯수 확인
     public List<devProgress> checkProgramId(@Param("programType") String programType,
 											@Param("developer") String developer,
 											@Param("programId") String programId,
-											@Param("programName") String programName);
-    public int checkProgramIdCounts(@Param("programType") String programType,
-	    							@Param("developer") String developer,
-	    							@Param("programId") String programId,
-	    							@Param("programName") String programName);
-    public List<devProgress> getprogramDetail(@Param("programId") String programId);
+											@Param("programName") String programName); //프로그램 ID 확보를 위한 프로그램 목록 조회
+//    public int checkProgramIdCounts(@Param("programType") String programType,
+//	    							@Param("developer") String developer,
+//	    							@Param("programId") String programId,
+//	    							@Param("programName") String programName);
+    public List<devProgress> getprogramDetail(@Param("programId") String programId); // 프로그램 상세 정보 확인
 }

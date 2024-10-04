@@ -36,17 +36,18 @@ public class DefectService {
 	
 	@Autowired
 	private AdminMapper adminmapper;
-
+	
+	// 결함 조회
     public List<Defect> searchDefects(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
     		String defectRegistrar, String defectHandler, String pl, String defectStatus, String programId, String testId, String programName,
     		String programType, int page, int size) {
     	int offset = (page - 1) * size;
-    	log.info("check"+size);
     	
         return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
         		programId, testId, programName, programType, defectStatus, offset, size);
     }
-
+    
+    // 결함 총 갯수
     public int getTotalDefectsCount(String testStage, String majorCategory, String subCategory, String defectSeverity, Integer seq,
     		String defectRegistrar, String defectHandler, String pl, String defectStatus, String programId,
     		String testId, String programName, String programType) {
@@ -54,11 +55,12 @@ public class DefectService {
         		defectStatus, programId, testId, programName, programType);
     }
     
+    // 결함 수정을 위한 결함 내용 조회
     public List<Defect> searchDefectOriginal(String testStage, String testId, String programId, String programName){
     	return defectmapper.searchDefectOriginal(testStage, testId, programId, programName);
     }
     
-    //결함 업데이트
+    //결함 수정
     public void updateDefect(Defect defect) {
     	defectmapper.updateDefect(defect);
     }
@@ -120,13 +122,5 @@ public class DefectService {
 			defect.setDefectStatus("등록자 확인완료");
 			}
 		}
-    
-//    //기발생 결함번호 조회
-//    public List<Defect> getdefectNumberList(String testStage, String testId, String programName, String programType){
-//    	return defectmapper.getdefectNumberList(testStage, testId, programName, programType);
-//    }
-	
-
-    
-    
+        
 }

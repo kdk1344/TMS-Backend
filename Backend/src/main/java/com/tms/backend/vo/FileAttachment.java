@@ -2,6 +2,9 @@ package com.tms.backend.vo;
 
 import java.util.Date;
 
+import lombok.Data;
+
+@Data
 public class FileAttachment {
 	
 	private Integer type; // 파일의 저장 게시판
@@ -10,55 +13,5 @@ public class FileAttachment {
     private String storageLocation; // 파일 저장 경로
     private String fileName; // 파일명
     private Date createdDate; // 파일 생성일시
-
-    // Getters and Setters
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(Integer identifier) {
-        this.identifier = identifier;
-    }
-
-    public Integer getSeq() {
-        return seq;
-    }
-
-    public void setSeq(Integer seq) {
-        this.seq = seq;
-    }
-
-    public String getStorageLocation() {
-        return storageLocation;
-    }
-
-    public void setStorageLocation(String storageLocation) {
-        this.storageLocation = storageLocation;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
 
 }

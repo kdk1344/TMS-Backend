@@ -3,6 +3,7 @@
 
 <!-- Dev-mapper.xml -->
 <mapper namespace="com.tms.backend.mapper.TestMapper">
+	<!-- 테스트 시나리오 조회 -->
     <select id="searchTestProgress" parameterType="map" resultType="TestProgress">
         SELECT * FROM TEST_PROGRESS
         WHERE 1=1
@@ -57,6 +58,7 @@
         LIMIT #{offset}, #{size}
     </select>
 	
+	<!-- 테스트 시나리오 총 갯수 -->
 	<select id="getTotalTestCount" parameterType="map" resultType="int">
         SELECT COUNT(*) FROM TEST_PROGRESS
         WHERE 1=1
@@ -104,7 +106,7 @@
         </if>
 	</select>
 	
-	<!-- 테스트 진행 현황 추가 -->
+	<!-- 테스트 시나리오 추가 -->
     <insert id="inserttestProgress" parameterType="TestProgress" useGeneratedKeys="true" keyProperty="seq">
 	    INSERT INTO TEST_PROGRESS (
 	        TEST_STAGE, MAJOR_CATEGORY, SUB_CATEGORY, MINOR_CATEGORY,
@@ -184,7 +186,7 @@
         WHERE SEQ = #{seq}
     </update>
 	
-	<!-- 테스트 진행 현황 삭제 -->
+	<!-- 테스트 시나리오 삭제 -->
 	<delete id="deleteTestProgress" parameterType="int">
 		DELETE FROM TEST_PROGRESS WHERE SEQ = #{seq}
 	</delete>
