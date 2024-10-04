@@ -14,6 +14,8 @@ import {
   setupModalEventListeners,
   showSpinner,
   hideSpinner,
+  AUTHORITY_CODE,
+  checkSession,
 } from "./common.js";
 
 let currentPage = 1;
@@ -53,6 +55,7 @@ function init() {
   renderTMSHeader();
   setupEventListeners();
   loadInitialDevProgress();
+  initializePageByUser();
 }
 
 // 이벤트 핸들러 설정
@@ -152,6 +155,35 @@ function setupEventListeners() {
   // if (developerSearchModal) {
   //   closeDeveloperSearchModalButton.addEventListener("click", () => closeModal(MODAL_ID.DEV_PROGRESS_DEVELOPER_SEARCH));
   // }
+}
+
+async function initializePageByUser() {
+  const { authorityCode } = await checkSession();
+  const fileUploadAccessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
+  const registerAndRemoveAccessCode = new Set([
+    AUTHORITY_CODE.ADMIN,
+    AUTHORITY_CODE.PM,
+    AUTHORITY_CODE.TEST_MGR,
+    AUTHORITY_CODE.PL,
+  ]);
+
+  const buttonIds = [
+    "goDevProgressRegisterPageButton",
+    "deleteDevProgressButton",
+    "openDevProgressFileUploadModalButton",
+  ];
+
+  const buttons = buttonIds.map((buttonId) => document.getElementById(buttonId));
+  buttons.forEach((button) => button.classList.add("hidden")); // 등록, 삭제, 파일업로드 버튼 가리기
+
+  if (fileUploadAccessCode.has(authorityCode)) {
+    document.getElementById("openDevProgressFileUploadModalButton").classList.remove("hidden");
+  }
+
+  if (registerAndRemoveAccessCode.has(authorityCode)) {
+    document.getElementById("goDevProgressRegisterPageButton").classList.remove("hidden");
+    document.getElementById("deleteDevProgressButton").classList.remove("hidden");
+  }
 }
 
 // 초기 프로그램 개발 진행 현황 목록 로드
