@@ -32,9 +32,6 @@ import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @Log4j
 @RequestMapping("/tms/*")

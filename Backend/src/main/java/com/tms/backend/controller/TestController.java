@@ -339,14 +339,15 @@ public class TestController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
+			log.info(testProgress.getSeq());
 	        testProgress TestProgressEdit = testService.getTestById(testProgress.getSeq());
 	        testProgress.setInitRegistrar(TestProgressEdit.getInitRegistrar());
 	        
+	        //테스트 시나리오 등록 시 권한 문제 및 필요한 값 체크
+    	    TestProgressCheck(testProgress);
+	        
         	// testProgress의 필드를 testProgressEdit에 복사
     	    BeanUtils.copyProperties(testProgress, TestProgressEdit);
-    	    
-    	    //테스트 시나리오 등록 시 권한 문제 및 필요한 값 체크
-    	    TestProgressCheck(TestProgressEdit);
 			
 	        //변경자 로그인 ID 세팅
 			TestProgressEdit.setLastModifier(UserName);
@@ -703,5 +704,19 @@ public class TestController {
 					
 		//프로그램 구분 추가
 		testProgress.setProgramType(testService.getProgramType(testProgress.getProgramId()));
+		
+		//테스트 진행 상태 자동 세팅
+		if(testProgress.getExecCompanyConfirmDate() == null && testProgress.getItTestDate() == null && testProgress.getBusiTestDate() == null) {
+			testProgress.setTestStatus("미착수");
+		}
+		if(testProgress.getExecCompanyConfirmDate() != null && testProgress.getItConfirmDate() == null && testProgress.getBusiConfirmDate() == null) {
+			testProgress.setTestStatus("수행사완료");
+		}
+		if(testProgress.getExecCompanyConfirmDate() != null && testProgress.getItConfirmDate() != null && testProgress.getBusiConfirmDate() == null) {
+			testProgress.setTestStatus("고객IT완료");
+		}
+		if(testProgress.getExecCompanyConfirmDate() != null && testProgress.getItConfirmDate() != null && testProgress.getBusiConfirmDate() != null) {
+			testProgress.setTestStatus("고객현업완료");
+		}
     }
 }

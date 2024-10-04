@@ -47,9 +47,6 @@ import com.tms.backend.vo.categoryCode;
 
 import lombok.extern.log4j.Log4j;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @Log4j
 @RequestMapping("/tms/*")

@@ -90,47 +90,7 @@ public class devProgressController {
 	//개발진행관리 Controller
 	
 	@GetMapping("/devProgress")
-	public String devProgressPage(
-	        @RequestParam(value = "majorCategory", required = false) String majorCategory,
-	        @RequestParam(value = "subCategory", required = false) String subCategory,
-	        @RequestParam(value = "programType", required = false) String programType,
-	        @RequestParam(value = "programName", required = false) String programName,
-	        @RequestParam(value = "programId", required = false) String programId,
-	        @RequestParam(value = "programStatus", required = false) String programStatus,
-	        @RequestParam(value = "developer", required = false) String developer,
-	        @RequestParam(value = "devStatus", required = false) String devStatus,
-	        @RequestParam(value = "devStartDate", required = false) String devStartDate,
-	        @RequestParam(value = "devEndDate", required = false) String devEndDate,
-	        @RequestParam(value = "pl", required = false) String pl,
-	        @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
-	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
-	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
-	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "15") int size,
-	        Model model) {
-		
-		log.info(programStatus);
-
-	    // Service를 통해 데이터를 조회
-	    List<devProgress> devProgressList = devservice.searchDevProgress(
-	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
-	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
-	    );
-
-	    int totalDevProgress = devservice.getTotalDevProgressCount(
-	            majorCategory, subCategory, programType, programName,programId, programStatus, developer,
-	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr
-	    );
-
-	    int totalPages = (int) Math.ceil((double) totalDevProgress / size);
-	    
-	    log.info(devProgressList);
-
-	    // 모델에 데이터를 추가
-	    model.addAttribute("devProgressList", devProgressList);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("totalDevProgress", totalDevProgress);
+	public String devProgressPage() {
 
 	    return "devProgress"; // JSP 페이지로 이동
 	}
@@ -162,10 +122,9 @@ public class devProgressController {
 //			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 //			}
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		log.info(simpleDateFormat.format(new Date()));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 날짜 데이터 변경
 
-		majorCategory = adminService.getStageCodes("대", majorCategory);
+		majorCategory = adminService.getStageCodes("대", majorCategory); // 숫자로 된 데이터 문자로 변환
 		subCategory = adminService.getStageCodes("중", subCategory);
 		if (programType != null && !programType.isEmpty()) {
 			programType = adminService.getStageCCodes("02", programType);}
@@ -206,8 +165,6 @@ public class devProgressController {
     	Map<String, Object> response = new HashMap<>();
         List<User> developer = adminService.findAuthorityCode(5);
         
-        log.info("확인중" + developer);
-
         // 응답 데이터 생성
         if (developer != null && !developer.isEmpty()) {
             response.put("status", "success");
@@ -430,7 +387,7 @@ public class devProgressController {
     }
 	
 	@GetMapping("/devProgressReg")
-	public String devProgressPage() {
+	public String devProgressRegPage() {
 
 	    return "devProgressReg"; // JSP 페이지로 이동
 	}
@@ -640,9 +597,7 @@ public class devProgressController {
 		String UserID = (String) session.getAttribute("id");
 		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
-		
-		log.info("devProgress: " + devProgress);
-		
+				
 		//코드로 들어오는 데이터를 코드명으로 변경
 		devProgress.setMajorCategory(adminService.getStageCodes("대", devProgress.getMajorCategory()));
 		devProgress.setSubCategory(adminService.getStageCodes("중", devProgress.getSubCategory()));
@@ -724,12 +679,10 @@ public class devProgressController {
 	        	devProgress.setDevStatus("고객 현업 확인완료");
 	        }
 	        
-	        
-
-	        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq());
-	        devProgress.setInitRegistrar(DevProgressEdit.getInitRegistrar());
+	        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq()); // 입력되지 않은 정보를 입력하기 위해 DB에서 수정 데이터 가져옴
+	        devProgress.setInitRegistrar(DevProgressEdit.getInitRegistrar()); // 최초 등록자 입력
 	        //프로그램 ID 중복체크
-	        if(!devProgress.getProgramId().equals(DevProgressEdit.getProgramId())) {
+	        if(!devProgress.getProgramId().equals(DevProgressEdit.getProgramId())) { // 프로그램 ID 중복 확인
 		        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());
 		        if(!IdCheck) {
 		        	response.put("status", "failure");
@@ -783,8 +736,8 @@ public class devProgressController {
     public ResponseEntity<Map<String, Object>> deletedev(@RequestBody List<Integer> seqs) {
         Map<String, Object> response = new HashMap<>();
         
-        for (int seq : seqs) {
-            devservice.deleteDevProgress(seq, 1);
+        for (int seq : seqs) { //입력된 seq 순서대로 삭제
+            devservice.deleteDevProgress(seq, 1); // 첨부파일 삭제를 위해 type 1을 입력
         }
         
         response.put("status", "success");
@@ -796,7 +749,6 @@ public class devProgressController {
     @GetMapping("/devdownloadAll")
     public void downloadAlldev(HttpServletResponse response) throws IOException {
         List<devProgress> DevCodeList = devservice.searchDevProgress(null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, Integer.MAX_VALUE);
-        log.info(DevCodeList);
         devexportToExcel(response, DevCodeList, "all_dev_codes.xlsx");
     }
     
@@ -844,7 +796,6 @@ public class devProgressController {
 	            devStatus, devStartDate, devEndDate, pl, thirdPartyTestMgr, ItMgr, BusiMgr, page, size
 	    );
 
-    	log.info("확인중"+filteredDevCodeList);
         devexportToExcel(response, filteredDevCodeList, "filtered_dev_codes.xlsx");
     }
 
@@ -853,10 +804,8 @@ public class devProgressController {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("DevProgress");
         String check = "";
-        log.info("체크중");
-        if (devProgressList.isEmpty()) {
+        if (devProgressList.isEmpty()) { // 업로드 예시 파일 다운로드 할 경우
     		check = "no_value";
-    		log.info(check);
     		}
         // 헤더 이름 배열
         String[] headers = {
@@ -879,9 +828,8 @@ public class devProgressController {
 
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
-        if (!check.equals("")) {
+        if (!check.equals("")) { // 예시 파일 다운로드하는 경우
         	// "SEQ"를 무시하고 다음 헤더부터 시작
-        	log.info("check"+check);
             for (int i = 1; i < headers.length; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
@@ -934,7 +882,7 @@ public class devProgressController {
             if (check != "") {
 	            row.createCell(46).setCellValue(devProgress.getInitRegistrar());
 	            row.createCell(47).setCellValue(devProgress.getLastModifier());
-            }
+            } // 일반적인 액셀 파일 다운로드
             else {
             	row.createCell(47).setCellValue(devProgress.getInitRegDate().toString());
 	            row.createCell(48).setCellValue(devProgress.getInitRegistrar());
@@ -950,7 +898,8 @@ public class devProgressController {
         }
         workbook.close();
     }
-  
+    
+    // 액셀 업로드
     @PostMapping(value = "api/devupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> devuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -977,7 +926,7 @@ public class devProgressController {
             		"IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", 
             		"BUSI_TEST_NOTES", "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
             		"THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "DEV_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
-            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) {
+            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) { // 컬럼명 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -1019,7 +968,6 @@ public class devProgressController {
                                     field.set(devprogress, fileservice.getCellValueAsDate(row.getCell(j)));
                                     break;
                                 default:
-                                	log.info(field.getType().getSimpleName());
                                     field.set(devprogress, fileservice.getCellValueAsString(row.getCell(j)));
                                     break;
                             }

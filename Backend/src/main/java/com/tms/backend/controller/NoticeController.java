@@ -58,9 +58,6 @@ import com.tms.backend.vo.User;
 
 import lombok.extern.log4j.Log4j;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @Log4j
 @RequestMapping("/tms/*")
@@ -78,8 +75,8 @@ public class NoticeController {
 
     ////공지사항 Controller
     
-	 // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
-    @GetMapping(value = "api/notices", produces = MediaType.APPLICATION_JSON_VALUE)
+	//공지사항 조회
+    @GetMapping(value = "api/notices", produces = MediaType.APPLICATION_JSON_VALUE) // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
     @ResponseBody
     public Map<String, Object> getNotices(@RequestParam(value = "startDate", required = false) String startDate,
                                           @RequestParam(value = "endDate", required = false) String endDate,
@@ -120,6 +117,7 @@ public class NoticeController {
         return response;
     }
     
+    //공지사항 등록
     @PostMapping(value = "api/{boardType}write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> createNotice(
@@ -143,18 +141,10 @@ public class NoticeController {
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", "이 작업을 수행할 권한이 없습니다."));
 //        }
 
-        // 로그로 데이터 확인
-        log.info("Title: " + notice.getTitle());
-        log.info("Content: " + notice.getContent());
-        log.info("Post Date: " + notice.getPostDate());
-        log.info("seq Date: " + notice.getSeq());
-
         // Notice 객체를 데이터베이스에 저장
         adminService.createNotice(notice);
-        
-        log.info("seq Date: " + notice.getSeq());
-        
-        // 새로운 파일 업로드 처리
+                
+        // 새로운 첨부파일 업로드 처리
         if (files != null && files.length > 0) {
             fileservice.handleFileUpload(files, boardType, notice.getSeq());
         }
@@ -168,6 +158,7 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
     
+    // 공지사항 수정
     @PostMapping(value = "api/{boardType}update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateNotice(
@@ -213,12 +204,9 @@ public class NoticeController {
         List<FileAttachment> attachments = adminService.getAttachments(existingNotice.getSeq(),4);
         existingNotice.setAttachments(attachments);
         
-        log.info("check "+existingNotice);
-
         // 업데이트된 공지사항을 저장
         adminService.updateNotice(existingNotice);
         
-
         // 응답 생성
         response.put("status", "success");
         response.put("message", "게시글이 성공적으로 수정되었습니다.");
@@ -227,25 +215,28 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
     
+    //공지사항 상세 조회
     @GetMapping(value = "api/ntdetail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getNoticeDetail(@RequestParam("seq") Integer seq) {
         Map<String, Object> response = new HashMap<>();
-        Notice notice = adminService.getNoticeById(seq);
+        Notice notice = adminService.getNoticeById(seq); // 공지사항 내용 가져오기
 
-        if (notice == null) {
+        if (notice == null) { // 공지사항이 존재하지 않을 경우
             response.put("message", "해당 공지사항이 존재하지 않습니다.");
             return ResponseEntity.status(404).body(response);
         }
 
-        List<FileAttachment> attachments = adminService.getAttachments(seq,4);
+        List<FileAttachment> attachments = adminService.getAttachments(seq,4); // 첨부파일 내용 불러오기
         notice.setAttachments(attachments);
-
+        
+        //반응 생성
         response.put("notice", notice);
         response.put("attachments", attachments);
 
         return ResponseEntity.ok(response);
     }
-
+    
+    //첨부파일 다운로드
     @GetMapping("api/downloadAttachment")
     public ResponseEntity<InputStreamResource> downloadAttachment(@RequestParam("seq") Integer seq) throws IOException {
     	// 첨부파일 정보 조회
@@ -261,12 +252,11 @@ public class NoticeController {
 
         String encodedFileName = fileservice.encodeFileName(attachment.getFileName());
         
-     // 파일의 MIME 타입 확인
+        // 파일의 MIME 타입 확인
         String contentType = Files.probeContentType(file.toPath());
         if (contentType == null) {
             contentType = "application/octet-stream";  // MIME 타입을 찾지 못한 경우 기본 바이너리로 처리
         }
-        log.info(attachment.getStorageLocation());
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 

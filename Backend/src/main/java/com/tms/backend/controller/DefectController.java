@@ -72,15 +72,13 @@ public class DefectController {
 	@Autowired
 	private FileService fileservice;
 	
-	
+	//결함 페이지
 	@GetMapping("/defect")
 	public String defectStatusPage() {
-	    
-
 	    return "defect"; // defect.jsp로 이동
 	}
 	
-	
+	//결함 페이지 조회 및 결함 테이블 조회 사용
 	@GetMapping(value="api/defect" , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> APIdefectPage(HttpServletRequest request,
@@ -108,6 +106,7 @@ public class DefectController {
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
+		// 숫자로 프론트엔드에서 오는 것들 DB에 입력하는 문자로 변환
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
 		if (defectSeverity != null && !defectSeverity.isEmpty()) {
@@ -118,11 +117,8 @@ public class DefectController {
 			testStage = adminService.getStageCCodes("11", testStage);}
 		
 		List<Defect> defects;
-		
-		log.info(size);
-		
+				
 		if (size == 99999) { // 결함 조회를 위해서는 size가 디폴트값에서 변하기에 기본 검색이 아니게 만들기 위한 조건으로 성립
-			log.info("size"+size);
 		    defects = defectService.searchDefectOriginal(testStage, testId, programId, programName);
 		} else { // 기본 검색
 				
@@ -155,7 +151,7 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getDefectType() {
     	Map<String, Object> response = new HashMap<>();
-    	List<CommonCode> defectType= adminService.getCCCode("13");
+    	List<CommonCode> defectType= adminService.getCCCode("13"); // 결함 유형 숫자로 보내서 문자로 반환
 
         // 응답 데이터 생성
         if (defectType != null && !defectType.isEmpty()) {
@@ -230,29 +226,6 @@ public class DefectController {
         return ResponseEntity.ok(response);
     }
 	
-//	//결함 번호 조회
-//	@GetMapping(value = "api/defectNumberList", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> getdefectNumberList(@RequestParam(value = "testStage", required = false) String testStage,
-//            @RequestParam(value = "testId", required = false) String testId,
-//            @RequestParam(value = "programName", required = false) String programName,
-//            @RequestParam(value = "programType", required = false) String programType) {
-//    	Map<String, Object> response = new HashMap<>();
-//    	List<Defect> defectNumberList= defectService.getdefectNumberList(testStage, testId, programName, programType);
-//
-//        // 응답 데이터 생성
-//        if (defectNumberList != null && !defectNumberList.isEmpty()) {
-//            response.put("status", "success");
-//            response.put("defectNumberList", defectNumberList);
-//        } else {
-//            response.put("status", "failure");
-//            response.put("message", "기발생 결함 번호 정보를 찾을 수 없습니다");
-//        }
-//
-//        // 조회된 결과를 반환
-//        return ResponseEntity.ok(response);
-//    }
-	
 	//결함 등록 페이지
 	@GetMapping("/defectReg")
 	public String defectRegPage() {
@@ -273,8 +246,7 @@ public class DefectController {
 			@RequestPart(value = "file", required = false) MultipartFile[] files,
 			@RequestPart(value = "fixfile", required = false) MultipartFile[] fixfiles) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
-		String UserID = (String) session.getAttribute("id");
-		String UserName = (String) session.getAttribute("name");
+		String UserName = (String) session.getAttribute("name"); //세션에서 유저명 가져오기
 		Map<String, Object> response = new HashMap<>();
 		
 		//코드로 들어오는 데이터를 코드명으로 변경
@@ -328,15 +300,11 @@ public class DefectController {
 			}
 			//결함 정보 등록
         	defectService.insertdefect(defect);
-        	log.info("1첨부"+files.length);
-        	log.info("2첨부"+fixfiles.length);
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
-            	log.info("첨부중");
                 fileservice.handleFileUpload(files, "defect", defect.getSeq());
             }
             if (fixfiles != null && fixfiles.length > 0) {
-            	log.info("첨부중");
                 fileservice.handleFileUpload(fixfiles, "defectFix", defect.getSeq());
             }
             
@@ -376,15 +344,11 @@ public class DefectController {
   		
   		Map<String, Object> response = new HashMap<>();
   		
-  		Defect defectDetail = defectService.getDefectById(seq);
-  		log.info("Seq"+seq);
-  		List<FileAttachment> attachments = adminService.getAttachments(seq, 31);
+  		Defect defectDetail = defectService.getDefectById(seq); // seq를 입력해서 해당 결함 데이터 가져오기
+  		List<FileAttachment> attachments = adminService.getAttachments(seq, 31); // 첨부 파일 저장
   		defectDetail.setDefectAttachment(attachments);
   		List<FileAttachment> fixAttachments = adminService.getAttachments(seq, 32);
   		defectDetail.setDefectFixAttachments(fixAttachments);
-  		
-  		log.info("첨부확인"+attachments);
-  		log.info("첨부확인"+fixAttachments);
 
   	    // 응답 생성
   		response.put("status", "success");
@@ -431,10 +395,19 @@ public class DefectController {
 			// 시작예정일이 종료예정일보다 뒤일 경우 에러
 			if (defect.getDefectScheduledDate() != null && defect.getDefectCompletionDate() != null) {
 			    if (defect.getDefectScheduledDate().after(defect.getDefectCompletionDate())) {
-			    	log.info("error!!!!");
 			        throw new IllegalArgumentException("결함 조치 예정일의 시작일은 종료일보다 앞서야 합니다.");
 			    }
 			}
+			
+			// 조치완료일, PL 확인일에 따른 결함 처리 상태 자동 세팅
+			if(defect.getDefectCompletionDate() == null && defect.getPlConfirmDate() == null) {
+				defect.setDefectStatus("등록완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() == null) {
+				defect.setDefectStatus("조치완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() == null) {
+				defect.setDefectStatus("PL 확인완료");}
+			if(defect.getDefectCompletionDate() != null && defect.getPlConfirmDate() != null && defect.getDefectRegConfirmDate() != null) {
+				defect.setDefectStatus("등록자 확인완료");}
 			
 			//등록된 결함 파일 가져오기
 			Defect DefectEdit = defectService.getDefectById(defect.getSeq());
@@ -447,6 +420,7 @@ public class DefectController {
 		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),31);
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),32);
+	        log.info(DefectEdit.getDefectStatus());
 	        // 업데이트된 공지사항을 저장
 	        defectService.updateDefect(DefectEdit);
 	        
@@ -466,11 +440,9 @@ public class DefectController {
         	
         	// 새로운 파일 업로드 처리
             if (files != null && files.length > 0) {
-            	log.info("첨부중");
             	fileservice.handleFileUpload(files, "defect", defect.getSeq());
             }
             if (fixfiles != null && fixfiles.length > 0) {
-            	log.info("첨부중");
             	fileservice.handleFileUpload(files, "defectFix", defect.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
@@ -502,7 +474,7 @@ public class DefectController {
         Map<String, Object> response = new HashMap<>();
         
         for (Integer seq : seqs) {
-            defectService.deleteDefect(seq,31);
+            defectService.deleteDefect(seq,31); // 첨부파일도 같이 삭제하기 위해 첨부파일 type을 입력
             defectService.deleteDefect(seq,32);
         }
         
@@ -515,7 +487,6 @@ public class DefectController {
     @GetMapping("/defectdownloadAll")
     public void downloadAlldefect(HttpServletResponse response) throws IOException {
     	List<Defect> defects = defectService.searchAllDefects();
-        log.info(defects);
         defectexportToExcel(response, defects, "all_defects_codes.xlsx");
     }
     
@@ -559,8 +530,6 @@ public class DefectController {
 	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 
 				defectHandler, pl,  defectStatus, programId, testId, programName, programType, page, size);
 
-
-    	log.info("확인중"+defects);
     	defectexportToExcel(response, defects, "filtered_defects_codes.xlsx");
     }
     
@@ -569,10 +538,8 @@ public class DefectController {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Defect");
         String check = "";
-        log.info("체크중");
         if (Defects.isEmpty()) {
     		check = "no_value";
-    		log.info(check);
     		}
         // 헤더 이름 배열
         String[] headers = {
@@ -669,7 +636,7 @@ public class DefectController {
             	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
             	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
             	    "DEFECT_REGISTRAR_COMMENT", "DEFECT_STATUS", "INIT_CREATER", "LAST_MODIFIER");
-            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) {
+            if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) { // 컬럼명 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
