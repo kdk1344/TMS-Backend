@@ -9,6 +9,8 @@ import {
   getMajorCategoryCodes,
   getSubCategoryCodes,
   setupModalEventListeners,
+  checkSession,
+  AUTHORITY_CODE,
 } from "./common.js";
 
 let currentPage = 1;
@@ -54,10 +56,11 @@ function init() {
   renderTMSHeader();
   setupEventListeners();
   loadInitialCategoryCodes();
+  initializePageByUser();
 }
 
 // 이벤트 핸들러 설정
-function setupEventListeners() {
+async function setupEventListeners() {
   if (parentCodeSelect) {
     parentCodeSelect.addEventListener("change", () => {
       const selectedParentCode = parentCodeSelect.value;
@@ -68,6 +71,11 @@ function setupEventListeners() {
 
   // 분류코드 테이블 클릭 이벤트 핸들러
   if (categoryCodeTableBody) {
+    const { authorityCode } = await checkSession();
+    const accessCode = new Set([AUTHORITY_CODE.ADMIN]);
+
+    if (!accessCode.has(authorityCode)) return; // 관리자가 아닌 경우 수정 불가
+
     // 분류코드 테이블에서 클릭된 행의 데이터 로드 (이벤트 위임)
     categoryCodeTableBody.addEventListener("click", (event) => {
       const clickedElement = event.target;
@@ -174,6 +182,17 @@ function setupEventListeners() {
 
   // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
   setupModalEventListeners(Object.values(MODAL_ID));
+}
+
+async function initializePageByUser() {
+  const { authorityCode } = await checkSession();
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN]);
+  const buttonIds = ["openCategoryCodeRegisterModalButton", "deleteCategoryCodeButton", "openFileUploadModalButton"];
+  const buttons = buttonIds.map((buttonId) => document.getElementById(buttonId));
+
+  if (accessCode.has(authorityCode)) return;
+
+  buttons.forEach((button) => button.classList.add("hidden")); // 등록, 삭제, 파일업로드 버튼 가리기
 }
 
 // 대분류 목록을 가져와 select 요소에 옵션을 설정하는 함수
