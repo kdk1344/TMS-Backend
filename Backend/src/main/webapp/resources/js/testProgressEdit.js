@@ -25,6 +25,7 @@ import {
   setSelectValueByText,
   convertDate,
   loadFilesToInput,
+  initializeEditableDefectList,
 } from "./common.js";
 
 /** @global */
@@ -129,7 +130,7 @@ function setupEventListeners() {
   // 프로그램 목록 테이블 클릭
   programTableBody.addEventListener("click", selectProgramFromTable);
 
-  setupModalEventListeners(["screenSearchModal", "programSearchModal"]);
+  setupModalEventListeners(["screenSearchModal", "programSearchModal", "editableDefectSearchModal"]);
 
   // 결함 등록 페이지로 이동
   goDefectRegisterPageButton.addEventListener("click", async () => {
@@ -156,6 +157,18 @@ function setupEventListeners() {
 
     window.location.href = `/tms/defectReg?${query}`;
   });
+
+  // 결함 수정대상 결함번호 조회
+  openEditableDefectSearchModalButton.addEventListener("click", () => {
+    const confirmed = confirm("수정대상 결함번호를 조회하시겠습니까? 작성 중인 정보는 저장되지 않습니다.");
+
+    if (!confirmed) return;
+
+    initializeEditableDefectList();
+    openModal("editableDefectSearchModal");
+  });
+
+  closeEditableDefectSearchModalButton.addEventListener("click", () => closeModal("editableDefectSearchModal"));
 }
 
 /** 사용자 정보에 따른 권한 설정 */

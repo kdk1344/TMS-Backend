@@ -115,24 +115,24 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testStageForEditableDefect">테스트 단계</label>
-                <select id="testStageForEditableDefect" name="testStage">
+                <select id="testStageForEditableDefect" name="testStage" class="readonly">
                   <option value="" selected>전체</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="testIdForEditableDefect">테스트ID</label>
-                <input id="testIdForEditableDefect" name="testId" />
+                <input id="testIdForEditableDefect" name="testId" readonly />
               </div>
 
               <div class="form-group">
                 <label for="programIdForEditableDefect">프로그램ID</label>
-                <input id="programIdForEditableDefect" name="programId" readonly />
+                <input id="programIdForEditableDefect" name="programId" />
               </div>
 
               <div class="form-group">
                 <label for="programNameForEditableDefect">프로그램명</label>
-                <input id="programNameForEditableDefect" name="programName" readonly />
+                <input id="programNameForEditableDefect" name="programName" />
               </div>
             </div>
 

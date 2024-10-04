@@ -888,18 +888,27 @@ export function selectOriginalDefectNumberFromTable(event) {
 }
 
 export async function initializeEditableDefectList() {
-  // 프로그램ID, 프로그램명 초기화
-  document.getElementById("programIdForEditableDefect").value = document.getElementById("programId").value ?? "";
-  document.getElementById("programNameForEditableDefect").value = document.getElementById("programName").value ?? "";
+  const testId = document.getElementById("testId")?.value ?? "";
+  const programId = document.getElementById("programId")?.value ?? "";
+  const programName = document.getElementById("programName")?.value ?? "";
+
+  // 테스트ID, 프로그램ID, 프로그램명 초기화
+  document.getElementById("testIdForEditableDefect").value = testId;
+  document.getElementById("programIdForEditableDefect").value = programId;
+  document.getElementById("programNameForEditableDefect").value = programName;
 
   // 수정대상 결함번호 필터링 이벤트 핸들러
   document.getElementById("editableDefectFilterForm").addEventListener("submit", submitEditableDefectFilter);
 
   // 테스트 단계 셀렉트박스 초기화
   const { testStageList } = await getTestStageList();
+  const testStageSelect = document.getElementById("testStage");
+  const testStageText = testStageSelect?.options[testStageSelect.selectedIndex].textContent ?? "";
+  const testStageCode = testStageSelect?.options[testStageSelect.selectedIndex].value ?? "";
 
   initializeSelect("testStageForEditableDefect", testStageList);
-  renderEditableDefectList();
+  setSelectValueByText("testStageForEditableDefect", testStageText);
+  renderEditableDefectList({ testId, testStage: testStageCode, programId, programName });
 }
 
 // 수정대상 결함번호 목록 필터링
