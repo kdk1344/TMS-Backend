@@ -14,6 +14,8 @@ import {
   setupModalEventListeners,
   showSpinner,
   hideSpinner,
+  AUTHORITY_CODE,
+  checkSession,
 } from "./common.js";
 
 let currentPage = 1;
@@ -52,6 +54,7 @@ function init() {
   setupEventListeners();
   initializeFilterForm(); // 폼 메타 데이터 초기 로드
   renderTestProgress(); // 테스트 진행현황 목록 render
+  initializePageByUser(); // 권한 관련 설정
 }
 
 // 이벤트 핸들러 설정
@@ -457,5 +460,29 @@ async function deleteTestProgress() {
     alert(error.message + "\n다시 시도해주세요.");
   } finally {
     hideSpinner();
+  }
+}
+
+async function initializePageByUser() {
+  const { authorityCode } = await checkSession();
+  const fileUploadAccessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
+  const registerAndRemoveAccessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
+
+  const buttonIds = [
+    "goTestProgressRegisterPageButton",
+    "deleteTestProgressButton",
+    "openTestProgressFileUploadModalButton",
+  ];
+
+  const buttons = buttonIds.map((buttonId) => document.getElementById(buttonId));
+  buttons.forEach((button) => button.classList.add("hidden")); // 등록, 삭제, 파일업로드 버튼 가리기
+
+  if (fileUploadAccessCode.has(authorityCode)) {
+    document.getElementById("openTestProgressFileUploadModalButton").classList.remove("hidden");
+  }
+
+  if (registerAndRemoveAccessCode.has(authorityCode)) {
+    document.getElementById("goTestProgressRegisterPageButton").classList.remove("hidden");
+    document.getElementById("deleteTestProgressButton").classList.remove("hidden");
   }
 }
