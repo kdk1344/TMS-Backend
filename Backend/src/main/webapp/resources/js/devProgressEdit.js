@@ -21,6 +21,8 @@ import {
   openModal,
   closeModal,
   initializeEditableDefectList,
+  AUTHORITY_CODE,
+  checkSession,
 } from "./common.js";
 
 /** @global */
@@ -51,10 +53,11 @@ const fileSelectButton = document.getElementById("fileSelectButton");
 document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
-function init() {
+async function init() {
   renderTMSHeader();
-  initializeEditForm();
+  await initializeEditForm();
   setupEventListeners();
+  await initializePageByUser();
 }
 
 // 이벤트 핸들러 설정
@@ -331,5 +334,129 @@ async function edit(event) {
     alert(error.message + "\n다시 시도해주세요.");
   } finally {
     hideSpinner();
+  }
+}
+
+/** 사용자 정보에 따른 권한 설정 */
+async function initializePageByUser() {
+  const { userName, authorityCode } = await checkSession();
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR, AUTHORITY_CODE.PL]);
+
+  const testSelectIds = new Set(["plTestResult", "thirdTestResult", "itTestResult", "busiTestResult"]); // pl테스트, 제3자 테스트, 고객IT 테스트, 고객현업 테스트 셀렉트박스
+  const selectIds = Object.values(SELECT_ID).filter((id) => !testSelectIds.has(id));
+  const inputIds = [
+    "minorCategory",
+    "programId",
+    "programName",
+    "screenId",
+    "screenName",
+    "screenMenuPath",
+    "developer",
+    "reqId",
+    "deletionHandler",
+    "deletionDate",
+    "deletionReason",
+    "plannedStartDate",
+    "plannedEndDate",
+    "actualStartDate",
+    "actualEndDate",
+    "devTestEndDate",
+    "pl",
+    "thirdPartyTestMgr",
+    "itMgr",
+    "busiMgr",
+  ];
+
+  const fileRemoveButtons = document.querySelectorAll(".file-remove-button");
+  fileRemoveButtons.forEach((button) => button.classList.add("hidden")); // 파일 삭제 버튼 가리기
+
+  // 관리자, PM, 테스트 관리자, PL인 경우
+  if (accessCode.has(authorityCode)) {
+    // 단위테스트 증적 첨부 파일 선택 버튼 disabled 해제
+    document.getElementById("fileSelectButton").removeAttribute("disabled");
+
+    // 단위테스트 증적 첨부 파일 삭제 버튼 가림 해제
+    fileRemoveButtons.forEach((button) => button.classList.remove("hidden"));
+
+    // 전체 Select요소 readonly 클래스 해제
+    selectIds.forEach((selectId) => {
+      document.getElementById(selectId).classList.remove("readonly");
+    });
+
+    // 전체 Input요소 readonly 속성 해제
+    inputIds.forEach((inputId) => {
+      document.getElementById(inputId).removeAttribute("readonly");
+    });
+  }
+
+  // 개발자인 경우
+  if (document.getElementById("developer").value === userName) {
+    const inputIds = ["actualStartDate", "actualEndDate", "devTestEndDate"];
+
+    inputIds.forEach((inputId) => {
+      document.getElementById(inputId).removeAttribute("readonly");
+    });
+
+    // 단위테스트 증적 첨부 파일 선택 버튼 disabled 해제
+    document.getElementById("fileSelectButton").removeAttribute("disabled");
+
+    // 단위테스트 증적 첨부 파일 삭제 버튼 가림 해제
+    fileRemoveButtons.forEach((button) => button.classList.remove("hidden"));
+  }
+
+  // PL인 경우
+  if (document.getElementById("pl").value === userName && authorityCode === AUTHORITY_CODE.PL) {
+    const selectIds = ["plTestResult"];
+    const inputIds = ["plTestScdDate", "plTestCmpDate", "plTestNotes"];
+
+    selectIds.forEach((selectId) => {
+      document.getElementById(selectId).classList.remove("readonly");
+    });
+
+    inputIds.forEach((inputId) => {
+      document.getElementById(inputId).removeAttribute("readonly");
+    });
+  }
+
+  // 제3자 테스터인 경우
+  if (document.getElementById("thirdPartyTestMgr").value === userName) {
+    const selectIds = ["thirdTestResult"];
+    const inputIds = ["thirdPartyTestDate", "thirdPartyConfirmDate", "thirdPartyTestNotes"];
+
+    selectIds.forEach((selectId) => {
+      document.getElementById(selectId).classList.remove("readonly");
+    });
+
+    inputIds.forEach((inputId) => {
+      document.getElementById(inputId).removeAttribute("readonly");
+    });
+  }
+
+  // 고객IT 담당자인 경우
+  if (document.getElementById("itMgr").value === userName) {
+    const selectIds = ["itTestResult"];
+    const inputIds = ["itTestDate", "itConfirmDate", "itTestNotes"];
+
+    selectIds.forEach((selectId) => {
+      document.getElementById(selectId).classList.remove("readonly");
+    });
+
+    inputIds.forEach((inputId) => {
+      document.getElementById(inputId).removeAttribute("readonly");
+    });
+  }
+
+  // 고객현업 담당자인 경우
+  if (document.getElementById("busiMgr").value === userName) {
+    const selectIds = ["busiTestResult"];
+    const inputIds = ["busiTestDate", "busiConfirmDate", "busiTestNotes"];
+
+    selectIds.forEach((selectId) => {
+      document.getElementById(selectId).classList.remove("readonly");
+    });
+
+    inputIds.forEach((inputId) => {
+      document.getElementById(inputId).removeAttribute("readonly");
+    });
   }
 }
