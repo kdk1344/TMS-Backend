@@ -13,6 +13,7 @@ import {
   setupPagination,
   checkSession,
   AUTHORITY_CODE,
+  getNotices,
 } from "./common.js";
 
 let currentPage = 1;
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
   renderTMSHeader();
   setupEventListeners();
-  loadInitialNotices();
+  renderNotices();
   initializeDateFields("startPostDateForFilter", "endPostDateForFilter");
   initializePageByUser();
 }
@@ -123,11 +124,6 @@ function setupEventListeners() {
   setupModalEventListeners(Object.values(MODAL_ID));
 }
 
-// 초기 공지사항 목록 로드
-function loadInitialNotices() {
-  getNotices();
-}
-
 async function initializePageByUser() {
   const { authorityCode } = await checkSession();
   const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
@@ -139,19 +135,9 @@ async function initializePageByUser() {
   buttons.forEach((button) => button.classList.add("hidden")); // 등록, 삭제 버튼 가리기
 }
 
-async function getNotices({ page = 1, startDate = "", endDate = "", title = "", content = "" } = {}) {
-  try {
-    const query = new URLSearchParams({ page, startDate, endDate, title, content }).toString();
-    const { totalPages, notices } = await tmsFetch(`/notices?${query}`);
-
-    displayNotices(notices, totalPages);
-  } catch (error) {
-    console.error("Error fetching notices:", error);
-  }
-}
-
 // 공지사항 목록 표시
-function displayNotices(notices, totalPages) {
+async function renderNotices() {
+  const { notices, totalPages } = await getNotices();
   if (noticeTableBody) {
     noticeTableBody.innerHTML = "";
 

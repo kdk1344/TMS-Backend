@@ -4,9 +4,20 @@ h1 {
   color: black;
 }
 
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
 #loginForm {
   width: 500px;
-  height: 60vh;
+
+  margin-bottom: 24px;
+}
+
+#loginForm h2 {
+  margin-bottom: 24px;
 }
 
 #loginForm button {
@@ -20,18 +31,20 @@ h1 {
 .login-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 40px;
 
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+
+  padding: 32px;
 }
 
 .title {
-  justify-content: center;
   align-items: end;
 
-  margin-bottom: 60px;
+  width: 100vw;
+  padding: 8px 32px;
+  border-bottom: 1px solid var(--black);
 }
 
 .sub-title {
@@ -56,8 +69,177 @@ h1 {
 
 .form-group label {
   display: block;
-  width: 200px;
+  width: 160px;
 
   font-size: 20px;
   font-weight: 600;
+}
+
+#testGuideSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+}
+
+.test-guide-title-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #dae3f3;
+
+  width: 20%;
+  min-height: 258px;
+
+  color: var(--primary-color);
+
+  text-align: center;
+}
+
+.test-guide-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+
+  width: 100%;
+  border: 1px solid var(--black);
+  padding: 28px;
+}
+
+.test-guide-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  flex: 1;
+
+  min-height: 200px;
+  padding: 40px 20px;
+
+  color: var(--black);
+  font-size: 20px;
+  background-color: var(--super-light-gray);
+  border-radius: 12px;
+}
+
+.notice-login-container {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 60px;
+
+  width: 100%;
+}
+
+#noticeSection {
+  flex: 1;
+  height: fit-content;
+}
+
+.notice-header {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 8px;
+}
+
+#noticeList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  height: 400px;
+  padding: 16px;
+
+  font-size: 16px;
+
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+
+  overflow-y: auto;
+}
+
+#noticeList li span:first-child {
+  margin-right: 16px;
+}
+
+/* 툴팁 텍스트 기본 스타일 (숨김) */
+.tooltip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  position: relative; /* 툴팁 텍스트의 위치 기준 */
+
+  font-size: 16px;
+  font-weight: 900;
+
+  border: 1px solid var(--dark-gray);
+  border-radius: 50%;
+
+  user-select: none;
+}
+
+.tooltip-text {
+  visibility: hidden; /* 기본적으로 숨김 */
+  width: 500px;
+  min-height: 40px;
+
+  background-color: var(--dark-gray);
+
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+
+  border-radius: 12px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%; /* 툴팁을 버튼 위에 위치 */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0; /* 투명하게 설정 */
+  transition: opacity 0.3s; /* 부드러운 표시 효과 */
+}
+
+/* 삼각형 모양 추가 (툴팁 아래 방향 화살표) */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* 툴팁 텍스트 바로 아래 */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--gray) transparent transparent transparent;
+}
+
+/* 마우스를 버튼에 올렸을 때 툴팁 표시 */
+.tooltip:hover .tooltip-text,
+.tooltip:focus .tooltip-text {
+  visibility: visible;
+  opacity: 1; /* 툴팁을 보이게 만듦 */
+}
+
+#loginSection {
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid var(--black);
+}
+
+.login-info {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
 }

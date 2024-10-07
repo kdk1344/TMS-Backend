@@ -1249,3 +1249,15 @@ export async function getDefectList(
     console.error(error.message, "결함현황 목록을 불러오지 못 했습니다.");
   }
 }
+
+/** 공지사항 목록 조회 */
+export async function getNotices({ page = 1, startDate = "", endDate = "", title = "", content = "" } = {}) {
+  try {
+    const query = new URLSearchParams({ page, startDate, endDate, title, content }).toString();
+    const { totalPages, notices } = await tmsFetch(`/notices?${query}`);
+
+    return { totalPages, notices };
+  } catch (error) {
+    console.error("Error fetching notices:", error);
+  }
+}

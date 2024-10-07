@@ -1,4 +1,4 @@
-import { tmsFetch, showSpinner, hideSpinner, redirectHomeOnLogin } from "./common.js";
+import { tmsFetch, showSpinner, hideSpinner, redirectHomeOnLogin, getNotices, convertDate } from "./common.js";
 
 // DOM 요소
 const loginForm = document.getElementById("loginForm");
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", init);
 // 초기화 함수
 function init() {
   redirectHomeOnLogin();
+  renderNotices();
   setupEventListeners();
 }
 
@@ -16,6 +17,27 @@ function init() {
 function setupEventListeners() {
   if (loginForm) {
     loginForm.addEventListener("submit", login);
+  }
+}
+
+// 공지사항 목록 표시
+async function renderNotices() {
+  const { notices } = await getNotices();
+  const noticeList = document.getElementById("noticeList");
+
+  if (noticeList) {
+    noticeList.innerHTML = "";
+
+    notices.forEach((notice) => {
+      const row = document.createElement("li");
+
+      row.innerHTML = `
+        <span class="notice-post-date">${convertDate(notice.postDate)}</span>
+        <span class="notice-title ellipsis">${notice.title}</span>
+      `;
+
+      noticeList.appendChild(row);
+    });
   }
 }
 
