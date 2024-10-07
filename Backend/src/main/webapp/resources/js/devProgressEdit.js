@@ -29,7 +29,6 @@ const SELECT_ID = {
   SUB_CATEGORY: "subCategory",
   PROGRAM_TYPE: "programType",
   PROGRAM_DETAIL_TYPE: "programDetailType",
-  PROGRAM_NAME: "programName",
   PRIORITY: "priority",
   DIFFICULTY: "difficulty",
   PROGRAM_STATUS: "programStatus",
@@ -37,7 +36,6 @@ const SELECT_ID = {
   THIRD_PARTY_TEST_RESULT: "thirdTestResult",
   IT_TEST_RESULT: "itTestResult",
   BUSI_TEST_RESULT: "busiTestResult",
-  DEV_STATUS: "devStatus",
 };
 
 // DOM 요소들

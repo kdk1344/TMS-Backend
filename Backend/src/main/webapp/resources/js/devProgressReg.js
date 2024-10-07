@@ -14,6 +14,8 @@ import {
   showSpinner,
   hideSpinner,
   goBack,
+  AUTHORITY_CODE,
+  checkSession,
 } from "./common.js";
 
 /** @global */
@@ -22,7 +24,6 @@ const SELECT_ID = {
   SUB_CATEGORY: "subCategory",
   PROGRAM_TYPE: "programType",
   PROGRAM_DETAIL_TYPE: "programDetailType",
-  PROGRAM_NAME: "programName",
   PRIORITY: "priority",
   DIFFICULTY: "difficulty",
   PROGRAM_STATUS: "programStatus",
@@ -30,7 +31,6 @@ const SELECT_ID = {
   THIRD_PARTY_TEST_RESULT: "thirdTestResult",
   IT_TEST_RESULT: "itTestResult",
   BUSI_TEST_RESULT: "busiTestResult",
-  DEV_STATUS: "devStatus",
 };
 
 // DOM 요소들
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
 function init() {
+  checkAccessOrGoBack();
   renderTMSHeader();
   initializeRegisterForm();
   setupEventListeners();
@@ -77,6 +78,14 @@ function setupEventListeners() {
 
   // 뒤로가기
   goBackButton.addEventListener("click", () => goBack("등록을 취소하시겠습니까? 작성 중인 정보는 저장되지 않습니다."));
+}
+
+async function checkAccessOrGoBack() {
+  const { authorityCode } = await checkSession();
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR, AUTHORITY_CODE.PL]);
+
+  if (!accessCode.has(authorityCode))
+    goBack("프로그램 개발 정보를 등록할 수 있는 권한이 없습니다. 필요 시 관리자에게 문의하세요.");
 }
 
 /**  등록 폼 초기화 함수 */
