@@ -84,33 +84,33 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="majorCategory">업무 대분류<span class="required-indicator">*</span></label>
-                <select id="majorCategory" name="majorCategory" required>
+                <select id="majorCategory" name="majorCategory" required class="readonly">
                   <option value="" disabled selected>대분류를 선택해 주세요.</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="subCategory">업무 중분류<span class="required-indicator">*</span></label>
-                <select id="subCategory" name="subCategory" required>
+                <select id="subCategory" name="subCategory" required class="readonly">
                   <option value="" disabled selected>중분류를 선택해 주세요.</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="minorCategory">업무 소분류</label>
-                <input id="minorCategory" name="minorCategory" placeholder="소분류를 입력해 주세요." />
+                <input id="minorCategory" name="minorCategory" placeholder="소분류를 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
-                <select id="programType" name="programType" required>
+                <select id="programType" name="programType" required class="readonly">
                   <option value="" disabled selected>구분을 선택해 주세요.</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="programDetailType">프로그램 상세구분<span class="required-indicator">*</span></label>
-                <select id="programDetailType" name="programDetailType" required>
+                <select id="programDetailType" name="programDetailType" required class="readonly">
                   <option value="" disabled selected>상세구분을 선택해 주세요.</option>
                 </select>
               </div>
@@ -119,97 +119,103 @@
             <div class="form-group-container">
               <div class="form-group">
                 <label for="programId">프로그램 ID<span class="required-indicator">*</span></label>
-                <input id="programId" name="programId" required placeholder="프로그램 ID를 입력해 주세요." />
+                <input id="programId" name="programId" required placeholder="프로그램 ID를 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="programName">프로그램명<span class="required-indicator">*</span></label>
-                <input id="programName" name="programName" required placeholder="프로그램명을 입력해 주세요." />
+                <input
+                  id="programName"
+                  name="programName"
+                  required
+                  placeholder="프로그램명을 입력해 주세요."
+                  readonly
+                />
               </div>
 
               <!-- 나중에 사용하는 경우 class="hidden" 제거 -->
               <div class="form-group hidden">
                 <label for="className">클래스명</label>
-                <input id="className" name="className" placeholder="클래스명을 입력해 주세요." />
+                <input id="className" name="className" placeholder="클래스명을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="screenId">화면 ID</label>
-                <input id="screenId" name="screenId" placeholder="화면 ID를 입력해 주세요." />
+                <input id="screenId" name="screenId" placeholder="화면 ID를 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="screenName">화면명</label>
-                <input id="screenName" name="screenName" placeholder="화면명을 입력해 주세요." />
+                <input id="screenName" name="screenName" placeholder="화면명을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="screenMenuPath">화면경로</label>
-                <input id="screenMenuPath" name="screenMenuPath" placeholder="화면경로를 입력해 주세요." />
+                <input id="screenMenuPath" name="screenMenuPath" placeholder="화면경로를 입력해 주세요." readonly />
               </div>
             </div>
 
             <div class="form-group-container">
               <div class="form-group">
                 <label for="developer">개발자<span class="required-indicator">*</span></label>
-                <input id="developer" name="developer" required placeholder="이름을 입력해 주세요." />
+                <input id="developer" name="developer" required placeholder="이름을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="priority">우선순위<span class="required-indicator">*</span></label>
-                <select id="priority" name="priority" required>
+                <select id="priority" name="priority" required class="readonly">
                   <option value="" disabled selected>우선순위를 선택해 주세요.</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="difficulty">난이도<span class="required-indicator">*</span></label>
-                <select id="difficulty" name="difficulty" required>
+                <select id="difficulty" name="difficulty" required class="readonly">
                   <option value="" disabled selected>난이도를 선택해 주세요.</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="programStatus">프로그램 상태<span class="required-indicator">*</span></label>
-                <select id="programStatus" name="programStatus" required>
+                <select id="programStatus" name="programStatus" required class="readonly">
                   <option value="" disabled selected>상태를 선택해 주세요.</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="reqId">요구사항 ID</label>
-                <input id="reqId" name="reqId" placeholder="요구사항 ID를 입력해 주세요." />
+                <input id="reqId" name="reqId" placeholder="요구사항 ID를 입력해 주세요." readonly />
               </div>
             </div>
 
             <div class="form-group-container">
               <div class="form-group">
                 <label for="deletionHandler">삭제처리자</label>
-                <input id="deletionHandler" name="deletionHandler" placeholder="이름을 입력해 주세요." />
+                <input id="deletionHandler" name="deletionHandler" placeholder="이름을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="deletionDate">삭제처리일</label>
-                <input id="deletionDate" name="deletionDate" type="date" />
+                <input id="deletionDate" name="deletionDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="deletionReason">삭제처리 사유</label>
-                <input id="deletionReason" name="deletionReason" placeholder="사유를 입력해 주세요." />
+                <input id="deletionReason" name="deletionReason" placeholder="사유를 입력해 주세요." readonly />
               </div>
 
               <div class="small-form-group">
                 <label for="plannedStartDate">개발착수예정일<span class="required-indicator">*</span></label>
-                <input id="plannedStartDate" name="plannedStartDate" type="date" required />
+                <input id="plannedStartDate" name="plannedStartDate" type="date" required readonly />
                 <span>-</span>
-                <input id="plannedEndDate" name="plannedEndDate" type="date" required />
+                <input id="plannedEndDate" name="plannedEndDate" type="date" required readonly />
               </div>
 
               <div class="small-form-group">
                 <label for="actualStartDate">개발종료일</label>
-                <input id="actualStartDate" name="actualStartDate" type="date" />
+                <input id="actualStartDate" name="actualStartDate" type="date" readonly />
                 <span>-</span>
-                <input id="actualEndDate" name="actualEndDate" type="date" />
+                <input id="actualEndDate" name="actualEndDate" type="date" readonly />
               </div>
             </div>
           </div>
@@ -220,11 +226,11 @@
             <div class="file-box-top">
               <div class="flex-box">
                 <legend>단위테스트 증적 첨부+</legend>
-                <button type="button" class="file-button" id="fileSelectButton">파일 선택</button>
+                <button type="button" class="file-button" id="fileSelectButton" disabled>파일 선택</button>
               </div>
               <div class="form-group">
                 <label for="devTestEndDate">개발자 단위테스트 종료일</label>
-                <input id="devTestEndDate" name="devtestendDate" type="date" />
+                <input id="devTestEndDate" name="devtestendDate" type="date" readonly />
               </div>
             </div>
 
@@ -241,22 +247,22 @@
             <div class="input-container">
               <div class="form-group">
                 <label for="pl">PL<span class="required-indicator">*</span></label>
-                <input id="pl" name="pl" required placeholder="이름을 입력해 주세요." />
+                <input id="pl" name="pl" required placeholder="이름을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="plTestScdDate">테스트 예정일</label>
-                <input id="plTestScdDate" name="plTestScdDate" type="date" />
+                <input id="plTestScdDate" name="plTestScdDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="plTestCmpDate">테스트 완료일</label>
-                <input id="plTestCmpDate" name="plTestCmpDate" type="date" />
+                <input id="plTestCmpDate" name="plTestCmpDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="plTestResult">테스트 결과</label>
-                <select id="plTestResult" name="plTestResult">
+                <select id="plTestResult" name="plTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -268,6 +274,7 @@
                   name="plTestNotes"
                   class="custom-scroll"
                   placeholder="테스트 의견을 입력해 주세요."
+                  readonly
                 ></textarea>
               </div>
             </div>
@@ -278,22 +285,22 @@
             <div class="input-container">
               <div class="form-group">
                 <label for="thirdPartyTestMgr">테스트 담당자</label>
-                <input id="thirdPartyTestMgr" name="thirdPartyTestMgr" placeholder="이름을 입력해 주세요." />
+                <input id="thirdPartyTestMgr" name="thirdPartyTestMgr" placeholder="이름을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdPartyTestDate">테스트 예정일</label>
-                <input id="thirdPartyTestDate" name="thirdPartyTestDate" type="date" />
+                <input id="thirdPartyTestDate" name="thirdPartyTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdPartyConfirmDate">테스트 완료일</label>
-                <input id="thirdPartyConfirmDate" name="thirdPartyConfirmDate" type="date" />
+                <input id="thirdPartyConfirmDate" name="thirdPartyConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="thirdTestResult">테스트 결과</label>
-                <select id="thirdTestResult" name="thirdTestResult">
+                <select id="thirdTestResult" name="thirdTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -305,6 +312,7 @@
                   name="thirdPartyTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
+                  readonly
                 ></textarea>
               </div>
 
@@ -320,22 +328,22 @@
             <div class="input-container">
               <div class="form-group">
                 <label for="itMgr">고객 IT 담당자</label>
-                <input id="itMgr" name="itMgr" placeholder="이름을 입력해 주세요." />
+                <input id="itMgr" name="itMgr" placeholder="이름을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="itTestDate">테스트 예정일</label>
-                <input id="itTestDate" name="itTestDate" type="date" />
+                <input id="itTestDate" name="itTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itConfirmDate">테스트 완료일</label>
-                <input id="itConfirmDate" name="itConfirmDate" type="date" />
+                <input id="itConfirmDate" name="itConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="itTestResult">테스트 결과</label>
-                <select id="itTestResult" name="itTestResult">
+                <select id="itTestResult" name="itTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -347,6 +355,7 @@
                   name="itTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
+                  readonly
                 ></textarea>
               </div>
 
@@ -362,22 +371,22 @@
             <div class="input-container">
               <div class="form-group">
                 <label for="busiMgr">현업 담당자</label>
-                <input id="busiMgr" name="busiMgr" placeholder="이름을 입력해 주세요." />
+                <input id="busiMgr" name="busiMgr" placeholder="이름을 입력해 주세요." readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiTestDate">테스트 예정일</label>
-                <input id="busiTestDate" name="busiTestDate" type="date" />
+                <input id="busiTestDate" name="busiTestDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiConfirmDate">테스트 완료일</label>
-                <input id="busiConfirmDate" name="busiConfirmDate" type="date" />
+                <input id="busiConfirmDate" name="busiConfirmDate" type="date" readonly />
               </div>
 
               <div class="form-group">
                 <label for="busiTestResult">테스트 결과</label>
-                <select id="busiTestResult" name="busiTestResult">
+                <select id="busiTestResult" name="busiTestResult" class="readonly">
                   <option value="" disabled selected>테스트 결과를 선택해 주세요.</option>
                 </select>
               </div>
@@ -389,6 +398,7 @@
                   name="busiTestNotes"
                   placeholder="테스트 의견을 입력해 주세요."
                   class="custom-scroll"
+                  readonly
                 ></textarea>
               </div>
 
