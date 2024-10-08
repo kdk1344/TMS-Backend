@@ -136,8 +136,8 @@ async function initializePageByUser() {
 }
 
 // 공지사항 목록 표시
-async function renderNotices() {
-  const { notices, totalPages } = await getNotices();
+async function renderNotices(getNoticesProps = {}) {
+  const { notices, totalPages } = await getNotices(getNoticesProps);
   if (noticeTableBody) {
     noticeTableBody.innerHTML = "";
 
@@ -166,7 +166,7 @@ function changePage(page) {
   const title = document.getElementById("titleForFilter").value.trim();
   const content = document.getElementById("contentForFilter").value;
 
-  getNotices({ page: currentPage, startDate, endDate, title, content });
+  renderNotices({ page: currentPage, startDate, endDate, title, content });
 }
 
 // 공지사항 필터링
@@ -178,9 +178,9 @@ function submitNoticeFilter(event) {
   const title = document.getElementById("titleForFilter").value.trim();
   const content = document.getElementById("contentForFilter").value;
 
-  // 페이지를 1로 초기화하고 getNotices 호출
+  // 페이지를 1로 초기화하고 renderNotices 호출
   currentPage = 1;
-  getNotices({ page: currentPage, startDate, endDate, title, content });
+  renderNotices({ page: currentPage, startDate, endDate, title, content });
 }
 
 // 공지사항 필터 리셋
