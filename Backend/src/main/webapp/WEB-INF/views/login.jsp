@@ -11,6 +11,20 @@
   </head>
 
   <body>
+    <!-- 테스트 참여자 절차안내 모달 -->
+    <div id="testGuideModal" class="modal">
+      <div class="modal-content">
+        <div class="flex-box justify-between">
+          <h2 id="testGuideModalTitle"></h2>
+          <button type="button" id="closeTestGuideModalButton" class="modal-close-button">
+            <img src="../../resources/images/close_icon.png" alt="닫기" />
+          </button>
+        </div>
+
+        <div id="testGuideModalContent"></div>
+      </div>
+    </div>
+
     <header class="flex-box title">
       <h1 class="logo">TMS</h1>
       <span class="sub-title">Test Management System</span>
@@ -26,16 +40,16 @@
         </div>
 
         <div class="test-guide-button-container">
-          <button class="test-guide-button" type="button">
+          <button class="test-guide-button" type="button" id="devProgressButton">
             <img src="../../resources/images/test_icon.png" />개발 진행관리
           </button>
-          <button class="test-guide-button" type="button">
+          <button class="test-guide-button" type="button" id="thirdPartyTestButton">
             <img src="../../resources/images/test_icon.png" />제3자 테스트
           </button>
-          <button class="test-guide-button" type="button">
+          <button class="test-guide-button" type="button" id="integrationTestButton">
             <img src="../../resources/images/test_icon.png" />통합테스트
           </button>
-          <button class="test-guide-button" type="button">
+          <button class="test-guide-button" type="button" id="defectButton">
             <img src="../../resources/images/test_icon.png" />결함관리
           </button>
         </div>

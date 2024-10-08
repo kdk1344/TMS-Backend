@@ -1,4 +1,14 @@
-import { tmsFetch, showSpinner, hideSpinner, redirectHomeOnLogin, getNotices, convertDate } from "./common.js";
+import {
+  tmsFetch,
+  showSpinner,
+  hideSpinner,
+  redirectHomeOnLogin,
+  getNotices,
+  convertDate,
+  openModal,
+  closeModal,
+  setupModalEventListeners,
+} from "./common.js";
 
 // DOM 요소
 const loginForm = document.getElementById("loginForm");
@@ -17,6 +27,91 @@ function init() {
 function setupEventListeners() {
   if (loginForm) {
     loginForm.addEventListener("submit", login);
+  }
+
+  const testGuideModalId = "testGuideModal";
+
+  document.getElementById("devProgressButton").addEventListener("click", () => {
+    const modalTitle = "[개발 진행관리]절차안내";
+    const modalHtmlContent = `
+  <p>테스트에 참여하기 위해 다음 단계를 따라주세요.</p>
+
+  <p>1. 개발 진행 관리: 프로젝트 진행 상황을 점검합니다.</p>
+  <p>2. 제3자 테스트: 외부 업체가 테스트를 수행합니다.</p>
+  <p>3. 통합 테스트: 각 모듈을 통합하여 전체 시스템을 테스트합니다.</p>
+  <p>4. 결함 관리: 발견된 문제를 관리하고 해결합니다.</p>
+
+  <p>위 단계를 모두 완료하시면 테스트 참여가 완료됩니다.</p>
+`;
+    renderTestGuideModal(modalTitle, modalHtmlContent);
+    openModal(testGuideModalId);
+  });
+
+  document.getElementById("thirdPartyTestButton").addEventListener("click", () => {
+    const modalTitle = "[제3자 테스트] 절차안내";
+    const modalHtmlContent = `
+  <p>테스트에 참여하기 위해 다음 단계를 따라주세요.</p>
+
+  <p>1. 개발 진행 관리: 프로젝트 진행 상황을 점검합니다.</p>
+  <p>2. 제3자 테스트: 외부 업체가 테스트를 수행합니다.</p>
+  <p>3. 통합 테스트: 각 모듈을 통합하여 전체 시스템을 테스트합니다.</p>
+  <p>4. 결함 관리: 발견된 문제를 관리하고 해결합니다.</p>
+
+  <p>위 단계를 모두 완료하시면 테스트 참여가 완료됩니다.</p>
+`;
+    renderTestGuideModal(modalTitle, modalHtmlContent);
+    openModal(testGuideModalId);
+  });
+
+  document.getElementById("integrationTestButton").addEventListener("click", () => {
+    const modalTitle = "[통합테스트] 절차안내";
+    const modalHtmlContent = `
+  <p>테스트에 참여하기 위해 다음 단계를 따라주세요.</p>
+
+  <p>1. 개발 진행 관리: 프로젝트 진행 상황을 점검합니다.</p>
+  <p>2. 제3자 테스트: 외부 업체가 테스트를 수행합니다.</p>
+  <p>3. 통합 테스트: 각 모듈을 통합하여 전체 시스템을 테스트합니다.</p>
+  <p>4. 결함 관리: 발견된 문제를 관리하고 해결합니다.</p>
+
+  <p>위 단계를 모두 완료하시면 테스트 참여가 완료됩니다.</p>
+`;
+    renderTestGuideModal(modalTitle, modalHtmlContent);
+    openModal(testGuideModalId);
+  });
+
+  document.getElementById("defectButton").addEventListener("click", () => {
+    const modalTitle = "[결함관리] 절차안내";
+    const modalHtmlContent = `
+  <p>테스트에 참여하기 위해 다음 단계를 따라주세요.</p>
+
+  <p>1. 개발 진행 관리: 프로젝트 진행 상황을 점검합니다.</p>
+  <p>2. 제3자 테스트: 외부 업체가 테스트를 수행합니다.</p>
+  <p>3. 통합 테스트: 각 모듈을 통합하여 전체 시스템을 테스트합니다.</p>
+  <p>4. 결함 관리: 발견된 문제를 관리하고 해결합니다.</p>
+
+  <p>위 단계를 모두 완료하시면 테스트 참여가 완료됩니다.</p>
+`;
+    renderTestGuideModal(modalTitle, modalHtmlContent);
+    openModal(testGuideModalId);
+  });
+
+  document.getElementById("closeTestGuideModalButton").addEventListener("click", () => closeModal(testGuideModalId));
+  setupModalEventListeners([testGuideModalId]);
+}
+
+// 테스트 참여자 절차안내 모달 콘텐츠 표시
+function renderTestGuideModal(modalTitle = "", modalHtmlContent = "", modalTextContent = "") {
+  const titleElement = document.getElementById("testGuideModalTitle");
+  const contentElement = document.getElementById("testGuideModalContent");
+
+  // 모달 제목 설정
+  titleElement.textContent = modalTitle;
+
+  // HTML 콘텐츠가 있을 경우에는 HTML로 설정, 그렇지 않으면 텍스트 콘텐츠 설정
+  if (modalHtmlContent.length > 0) {
+    contentElement.innerHTML = modalHtmlContent;
+  } else {
+    contentElement.textContent = modalTextContent;
   }
 }
 
