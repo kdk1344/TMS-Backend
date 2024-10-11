@@ -54,10 +54,10 @@ document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
 async function init() {
-  renderTMSHeader();
+  await renderTMSHeader();
   await initializeEditForm();
-  setupEventListeners();
   await initializePageByUser();
+  setupEventListeners();
 }
 
 // 이벤트 핸들러 설정
@@ -162,7 +162,7 @@ async function initializeEditForm() {
   Object.values(SELECT_ID).forEach((selectId) => initializeSelect(selectId, SELECT_DATA[selectId])); // 셀렉트 초기화
 
   // 상세 정보 초기화
-  fillFormValues({ ...devProgressDetail, ...defectCounts, attachments });
+  await fillFormValues({ ...devProgressDetail, ...defectCounts, attachments });
 
   if (defectCounts.totalDefectCount === 0) {
     document.getElementById("openEditableDefectSearchModalButton").classList.add("hidden"); // 수정할 결함이 없는 경우 결함수정 버튼 숨김
