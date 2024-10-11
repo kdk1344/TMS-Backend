@@ -100,12 +100,12 @@ export async function renderTMSHeader() {
 
 // 사용자 정보 HTML을 반환하는 함수
 async function getUserInfoHTML() {
-  const { isLogin, userID, authrityCode } = await checkSession();
+  const { isLogin, userID, userName, authrityCode } = await checkSession();
 
   if (isLogin) {
     return `
         <div id="userInfoBox">
-          <span>${userID}님</span>
+          <span>${userID}(${userName})님</span>
           <button type="button" id="logoutButton" onclick="logout">로그아웃</button>
         </div>
       `;

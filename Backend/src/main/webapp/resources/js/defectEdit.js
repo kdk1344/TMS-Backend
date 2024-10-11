@@ -501,11 +501,9 @@ function enableDefectRegistrarFields() {
   const majorCategorySelect = document.getElementById("majorCategory");
   const subCategorySelect = document.getElementById("subCategory");
   const testStageSelect = document.getElementById("testStage");
-  const testIdInput = document.getElementById("testId");
   const defectDiscoveryDateInput = document.getElementById("defectDiscoveryDate");
   const defectTypeSelect = document.getElementById("defectType");
   const defectSeveritySelect = document.getElementById("defectSeverity");
-  const defectRegistrarInput = document.getElementById("defectRegistrar");
   const defectDescriptionInput = document.getElementById("defectDescription");
   const defectFileSelectButton = document.getElementById("defectFileSelectButton");
   const programSearchButton = document.getElementById("programSearchButton");
@@ -518,9 +516,7 @@ function enableDefectRegistrarFields() {
   defectTypeSelect.classList.remove("readonly");
   defectSeveritySelect.classList.remove("readonly");
 
-  testIdInput.removeAttribute("readonly");
   defectDiscoveryDateInput.removeAttribute("readonly");
-  defectRegistrarInput.removeAttribute("readonly");
   defectDescriptionInput.removeAttribute("readonly");
 
   defectFileSelectButton.removeAttribute("hidden");
