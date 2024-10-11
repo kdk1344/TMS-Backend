@@ -15,23 +15,24 @@ import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 
 @Mapper
 public interface DefectMapper {
 
 	public List<Defect> searchDefects(@Param("testStage") String testStage, 
-            @Param("majorCategory") String majorCategory, 
-            @Param("subCategory") String subCategory, 
-            @Param("defectSeverity") String defectSeverity,
-            @Param("seq") Integer seq,
-            @Param("defectRegistrar") String defectRegistrar,
-            @Param("defectHandler") String defectHandler,
-            @Param("pl") String pl,
-            @Param("defectStatus") String defectStatus,
-            @Param("programId") String programId,
-            @Param("testId") String testId,
-            @Param("programName") String programName,
-            @Param("programType") String programType,
+			@Param("majorCategory") String majorCategory, 
+	        @Param("subCategory") String subCategory, 
+		    @Param("defectSeverity") String defectSeverity,
+		    @Param("seq") Integer seq,
+		    @Param("defectRegistrar") String defectRegistrar,
+		    @Param("defectHandler") String defectHandler,
+		    @Param("pl") String pl,
+		    @Param("defectStatus") String defectStatus,
+		    @Param("programId") String programId,
+		    @Param("testId") String testId,
+		    @Param("programName") String programName,
+		    @Param("programType") String programType,
             @Param("offset") int offset, 
             @Param("size") int size); // 결함 현황 조회
 	public int countDefects(@Param("testStage") String testStage, 

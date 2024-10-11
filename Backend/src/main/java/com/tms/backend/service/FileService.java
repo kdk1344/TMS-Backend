@@ -90,7 +90,7 @@ public class FileService {
 	
 	                File destinationFile = new File(storageLocation);
 	                file.transferTo(destinationFile);
-	                
+  
 	                // 첨부파일 테이블 세팅
 	                FileAttachment attachment = new FileAttachment();
 	                attachment.setIdentifier(identifier);
@@ -99,10 +99,12 @@ public class FileService {
 	                attachment.setFileName(file.getOriginalFilename());
 	
 	                attachments.add(attachment);
-	            } catch (IOException e) {
-	                log.error("File upload failed", e);
+	                log.info(attachments);
+	            } catch (Exception e) {
+	                log.info("File upload failed");
 	            }
 	        } else {
+	        	log.info("비었어!");
 	        }
         }
         adminService.saveAttachments(attachments); // 첨부파일 저장

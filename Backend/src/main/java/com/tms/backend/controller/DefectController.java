@@ -105,19 +105,16 @@ public class DefectController {
 //			}
 		Map<String, Object> response = new HashMap<>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
+				
 		// 숫자로 프론트엔드에서 오는 것들 DB에 입력하는 문자로 변환
 		majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
-		if (defectSeverity != null && !defectSeverity.isEmpty()) {
-			defectSeverity = adminService.getStageCCodes("14", defectSeverity);}
-		if (defectStatus != null && !defectStatus.isEmpty()) {
-			defectStatus = adminService.getStageCCodes("15", defectStatus);}
-		if (testStage != null && !testStage.isEmpty()) {
-			testStage = adminService.getStageCCodes("11", testStage);}
-		
-		List<Defect> defects;
+		defectSeverity = adminService.getStageCCodes("14", defectSeverity);
+		defectStatus = adminService.getStageCCodes("15", defectStatus);
+		testStage = adminService.getStageCCodes("11", testStage);
 				
+		List<Defect> defects;
+								
 		if (size == 99999) { // 결함 조회를 위해서는 size가 디폴트값에서 변하기에 기본 검색이 아니게 만들기 위한 조건으로 성립
 		    defects = defectService.searchDefectOriginal(testStage, testId, programId, programName);
 		} else { // 기본 검색
@@ -420,7 +417,6 @@ public class DefectController {
 		    // 공지사항에 등록된 기존 첨부파일 전부 삭제
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),31);
 	        adminService.deleteAttachmentsByNoticeId(defect.getSeq(),32);
-	        log.info(DefectEdit.getDefectStatus());
 	        // 업데이트된 공지사항을 저장
 	        defectService.updateDefect(DefectEdit);
 	        
@@ -443,7 +439,7 @@ public class DefectController {
             	fileservice.handleFileUpload(files, "defect", defect.getSeq());
             }
             if (fixfiles != null && fixfiles.length > 0) {
-            	fileservice.handleFileUpload(files, "defectFix", defect.getSeq());
+            	fileservice.handleFileUpload(fixfiles, "defectFix", defect.getSeq());
             }
             List<FileAttachment> attachments = adminService.getAttachments(defect.getSeq(),31);
             DefectEdit.setDefectAttachment(attachments);
@@ -514,17 +510,14 @@ public class DefectController {
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "size", defaultValue = "15") int size,
             HttpServletResponse response) throws IOException {
     	
     	majorCategory = adminService.getStageCodes("대", majorCategory);
 		subCategory = adminService.getStageCodes("중", subCategory);
-		if (defectSeverity != null && !defectSeverity.isEmpty()) {
-			defectSeverity = adminService.getStageCCodes("14", defectSeverity);}
-		if (defectStatus != null && !defectStatus.isEmpty()) {
-			defectStatus = adminService.getStageCCodes("15", defectStatus);}
-		if (testStage != null && !testStage.isEmpty()) {
-			testStage = adminService.getStageCCodes("11", testStage);}
+		defectSeverity = adminService.getStageCCodes("14", defectSeverity);
+		defectStatus = adminService.getStageCCodes("15", defectStatus);
+		testStage = adminService.getStageCCodes("11", testStage);
 		
 		// 결함 목록 조회
 	    List<Defect> defects = defectService.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, 

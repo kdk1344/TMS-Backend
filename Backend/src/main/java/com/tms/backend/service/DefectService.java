@@ -43,8 +43,8 @@ public class DefectService {
     		String programType, int page, int size) {
     	int offset = (page - 1) * size;
     	
-        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl,
-        		programId, testId, programName, programType, defectStatus, offset, size);
+        return defectmapper.searchDefects(testStage, majorCategory, subCategory, defectSeverity, seq, defectRegistrar, defectHandler, pl, defectStatus,
+        		programId, testId, programName, programType, offset, size);
     }
     
     // °áÇÔ ÃÑ °¹¼ö

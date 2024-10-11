@@ -321,8 +321,8 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> testProgressEdit(HttpServletRequest request,
 			@RequestPart("testProgress") testProgress testProgress,
-			@RequestPart(value = "file", required = false) MultipartFile[] files,
-			@RequestPart(value = "fixfile", required = false) MultipartFile[] fixfiles) {
+			@RequestPart(value = "execFile", required = false) MultipartFile[] execfiles,
+			@RequestPart(value = "thirdFile", required = false) MultipartFile[] thirdfiles) {
 		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
 //			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
@@ -348,10 +348,9 @@ public class TestController {
     	    // 공지사항에 등록된 기존 첨부파일 전부 삭제
             adminService.deleteAttachmentsByNoticeId(TestProgressEdit.getSeq(), 1);
             
-
             // 새로운 파일 업로드 처리
-            fileservice.handleFileUpload(files, "testProgress", testProgress.getSeq());
-            fileservice.handleFileUpload(files, "testProgressThird", testProgress.getSeq());
+            fileservice.handleFileUpload(execfiles, "testProgress", testProgress.getSeq());
+            fileservice.handleFileUpload(thirdfiles, "testProgressThird", testProgress.getSeq());
 
             //첨부파일 등록
             List<FileAttachment> execattachments = adminService.getAttachments(testProgress.getSeq(),21);

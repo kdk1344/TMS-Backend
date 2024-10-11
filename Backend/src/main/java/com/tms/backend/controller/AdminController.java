@@ -91,17 +91,21 @@ public class AdminController {
         try {
             adminService.join(user);  // 사용자 등록
             response.put("status", "success");
-            response.put("message", "User successfully registered!");
+            response.put("message", "사용자 등록에 성공했습니다.");
             response.put("user", user); // 가입된 사용자 정보 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch(DuplicateKeyException e) { 
+        	response.put("status", "failure");
+            response.put("message", "중복된 사용자입니다.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    	} catch (IllegalArgumentException e) {
             response.put("status", "failure");
-            response.put("message", e.getMessage());
+            response.put("message", "사용자 등록 중에 오류가 발생했습니다.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
-            response.put("message", "Error occurred while registering user.");
+            response.put("message", "사용자 등록 중에 오류가 발생했습니다.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
