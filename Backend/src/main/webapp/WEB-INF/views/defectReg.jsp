@@ -4,10 +4,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/defectReg.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/defectReg.css" />
 
     <title>TMS 결함진행 관리 - 결함 등록</title>
-    <script type="module" src="../../resources/js/defectReg.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/resources/js/defectReg.js"></script>
   </head>
 
   <body>
@@ -24,7 +24,7 @@
           <div class="flex-box justify-between">
             <h2>프로그램 조회</h2>
             <button type="button" id="closeProgramSearchModalButton" class="modal-close-button">
-              <img src="../../resources/images/close_icon.png" alt="닫기" />
+              <img src="${pageContext.request.contextPath}/resources/images/close_icon.png" alt="닫기" />
             </button>
           </div>
 
@@ -81,7 +81,7 @@
           <div class="flex-box justify-between">
             <h2>기발생 결함번호 조회</h2>
             <button type="button" id="closeDefectNumberSearchModalButton" class="modal-close-button">
-              <img src="../../resources/images/close_icon.png" alt="닫기" />
+              <img src="${pageContext.request.contextPath}/resources/images/close_icon.png" alt="닫기" />
             </button>
           </div>
           <dl class="definition-container">
@@ -189,7 +189,7 @@
                   <input id="programId" name="programId" required readonly />
 
                   <button type="button" class="search-button" id="programSearchButton">
-                    <img src="../../resources/images/search_icon.png" alt="프로그램 검색" />
+                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="프로그램 검색" />
                   </button>
                 </div>
               </div>
@@ -322,7 +322,7 @@
                   <input id="originalDefectNumber" name="originalDefectNumber" readonly />
 
                   <button type="button" class="search-button" id="defectNumberSearchButton">
-                    <img src="../../resources/images/search_icon.png" alt="기발생 결함번호 검색" />
+                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="기발생 결함번호 검색" />
                   </button>
                 </div>
               </div>

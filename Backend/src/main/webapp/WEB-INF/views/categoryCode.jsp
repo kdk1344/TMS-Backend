@@ -4,10 +4,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/categoryCode.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/categoryCode.css" />
 
     <title>TMS 분류코드 관리</title>
-    <script type="module" src="../../resources/js/categoryCode.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/resources/js/categoryCode.js"></script>
   </head>
 
   <body>
@@ -121,7 +121,7 @@
             >
             <form id="downloadTemplateForm" action="catexampleexcel" method="get" class="flex-box align-center">
               <button type="submit" class="excel-button">
-                <img src="../../resources/images/download_icon.png" />엑셀 양식 다운로드
+                <img src="${pageContext.request.contextPath}/resources/images/download_icon.png" />엑셀 양식 다운로드
               </button>
             </form>
           </div>
@@ -144,7 +144,7 @@
           <div class="download-box">
             <form id="downloadAllCategoryCodeForm" action="catdownloadAll" method="get" class="flex-box align-center">
               <button type="submit" id="downloadAllCategoryCodeButton" class="excel-button">
-                <img src="../../resources/images/download_icon.png" />전체자료 다운로드
+                <img src="${pageContext.request.contextPath}/resources/images/download_icon.png" />전체자료 다운로드
               </button>
               전체 데이터를 주별로 다운로드 받아 실적 집계로 활용
             </form>
@@ -162,7 +162,7 @@
               <input type="hidden" id="codeNameForDownload" name="codeName" />
 
               <button type="submit" id="downloadFilteredCategoryCodeButton" class="excel-button">
-                <img src="../../resources/images/download_icon.png" />
+                <img src="${pageContext.request.contextPath}/resources/images/download_icon.png" />
                 조회결과 다운로드
               </button>
               조회조건에 의한 결과만 다운로드
@@ -211,10 +211,10 @@
         </div>
         <div class="flex-box">
           <button id="openFileUploadModalButton" class="excel-button">
-            <img src="../../resources/images/upload_icon.png" />엑셀 업로드
+            <img src="${pageContext.request.contextPath}/resources/images/upload_icon.png" />엑셀 업로드
           </button>
           <button id="openCategoryCodeFileDownloadModalButton" class="excel-button">
-            <img src="../../resources/images/download_icon.png" />엑셀 다운로드
+            <img src="${pageContext.request.contextPath}/resources/images/download_icon.png" />엑셀 다운로드
           </button>
         </div>
       </div>

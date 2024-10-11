@@ -6,10 +6,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/dashboard.css" />
 
     <title>TMS 대시보드</title>
-    <script type="module" src="../../resources/js/dashboard.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/resources/js/dashboard.js"></script>
   </head>
 
   <body>

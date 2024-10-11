@@ -111,6 +111,11 @@ public class AdminService {
     	return adminmapper.getUserList();
     }
     
+//    // 수행사, 고객, 기타 사용자 숫자 불러오기
+//    public Integer getTesterNumber(String codeName) {
+//    	return adminmapper.getTesterNumber(codeName);
+//    }
+    
     // 공지사항 서비스
     
     //공지사항 정보 불러오기

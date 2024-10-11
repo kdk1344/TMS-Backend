@@ -4,10 +4,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/devProgressEdit.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/devProgressEdit.css" />
 
     <title>TMS 개발진행 관리 - 프로그램 개발 수정</title>
-    <script type="module" src="../../resources/js/devProgressEdit.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/resources/js/devProgressEdit.js"></script>
   </head>
 
   <body>
@@ -24,7 +24,7 @@
           <div class="flex-box justify-between">
             <h2>수정대상 결함번호 조회</h2>
             <button type="button" id="closeEditableDefectSearchModalButton" class="modal-close-button">
-              <img src="../../resources/images/close_icon.png" alt="닫기" />
+              <img src="${pageContext.request.contextPath}/resources/images/close_icon.png" alt="닫기" />
             </button>
           </div>
 

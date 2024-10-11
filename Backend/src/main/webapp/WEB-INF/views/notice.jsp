@@ -4,10 +4,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/notice.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/notice.css" />
 
     <title>TMS 공지사항</title>
-    <script type="module" src="../../resources/js/notice.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/resources/js/notice.js"></script>
   </head>
 
   <body>

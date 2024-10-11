@@ -4,10 +4,10 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/login.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css" />
 
     <title>TMS 로그인</title>
-    <script type="module" src="../../resources/js/login.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/resources/js/login.js"></script>
   </head>
 
   <body>
@@ -17,7 +17,7 @@
         <div class="flex-box justify-between">
           <h2 id="testGuideModalTitle"></h2>
           <button type="button" id="closeTestGuideModalButton" class="modal-close-button">
-            <img src="../../resources/images/close_icon.png" alt="닫기" />
+            <img src="${pageContext.request.contextPath}/resources/images/close_icon.png" alt="닫기" />
           </button>
         </div>
 
@@ -41,16 +41,16 @@
 
         <div class="test-guide-button-container">
           <button class="test-guide-button" type="button" id="devProgressButton">
-            <img src="../../resources/images/test_icon.png" />개발 진행관리
+            <img src="${pageContext.request.contextPath}/resources/images/test_icon.png" />개발 진행관리
           </button>
           <button class="test-guide-button" type="button" id="thirdPartyTestButton">
-            <img src="../../resources/images/test_icon.png" />제3자 테스트
+            <img src="${pageContext.request.contextPath}/resources/images/test_icon.png" />제3자 테스트
           </button>
           <button class="test-guide-button" type="button" id="integrationTestButton">
-            <img src="../../resources/images/test_icon.png" />통합테스트
+            <img src="${pageContext.request.contextPath}/resources/images/test_icon.png" />통합테스트
           </button>
           <button class="test-guide-button" type="button" id="defectButton">
-            <img src="../../resources/images/test_icon.png" />결함관리
+            <img src="${pageContext.request.contextPath}/resources/images/test_icon.png" />결함관리
           </button>
         </div>
       </section>

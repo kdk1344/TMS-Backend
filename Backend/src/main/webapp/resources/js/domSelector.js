@@ -1,4 +1,4 @@
-const $ = (selector) => {
+﻿const $ = (selector) => {
     const $HTMLElement = document.querySelector(selector);
     if (!$HTMLElement) throw new Error(`Dom Error`);
   

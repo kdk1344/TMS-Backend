@@ -34,7 +34,7 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
-@RequestMapping("/tms/*")
+@RequestMapping("/*")
 public class UserController {
 	
 	@Autowired
@@ -48,6 +48,22 @@ public class UserController {
     public String loginPage() {
         return "login";
     }
+    
+//    // 테스터 참여자 인원수
+//    @GetMapping("api/testerNumber")
+//    public Map<String, Object> getTesterNumber(){
+//    	//수행사, 고객, 기타 테스터 인원 산출
+//    	Integer execNumber = adminService.getTesterNumber("수행사");
+//    	Integer customNumber = adminService.getTesterNumber("고객");
+//    	Integer etc = adminService.getTesterNumber("기타");
+//    	
+//    	// 응답 생성
+//	    Map<String, Object> response = new HashMap<>();
+//	    response.put("execNumber", execNumber);
+//	    response.put("customNumber", customNumber);
+//	    response.put("etc", etc);
+//      return response;
+//    }
     
     // 메인 화면 진입 페이지
     @GetMapping("/dashboard")

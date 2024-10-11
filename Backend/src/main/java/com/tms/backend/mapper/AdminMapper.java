@@ -26,6 +26,7 @@ public interface AdminMapper {
 	public int countUsers(Criteria criteria); // 사용자 데이터 숫자
 	public List<User> findAuthorityCode(int authorityCode); // 권한 코드에 따른 사용자 데이터 추출
 	public List<User> getUserList(); // 사용자 데이터 추출
+//	public Integer getTesterNumber(String codeName); // 수행사, 고객, 기타 사용자 숫자 불러오기
 	
 	//공지사항
 	public List<Notice> searchNotices(@Param("startDate") String postDate,
