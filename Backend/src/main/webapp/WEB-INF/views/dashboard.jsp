@@ -24,7 +24,12 @@
 	    	<dl class="nt-details">
 		    <div class="nt-field">
 		      <dt>번호</dt>
-		      <dd id="nt-seq">${latestNotice.seq}</dd>
+		      <c:if test="${latestNotice.seq != 77777}">
+			  	<dd id="nt-seq">${latestNotice.seq}</dd>
+			  </c:if>
+			  <c:if test="${latestNotice.seq == 77777}">
+			  	<dd id="nt-seq">-</dd>
+			  </c:if>
 		    </div>
 		    <div class="nt-field">
 		      <dt>게시일자</dt>
@@ -64,27 +69,19 @@
           </tr>
         </thead>
         <tbody id="noticeTableBody">
-          <c:forEach var="notice" items="${notices}">
-                <tr>
+          	<c:forEach var="notice" items="${notices}">
+                <tr onclick="location.href='/tms/ntdetail?seq=${notice.seq}'" style="cursor: pointer;">
                     <td>
-	                    <a href="/tms/ntdetail?seq=${notice.seq}">
-	                        ${notice.seq}
-	                    </a>
+                        ${notice.seq}
 	                </td>
                     <td>
-	                    <a href="/tms/ntdetail?seq=${notice.seq}">
-	                        <fmt:formatDate value="${notice.postDate}" pattern="yyyy-MM-dd" />
-	                    </a>
+                        <fmt:formatDate value="${notice.postDate}" pattern="yyyy-MM-dd" />
 	                </td>
                     <td>
-                    	<a href="/tms/ntdetail?seq=${notice.seq}">
                         ${notice.title}
-                    	</a>
                     </td>
                     <td class="notice-contents">
-	                    <a href="/tms/ntdetail?seq=${notice.seq}">
-	                        ${notice.content}
-	                    </a>
+                        ${notice.content}
 	                </td>
                 </tr>
             </c:forEach>

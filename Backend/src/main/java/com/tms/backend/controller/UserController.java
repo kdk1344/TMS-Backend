@@ -93,6 +93,12 @@ public class UserController {
         int nextPageGroupStart = startPage + pageGroupSize;
         
         Notice latestNotice = adminService.getLatestNotice(); // 윗 화면에 출력되는 최근 공지사항 내용
+        if (latestNotice == null) {
+            latestNotice = new Notice(); // 빈 Notice 객체를 생성
+            latestNotice.setTitle("최근 공지사항이 없습니다."); // 기본 메시지 설정
+            latestNotice.setContent("");
+            latestNotice.setSeq(77777);
+        }
         List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4); // 최근 공지사항 첨부파일
         latestNotice.setAttachments(attachments);
 
