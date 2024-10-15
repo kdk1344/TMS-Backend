@@ -278,6 +278,7 @@ async function registerUser(event) {
       alert(`사용자(ID: ${user.userID}) 등록이 완료되었습니다.`);
       event.target.reset(); // 폼 초기화
       closeModal(MODAL_ID.USER_REGISTER); // 모달 닫기
+      window.location.reload();
     }
   } catch (error) {
     alert(error.message + "\n다시 시도해주세요.");
