@@ -401,7 +401,6 @@ public class devProgressController {
 			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
 			}
-		String UserID = (String) session.getAttribute("id");
 		String UserName = (String) session.getAttribute("name");
 		Map<String, Object> response = new HashMap<>();
 		try {
@@ -466,24 +465,7 @@ public class devProgressController {
 	        	devProgress.setPlTestScdDate(newDate);
 	        }
 	        // 개발종료일에 따른 개발진행 상태 저장 처리
-	        if (devProgress.getActualStartDate() == null && devProgress.getActualEndDate() == null) {
-	        	devProgress.setDevStatus("미착수");
-	        } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() == null) {
-	        	devProgress.setDevStatus("진행중");
-	        } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() != null) {
-	        	devProgress.setDevStatus("개발완료");
-	        } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() != null
-	        		&& devProgress.getDevProgAttachment().size() >= 1 && devProgress.getPlTestCmpDate() == null) {
-	        	devProgress.setDevStatus("개발자 단테완료");
-	        } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() == null) {
-	        	devProgress.setDevStatus("PL 확인완료");
-	        } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() != null
-	        		&& devProgress.getBusiConfirmDate() == null) {
-	        	devProgress.setDevStatus("고객IT 확인완료");
-	        } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() != null
-	        		&& devProgress.getBusiConfirmDate() != null) {
-	        	devProgress.setDevStatus("고객 현업 확인완료");
-	        }
+	        EndDateDevStatusCheck(devProgress);
 	        //프로그램 ID 중복체크
 	        boolean IdCheck = devservice.checkCountProgramId(devProgress.getProgramId());
 	        if(!IdCheck) {
@@ -654,24 +636,7 @@ public class devProgressController {
 	        	devProgress.setPlTestScdDate(newDate);
 	        }
 	        // 개발종료일에 따른 개발진행 상태 저장 처리
-	        if (devProgress.getActualStartDate() == null && devProgress.getActualEndDate() == null) {
-	        	devProgress.setDevStatus("미착수");
-	        } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() == null) {
-	        	devProgress.setDevStatus("진행중");
-	        } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() != null) {
-	        	devProgress.setDevStatus("개발완료");
-	        } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() != null
-	        		&& devProgress.getDevProgAttachment().size() >= 1 && devProgress.getPlTestCmpDate() == null) {
-	        	devProgress.setDevStatus("개발자 단테완료");
-	        } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() == null) {
-	        	devProgress.setDevStatus("PL 확인완료");
-	        } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() != null
-	        		&& devProgress.getBusiConfirmDate() == null) {
-	        	devProgress.setDevStatus("고객IT 확인완료");
-	        } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() != null
-	        		&& devProgress.getBusiConfirmDate() != null) {
-	        	devProgress.setDevStatus("고객 현업 확인완료");
-	        }
+	        EndDateDevStatusCheck(devProgress);
 	        
 	        devProgress DevProgressEdit = devservice.getDevById(devProgress.getSeq()); // 입력되지 않은 정보를 입력하기 위해 DB에서 수정 데이터 가져옴
 	        devProgress.setInitRegistrar(DevProgressEdit.getInitRegistrar()); // 최초 등록자 입력
@@ -801,21 +766,21 @@ public class devProgressController {
     		}
         // 헤더 이름 배열
         String[] headers = {
-            "SEQ","MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
-            "PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
-            "CLASS_NAME", "SCREEN_ID", "SCREEN_NAME", "SCREEN_MENU_PATH", 
-            "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "PROGRAM_STATUS", 
-            "REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", 
-            "DEVELOPER", "PLANNED_START_DATE", "PLANNED_END_DATE", 
-            "ACTUAL_START_DATE", "ACTUAL_END_DATE", "DEV_TEST_END_DATE", 
-            "PL", "PL_TEST_SCD_DATE", "PL_TEST_CMP_DATE", 
-            "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", 
-            "IT_TEST_DATE", "IT_CONFIRM_DATE", "IT_TEST_RESULT", 
-            "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", 
-            "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
-            "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", 
-            "THIRD_PARTY_CONFIRM_DATE", "THIRD_TEST_RESULT", 
-            "THIRD_PARTY_TEST_NOTES", "DEV_STATUS"
+        		"순번", "업무대분류", "업무중분류", "업무소분류", 
+        	    "프로그램구분", "프로그램상세구분", "프로그램ID", "프로그램명", 
+        	    "클래스명", "화면ID", "화면명", "화면메뉴경로", 
+        	    "우선순위", "난이도", "예상 공수", "프로그램상태", 
+        	    "요구사항ID", "삭제처리자", "삭제처리일", "삭제처리사유", 
+        	    "개발자", "시작예정일", "완료예정일", 
+        	    "시작일", "완료일", "개발자 단위테스트 종료일", 
+        	    "PL", "PL 테스트예정일", "PL 테스트완료일", 
+        	    "PL 테스트 결과", "PL 테스트 의견", "IT 담당자", 
+        	    "IT 테스트예정일", "IT 테스트완료일", "IT 테스트 결과", 
+        	    "IT 테스트의견", "현업 담당자", "현업 테스트예정일", 
+        	    "현업 테스트완료일", "현업 테스트 결과", "현업 테스트의견", 
+        	    "3자 테스트 담당자", "3자 테스트예정일", 
+        	    "3자 테스트완료일", "제3자 테스트 결과", 
+        	    "3자 테스트 의견", "개발진행상태"
         };
 
         // 헤더 생성
@@ -825,24 +790,24 @@ public class devProgressController {
             for (int i = 1; i < headers.length; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
-            headerRow.createCell(46).setCellValue("INIT_REGISTRAR");
-            headerRow.createCell(47).setCellValue("LAST_MODIFIER");
+            headerRow.createCell(46).setCellValue("최초 등록자");
+            headerRow.createCell(47).setCellValue("최종 변경자");
         }
         else {
         	// "SEQ"를 포함하여 모든 헤더 생성
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
-	        headerRow.createCell(47).setCellValue("INIT_REG_DATE");
-	        headerRow.createCell(48).setCellValue("INIT_REGISTRAR");
-	        headerRow.createCell(49).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(50).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(47).setCellValue("최초 등록일시");
+	        headerRow.createCell(48).setCellValue("최초 등록자");
+	        headerRow.createCell(49).setCellValue("최종 변경일시");
+	        headerRow.createCell(50).setCellValue("최종 변경자");
         }
         
         // 헤더와 데이터 매핑
         String[] fields = {
             "getSeq","getMajorCategory", "getSubCategory", "getMinorCategory",
-            "getProgramDetailType", "getProgramType", "getProgramId", "getProgramName",
+            "getProgramType", "getProgramDetailType", "getProgramId", "getProgramName",
             "getClassName", "getScreenId", "getScreenName", "getScreenMenuPath",
             "getPriority", "getDifficulty", "getEstimatedEffort", "getProgramStatus",
             "getReqId", "getDeletionHandler", "getDeletionDate", "getDeletionReason",
@@ -894,7 +859,16 @@ public class devProgressController {
     // 액셀 업로드
     @PostMapping(value = "api/devupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> devuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Map<String, Object>> devuploadExcelFile(@RequestParam("file") MultipartFile file, HttpServletRequest request,
+    															RedirectAttributes redirectAttributes) {
+    	HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		if (session == null || session.getAttribute("authorityCode") == null) {
+			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+			}
+		String UserName = (String) session.getAttribute("name"); // 최초등록자를 위해 가져옴
+		// 현재 LocalDateTime 가져오기
+        LocalDateTime initRegdate = LocalDateTime.now();
         Map<String, Object> response = new HashMap<>();
         if (file.isEmpty()) {
             response.put("status", "failure");
@@ -908,16 +882,23 @@ public class devProgressController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
-            		"PROGRAM_DETAIL_TYPE", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "CLASS_NAME", "SCREEN_ID", 
-            		"SCREEN_NAME", "SCREEN_MENU_PATH", "PRIORITY", "DIFFICULTY", "ESTIMATED_EFFORT", "PROGRAM_STATUS", 
-            		"REQ_ID", "DELETION_HANDLER", "DELETION_DATE", "DELETION_REASON", "DEVELOPER", "PLANNED_START_DATE", 
-            		"PLANNED_END_DATE", "ACTUAL_START_DATE", "ACTUAL_END_DATE", "DEV_TEST_END_DATE", 
-                    "PL", "PL_TEST_SCD_DATE", 
-            		"PL_TEST_CMP_DATE", "PL_TEST_RESULT", "PL_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", "IT_CONFIRM_DATE", 
-            		"IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", 
-            		"BUSI_TEST_NOTES", "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
-            		"THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "DEV_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
+            List<String> expectedHeaders = Arrays.asList(
+            	    "업무대분류", "업무중분류", "업무소분류", 
+            	    "프로그램구분", "프로그램상세구분", "프로그램ID", "프로그램명", 
+            	    "클래스명", "화면ID", "화면명", "화면메뉴경로", 
+            	    "우선순위", "난이도", "예상 공수", "프로그램상태", 
+            	    "요구사항ID", "삭제처리자", "삭제처리일", "삭제처리사유", 
+            	    "개발자", "시작예정일", "완료예정일", 
+            	    "시작일", "완료일", "개발자 단위테스트 종료일", 
+            	    "PL", "PL 테스트예정일", "PL 테스트완료일", 
+            	    "PL 테스트 결과", "PL 테스트 의견", "IT 담당자", 
+            	    "IT 테스트예정일", "IT 테스트완료일", "IT 테스트 결과", 
+            	    "IT 테스트의견", "현업 담당자", "현업 테스트예정일", 
+            	    "현업 테스트완료일", "현업 테스트 결과", "현업 테스트의견", 
+            	    "3자 테스트 담당자", "3자 테스트예정일", 
+            	    "3자 테스트완료일", "제3자 테스트 결과", 
+            	    "3자 테스트 의견", "개발진행상태", "최초 등록자", "최종 변경자"
+            	);
             if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) { // 컬럼명 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -963,7 +944,12 @@ public class devProgressController {
                                     field.set(devprogress, fileservice.getCellValueAsString(row.getCell(j)));
                                     break;
                             }
-                        }                    	
+                        }
+                    	EndDateDevStatusCheck(devprogress);
+                    	devprogress.setInitRegistrar(UserName);
+                    	devprogress.setInitRegDate(initRegdate);
+                    	devprogress.setLastModifier(UserName);
+                    	devprogress.setLastModifiedDate(initRegdate);
                         devProgress.add(devprogress);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1008,6 +994,28 @@ public class devProgressController {
 	        	(ResultValue == null || ResultValue.trim().isEmpty())) {
 	        	throw new IllegalArgumentException(dataName + " 단위테스트 수행 결과 '성공' 인지 '실패'인지 등록하시기 바랍니다.");
 	        }
+    }
+    
+    // 개발종료일에 따른 개발진행 상태 저장 처리
+    private void EndDateDevStatusCheck(devProgress devProgress) {
+	    if (devProgress.getActualStartDate() == null && devProgress.getActualEndDate() == null) {
+	    	devProgress.setDevStatus("미착수");
+	    } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() == null) {
+	    	devProgress.setDevStatus("진행중");
+	    } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() != null) {
+	    	devProgress.setDevStatus("개발완료");
+	    } else if(devProgress.getActualStartDate() != null && devProgress.getActualEndDate() != null
+	    		&& devProgress.getDevProgAttachment().size() >= 1 && devProgress.getPlTestCmpDate() == null) {
+	    	devProgress.setDevStatus("개발자 단테완료");
+	    } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() == null) {
+	    	devProgress.setDevStatus("PL 확인완료");
+	    } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() != null
+	    		&& devProgress.getBusiConfirmDate() == null) {
+	    	devProgress.setDevStatus("고객IT 확인완료");
+	    } else if(devProgress.getPlTestCmpDate() != null && devProgress.getItConfirmDate() != null
+	    		&& devProgress.getBusiConfirmDate() != null) {
+	    	devProgress.setDevStatus("고객 현업 확인완료");
+	    }
     }
     
     
