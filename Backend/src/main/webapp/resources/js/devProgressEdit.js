@@ -340,7 +340,7 @@ async function edit(event) {
 /** 사용자 정보에 따른 권한 설정 */
 async function initializePageByUser() {
   const { userName, authorityCode } = await checkSession();
-  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR, AUTHORITY_CODE.PL]);
+  const accessCode = new Set([AUTHORITY_CODE.ADMIN, AUTHORITY_CODE.PM, AUTHORITY_CODE.TEST_MGR]);
 
   const testSelectIds = new Set(["plTestResult", "thirdTestResult", "itTestResult", "busiTestResult"]); // pl테스트, 제3자 테스트, 고객IT 테스트, 고객현업 테스트 셀렉트박스
   const selectIds = Object.values(SELECT_ID).filter((id) => !testSelectIds.has(id));
@@ -370,8 +370,10 @@ async function initializePageByUser() {
   const fileRemoveButtons = document.querySelectorAll(".file-remove-button");
   fileRemoveButtons.forEach((button) => button.classList.add("hidden")); // 파일 삭제 버튼 가리기
 
+  const isPL = authorityCode === AUTHORITY_CODE.PL && document.getElementById("pl").value === userName;
+
   // 관리자, PM, 테스트 관리자, PL인 경우
-  if (accessCode.has(authorityCode)) {
+  if (accessCode.has(authorityCode) || isPL) {
     // 단위테스트 증적 첨부 파일 선택 버튼 disabled 해제
     document.getElementById("fileSelectButton").removeAttribute("disabled");
 
@@ -405,7 +407,7 @@ async function initializePageByUser() {
   }
 
   // PL인 경우
-  if (document.getElementById("pl").value === userName && authorityCode === AUTHORITY_CODE.PL) {
+  if (isPL) {
     const selectIds = ["plTestResult"];
     const inputIds = ["plTestScdDate", "plTestCmpDate", "plTestNotes"];
 
