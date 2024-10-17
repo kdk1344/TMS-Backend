@@ -269,9 +269,9 @@ public class CodeController {
         //액셀 Row 만들기
         Row headerRow = sheet.createRow(0);
         //컬럼 만들기
-        headerRow.createCell(0).setCellValue("ParentCode");
-        headerRow.createCell(1).setCellValue("Code");
-        headerRow.createCell(2).setCellValue("CodeName");
+        headerRow.createCell(0).setCellValue("상위코드");
+        headerRow.createCell(1).setCellValue("코드");
+        headerRow.createCell(2).setCellValue("코드명");
 
         int rowNum = 1;
         for (CommonCode commonCode : commonCodeList) {
@@ -307,7 +307,7 @@ public class CodeController {
             Row headerRow = sheet.getRow(0);
             
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("ParentCode", "Code", "CodeName");
+            List<String> expectedHeaders = Arrays.asList("상위코드", "코드", "코드명");
             if (!fileService.isHeaderValid(headerRow, expectedHeaders)) { //컬럼 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -616,9 +616,9 @@ public class CodeController {
         
         //로우 값 생성
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("StageType");
-        headerRow.createCell(1).setCellValue("Code");
-        headerRow.createCell(2).setCellValue("CodeName");
+        headerRow.createCell(0).setCellValue("단계구분");
+        headerRow.createCell(1).setCellValue("코드");
+        headerRow.createCell(2).setCellValue("코드명");
 
         int rowNum = 1;
         for (categoryCode categoryCode : categoryCodeList) {
@@ -654,7 +654,7 @@ public class CodeController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("StageType", "Code", "CodeName");
+            List<String> expectedHeaders = Arrays.asList("단계구분", "코드", "코드명");
             if (!fileService.isHeaderValid(headerRow, expectedHeaders)) {
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -675,13 +675,17 @@ public class CodeController {
                         // Code 처리
                     	String code;
                         if (row.getCell(1).getCellType() == CellType.NUMERIC) {
+                        	log.info("check");
                         	if ("대".equals(stageType)) {
+                        		log.info("대");
 	                        	code = String.format("%02d", (int) row.getCell(1).getNumericCellValue());
                         	}
                         	else {
+                        		log.info("중");
 	                    		code = String.format("%04d", (int) row.getCell(1).getNumericCellValue());
                         	}
                         } else {
+                        	log.info("소");
                         	code = row.getCell(1).getStringCellValue();
                         }
                         // 코드네임 처리

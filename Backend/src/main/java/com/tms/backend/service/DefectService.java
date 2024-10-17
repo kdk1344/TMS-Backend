@@ -1,9 +1,16 @@
 
 package com.tms.backend.service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -91,6 +98,9 @@ public class DefectService {
     public void saveAllDefect(List<Defect> defect) {
         for (Defect def : defect) {
         	DefectStatusCheck(def);
+        	if (def.getPlDefectJudgeClass()== null && def.getPlDefectJudgeClass().isEmpty()) {
+        		def.setPlDefectJudgeClass("결함수용");
+        	}
             defectmapper.insertdefect(def);
         }	
     }

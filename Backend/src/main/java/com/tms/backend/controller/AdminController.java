@@ -306,17 +306,17 @@ public class AdminController {
         //액셀 Row 만들기
         Row headerRow = sheet.createRow(0);
         //컬럼 만들기
-        headerRow.createCell(0).setCellValue("UserID");
-        headerRow.createCell(1).setCellValue("userName");
-        headerRow.createCell(2).setCellValue("Password");
+        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(1).setCellValue("사용자명");
+        headerRow.createCell(2).setCellValue("패스워드");
         //사용자 예시 파일 생성을 위한 조건
         if (check != "") {
-        	headerRow.createCell(3).setCellValue("AuthorityName");
+        	headerRow.createCell(3).setCellValue("권한명");
         }
         //그외 액셀 파일 생성을 위한 조건
         else {
-	        headerRow.createCell(3).setCellValue("AuthorityCode");
-	        headerRow.createCell(4).setCellValue("AuthorityName");
+	        headerRow.createCell(3).setCellValue("권한코드");
+	        headerRow.createCell(4).setCellValue("권한명");
         }
         
         int rowNum = 1;
@@ -378,7 +378,7 @@ public class AdminController {
             Row headerRow = sheet.getRow(0);
             
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("userID", "userName", "Password", "AuthorityName");
+            List<String> expectedHeaders = Arrays.asList("ID", "사용자명", "패스워드", "권한명");
             if (!fileService.isHeaderValid(headerRow, expectedHeaders)) { // 컬럼 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");

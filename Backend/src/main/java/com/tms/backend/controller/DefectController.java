@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -536,14 +537,13 @@ public class DefectController {
     		}
         // 헤더 이름 배열
         String[] headers = {
-        	    "SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
-        	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
-        	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_DISCOVERY_DATE", 
-        	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
-        	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
-        	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
-        	    "DEFECT_REGISTRAR_COMMENT", "DEFECT_STATUS", "INIT_CREATED_DATE", 
-        	    "INIT_CREATER", "LAST_MODIFIED_DATE", "LAST_MODIFIER"
+        		"결함SEQ", "테스트단계", "업무대분류", "업무중분류", "테스트ID", 
+        	    "프로그램구분", "프로그램ID", "프로그램명", "결함 유형", 
+        	    "결함 심각도", "결함 내용", "결함 등록자", "결함 발생일", 
+        	    "결함 조치 담당자", "결함 조치 예정일", "결함 조치 완료일", 
+        	    "결함 조치 내역", "PL", "PL 확인일", "기 발생 결함번호", 
+        	    "PL결함판단구분", "PL의견", "결함 등록자 확인일", 
+        	    "결함 등록자 의견", "결함 처리 상태"
         	};
 
         // 헤더 생성
@@ -551,21 +551,21 @@ public class DefectController {
         if (!check.equals("")) {
         	// "SEQ"를 무시하고 다음 헤더부터 시작
         	log.info("check"+check);
-            for (int i = 1; i < headers.length-4; i++) {
+            for (int i = 1; i < headers.length; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
-            headerRow.createCell(24).setCellValue("INIT_CREATER");
-            headerRow.createCell(25).setCellValue("LAST_MODIFIER");
+            headerRow.createCell(24).setCellValue("최초 등록자");
+            headerRow.createCell(25).setCellValue("최종 변경자");
         }
         else {
         	// "SEQ"를 포함하여 모든 헤더 생성
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
-	        headerRow.createCell(25).setCellValue("INIT_CREATED_DATE");
-	        headerRow.createCell(26).setCellValue("INIT_CREATER");
-	        headerRow.createCell(27).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(28).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(25).setCellValue("최초 등록일시");
+	        headerRow.createCell(26).setCellValue("최초 등록자");
+	        headerRow.createCell(27).setCellValue("최종 변경일시");
+	        headerRow.createCell(28).setCellValue("최종 변경자");
         }
         
         // 헤더와 데이터 매핑
@@ -608,7 +608,12 @@ public class DefectController {
     
     @PostMapping(value = "api/defectupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> defectuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Map<String, Object>> defectuploadExcelFile(HttpServletRequest request, @RequestParam("file") MultipartFile file, 
+    																RedirectAttributes redirectAttributes) {
+    	HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		String UserName = (String) session.getAttribute("name"); // 최초등록자를 위해 가져옴
+		// 현재 LocalDateTime 가져오기
+        LocalDateTime initRegdate = LocalDateTime.now();
         Map<String, Object> response = new HashMap<>();
         if (file.isEmpty()) {
             response.put("status", "failure");
@@ -622,13 +627,14 @@ public class DefectController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "TEST_ID", 
-            	    "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", "DEFECT_TYPE", 
-            	    "DEFECT_SEVERITY", "DEFECT_DESCRIPTION", "DEFECT_REGISTRAR", "DEFECT_DISCOVERY_DATE", 
-            	    "DEFECT_HANDLER", "DEFECT_SCHEDULED_DATE", "DEFECT_COMPLETION_DATE", 
-            	    "DEFECT_RESOLUTION_DETAILS", "PL", "PL_CONFIRM_DATE", "ORIGINAL_DEFECT_NUMBER", 
-            	    "PL_DEFECT_JUDGE_CLASS", "PL_COMMENTS", "DEFECT_REG_CONFIRM_DATE", 
-            	    "DEFECT_REGISTRAR_COMMENT", "DEFECT_STATUS", "INIT_CREATER", "LAST_MODIFIER");
+            List<String> expectedHeaders = Arrays.asList(
+            		"테스트단계", "업무대분류", "업무중분류", "테스트ID", 
+            	    "프로그램구분", "프로그램ID", "프로그램명", "결함 유형", 
+            	    "결함 심각도", "결함 내용", "결함 등록자", "결함 발생일", 
+            	    "결함 조치 담당자", "결함 조치 예정일", "결함 조치 완료일", 
+            	    "결함 조치 내역", "PL", "PL 확인일", "기 발생 결함번호", 
+            	    "PL결함판단구분", "PL의견", "결함 등록자 확인일", 
+            	    "결함 등록자 의견", "결함 처리 상태", "최초 등록자", "최종 변경자");
             if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) { // 컬럼명 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -674,6 +680,10 @@ public class DefectController {
                                 break;
                         }
                         }
+                    	deFect.setInitCreater(UserName);
+                    	deFect.setInitCreatedDate(initRegdate);
+                    	deFect.setLastModifier(UserName);
+                    	deFect.setLastModifiedDate(initRegdate);
                     	defect.add(deFect);
                     } catch (Exception e) {
                         e.printStackTrace();

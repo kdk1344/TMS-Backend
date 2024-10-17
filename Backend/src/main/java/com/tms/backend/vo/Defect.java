@@ -1,6 +1,8 @@
 package com.tms.backend.vo;
 
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class Defect {
     private Date defectRegConfirmDate;           // 결함 등록자 확인일
     private String defectRegistrarComment;       // 결함 등록자 의견
     private String defectStatus;                 // 결함 처리 상태
-    private Date initCreatedDate;                // 최초 등록일시
+    private LocalDateTime initCreatedDate;                // 최초 등록일시
     private String initCreater;                  // 최초 등록자
-    private Date lastModifiedDate;               // 최종 변경일시
+    private LocalDateTime lastModifiedDate;               // 최종 변경일시
     private String lastModifier;                 // 최종 변경자
     private List<FileAttachment> defectAttachment;            // 결함 첨부파일
     private List<FileAttachment> defectFixAttachments;         // 결함 조치 첨부파일

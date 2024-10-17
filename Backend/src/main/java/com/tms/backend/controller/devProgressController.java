@@ -945,6 +945,7 @@ public class devProgressController {
                                     break;
                             }
                         }
+                    	//프로그램 개발 진행 현황 필수값 입력
                     	EndDateDevStatusCheck(devprogress);
                     	devprogress.setInitRegistrar(UserName);
                     	devprogress.setInitRegDate(initRegdate);

@@ -31,7 +31,7 @@
 			              WHEN #{authorityName} = '테스트관리자' THEN 3
 			              WHEN #{authorityName} = 'PL' THEN 4
 			              WHEN #{authorityName} = '개발자' THEN 5
-			              WHEN #{authorityName} = '제3자테스터' THEN 6
+			              WHEN #{authorityName} = '테스터' THEN 6
 			              WHEN #{authorityName} = '고객 IT 담당자' THEN 7
 			              WHEN #{authorityName} = '고객 현업 담당자' THEN 8
                       END
@@ -457,7 +457,7 @@
 	<!--  중복 분류코드 확인 -->
     <select id="countdupliCtCode" parameterType="categoryCode" resultType="int">
     	SELECT COUNT(*)
-    	FROM category_code
+    	FROM category_codes
     	WHERE Stage_Type = #{stageType} and Code = #{code} and CODE_NAME = #{codeName} 
     </select>
 </mapper>

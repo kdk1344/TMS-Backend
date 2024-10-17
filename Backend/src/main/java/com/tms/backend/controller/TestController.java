@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -456,18 +457,18 @@ public class TestController {
     		}
         // 헤더 이름 배열
         String[] headers = {
-        		"SEQ", "TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
-        	    "TEST_ID", "TEST_SCENARIO_NAME", "TEST_CASE_NAME", "TEST_STEP_NAME", 
-        	    "SCREEN_ID", "SCREEN_NAME", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
-        	    "SCREEN_MENU_PATH", "EXECUTE_PROCEDURE", "INPUT_DATA", "PRECONDITIONS", "EXPECTED_RESULT", 
-        	    "ACTUAL_RESULT", "DEVELOPER", "PL", "EXEC_COMPANY_MGR", "EXEC_COMPANY_TEST_DATE", 
-        	    "EXEC_COMPANY_CONFIRM_DATE", "EXEC_COMPANY_TEST_RESULT", "EXEC_COMPANY_TEST_NOTES", 
-        	    "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
-        	    "THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", 
-        	    "IT_CONFIRM_DATE", "IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", 
-        	    "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
-        	    "TEST_STATUS", "INIT_REG_DATE", "INIT_REGISTRAR", "LAST_MODIFIED_DATE", 
-        	    "LAST_MODIFIER"
+        	    "테스트SEQ", "테스트단계", "업무대분류", "업무중분류", "업무소분류", 
+        	    "테스트ID", "테스트시나리오명", "테스트케이스명", "테스트스텝명", 
+        	    "화면ID", "화면명", "프로그램구분", "프로그램ID", "프로그램명", 
+        	    "화면메뉴경로", "수행 절차", "입력 데이터", "사전 조건", "예상 결과", 
+        	    "실제 결과", "개발자", "PL", "수행사 담당자", "수행사 완료예정일", 
+        	    "수행사 완료일", "수행사 테스트결과", "수행사 테스트의견", 
+        	    "제3자 담당자", "제3자 완료예정일", "제3자 완료일", 
+        	    "제3자 테스트의견", "제3자 테스트결과", "고객IT 담당자", 
+        	    "고객IT 시작일", "고객IT 완료일", "고객IT 테스트결과", 
+        	    "고객IT 테스트의견", "고객현업 담당자", "고객현업 시작일", 
+        	    "고객현업 완료일", "고객현업 테스트결과", "고객현업 테스트의견", 
+        	    "테스트 진행 상태"
         	};
 
         // 헤더 생성
@@ -475,21 +476,21 @@ public class TestController {
         if (!check.equals("")) {
         	// "SEQ"를 무시하고 다음 헤더부터 시작
         	log.info("check"+check);
-            for (int i = 1; i < headers.length-2; i++) {
+            for (int i = 1; i < headers.length-1; i++) {
                 headerRow.createCell(i - 1).setCellValue(headers[i]);
             }
-            headerRow.createCell(41).setCellValue("INIT_REGISTRAR");
-            headerRow.createCell(42).setCellValue("LAST_MODIFIER");
+            headerRow.createCell(41).setCellValue("최초 등록자");
+            headerRow.createCell(42).setCellValue("최종 변경자");
         }
         else {
         	// "SEQ"를 포함하여 모든 헤더 생성
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
-	        headerRow.createCell(42).setCellValue("INIT_REG_DATE");
-	        headerRow.createCell(43).setCellValue("INIT_REGISTRAR");
-	        headerRow.createCell(44).setCellValue("LAST_MODIFIED_DATE");
-	        headerRow.createCell(45).setCellValue("LAST_MODIFIER");
+	        headerRow.createCell(43).setCellValue("최초 등록일시");
+	        headerRow.createCell(44).setCellValue("최초 등록자");
+	        headerRow.createCell(45).setCellValue("최종 변경일시");
+	        headerRow.createCell(46).setCellValue("최종 변경자");
         }
         
         // 헤더와 데이터 매핑
@@ -497,7 +498,7 @@ public class TestController {
         	    "getSeq", "getTestStage", "getMajorCategory", "getSubCategory", "getMinorCategory",
         	    "getTestId", "getTestScenarioName", "getTestCaseName", "getTestStepName",
         	    "getScreenId", "getScreenName", "getProgramType", "getProgramId", "getProgramName",
-        	    "getScreenMenuPath", "getExecuteProcedure", "getInputData", "getpreConditions", "getExpectedResult", "getActualResult",
+        	    "getScreenMenuPath", "getExecuteProcedure", "getInputData", "getPreConditions", "getExpectedResult", "getActualResult",
         	    "getDeveloper", "getPl", "getExecCompanyMgr", "getExecCompanyTestDate", "getExecCompanyConfirmDate", 
         	    "getExecCompanyTestResult", "getExecCompanyTestNotes", "getThirdPartyTestMgr", 
         	    "getThirdPartyTestDate", "getThirdPartyConfirmDate", "getThirdTestResult", 
@@ -526,10 +527,10 @@ public class TestController {
 	            row.createCell(42).setCellValue(testProgress.getLastModifier());
             }
             else {
-            	row.createCell(42).setCellValue(testProgress.getInitRegDate().toString());
-	            row.createCell(43).setCellValue(testProgress.getInitRegistrar());
-	            row.createCell(44).setCellValue(testProgress.getLastModifiedDate().toString());
-	            row.createCell(45).setCellValue(testProgress.getLastModifier());
+            	row.createCell(43).setCellValue(testProgress.getInitRegDate().toString());
+	            row.createCell(44).setCellValue(testProgress.getInitRegistrar());
+	            row.createCell(45).setCellValue(testProgress.getLastModifiedDate().toString());
+	            row.createCell(46).setCellValue(testProgress.getLastModifier());
             }
         }
         // 엑셀 파일을 HTTP 응답으로 내보내기
@@ -544,7 +545,16 @@ public class TestController {
     //액셀 업로드
     @PostMapping(value = "api/testupload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> testuploadExcelFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Map<String, Object>> testuploadExcelFile(@RequestParam("file") MultipartFile file, HttpServletRequest request,
+    															   RedirectAttributes redirectAttributes) {
+    	HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
+		if (session == null || session.getAttribute("authorityCode") == null) {
+			// 세션이 없거나 authorityCode가 없으면 401 Unauthorized 반환
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "권한이 없습니다. 로그인하세요."));
+			}
+		String UserName = (String) session.getAttribute("name"); // 최초등록자를 위해 가져옴
+		// 현재 LocalDateTime 가져오기
+        LocalDateTime initRegdate = LocalDateTime.now();
         Map<String, Object> response = new HashMap<>();
         if (file.isEmpty()) {
             response.put("status", "failure");
@@ -558,17 +568,18 @@ public class TestController {
             Row headerRow = sheet.getRow(0);
 
             // 예상하는 컬럼명 리스트
-            List<String> expectedHeaders = Arrays.asList("TEST_STAGE", "MAJOR_CATEGORY", "SUB_CATEGORY", "MINOR_CATEGORY", 
-            	    "TEST_ID", "TEST_SCENARIO_NAME", "TEST_CASE_NAME", "TEST_STEP_NAME", 
-            	    "SCREEN_ID", "SCREEN_NAME", "PROGRAM_TYPE", "PROGRAM_ID", "PROGRAM_NAME", 
-            	    "SCREEN_MENU_PATH", "EXECUTE_PROCEDURE", "INPUT_DATA", "PRECONDITIONS", "EXPECTED_RESULT", 
-            	    "ACTUAL_RESULT", "DEVELOPER", "PL", "EXEC_COMPANY_MGR", "EXEC_COMPANY_TEST_DATE", 
-            	    "EXEC_COMPANY_CONFIRM_DATE", "EXEC_COMPANY_TEST_RESULT", "EXEC_COMPANY_TEST_NOTES", 
-            	    "THIRD_PARTY_TEST_MGR", "THIRD_PARTY_TEST_DATE", "THIRD_PARTY_CONFIRM_DATE", 
-            	    "THIRD_TEST_RESULT", "THIRD_PARTY_TEST_NOTES", "IT_MGR", "IT_TEST_DATE", 
-            	    "IT_CONFIRM_DATE", "IT_TEST_RESULT", "IT_TEST_NOTES", "BUSI_MGR", 
-            	    "BUSI_TEST_DATE", "BUSI_CONFIRM_DATE", "BUSI_TEST_RESULT", "BUSI_TEST_NOTES", 
-            	    "TEST_STATUS", "INIT_REGISTRAR", "LAST_MODIFIER");
+            List<String> expectedHeaders = Arrays.asList("테스트단계", "업무대분류", "업무중분류", "업무소분류", 
+            	    "테스트ID", "테스트시나리오명", "테스트케이스명", "테스트스텝명", 
+            	    "화면ID", "화면명", "프로그램구분", "프로그램ID", "프로그램명", 
+            	    "화면메뉴경로", "수행 절차", "입력 데이터", "사전 조건", "예상 결과", 
+            	    "실제 결과", "개발자", "PL", "수행사 담당자", "수행사 완료예정일", 
+            	    "수행사 완료일", "수행사 테스트결과", "수행사 테스트의견", 
+            	    "제3자 담당자", "제3자 완료예정일", "제3자 완료일", 
+            	    "제3자 테스트의견", "제3자 테스트결과", "고객IT 담당자", 
+            	    "고객IT 시작일", "고객IT 완료일", "고객IT 테스트결과", 
+            	    "고객IT 테스트의견", "고객현업 담당자", "고객현업 시작일", 
+            	    "고객현업 완료일", "고객현업 테스트결과", "고객현업 테스트의견", 
+            	    "최초 등록자", "최종 변경자");
             if (!fileservice.isHeaderValid(headerRow, expectedHeaders)) { //컬럼명 비교
                 response.put("status", "error");
                 response.put("message", "헤더의 컬럼명이 올바르지 않습니다.");
@@ -615,7 +626,12 @@ public class TestController {
                                     field.set(testprogress, fileservice.getCellValueAsString(row.getCell(j)));
                                     break;
                             }
-                        }                    	
+                        }
+                    	//테스트 시나리오 필수값 입력
+                    	testprogress.setInitRegistrar(UserName);
+                    	testprogress.setInitRegDate(initRegdate);
+                    	testprogress.setLastModifier(UserName);
+                    	testprogress.setLastModifiedDate(initRegdate);
                         Testprogress.add(testprogress);
                     } catch (Exception e) {
                         e.printStackTrace();
