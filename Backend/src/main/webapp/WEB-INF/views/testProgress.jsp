@@ -190,31 +190,8 @@
       <!-- 테스트 진행현황 테이블 -->
       <div class="table-container">
         <table id="testProgressTable">
-          <thead>
-            <tr>
-              <th><input type="checkbox" id="selectAllTestProgressCheckbox" /></th>
-              <th class="sub-category">업무 중분류</th>
-              <th class="test-id">테스트ID</th>
-              <th class="test-scenario-name">시나리오명</th>
-              <th class="test-case-name">케이스명</th>
-              <th class="test-step-name">스텝명</th>
-              <th class="screen-id">화면ID</th>
-              <th class="screen-name">화면명</th>
-              <th class="program-type">프로그램<br />구분</th>
-              <th class="program-id">호출<br />프로그램ID</th>
-              <th class="program-name">호출<br />프로그램명</th>
-              <th class="exec-company-test-date">수행사<br />완료예정일</th>
-              <th class="exec-company-confirm-date">수행사<br />완료일</th>
-              <th class="developer">개발자</th>
-              <th class="pl">PL</th>
-              <th class="third-party-test-mgr">제3자<br />테스터</th>
-              <th class="third-party-confirm-date">제3자<br />완료일</th>
-              <th class="it-mgr">고객IT</th>
-              <th class="it-confirm-date">고객IT<br />완료일</th>
-              <th class="busi-mgr">고객현업</th>
-              <th class="busi-confirm-date">고객현업<br />완료일</th>
-              <th class="test-status">진행상태</th>
-            </tr>
+          <thead id="testProgressTableHead">
+            <!-- 테스트 진행 정보 헤더 동적으로 삽입 -->
           </thead>
           <tbody id="testProgressTableBody">
             <!-- 테스트 진행 정보 동적으로 삽입-->

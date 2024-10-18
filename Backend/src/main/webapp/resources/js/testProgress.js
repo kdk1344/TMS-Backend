@@ -53,7 +53,6 @@ function init() {
   renderTMSHeader();
   setupEventListeners();
   initializeFilterForm(); // 폼 메타 데이터 초기 로드
-  renderTestProgress(); // 테스트 진행현황 목록 render
   initializePageByUser(); // 권한 관련 설정
 }
 
@@ -163,8 +162,46 @@ async function renderTestProgress(
 
   document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
+  const tableHead = document.getElementById("testProgressTableHead");
+
+  tableHead.innerHTML = `
+        <tr>
+            <th><input type="checkbox" id="selectAllTestProgressCheckbox" /></th>
+            <th class="sub-category">업무 중분류</th>
+            <th class="test-id">테스트ID</th>
+            <th class="test-scenario-name">시나리오명</th>
+            <th class="test-case-name">케이스명</th>
+            <th class="test-step-name">스텝명</th>
+            <th class="screen-id">화면ID</th>
+            <th class="screen-name">화면명</th>
+            <th class="program-type">프로그램<br />구분</th>
+            <th class="program-id">호출<br />프로그램ID</th>
+            <th class="program-name">호출<br />프로그램명</th>
+            <th class="exec-company-test-date">수행사<br />완료예정일</th>
+            <th class="exec-company-confirm-date">수행사<br />완료일</th>
+            <th class="developer">개발자</th>
+            <th class="pl">PL</th>
+            <th class="third-party-test-mgr">제3자<br />테스터</th>
+            <th class="third-party-confirm-date">제3자<br />완료일</th>
+            <th class="it-mgr">고객IT</th>
+            <th class="it-confirm-date">고객IT<br />완료일</th>
+            <th class="busi-mgr">고객현업</th>
+            <th class="busi-confirm-date">고객현업<br />완료일</th>
+            <th class="test-status">진행상태</th>
+        </tr>
+    `;
+
   if (testProgressTableBody) {
     testProgressTableBody.innerHTML = "";
+
+    if (testProgressList.length === 0) {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `<td colspan="22">조건에 맞는 테스트 진행현황이 없습니다.</td>`;
+      testProgressTableBody.appendChild(row);
+
+      return;
+    }
 
     testProgressList.forEach((testProgress) => {
       const {
@@ -197,15 +234,15 @@ async function renderTestProgress(
       row.innerHTML = `
         <td><input type="checkbox" name="testProgress" value="${seq}"></td>
         <td class="sub-category">${subCategory}</td>
-        <td class="test-id">${testId}</td>
-        <td class="test-scenario-name">${testScenarioName}</td>
-        <td class="test-case-name">${testCaseName}</td>
-        <td class="test-step-name">${testStepName}</td>
+        <td class="test-id ellipsis">${testId}</td>
+        <td class="test-scenario-name ellipsis">${testScenarioName}</td>
+        <td class="test-case-name ellipsis">${testCaseName}</td>
+        <td class="test-step-name ellipsis">${testStepName}</td>
         <td class="screen-id">${screenId}</th>
-        <td class="screen-name">${screenName}</td>
+        <td class="screen-name ellipsis">${screenName}</td>
         <td class="program-type">${programType}</td>
-        <td class="program-id">${programId}</td>
-        <td class="program-name">${programName}</td>
+        <td class="program-id ellipsis">${programId}</td>
+        <td class="program-name ellipsis">${programName}</td>
         <td class="exec-company-test-date">${convertDate(execCompanyTestDate)}</td>
         <td class="exec-company-confirm-date">${convertDate(execCompanyConfirmDate)}</td>
         <td class="developer">${developer}</td>

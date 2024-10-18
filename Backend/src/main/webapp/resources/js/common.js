@@ -1223,23 +1223,21 @@ export async function getProgramList(props = {}) {
 }
 
 // 결함목록 조회
-export async function getDefectList(
-  getDefectsProps = {
-    page: 1,
-    size: 15,
-    testStage,
-    majorCategory,
-    subCategory,
-    defectSeverity,
-    defectNumber,
-    defectStatus,
-    defectRegistrar: "",
-    defectHandler: "",
-    pl: "",
-  }
-) {
+export async function getDefectList(props = {}) {
   try {
-    const query = new URLSearchParams(getDefectsProps).toString();
+    const defaultProps = {
+      page: 1,
+      testStage: "",
+      majorCategory: "",
+      subCategory: "",
+      defectSeverity: "",
+      defectNumber: "",
+      defectStatus: "",
+      defectRegistrar: "",
+      defectHandler: "",
+      pl: "",
+    };
+    const query = new URLSearchParams({ ...defaultProps, ...props }).toString();
     const { defects: defectList, totalPages, totalDefects } = await tmsFetch(`/defect?${query}`);
 
     return { defectList, totalPages, totalCount: totalDefects };

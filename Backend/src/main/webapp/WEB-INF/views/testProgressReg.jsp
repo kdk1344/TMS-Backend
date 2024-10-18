@@ -115,17 +115,23 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testStage">테스트 단계<span class="required-indicator">*</span></label>
-                <select id="testStage" name="testStage" required></select>
+                <select id="testStage" name="testStage" required>
+                  <option value="" disabled selected>테스트 단계를 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="majorCategory">업무 대분류<span class="required-indicator">*</span></label>
-                <select id="majorCategory" name="majorCategory" required></select>
+                <select id="majorCategory" name="majorCategory" required>
+                  <option value="" disabled selected>업무 대분류를 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="subCategory">업무 중분류<span class="required-indicator">*</span></label>
-                <select id="subCategory" name="subCategory" required></select>
+                <select id="subCategory" name="subCategory" required>
+                  <option value="" disabled selected>업무 중분류를 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
