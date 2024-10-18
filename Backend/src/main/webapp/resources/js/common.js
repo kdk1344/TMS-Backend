@@ -1243,9 +1243,9 @@ export async function getDefectList(
 ) {
   try {
     const query = new URLSearchParams(getDefectsProps).toString();
-    const { defects: defectList, totalPages } = await tmsFetch(`/defect?${query}`);
+    const { defects: defectList, totalPages, totalDefects } = await tmsFetch(`/defect?${query}`);
 
-    return { defectList, totalPages };
+    return { defectList, totalPages, totalCount: totalDefects };
   } catch (error) {
     console.error(error.message, "결함현황 목록을 불러오지 못 했습니다.");
   }
@@ -1255,9 +1255,9 @@ export async function getDefectList(
 export async function getNotices({ page = 1, startDate = "", endDate = "", title = "", content = "" } = {}) {
   try {
     const query = new URLSearchParams({ page, startDate, endDate, title, content }).toString();
-    const { totalPages, notices } = await tmsFetch(`/notices?${query}`);
+    const { totalPages, notices, totalNotices } = await tmsFetch(`/notices?${query}`);
 
-    return { totalPages, notices };
+    return { totalPages, notices, totalCount: totalNotices };
   } catch (error) {
     console.error("Error fetching notices:", error);
   }

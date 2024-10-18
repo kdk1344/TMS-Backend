@@ -247,6 +247,8 @@
         </table>
       </div>
 
+      <div id="totalCount"></div>
+
       <!-- 페이지네이션 -->
       <div id="devProgressPagination" class="pagination">
         <!-- 페이지네이션 버튼 동적으로 삽입 -->

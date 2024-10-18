@@ -137,7 +137,10 @@ async function initializePageByUser() {
 
 // 공지사항 목록 표시
 async function renderNotices(getNoticesProps = {}) {
-  const { notices, totalPages } = await getNotices(getNoticesProps);
+  const { notices, totalPages, totalCount } = await getNotices(getNoticesProps);
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
+
   if (noticeTableBody) {
     noticeTableBody.innerHTML = "";
 

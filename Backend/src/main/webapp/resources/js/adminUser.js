@@ -48,7 +48,7 @@ const MODAL_ID = {
 function init() {
   renderTMSHeader();
   setupEventListeners();
-  loadInitialUsers();
+  renderUsers();
   initializePageByUser();
 }
 
@@ -166,21 +166,26 @@ async function initializePageByUser() {
  * @throws {Error} API 요청 실패 시 오류를 발생시킵니다.
  *
  * @returns {Promise<void>} 이 함수는 결과를 반환하지 않습니다. 성공적으로 데이터를 가져온 후,
- *                          `displayUsers` 함수를 호출하여 사용자 목록을 페이지에 표시합니다.
+ *                          `renderUsers` 함수를 호출하여 사용자 목록을 페이지에 표시합니다.
  */
-async function getUsers({ page = 1, userName = "", authorityName = "" } = {}) {
+async function getUsers(props) {
   try {
-    const query = new URLSearchParams({ page, userName, authorityName }).toString();
-    const { totalPages, userList: users } = await tmsFetch(`/users?${query}`);
+    const defaultProps = { page: 1, userName: "", authorityName: "" };
+    const query = new URLSearchParams({ ...defaultProps, ...props }).toString();
+    const { totalPages, userList, totalUsers } = await tmsFetch(`/users?${query}`);
 
-    displayUsers(users, totalPages);
+    return { users: userList, totalPages, totalCount: totalUsers };
   } catch (error) {
     console.error("Error fetching users:", error);
   }
 }
 
 // 사용자 표시
-function displayUsers(users, totalPages) {
+async function renderUsers(getUsersProps = {}) {
+  const { users, totalPages, totalCount } = await getUsers(getUsersProps);
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
+
   if (userTableBody) {
     userTableBody.innerHTML = "";
 
@@ -206,7 +211,7 @@ function changePage(page) {
   const userName = document.getElementById("userNameForFilter").value.trim();
   const authorityName = document.getElementById("authorityNameForFilter").value;
 
-  getUsers({ page: currentPage, userName, authorityName });
+  renderUsers({ page: currentPage, userName, authorityName });
 }
 
 // 사용자 필터링
@@ -216,9 +221,9 @@ function submitUserFilter(event) {
   const userName = document.getElementById("userNameForFilter").value.trim();
   const authorityName = document.getElementById("authorityNameForFilter").value;
 
-  // 페이지를 1로 초기화하고 getUsers 호출
+  // 페이지를 1로 초기화하고 renderUsers 호출
   currentPage = 1;
-  getUsers({ page: currentPage, userName, authorityName });
+  renderUsers({ page: currentPage, userName, authorityName });
 }
 
 // 사용자 필터 리셋
@@ -390,9 +395,4 @@ function copyFilterValuesToDownloadForm() {
   // 숨겨진 다운로드 폼의 input 필드에 값을 설정
   document.getElementById("downloadUserName").value = userName;
   document.getElementById("downloadAuthorityName").value = authorityName;
-}
-
-// 초기 사용자 목록 로드
-function loadInitialUsers() {
-  getUsers();
 }

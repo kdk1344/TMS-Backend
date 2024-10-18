@@ -148,7 +148,9 @@ async function renderDefect(
     pl: "",
   }
 ) {
-  const { defectList, totalPages } = await getDefectList(getDefectListProps);
+  const { defectList, totalPages, totalCount } = await getDefectList(getDefectListProps);
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
   if (defectTableBody) {
     defectTableBody.innerHTML = "";

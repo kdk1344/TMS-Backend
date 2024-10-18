@@ -159,7 +159,9 @@ async function renderTestProgress(
     busiMgr: "",
   }
 ) {
-  const { testProgressList, totalPages } = await getTestProgressList(getTestProgressListProps);
+  const { testProgressList, totalPages, totalCount } = await getTestProgressList(getTestProgressListProps);
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
   if (testProgressTableBody) {
     testProgressTableBody.innerHTML = "";
@@ -388,9 +390,9 @@ async function getTestProgressList(
 ) {
   try {
     const query = new URLSearchParams(getTestProgressListProps).toString();
-    const { testProgress: testProgressList, totalPages } = await tmsFetch(`/testProgress?${query}`);
+    const { testProgress: testProgressList, totalPages, totalTest } = await tmsFetch(`/testProgress?${query}`);
 
-    return { testProgressList, totalPages };
+    return { testProgressList, totalPages, totalCount: totalTest };
   } catch (error) {
     console.error(error.message, "테스트 진행현황 목록을 불러오지 못 했습니다.");
   }

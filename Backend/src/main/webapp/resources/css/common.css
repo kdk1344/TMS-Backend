@@ -679,7 +679,7 @@ button:hover {
 
 /* 스크롤바의 기본 스타일 설정 */
 .custom-scroll::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
 }
 
 /* 스크롤바의 막대 (thumb) 스타일 설정 */
@@ -739,4 +739,8 @@ button:hover {
 
 #editableDefectTableBody > tr:hover {
   background-color: var(--super-light-gray);
+}
+
+#totalCount {
+  color: var(--dark-gray);
 }

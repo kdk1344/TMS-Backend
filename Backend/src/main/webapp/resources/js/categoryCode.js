@@ -257,9 +257,9 @@ async function initializeChildCodes(selectedParentCode = "") {
 async function getCategoryCodes({ page = 1, parentCode = "", code = "", codeName = "" } = {}) {
   try {
     const query = new URLSearchParams({ page, parentCode, code, codeName }).toString();
-    const { categoryCodes, totalPages } = await tmsFetch(`/categoryCode?${query}`);
+    const { categoryCodes, totalPages, totalCategoryCodes } = await tmsFetch(`/categoryCode?${query}`);
 
-    return { categoryCodes, totalPages };
+    return { categoryCodes, totalPages, totalCount: totalCategoryCodes };
   } catch (error) {
     console.error("Error fetching categoryCodes:", error);
   }
@@ -267,7 +267,9 @@ async function getCategoryCodes({ page = 1, parentCode = "", code = "", codeName
 
 // 분류코드 목록 테이블 렌더링
 async function renderCategoryCodes({ page = 1, parentCode = "", code = "", codeName = "" } = {}) {
-  const { categoryCodes, totalPages } = await getCategoryCodes({ page, parentCode, code, codeName });
+  const { categoryCodes, totalPages, totalCount } = await getCategoryCodes({ page, parentCode, code, codeName });
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
   if (categoryCodeTableBody) {
     categoryCodeTableBody.innerHTML = "";

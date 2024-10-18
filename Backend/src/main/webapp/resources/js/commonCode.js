@@ -256,9 +256,9 @@ async function initializeChildCodes(selectedParentCode = "") {
 async function getCommonCodes({ page = 1, parentCode = "", code = "", codeName = "" } = {}) {
   try {
     const query = new URLSearchParams({ page, parentCode, code, codeName }).toString();
-    const { commonCodes, totalPages } = await tmsFetch(`/commonCode?${query}`);
+    const { commonCodes, totalPages, totalCommonCodes } = await tmsFetch(`/commonCode?${query}`);
 
-    return { commonCodes, totalPages };
+    return { commonCodes, totalPages, totalCount: totalCommonCodes };
   } catch (error) {
     console.error("Error fetching commonCodes:", error);
   }
@@ -266,7 +266,9 @@ async function getCommonCodes({ page = 1, parentCode = "", code = "", codeName =
 
 // 공통코드 목록 테이블 렌더링
 async function renderCommonCodes({ page = 1, parentCode = "", code = "", codeName = "" } = {}) {
-  const { commonCodes, totalPages } = await getCommonCodes({ page, parentCode, code, codeName });
+  const { commonCodes, totalPages, totalCount } = await getCommonCodes({ page, parentCode, code, codeName });
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
   if (commonCodeTableBody) {
     commonCodeTableBody.innerHTML = "";

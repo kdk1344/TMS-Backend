@@ -189,7 +189,7 @@ async function initializePageByUser() {
 // 초기 프로그램 개발 진행 현황 목록 로드
 function loadInitialDevProgress() {
   initializeFilterForm(); // 폼 메타 데이터 초기 로드
-  renderDevProgress(); // 분류코드 목록 render
+  renderDevProgress();
 }
 
 // 프로그램 개발 진행 현황 목록 테이블 렌더링
@@ -211,7 +211,9 @@ async function renderDevProgress(
     busiMgr: "",
   }
 ) {
-  const { devProgressList, totalPages } = await getDevProgress(getDevProgressProps);
+  const { devProgressList, totalPages, totalCount } = await getDevProgress(getDevProgressProps);
+
+  document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
   if (devProgressTableBody) {
     devProgressTableBody.innerHTML = "";
@@ -309,9 +311,9 @@ async function getDevProgress(
 ) {
   try {
     const query = new URLSearchParams(getDevProgressProps).toString();
-    const { devProgressList, totalPages } = await tmsFetch(`/devProgress?${query}`);
+    const { devProgressList, totalPages, totalDevProgress } = await tmsFetch(`/devProgress?${query}`);
 
-    return { devProgressList, totalPages };
+    return { devProgressList, totalPages, totalCount: totalDevProgress };
   } catch (error) {
     console.error(error.message, "개발 진행현황 목록을 불러오지 못 했습니다.");
   }
