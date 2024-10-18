@@ -17,6 +17,7 @@
 		<typeAlias type="com.tms.backend.vo.categoryCode" alias="categoryCode"/>
 		<typeAlias type="com.tms.backend.vo.Defect" alias="Defect"/>
 		<typeAlias type="com.tms.backend.vo.devProgress" alias="devProgress"/>
+		<typeAlias type="com.tms.backend.vo.deleteHistory" alias="deleteHistory"/>
 		<typeAlias type="com.tms.backend.vo.testProgress" alias="TestProgress"/>
 	</typeAliases>
 	

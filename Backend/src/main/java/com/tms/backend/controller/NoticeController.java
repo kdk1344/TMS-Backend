@@ -83,7 +83,7 @@ public class NoticeController {
                                           @RequestParam(value = "title", required = false) String title,
                                           @RequestParam(value = "content", required = false) String content,
                                           @RequestParam(value = "page", defaultValue = "1") int page,
-                                          @RequestParam(value = "size", defaultValue = "15") int size) {
+                                          @RequestParam(value = "size", defaultValue = "50") int size) {
     	// 날짜 형식 설정 (yyyy-MM-dd)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

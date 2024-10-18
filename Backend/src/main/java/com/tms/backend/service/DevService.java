@@ -26,6 +26,7 @@ import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
+import com.tms.backend.vo.deleteHistory;
 import com.tms.backend.vo.devProgress;
 
 import lombok.extern.log4j.Log4j;
@@ -90,6 +91,11 @@ public class DevService {
     
     // 프로그램 개발 진행 현황 입력
     public void insertdevProgress(devProgress devProgress) {
+    	if((devProgress.getDeletionHandler() != null && !devProgress.getDeletionHandler().isEmpty()) &&
+    		(devProgress.getDeletionDate() != null) &&
+    		(devProgress.getDeletionReason() != null && !devProgress.getDeletionReason().isEmpty())) {
+    		insertDeleteHistory(devProgress);
+    	}
     	devMapper.insertdevProgress(devProgress);
     }
     
@@ -104,12 +110,35 @@ public class DevService {
     }
     
     //프로그램 아이디 목록 확인
-    public List<devProgress> checkProgramId(String programType, String developer, String programId, String programName) {
-    	return devMapper.checkProgramId(programType, developer, programId, programName);
+    public List<devProgress> checkProgramId(String programType, String developer, String programId, String programName, String screenId) {
+    	return devMapper.checkProgramId(programType, developer, programId, programName, screenId);
     }
     
     //프로그램 상세 정보 확인
     public List<devProgress> getprogramDetail(String programId) {
     	return devMapper.getprogramDetail(programId);
     }
+    
+    //삭제 기록 deleteHistory 테이블에 전송
+    private void insertDeleteHistory(devProgress devProgress) {
+    	deleteHistory deletehistory = new deleteHistory(); // 메서드 내에서 deleteHistory 객체 로컬 변수로 선언 및 초기화
+    	// deleteHistory 속성 설정
+    	deletehistory.setSeq(devProgress.getSeq());
+    	deletehistory.setProgramName(devProgress.getProgramName());
+    	deletehistory.setProgramId(devProgress.getProgramId());
+    	deletehistory.setDeletionDate(devProgress.getDeletionDate());
+    	deletehistory.setDeletionHandler(devProgress.getDeletionHandler());
+    	deletehistory.setDeletionReason(devProgress.getDeletionHandler());
+    	if (checkDeleteHistory(devProgress.getSeq()) == 0) {
+    		devMapper.insertDeleteHistory(deletehistory);} // deleteHistory DB에 삽입
+    	else{
+    		devMapper.updateDeleteHistory(deletehistory);
+    	}
+    }
+    
+    // 삭제 기록 존재 확인
+    private int checkDeleteHistory(int seq) {
+    	return devMapper.checkDeleteHistory(seq);
+    }
+    
 }

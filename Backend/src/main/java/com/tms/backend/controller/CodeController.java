@@ -162,7 +162,7 @@ public class CodeController {
 									          @RequestParam(value = "code", required = false) String code,
 									          @RequestParam(value = "codeName", required = false) String codeName,
 									          @RequestParam(value = "page", defaultValue = "1") int page,
-									          @RequestParam(value = "size", defaultValue = "15") int size) {
+									          @RequestParam(value = "size", defaultValue = "25") int size) {
 		// CommonCode 조회
         List<CommonCode> commonCodes = adminService.searchCommonCodes(parentCode, code, codeName, page, size);
         
@@ -520,7 +520,7 @@ public class CodeController {
                                                 @RequestParam(value = "code", required = false) String code,
                                                 @RequestParam(value = "codeName", required = false) String codeName,
                                                 @RequestParam(value = "page", defaultValue = "1") int page,
-                                                @RequestParam(value = "size", defaultValue = "15") int size) {
+                                                @RequestParam(value = "size", defaultValue = "25") int size) {
     	Map<String, Object> response = new HashMap<>();
     	
     	// categoryCode 조회
@@ -602,7 +602,7 @@ public class CodeController {
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "codeName", required = false) String codeName,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "15") int size,
+            @RequestParam(value = "size", defaultValue = "25") int size,
             HttpServletResponse response) throws IOException {
 
     	List<categoryCode> filteredCategoryCodeList = adminService.searchCategoryCodes(parentCode, code, codeName, page, size);

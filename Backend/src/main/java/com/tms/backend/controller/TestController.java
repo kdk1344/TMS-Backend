@@ -105,7 +105,7 @@ public class TestController {
             @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
             @RequestParam(value = "testStatus", required = false) String testStatus,
             @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "15") int size) {
+	        @RequestParam(value = "size", defaultValue = "50") int size) {
 		
 		Map<String, Object> response = new HashMap<>(); // 응답 생성
 		
@@ -431,7 +431,7 @@ public class TestController {
             @RequestParam(value = "thirdPartyTestMgr", required = false) String thirdPartyTestMgr,
             @RequestParam(value = "testStatus", required = false) String testStatus,
             @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "15") int size,
+	        @RequestParam(value = "size", defaultValue = "50") int size,
             HttpServletResponse response) throws IOException {
     			
 		majorCategory = adminService.getStageCodes("대", majorCategory);

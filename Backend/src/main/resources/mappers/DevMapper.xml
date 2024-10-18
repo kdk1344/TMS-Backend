@@ -242,6 +242,9 @@
 	    <if test="developer != null and developer != ''">
 	        AND DEVELOPER LIKE CONCAT('%', #{developer}, '%')
 	    </if>
+	    <if test="screenId != null and screenId != ''">
+	        AND SCREEN_ID LIKE CONCAT('%', #{screenId}, '%')
+	    </if>
 	</select>
 	
 	<!-- 프로그램 상세 정보 확인 -->
@@ -252,6 +255,34 @@
 	    <if test="programId != null and programId != ''">
 	        AND PROGRAM_ID LIKE CONCAT('%', #{programId}, '%')
 	    </if>
+	</select>
+	
+	<!-- 삭제 기록 추가 -->
+    <insert id="insertDeleteHistory" parameterType="deleteHistory" useGeneratedKeys="true" keyProperty="seq">
+	    INSERT INTO DELETE_HISTORY (
+	        SEQ, PROGRAM_ID, PROGRAM_NAME, DELETION_HANDLER, DELETION_DATE, DELETION_REASON
+	    ) VALUES (
+	        #{seq}, #{programId}, #{programName}, #{deletionHandler}, #{deletionDate}, #{deletionReason}
+	    )
+	</insert>
+	
+	<!-- 개발 진행 현황 수정 -->
+	<update id="updateDeleteHistory" parameterType="deleteHistory">
+		UPDATE DELETE_HISTORY
+        SET 
+            PROGRAM_ID = #{programId},
+            PROGRAM_NAME = #{programName},
+            DELETION_HANDLER = #{deletionHandler},
+            DELETION_DATE = #{deletionDate},
+            DELETION_REASON = #{deletionReason},
+        WHERE SEQ = #{seq}
+    </update>
+	
+	<!-- 삭제 기록 갯수 확인 -->
+	<select id="checkCountProgramId" resultType="int">
+		SELECT COUNT(*)
+        FROM delete_history
+        where SEQ = #{seq}
 	</select>
 
 	

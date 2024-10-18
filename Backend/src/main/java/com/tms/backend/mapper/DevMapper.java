@@ -13,6 +13,7 @@ import com.tms.backend.vo.FileAttachment;
 import com.tms.backend.vo.Notice;
 import com.tms.backend.vo.User;
 import com.tms.backend.vo.categoryCode;
+import com.tms.backend.vo.deleteHistory;
 import com.tms.backend.vo.devProgress;
 
 import lombok.extern.log4j.Log4j;
@@ -61,10 +62,14 @@ public interface DevMapper {
     public List<devProgress> checkProgramId(@Param("programType") String programType,
 											@Param("developer") String developer,
 											@Param("programId") String programId,
-											@Param("programName") String programName); //프로그램 ID 확보를 위한 프로그램 목록 조회
+											@Param("programName") String programName,
+											@Param("screenId") String screenId); //프로그램 ID 확보를 위한 프로그램 목록 조회
 //    public int checkProgramIdCounts(@Param("programType") String programType,
 //	    							@Param("developer") String developer,
 //	    							@Param("programId") String programId,
 //	    							@Param("programName") String programName);
     public List<devProgress> getprogramDetail(@Param("programId") String programId); // 프로그램 상세 정보 확인
+    public void insertDeleteHistory(deleteHistory deletehistory); // deleteHistory DB에 삽입
+    public int checkDeleteHistory(int seq); // 삭제 기록 존재 여부 확인
+    public void updateDeleteHistory(deleteHistory deletehistory);
 }

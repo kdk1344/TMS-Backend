@@ -90,7 +90,7 @@ public class DefectController {
             @RequestParam(value = "seq", required = false) Integer seq,
             @RequestParam(value = "defectRegistrar", required = false) String defectRegistrar,
             @RequestParam(value = "defectHandler", required = false) String defectHandler,
-            @RequestParam(value = "Pl", required = false) String pl,
+            @RequestParam(value = "pl", required = false) String pl,
             @RequestParam(value = "defectStatus", required = false) String defectStatus,
             @RequestParam(value = "programId", required = false) String programId,
             @RequestParam(value = "testId", required = false) String testId,
@@ -511,7 +511,7 @@ public class DefectController {
             @RequestParam(value = "programName", required = false) String programName,
             @RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "15") int size,
+            @RequestParam(value = "size", defaultValue = "50") int size,
             HttpServletResponse response) throws IOException {
     	
     	majorCategory = adminService.getStageCodes("대", majorCategory);
@@ -570,10 +570,10 @@ public class DefectController {
         
         // 헤더와 데이터 매핑
         String[] fields = {
-        	    "getseq", "getTestStage", "getMajorCategory", "getSubCategory", 
+        	    "getSeq", "getTestStage", "getMajorCategory", "getSubCategory", 
         	    "getTestId", "getProgramType", "getProgramId", "getProgramName", 
         	    "getDefectType", "getDefectSeverity", "getDefectDescription", 
-        	    "getDefectRegistrar", "getdefectDiscoveryDate", "getDefectHandler", 
+        	    "getDefectRegistrar", "getDefectDiscoveryDate", "getDefectHandler", 
         	    "getDefectScheduledDate", "getDefectCompletionDate", 
         	    "getDefectResolutionDetails", "getPl", "getPlConfirmDate", 
         	    "getOriginalDefectNumber", "getPlDefectJudgeClass", "getPlComments", 

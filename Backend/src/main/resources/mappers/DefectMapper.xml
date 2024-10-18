@@ -23,8 +23,8 @@
 	    <if test="seq != null and seq != ''">
 	        AND SEQ = #{seq}
 	    </if>
-	    <if test="pl != null and pl != ''">
-	        AND PL LIKE CONCAT('%', #{pl}, '%')}
+		<if test="pl != null and pl != ''">
+	        AND PL LIKE CONCAT('%', #{pl}, '%')
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
 	        AND DEFECT_REGISTRAR LIKE CONCAT('%', #{defectRegistrar}, '%')
@@ -71,7 +71,7 @@
 	        AND SEQ = #{seq}
 	    </if>
 	    <if test="pl != null and pl != ''">
-	        AND PL LIKE CONCAT('%', #{pl}, '%')}
+	        AND PL LIKE CONCAT('%', #{pl}, '%')
 	    </if>
 	    <if test="defectRegistrar != null and defectRegistrar != ''">
 	        AND DEFECT_REGISTRAR LIKE CONCAT('%', #{defectRegistrar}, '%')

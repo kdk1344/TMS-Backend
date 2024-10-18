@@ -114,7 +114,7 @@ public class devProgressController {
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
 	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "15") int size) {
+	        @RequestParam(value = "size", defaultValue = "50") int size) {
 		
 //		HttpSession session = request.getSession(false); // 세션이 없다면 새로 만들지 않음
 //		if (session == null || session.getAttribute("authorityCode") == null) {
@@ -184,12 +184,13 @@ public class devProgressController {
     		@RequestParam(value = "programType", required = false) String programType,
             @RequestParam(value = "developer", required = false) String developer,
             @RequestParam(value = "programId", required = false) String programId,
-            @RequestParam(value = "programName", required = false) String programName) {
+            @RequestParam(value = "programName", required = false) String programName,
+            @RequestParam(value = "screenId", required = false) String screenId) {
 		if (programType != null && !programType.isEmpty()) {
 			programType = adminService.getStageCCodes("02", programType);}
 		
     	Map<String, Object> response = new HashMap<>();
-    	List<devProgress> programList = devservice.checkProgramId(programType, developer, programId, programName);
+    	List<devProgress> programList = devservice.checkProgramId(programType, developer, programId, programName, screenId);
 
         // 응답 데이터 생성
         if (programList != null && !programList.isEmpty()) {
@@ -736,7 +737,7 @@ public class devProgressController {
 	        @RequestParam(value = "ItMgr", required = false) String ItMgr,
 	        @RequestParam(value = "BusiMgr", required = false) String BusiMgr,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        @RequestParam(value = "size", defaultValue = "15") int size,
+	        @RequestParam(value = "size", defaultValue = "50") int size,
             HttpServletResponse response) throws IOException {
     	
     	majorCategory = adminService.getStageCodes("대", majorCategory);
