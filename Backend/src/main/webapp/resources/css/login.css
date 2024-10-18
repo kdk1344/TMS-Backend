@@ -265,3 +265,13 @@ h2 {
   font-weight: 500;
   line-height: 24px;
 }
+
+.remember-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.remember-box input[type="checkbox"] {
+  transform: scale(1.2);
+}

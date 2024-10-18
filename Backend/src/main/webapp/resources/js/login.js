@@ -19,8 +19,21 @@ document.addEventListener("DOMContentLoaded", init);
 // 초기화 함수
 function init() {
   redirectHomeOnLogin();
+  loadSavedUserId();
   renderNotices();
   setupEventListeners();
+}
+
+// 로컬 스토리지에서 저장된 아이디를 입력 필드에 설정하는 함수
+function loadSavedUserId() {
+  const savedUserId = localStorage.getItem("savedUserId");
+  const userIdInput = document.getElementById("userID");
+  const rememberMeCheckbox = document.getElementById("rememberMe");
+
+  if (savedUserId) {
+    userIdInput.value = savedUserId;
+    rememberMeCheckbox.checked = true;
+  }
 }
 
 // 이벤트 핸들러 설정
@@ -141,6 +154,14 @@ async function login(event) {
 
   const formData = new FormData(event.target);
   const formDataObj = Object.fromEntries(formData.entries());
+
+  if (document.getElementById("rememberMe").checked) {
+    // 체크박스가 체크된 상태면 아이디를 로컬 스토리지에 저장
+    localStorage.setItem("savedUserId", formDataObj.userID);
+  } else {
+    // 체크박스가 해제된 상태면 저장된 아이디 삭제
+    localStorage.removeItem("savedUserId");
+  }
 
   try {
     showSpinner();

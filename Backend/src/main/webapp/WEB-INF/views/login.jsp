@@ -79,6 +79,10 @@
               <label for="password">비밀번호</label>
               <input type="password" id="password" name="password" placeholder="비밀번호" required autocomplete />
             </div>
+            <div class="remember-box">
+              <input type="checkbox" id="rememberMe" />
+              <label for="rememberMe">아이디 기억하기</label>
+            </div>
             <button type="submit">로그인</button>
           </form>
           <div class="login-info">
