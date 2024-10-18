@@ -279,7 +279,7 @@
     </update>
 	
 	<!-- 삭제 기록 갯수 확인 -->
-	<select id="checkCountProgramId" resultType="int">
+	<select id="checkDeleteHistory" resultType="int">
 		SELECT COUNT(*)
         FROM delete_history
         where SEQ = #{seq}

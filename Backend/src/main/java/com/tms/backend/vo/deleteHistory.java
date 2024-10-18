@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class deleteHistory {
-	private Integer seq;                     // SEQ
+	private Integer seq;          		 // 프로그램 개발 목록의 SEQ
     private String programId;            // 프로그램 ID
     private String programName;          // 프로그램명
     private String deletionHandler;      // 삭제처리자 ID

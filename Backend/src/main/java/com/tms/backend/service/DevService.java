@@ -69,6 +69,11 @@ public class DevService {
 	
 	// 프로그램 개발 진행 현황 수정
 	public void updatedevProgress(devProgress devProgress) {
+		if((devProgress.getDeletionHandler() != null && !devProgress.getDeletionHandler().isEmpty()) &&
+	    		(devProgress.getDeletionDate() != null) &&
+	    		(devProgress.getDeletionReason() != null && !devProgress.getDeletionReason().isEmpty())) {
+	    		insertDeleteHistory(devProgress);
+	    	}
 		devMapper.updatedevProgress(devProgress);
 	}
 	
@@ -91,11 +96,6 @@ public class DevService {
     
     // 프로그램 개발 진행 현황 입력
     public void insertdevProgress(devProgress devProgress) {
-    	if((devProgress.getDeletionHandler() != null && !devProgress.getDeletionHandler().isEmpty()) &&
-    		(devProgress.getDeletionDate() != null) &&
-    		(devProgress.getDeletionReason() != null && !devProgress.getDeletionReason().isEmpty())) {
-    		insertDeleteHistory(devProgress);
-    	}
     	devMapper.insertdevProgress(devProgress);
     }
     
