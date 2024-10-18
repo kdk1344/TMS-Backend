@@ -122,8 +122,9 @@ function generateMenuItem(item) {
   const mainLink = item.subMenu.length > 0 ? item.subMenu[0].link : "#";
 
   // 하위 메뉴를 렌더링하는 함수
+  // 메뉴가 2개 이상인 경우에만 하위 메뉴 렌더링
   const subMenu =
-    item.subMenu.length > 0
+    item.subMenu.length > 1
       ? `
       <ul id="sub-menu">
         ${item.subMenu

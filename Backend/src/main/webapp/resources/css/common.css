@@ -15,6 +15,7 @@
   --extra-light-gray: #d4d4d4;
   --light-gray: #c0c0c0;
   --gray: #7f7f7f; /*초기화, 목록 버튼 색*/
+  --medium-gray: #666666;
   --dark-gray: #474747;
   --extra-dark-gray: #333333;
   --super-dark-gray: #333f50; /* 삭제, 저장 버튼 색*/
@@ -312,7 +313,6 @@ button:hover {
   top: 100%; /* 상위 메뉴 바로 아래에 위치 */
   left: 0; /* 상위 메뉴의 왼쪽 끝에 맞추기 */
 
-  border-radius: 8px;
   background-color: var(--dark-gray); /* 배경색 설정 */
   margin: 0;
   padding: 0;
@@ -324,12 +324,19 @@ button:hover {
 }
 
 #sub-menu li {
+  width: 100%;
+
   white-space: nowrap; /* 줄 바꿈 없음 */
   overflow: hidden; /* 넘치는 텍스트를 숨김 */
   text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
 
   padding: 4px;
-  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+#sub-menu li:hover {
+  background-color: var(--medium-gray);
 }
 
 #sub-menu li a {
@@ -340,6 +347,7 @@ button:hover {
 /* 호버 시 서브 메뉴 표시 */
 .menu-item:hover #sub-menu {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
