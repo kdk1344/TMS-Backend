@@ -719,6 +719,7 @@ export async function renderProgramList(
     developer: "",
     programId: "",
     programName: "",
+    screenId: "",
   }
 ) {
   const { programList } = await getProgramList(getProgramListProps);
@@ -774,16 +775,18 @@ export function submitProgramFilter(event) {
 
 /** 프로그램 필터 값 조회 */
 function getCurrentProgramFilterValues() {
-  const programType = document.getElementById("programTypeForPrgoram").value;
-  const developer = document.getElementById("developerForPrgoram").value;
-  const programId = document.getElementById("programIdForPrgoram").value;
-  const programName = document.getElementById("programNameForPrgoram").value;
+  const programType = document.getElementById("programTypeForProgram").value;
+  const developer = document.getElementById("developerForProgram").value;
+  const programId = document.getElementById("programIdForProgram").value;
+  const programName = document.getElementById("programNameForProgram").value;
+  const screenId = document.getElementById("screenIdForProgram").value;
 
   return {
     programType,
     developer,
     programId,
     programName,
+    screenId,
   };
 }
 
@@ -1207,16 +1210,10 @@ export async function getScreenList() {
 }
 
 // 프로그램 목록 조회
-export async function getProgramList(
-  getProgramListProps = {
-    programType: "",
-    developer: "",
-    programId: "",
-    programName: "",
-  }
-) {
+export async function getProgramList(props = {}) {
   try {
-    const query = new URLSearchParams(getProgramListProps).toString();
+    const defaultProps = { programType: "", developer: "", programId: "", programName: "", screenId: "" };
+    const query = new URLSearchParams({ ...defaultProps, ...props }).toString();
     const { programList } = await tmsFetch(`/programList?${query}`);
 
     return { programList };

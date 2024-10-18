@@ -4,7 +4,11 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/devProgressEdit.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="${pageContext.request.contextPath}/resources/css/devProgressEdit.css"
+    />
 
     <title>TMS 개발진행 관리 - 프로그램 개발 수정</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/devProgressEdit.js"></script>
@@ -212,7 +216,7 @@
               </div>
 
               <div class="small-form-group">
-                <label for="actualStartDate">개발종료일</label>
+                <label for="actualStartDate">개발 시작-종료일</label>
                 <input id="actualStartDate" name="actualStartDate" type="date" readonly />
                 <span>-</span>
                 <input id="actualEndDate" name="actualEndDate" type="date" readonly />

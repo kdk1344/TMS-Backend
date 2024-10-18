@@ -38,7 +38,7 @@ const SELECT_ID = {
   THIRD_PARTY_TEST_RESULT: "thirdTestResult",
   IT_TEST_RESULT: "itTestResult",
   BUSI_TEST_RESULT: "busiTestResult",
-  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForPrgoram", // 프로그램 조회 모달 내부
+  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForProgram", // 프로그램 조회 모달 내부
 };
 
 // DOM 요소들

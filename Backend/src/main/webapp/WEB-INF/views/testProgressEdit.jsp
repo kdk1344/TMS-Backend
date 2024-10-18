@@ -4,7 +4,11 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/testProgressEdit.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="${pageContext.request.contextPath}/resources/css/testProgressEdit.css"
+    />
 
     <title>TMS 테스트 진행관리 - 테스트 시나리오 수정</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/testProgressEdit.js"></script>
@@ -32,25 +36,30 @@
           <form id="programFilterForm">
             <div class="form-group-row">
               <div class="form-group">
-                <label for="programTypeForPrgoram">프로그램 구분</label>
-                <select id="programTypeForPrgoram" name="programType">
+                <label for="programTypeForProgram">프로그램 구분</label>
+                <select id="programTypeForProgram" name="programType">
                   <option value="" selected>전체</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="developerForPrgoram">개발자</label>
-                <input id="developerForPrgoram" name="developer" />
+                <label for="developerForProgram">개발자</label>
+                <input id="developerForProgram" name="developer" />
               </div>
 
               <div class="form-group">
-                <label for="programIdForPrgoram">프로그램ID</label>
-                <input id="programIdForPrgoram" name="programId" />
+                <label for="programIdForProgram">프로그램ID</label>
+                <input id="programIdForProgram" name="programId" />
               </div>
 
               <div class="form-group">
-                <label for="programNameForPrgoram">프로그램명</label>
-                <input id="programNameForPrgoram" name="programName" />
+                <label for="programNameForProgram">프로그램명</label>
+                <input id="programNameForProgram" name="programName" />
+              </div>
+
+              <div class="form-group">
+                <label for="screenIdForProgram">화면ID</label>
+                <input id="screenIdForProgram" name="screenId" />
               </div>
             </div>
 
@@ -220,7 +229,10 @@
                   <input id="programId" name="programId" required readonly />
 
                   <button type="button" class="search-button" id="programSearchButton" disabled>
-                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="프로그램 검색" />
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="프로그램 검색"
+                    />
                   </button>
                 </div>
               </div>

@@ -35,7 +35,7 @@ const SELECT_ID = {
   TEST_STAGE: "testStage",
   DEFECT_TYPE: "defectType",
   DEFECT_SEVERITY: "defectSeverity",
-  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForPrgoram",
+  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForProgram",
 };
 
 // DOM 요소들

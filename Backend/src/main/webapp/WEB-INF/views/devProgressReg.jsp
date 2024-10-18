@@ -146,7 +146,7 @@
               </div>
 
               <div class="small-form-group">
-                <label for="actualStartDate">개발종료일</label>
+                <label for="actualStartDate">개발 시작-종료일</label>
                 <input id="actualStartDate" name="actualStartDate" type="date" />
                 <span>-</span>
                 <input id="actualEndDate" name="actualEndDate" type="date" />
