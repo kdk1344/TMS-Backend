@@ -181,7 +181,7 @@
                 id="defectDescription"
                 name="defectDescription"
                 required
-                class="hidden-scroll"
+                class="custom-scroll"
                 readonly
               ></textarea>
             </div>
@@ -251,7 +251,7 @@
               <textarea
                 id="defectResolutionDetails"
                 name="defectResolutionDetails"
-                class="hidden-scroll"
+                class="custom-scroll"
                 readonly
               ></textarea>
             </div>
@@ -310,7 +310,7 @@
               <textarea
                 id="plComments"
                 name="plComments"
-                class="hidden-scroll"
+                class="custom-scroll"
                 placeholder="'결함아님'인 경우 필수로 입력해 주세요."
                 readonly
               ></textarea>
@@ -333,7 +333,7 @@
               <textarea
                 id="defectRegistrarComment"
                 name="defectRegistrarComment"
-                class="hidden-scroll"
+                class="custom-scroll"
                 readonly
               ></textarea>
             </div>

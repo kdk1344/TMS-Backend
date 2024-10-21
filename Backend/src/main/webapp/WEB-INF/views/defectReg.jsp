@@ -218,7 +218,7 @@
 
             <div class="form-group">
               <label for="defectDescription">결함내용<span class="required-indicator">*</span></label>
-              <textarea id="defectDescription" name="defectDescription" required class="hidden-scroll"></textarea>
+              <textarea id="defectDescription" name="defectDescription" required class="custom-scroll"></textarea>
             </div>
 
             <div class="form-group">
@@ -257,7 +257,7 @@
 
             <div class="form-group">
               <label for="defectResolutionDetails">조치내역</label>
-              <textarea id="defectResolutionDetails" name="defectResolutionDetails" class="hidden-scroll"></textarea>
+              <textarea id="defectResolutionDetails" name="defectResolutionDetails" class="custom-scroll"></textarea>
             </div>
 
             <div class="form-group">
@@ -314,7 +314,7 @@
               <textarea
                 id="plComments"
                 name="plComments"
-                class="hidden-scroll"
+                class="custom-scroll"
                 placeholder="'결함아님'인 경우 필수로 입력해 주세요."
               ></textarea>
             </div>
@@ -333,7 +333,7 @@
 
             <div class="form-group">
               <label for="defectRegistrarComment">등록자 의견</label>
-              <textarea id="defectRegistrarComment" name="defectRegistrarComment" class="hidden-scroll"></textarea>
+              <textarea id="defectRegistrarComment" name="defectRegistrarComment" class="custom-scroll"></textarea>
             </div>
 
             <p id="defectRegistrarInfo" class="notice-info"></p>

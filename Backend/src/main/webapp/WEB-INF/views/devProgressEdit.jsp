@@ -137,8 +137,7 @@
                 />
               </div>
 
-              <!-- 나중에 사용하는 경우 class="hidden" 제거 -->
-              <div class="form-group hidden">
+              <div class="form-group">
                 <label for="className">클래스명</label>
                 <input id="className" name="className" placeholder="클래스명을 입력해 주세요." readonly />
               </div>
@@ -151,11 +150,6 @@
               <div class="form-group">
                 <label for="screenName">화면명</label>
                 <input id="screenName" name="screenName" placeholder="화면명을 입력해 주세요." readonly />
-              </div>
-
-              <div class="form-group">
-                <label for="screenMenuPath">화면경로</label>
-                <input id="screenMenuPath" name="screenMenuPath" placeholder="화면경로를 입력해 주세요." readonly />
               </div>
             </div>
 
@@ -220,6 +214,19 @@
                 <input id="actualStartDate" name="actualStartDate" type="date" readonly />
                 <span>-</span>
                 <input id="actualEndDate" name="actualEndDate" type="date" readonly />
+              </div>
+            </div>
+
+            <div class="form-group-container">
+              <div class="form-group">
+                <label for="screenMenuPath">화면경로</label>
+                <textarea
+                  class="custom-scroll"
+                  id="screenMenuPath"
+                  name="screenMenuPath"
+                  placeholder="화면경로를 입력해 주세요."
+                  readonly
+                ></textarea>
               </div>
             </div>
           </div>

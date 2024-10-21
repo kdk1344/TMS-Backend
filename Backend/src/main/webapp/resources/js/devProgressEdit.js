@@ -348,6 +348,7 @@ async function initializePageByUser() {
     "minorCategory",
     "programId",
     "programName",
+    "className",
     "screenId",
     "screenName",
     "screenMenuPath",
