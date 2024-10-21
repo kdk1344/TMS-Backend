@@ -28,6 +28,10 @@ legend {
   margin-bottom: 8px;
 }
 
+textarea {
+  min-height: 120px;
+}
+
 .form-group-container {
   display: flex;
   flex-direction: column;
