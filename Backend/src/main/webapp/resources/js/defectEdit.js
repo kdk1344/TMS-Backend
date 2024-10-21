@@ -38,7 +38,7 @@ const SELECT_ID = {
   TEST_STAGE: "testStage",
   DEFECT_TYPE: "defectType",
   DEFECT_SEVERITY: "defectSeverity",
-  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForPrgoram",
+  PROGRAM_TYPE_FOR_PROGRAM: "programTypeForProgram",
 };
 
 // DOM 요소들
@@ -307,6 +307,8 @@ async function initializePageByReferer() {
   const { majorCategory, subCategory, programId, programName, programType, developer, pl, testStage, testId } =
     Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
+  const previousScreenInfo = document.getElementById("previousScreenInfo");
+
   const majorCategorySelect = document.getElementById("majorCategory");
   const subCategorySelect = document.getElementById("subCategory");
   const testStageSelect = document.getElementById("testStage");
@@ -346,6 +348,8 @@ async function initializePageByReferer() {
 
   // 개발진행관리 > 결함 수정
   if (referer === REFERER.DEV_PROGRESS) {
+    previousScreenInfo.textContent = " (개발진행관리)";
+
     const programSearchButton = document.getElementById("programSearchButton");
 
     testIdInput.value = `UT-${programId}`;
@@ -367,6 +371,8 @@ async function initializePageByReferer() {
 
   // 테스트 진행관리 > 결함 수정
   if (referer === REFERER.TEST_PROGRESS) {
+    previousScreenInfo.textContent = " (테스트진행관리)";
+
     testIdInput.value = testId;
 
     for (let option of testStageSelect.options) {

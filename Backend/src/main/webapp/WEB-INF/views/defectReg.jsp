@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/defectReg.css" />
 
-    <title>TMS 결함진행 관리 - 결함 등록</title>
+    <title>TMS 결함진행관리 - 결함 등록</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/defectReg.js"></script>
   </head>
 
@@ -16,7 +16,7 @@
     </header>
 
     <main class="content">
-      <h1 class="page-title">결함 등록</h1>
+      <h1 class="page-title">결함 등록<span id="previousScreenInfo"></span></h1>
 
       <!-- 프로그램 검색 모달 -->
       <div id="programSearchModal" class="modal">
@@ -32,25 +32,30 @@
           <form id="programFilterForm">
             <div class="form-group-row">
               <div class="form-group">
-                <label for="programTypeForPrgoram">프로그램 구분</label>
-                <select id="programTypeForPrgoram" name="programType">
+                <label for="programTypeForProgram">프로그램 구분</label>
+                <select id="programTypeForProgram" name="programType">
                   <option value="" selected>전체</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="developerForPrgoram">개발자</label>
-                <input id="developerForPrgoram" name="developer" />
+                <label for="developerForProgram">개발자</label>
+                <input id="developerForProgram" name="developer" />
               </div>
 
               <div class="form-group">
-                <label for="programIdForPrgoram">프로그램ID</label>
-                <input id="programIdForPrgoram" name="programId" />
+                <label for="programIdForProgram">프로그램ID</label>
+                <input id="programIdForProgram" name="programId" />
               </div>
 
               <div class="form-group">
-                <label for="programNameForPrgoram">프로그램명</label>
-                <input id="programNameForPrgoram" name="programName" />
+                <label for="programNameForProgram">프로그램명</label>
+                <input id="programNameForProgram" name="programName" />
+              </div>
+
+              <div class="form-group">
+                <label for="screenIdForProgram">화면ID</label>
+                <input id="screenIdForProgram" name="screenId" />
               </div>
             </div>
 
@@ -117,12 +122,16 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="majorCategory">업무 대분류<span class="required-indicator">*</span></label>
-                <select id="majorCategory" name="majorCategory" required></select>
+                <select id="majorCategory" name="majorCategory" required>
+                  <option value="" disabled selected>업무 대분류를 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="subCategory">업무 중분류<span class="required-indicator">*</span></label>
-                <select id="subCategory" name="subCategory" required></select>
+                <select id="subCategory" name="subCategory" required>
+                  <option value="" disabled selected>업무 중분류를 선택해 주세요.</option>
+                </select>
               </div>
             </div>
           </div>
@@ -134,12 +143,50 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="testStage">테스트 단계<span class="required-indicator">*</span></label>
-                <select id="testStage" name="testStage" required></select>
+                <select id="testStage" name="testStage" required>
+                  <option value="" disabled selected>테스트 단계를 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
                 <input id="testId" name="testId" required placeholder="UT-프로그램ID" />
+              </div>
+
+              <div class="form-group">
+                <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
+                <div class="search-input-wrapper">
+                  <input id="programId" name="programId" required readonly placeholder="프로그램 조회" />
+
+                  <button type="button" class="search-button" id="programSearchButton">
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="프로그램 검색"
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="programName">프로그램명<span class="required-indicator">*</span></label>
+                <input
+                  id="programName"
+                  name="programName"
+                  required
+                  readonly
+                  placeholder="프로그램ID를 선택해 주세요."
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
+                <input
+                  id="programType"
+                  name="programType"
+                  required
+                  readonly
+                  placeholder="프로그램ID를 선택해 주세요."
+                />
               </div>
             </div>
 
@@ -151,12 +198,16 @@
 
               <div class="form-group">
                 <label for="defectType">결함유형<span class="required-indicator">*</span></label>
-                <select id="defectType" name="defectType" required></select>
+                <select id="defectType" name="defectType" required>
+                  <option value="" disabled selected>결함유형을 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="defectSeverity">결함심각도<span class="required-indicator">*</span></label>
-                <select id="defectSeverity" name="defectSeverity" required></select>
+                <select id="defectSeverity" name="defectSeverity" required>
+                  <option value="" disabled selected>결함심각도를 선택해 주세요.</option>
+                </select>
               </div>
 
               <div class="form-group">
@@ -167,7 +218,7 @@
 
             <div class="form-group">
               <label for="defectDescription">결함내용<span class="required-indicator">*</span></label>
-              <textarea id="defectDescription" name="defectDescription" required class="hidden-scroll"></textarea>
+              <textarea id="defectDescription" name="defectDescription" required class="custom-scroll"></textarea>
             </div>
 
             <div class="form-group">
@@ -179,29 +230,6 @@
                   <input type="file" id="defectFileInput" class="hidden" name="defectAttachments" multiple />
                   <div id="defectFileOutput" class="file-preview custom-scroll"></div>
                 </div>
-              </div>
-            </div>
-
-            <div class="form-group-row">
-              <div class="form-group">
-                <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
-                <div class="search-input-wrapper">
-                  <input id="programId" name="programId" required readonly />
-
-                  <button type="button" class="search-button" id="programSearchButton">
-                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="프로그램 검색" />
-                  </button>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="programName">프로그램명<span class="required-indicator">*</span></label>
-                <input id="programName" name="programName" required readonly />
-              </div>
-
-              <div class="form-group">
-                <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
-                <input id="programType" name="programType" required readonly />
               </div>
             </div>
           </div>
@@ -229,7 +257,7 @@
 
             <div class="form-group">
               <label for="defectResolutionDetails">조치내역</label>
-              <textarea id="defectResolutionDetails" name="defectResolutionDetails" class="hidden-scroll"></textarea>
+              <textarea id="defectResolutionDetails" name="defectResolutionDetails" class="custom-scroll"></textarea>
             </div>
 
             <div class="form-group">
@@ -286,7 +314,7 @@
               <textarea
                 id="plComments"
                 name="plComments"
-                class="hidden-scroll"
+                class="custom-scroll"
                 placeholder="'결함아님'인 경우 필수로 입력해 주세요."
               ></textarea>
             </div>
@@ -305,7 +333,7 @@
 
             <div class="form-group">
               <label for="defectRegistrarComment">등록자 의견</label>
-              <textarea id="defectRegistrarComment" name="defectRegistrarComment" class="hidden-scroll"></textarea>
+              <textarea id="defectRegistrarComment" name="defectRegistrarComment" class="custom-scroll"></textarea>
             </div>
 
             <p id="defectRegistrarInfo" class="notice-info"></p>
@@ -322,7 +350,10 @@
                   <input id="originalDefectNumber" name="originalDefectNumber" readonly />
 
                   <button type="button" class="search-button" id="defectNumberSearchButton">
-                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="기발생 결함번호 검색" />
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="기발생 결함번호 검색"
+                    />
                   </button>
                 </div>
               </div>

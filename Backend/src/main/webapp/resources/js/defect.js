@@ -133,10 +133,10 @@ function setupEventListeners() {
 }
 
 // 결함현황 목록 테이블 렌더링
-async function renderDefect(
-  getDefectListProps = {
+async function renderDefect(getDefectListProps = {}) {
+  const defaultProps = {
     page: 1,
-    size: 15,
+    size: 50,
     testStage: "",
     majorCategory: "",
     subCategory: "",
@@ -146,9 +146,8 @@ async function renderDefect(
     defectRegistrar: "",
     defectHandler: "",
     pl: "",
-  }
-) {
-  const { defectList, totalPages, totalCount } = await getDefectList(getDefectListProps);
+  };
+  const { defectList, totalPages, totalCount } = await getDefectList({ ...defaultProps, getDefectListProps });
 
   document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
@@ -229,7 +228,7 @@ function changePage(page) {
 }
 
 function getCurrentFilterValues() {
-  let getDefectListProps = { page: currentPage, size: 15 };
+  let getDefectListProps = { page: currentPage };
 
   const defectRoleKey = document.getElementById("defectRoleKeySelect").value;
   const defectRoleValue = document.getElementById("defectRoleValueInput").value.trim();

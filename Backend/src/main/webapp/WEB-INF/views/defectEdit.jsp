@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/defectEdit.css" />
 
-    <title>TMS 결함진행 관리 - 결함 수정</title>
+    <title>TMS 결함진행관리 - 결함 수정</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/defectEdit.js"></script>
   </head>
 
@@ -16,7 +16,7 @@
     </header>
 
     <main class="content">
-      <h1 class="page-title">결함 수정</h1>
+      <h1 class="page-title">결함 수정<span id="previousScreenInfo"></span></h1>
 
       <!-- 프로그램 검색 모달 -->
       <div id="programSearchModal" class="modal">
@@ -32,25 +32,30 @@
           <form id="programFilterForm">
             <div class="form-group-row">
               <div class="form-group">
-                <label for="programTypeForPrgoram">프로그램 구분</label>
-                <select id="programTypeForPrgoram" name="programType">
+                <label for="programTypeForProgram">프로그램 구분</label>
+                <select id="programTypeForProgram" name="programType">
                   <option value="" selected>전체</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="developerForPrgoram">개발자</label>
-                <input id="developerForPrgoram" name="developer" />
+                <label for="developerForProgram">개발자</label>
+                <input id="developerForProgram" name="developer" />
               </div>
 
               <div class="form-group">
-                <label for="programIdForPrgoram">프로그램ID</label>
-                <input id="programIdForPrgoram" name="programId" />
+                <label for="programIdForProgram">프로그램ID</label>
+                <input id="programIdForProgram" name="programId" />
               </div>
 
               <div class="form-group">
-                <label for="programNameForPrgoram">프로그램명</label>
-                <input id="programNameForPrgoram" name="programName" />
+                <label for="programNameForProgram">프로그램명</label>
+                <input id="programNameForProgram" name="programName" />
+              </div>
+
+              <div class="form-group">
+                <label for="screenIdForProgram">화면ID</label>
+                <input id="screenIdForProgram" name="screenId" />
               </div>
             </div>
 
@@ -176,7 +181,7 @@
                 id="defectDescription"
                 name="defectDescription"
                 required
-                class="hidden-scroll"
+                class="custom-scroll"
                 readonly
               ></textarea>
             </div>
@@ -200,7 +205,10 @@
                   <input id="programId" name="programId" required readonly />
 
                   <button type="button" class="search-button" id="programSearchButton" disabled>
-                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="프로그램 검색" />
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="프로그램 검색"
+                    />
                   </button>
                 </div>
               </div>
@@ -243,7 +251,7 @@
               <textarea
                 id="defectResolutionDetails"
                 name="defectResolutionDetails"
-                class="hidden-scroll"
+                class="custom-scroll"
                 readonly
               ></textarea>
             </div>
@@ -302,7 +310,7 @@
               <textarea
                 id="plComments"
                 name="plComments"
-                class="hidden-scroll"
+                class="custom-scroll"
                 placeholder="'결함아님'인 경우 필수로 입력해 주세요."
                 readonly
               ></textarea>
@@ -325,7 +333,7 @@
               <textarea
                 id="defectRegistrarComment"
                 name="defectRegistrarComment"
-                class="hidden-scroll"
+                class="custom-scroll"
                 readonly
               ></textarea>
             </div>
@@ -349,7 +357,10 @@
                   <input id="originalDefectNumber" name="originalDefectNumber" readonly />
 
                   <button type="button" class="search-button" id="defectNumberSearchButton" disabled>
-                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="기발생 결함번호 검색" />
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="기발생 결함번호 검색"
+                    />
                   </button>
                 </div>
               </div>

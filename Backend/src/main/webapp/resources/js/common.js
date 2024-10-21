@@ -51,7 +51,7 @@ const menuData = [
     subMenu: [{ name: "프로그램 개발 진행현황", link: "/tms/devProgress" }],
   },
   {
-    name: "테스트 진행관리",
+    name: "테스트진행관리",
     subMenu: [{ name: "테스트 진행현황", link: "/tms/testProgress" }],
   },
   {
@@ -719,6 +719,7 @@ export async function renderProgramList(
     developer: "",
     programId: "",
     programName: "",
+    screenId: "",
   }
 ) {
   const { programList } = await getProgramList(getProgramListProps);
@@ -774,16 +775,18 @@ export function submitProgramFilter(event) {
 
 /** 프로그램 필터 값 조회 */
 function getCurrentProgramFilterValues() {
-  const programType = document.getElementById("programTypeForPrgoram").value;
-  const developer = document.getElementById("developerForPrgoram").value;
-  const programId = document.getElementById("programIdForPrgoram").value;
-  const programName = document.getElementById("programNameForPrgoram").value;
+  const programType = document.getElementById("programTypeForProgram").value;
+  const developer = document.getElementById("developerForProgram").value;
+  const programId = document.getElementById("programIdForProgram").value;
+  const programName = document.getElementById("programNameForProgram").value;
+  const screenId = document.getElementById("screenIdForProgram").value;
 
   return {
     programType,
     developer,
     programId,
     programName,
+    screenId,
   };
 }
 
@@ -1207,16 +1210,10 @@ export async function getScreenList() {
 }
 
 // 프로그램 목록 조회
-export async function getProgramList(
-  getProgramListProps = {
-    programType: "",
-    developer: "",
-    programId: "",
-    programName: "",
-  }
-) {
+export async function getProgramList(props = {}) {
   try {
-    const query = new URLSearchParams(getProgramListProps).toString();
+    const defaultProps = { programType: "", developer: "", programId: "", programName: "", screenId: "" };
+    const query = new URLSearchParams({ ...defaultProps, ...props }).toString();
     const { programList } = await tmsFetch(`/programList?${query}`);
 
     return { programList };
@@ -1226,23 +1223,21 @@ export async function getProgramList(
 }
 
 // 결함목록 조회
-export async function getDefectList(
-  getDefectsProps = {
-    page: 1,
-    size: 15,
-    testStage,
-    majorCategory,
-    subCategory,
-    defectSeverity,
-    defectNumber,
-    defectStatus,
-    defectRegistrar: "",
-    defectHandler: "",
-    pl: "",
-  }
-) {
+export async function getDefectList(props = {}) {
   try {
-    const query = new URLSearchParams(getDefectsProps).toString();
+    const defaultProps = {
+      page: 1,
+      testStage: "",
+      majorCategory: "",
+      subCategory: "",
+      defectSeverity: "",
+      defectNumber: "",
+      defectStatus: "",
+      defectRegistrar: "",
+      defectHandler: "",
+      pl: "",
+    };
+    const query = new URLSearchParams({ ...defaultProps, ...props }).toString();
     const { defects: defectList, totalPages, totalDefects } = await tmsFetch(`/defect?${query}`);
 
     return { defectList, totalPages, totalCount: totalDefects };

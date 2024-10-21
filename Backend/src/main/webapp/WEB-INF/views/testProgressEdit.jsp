@@ -4,9 +4,13 @@
   <head>
     <%@ include file="./common.jsp" %>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/testProgressEdit.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="${pageContext.request.contextPath}/resources/css/testProgressEdit.css"
+    />
 
-    <title>TMS 테스트 진행관리 - 테스트 시나리오 수정</title>
+    <title>TMS 테스트진행관리 - 테스트 시나리오 수정</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/testProgressEdit.js"></script>
   </head>
 
@@ -32,25 +36,30 @@
           <form id="programFilterForm">
             <div class="form-group-row">
               <div class="form-group">
-                <label for="programTypeForPrgoram">프로그램 구분</label>
-                <select id="programTypeForPrgoram" name="programType">
+                <label for="programTypeForProgram">프로그램 구분</label>
+                <select id="programTypeForProgram" name="programType">
                   <option value="" selected>전체</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="developerForPrgoram">개발자</label>
-                <input id="developerForPrgoram" name="developer" />
+                <label for="developerForProgram">개발자</label>
+                <input id="developerForProgram" name="developer" />
               </div>
 
               <div class="form-group">
-                <label for="programIdForPrgoram">프로그램ID</label>
-                <input id="programIdForPrgoram" name="programId" />
+                <label for="programIdForProgram">프로그램ID</label>
+                <input id="programIdForProgram" name="programId" />
               </div>
 
               <div class="form-group">
-                <label for="programNameForPrgoram">프로그램명</label>
-                <input id="programNameForPrgoram" name="programName" />
+                <label for="programNameForProgram">프로그램명</label>
+                <input id="programNameForProgram" name="programName" />
+              </div>
+
+              <div class="form-group">
+                <label for="screenIdForProgram">화면ID</label>
+                <input id="screenIdForProgram" name="screenId" />
               </div>
             </div>
 
@@ -217,10 +226,13 @@
               <div class="form-group">
                 <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
                 <div class="search-input-wrapper">
-                  <input id="programId" name="programId" required readonly />
+                  <input id="programId" name="programId" required readonly placeholder="프로그램 조회" />
 
                   <button type="button" class="search-button" id="programSearchButton" disabled>
-                    <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="프로그램 검색" />
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="프로그램 검색"
+                    />
                   </button>
                 </div>
               </div>
@@ -247,7 +259,7 @@
               <div class="form-group">
                 <label for="screenId">화면ID<span class="required-indicator">*</span></label>
                 <div class="search-input-wrapper">
-                  <input id="screenId" name="screenId" required readonly />
+                  <input id="screenId" name="screenId" required readonly placeholder="화면 조회" />
 
                   <button type="button" class="search-button" id="screenSearchButton" disabled>
                     <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="화면 검색" />
@@ -257,12 +269,12 @@
 
               <div class="form-group">
                 <label for="programName">프로그램명</label>
-                <input id="programName" name="programName" readonly />
+                <input id="programName" name="programName" readonly placeholder="프로그램ID를 선택해 주세요." />
               </div>
 
               <div class="form-group">
                 <label for="developer">개발자<span class="required-indicator">*</span></label>
-                <input id="developer" name="developer" required readonly />
+                <input id="developer" name="developer" required readonly placeholder="프로그램ID를 선택해 주세요." />
               </div>
             </div>
 
@@ -281,18 +293,30 @@
 
               <div class="form-group">
                 <label for="screenName">화면명</label>
-                <input id="screenName" name="screenName" readonly />
-              </div>
-
-              <div class="form-group">
-                <label for="screenMenuPath">화면경로</label>
-                <input id="screenMenuPath" name="screenMenuPath" readonly />
+                <input id="screenName" name="screenName" readonly placeholder="화면ID를 선택해 주세요." />
               </div>
 
               <!-- @todo 현재 테스트 진핸현황 DB에 요구사항ID를 저장하는 컬럼 없으므로 화면엔 보이되 서버에 전송X, 나중에 사용하게 되면 disabled 제거 -->
               <div class="form-group">
                 <label for="reqId">요구사항ID</label>
-                <input id="reqId" name="reqId" readonly disabled />
+                <input id="reqId" name="reqId" readonly disabled placeholder="프로그램ID를 선택해 주세요." />
+              </div>
+
+              <div class="form-group">
+                <!-- 자리채우기용 -->
+              </div>
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="screenMenuPath">화면경로</label>
+                <textarea
+                  class="custom-scroll"
+                  id="screenMenuPath"
+                  name="screenMenuPath"
+                  readonly
+                  placeholder="프로그램ID를 선택해 주세요."
+                ></textarea>
               </div>
             </div>
 
@@ -314,36 +338,52 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="preConditions">사전조건</label>
-                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" tabindex="6" readonly />
+                <textarea
+                  class="custom-scroll"
+                  id="preConditions"
+                  name="preConditions"
+                  placeholder="테스트 사전조건"
+                  tabindex="6"
+                  readonly
+                ></textarea>
               </div>
 
               <div class="form-group">
                 <label for="inputData">입력 데이터<span class="required-indicator">*</span></label>
-                <input
+                <textarea
+                  class="custom-scroll"
                   id="inputData"
                   name="inputData"
                   required
                   placeholder="테스트 입력 데이터"
                   tabindex="7"
                   readonly
-                />
+                ></textarea>
               </div>
 
               <div class="form-group">
                 <label for="expectedResult">예상결과<span class="required-indicator">*</span></label>
-                <input
+                <textarea
+                  class="custom-scroll"
                   id="expectedResult"
                   name="expectedResult"
                   required
                   placeholder="테스트 예상결과"
                   tabindex="8"
                   readonly
-                />
+                ></textarea>
               </div>
 
               <div class="form-group">
                 <label for="actualResult">실제결과</label>
-                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" tabindex="9" readonly />
+                <textarea
+                  class="custom-scroll"
+                  id="actualResult"
+                  name="actualResult"
+                  placeholder="테스트 실제결과"
+                  tabindex="9"
+                  readonly
+                ></textarea>
               </div>
             </div>
           </div>

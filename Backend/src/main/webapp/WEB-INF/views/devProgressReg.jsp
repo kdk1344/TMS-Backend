@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/devProgressReg.css" />
 
-    <title>TMS 개발진행 관리 - 프로그램 개발 등록</title>
+    <title>TMS 개발진행관리 - 프로그램 개발 등록</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/devProgressReg.js"></script>
   </head>
 
@@ -67,8 +67,7 @@
                 <input id="programName" name="programName" required placeholder="프로그램명을 입력해 주세요." />
               </div>
 
-              <!-- 나중에 사용하는 경우 class="hidden" 제거 -->
-              <div class="form-group hidden">
+              <div class="form-group">
                 <label for="className">클래스명</label>
                 <input id="className" name="className" placeholder="클래스명을 입력해 주세요." />
               </div>
@@ -81,11 +80,6 @@
               <div class="form-group">
                 <label for="screenName">화면명</label>
                 <input id="screenName" name="screenName" placeholder="화면명을 입력해 주세요." />
-              </div>
-
-              <div class="form-group">
-                <label for="screenMenuPath">화면경로</label>
-                <input id="screenMenuPath" name="screenMenuPath" placeholder="화면경로를 입력해 주세요." />
               </div>
             </div>
 
@@ -133,11 +127,6 @@
                 <input id="deletionDate" name="deletionDate" type="date" />
               </div>
 
-              <div class="form-group">
-                <label for="deletionReason">삭제처리 사유</label>
-                <input id="deletionReason" name="deletionReason" placeholder="사유를 입력해 주세요." />
-              </div>
-
               <div class="small-form-group">
                 <label for="plannedStartDate">개발착수예정일<span class="required-indicator">*</span></label>
                 <input id="plannedStartDate" name="plannedStartDate" type="date" required />
@@ -146,10 +135,38 @@
               </div>
 
               <div class="small-form-group">
-                <label for="actualStartDate">개발종료일</label>
+                <label for="actualStartDate">개발 시작-종료일</label>
                 <input id="actualStartDate" name="actualStartDate" type="date" />
                 <span>-</span>
                 <input id="actualEndDate" name="actualEndDate" type="date" />
+              </div>
+
+              <div class="form-group">
+                <!-- 자리채우기용 -->
+              </div>
+            </div>
+
+            <div class="form-group-container">
+              <div class="form-group">
+                <label for="screenMenuPath">화면경로</label>
+                <textarea
+                  class="custom-scroll"
+                  id="screenMenuPath"
+                  name="screenMenuPath"
+                  placeholder="화면경로를 입력해 주세요."
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-group-container">
+              <div class="form-group">
+                <label for="deletionReason">삭제처리 사유</label>
+                <textarea
+                  class="custom-scroll"
+                  id="deletionReason"
+                  name="deletionReason"
+                  placeholder="사유를 입력해 주세요."
+                ></textarea>
               </div>
             </div>
           </div>
