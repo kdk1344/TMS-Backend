@@ -71,5 +71,5 @@ public interface DevMapper {
     public List<devProgress> getprogramDetail(@Param("programId") String programId); // 프로그램 상세 정보 확인
     public void insertDeleteHistory(deleteHistory deletehistory); // deleteHistory DB에 삽입
     public int checkDeleteHistory(int seq); // 삭제 기록 존재 여부 확인
-    public void updateDeleteHistory(deleteHistory deletehistory);
+    public void updateDeleteHistory(deleteHistory deletehistory); // deleteHistory DB 내용 수정
 }

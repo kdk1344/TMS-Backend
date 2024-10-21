@@ -39,7 +39,6 @@ public interface AdminMapper {
 			@Param("endDate") String endDate,
 	        @Param("title") String title,
 	        @Param("content") String content); // 공지사항 총 갯수
-	public Notice getLatestNotice(); // 최근 공지사항 조회
 	public List<FileAttachment> getAttachmentsByNoticeSEQ(@Param("seq") int seq); // seq에 따른 첨부파일 추출
 	public void insertNotice(Notice notice); // 공지사항 입력
     public void insertAttachment(FileAttachment attachment); // 첨부파일 입력

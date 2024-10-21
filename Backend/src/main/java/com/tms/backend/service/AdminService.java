@@ -122,6 +122,7 @@ public class AdminService {
     public List<Notice> searchNotices(String startDate, String endDate, String title, String content, int page, int size) {
         int offset = (page - 1) * size;
         List<Notice> notices = adminmapper.searchNotices(startDate, endDate, title, content, offset, size);
+        log.info(size);
         return notices;
     }
     
@@ -131,8 +132,17 @@ public class AdminService {
     }
     
     //최근 공지사항 데이터 불러오기
-    public Notice getLatestNotice() {
-        return adminmapper.getLatestNotice();
+    public Notice getLatestNotice(List<Notice> noticeList) {
+    	if (noticeList == null || noticeList.isEmpty()) {
+            return null; // 리스트가 비어있거나 null인 경우
+        }
+    	Notice maxSeqNotice = noticeList.get(0); // 초기값으로 첫 번째 요소 설정
+    	for (Notice notice : noticeList) {
+            if (notice.getSeq() > maxSeqNotice.getSeq()) {
+                maxSeqNotice = notice; // 더 큰 seq를 가진 Notice로 업데이트
+            }
+        }
+        return maxSeqNotice;
     }
     
     //공지사항 등록

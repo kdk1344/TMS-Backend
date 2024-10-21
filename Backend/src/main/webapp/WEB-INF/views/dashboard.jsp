@@ -49,9 +49,9 @@
 		      <dt>첨부파일</dt>
 		      <dd>
 		        <ul id="nt-attachments">
-		          <c:forEach var="attachment" items="${latestNotice.attachments}">
-		            <li><a href="/tms/downloadAttachment?seq=${attachment.seq}">${attachment.fileName}</a></li>
-		          </c:forEach>
+		        	<c:forEach var="attachment" items="${latestNotice.attachments}">
+		            	<li><a href="/tms/downloadAttachment?seq=${attachment.seq}">${attachment.fileName}</a></li>
+		          	</c:forEach>
 		        </ul>
 		      </dd>
 		    </div>
@@ -62,7 +62,7 @@
       <table id="noticeTable">
         <thead>
           <tr>
-            <th class="notice-seq">번호</th>
+            <th class="notice-seq" style="width: 100px;">번호</th>
             <th class="notice-post-date">게시일자</th>
             <th class="notice-title">제목</th>
             <th class="notice-content">게시내용</th>
@@ -70,14 +70,14 @@
         </thead>
         <tbody id="noticeTableBody">
           	<c:forEach var="notice" items="${notices}">
-                <tr onclick="location.href='/tms/ntdetail?seq=${notice.seq}'" style="cursor: pointer;">
-                    <td>
+                <tr onclick="loadNotice(${notice.seq})" style="cursor: pointer;">
+                    <td class="notice-seq">
                         ${notice.seq}
 	                </td>
-                    <td>
+                    <td class="notice-post-date">
                         <fmt:formatDate value="${notice.postDate}" pattern="yyyy-MM-dd" />
 	                </td>
-                    <td>
+                    <td class="notice-title">
                         ${notice.title}
                     </td>
                     <td class="notice-contents">
@@ -168,5 +168,43 @@
 		  window.onload = function() {
 		    truncateTextByClass("notice-contents", 50); // 최대 50글자까지만 표시
 		  };
+	  function loadNotice(seq) {
+		    const fetchURL = '/tms/getNotice?seq=' + seq; // api 주소
+		    fetch(fetchURL)
+			    .then(response => {
+		            if (!response.ok) {
+		                throw new Error('Network response was not ok');
+		            }
+		            return response.json();
+		        })
+		        .then(data => {
+		        	//날짜값 정리
+		        	const postDate = new Date(data.postDate);
+					const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+					const formattedDate = new Intl.DateTimeFormat('en-CA', options).format(postDate);
+		            // latestNotice 내용 업데이트
+		            document.getElementById('nt-seq').textContent = data.seq;
+		            document.getElementById('nt-post-date').textContent = formattedDate;
+		            document.getElementById('nt-title').textContent = data.title;
+		            document.querySelector('.notice-content').textContent = data.content;
+		            
+		            console.log('Fetched data:', data);
+
+		            // 첨부파일 목록 업데이트
+		            const attachmentsList = document.getElementById('nt-attachments');
+		            attachmentsList.innerHTML = ''; // 기존 목록 초기화
+		            data.attachments.forEach(attachment => {
+		                const li = document.createElement('li');
+		                const fileName = attachment.fileName;
+		                console.log(fileName);
+		                const url = '/tms/downloadAttachment?seq=' + attachment.seq; // URL 변수 정의
+		                const linkHtml = '<a href="' + url + '">' + fileName + '</a>'; // linkHtml 변수 정의
+		                console.log(linkHtml);
+		                li.innerHTML = linkHtml;
+		                attachmentsList.appendChild(li);
+		            });
+		        })
+		        .catch(error => console.error('Error fetching notice:', error));
+		}
   </script>
 </html>

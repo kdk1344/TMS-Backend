@@ -122,6 +122,7 @@ public class DevService {
     //삭제 기록 deleteHistory 테이블에 전송
     private void insertDeleteHistory(devProgress devProgress) {
     	deleteHistory deletehistory = new deleteHistory(); // 메서드 내에서 deleteHistory 객체 로컬 변수로 선언 및 초기화
+    	log.info(devProgress.getSeq());
     	// deleteHistory 속성 설정
     	deletehistory.setSeq(devProgress.getSeq());
     	deletehistory.setProgramName(devProgress.getProgramName());
@@ -132,7 +133,7 @@ public class DevService {
     	if (checkDeleteHistory(devProgress.getSeq()) == 0) {
     		devMapper.insertDeleteHistory(deletehistory);} // deleteHistory DB에 삽입
     	else{
-    		devMapper.updateDeleteHistory(deletehistory);
+    		devMapper.updateDeleteHistory(deletehistory); // deleteHistory DB 내용 수정
     	}
     }
     

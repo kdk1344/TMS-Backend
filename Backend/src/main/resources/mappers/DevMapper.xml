@@ -266,7 +266,7 @@
 	    )
 	</insert>
 	
-	<!-- 개발 진행 현황 수정 -->
+	<!-- 삭제 기록 수정 -->
 	<update id="updateDeleteHistory" parameterType="deleteHistory">
 		UPDATE DELETE_HISTORY
         SET 
@@ -274,7 +274,7 @@
             PROGRAM_NAME = #{programName},
             DELETION_HANDLER = #{deletionHandler},
             DELETION_DATE = #{deletionDate},
-            DELETION_REASON = #{deletionReason},
+            DELETION_REASON = #{deletionReason}
         WHERE SEQ = #{seq}
     </update>
 	

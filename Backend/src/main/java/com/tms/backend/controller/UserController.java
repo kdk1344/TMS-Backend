@@ -79,6 +79,9 @@ public class UserController {
     	int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content); // 총 공지사항 숫자
         int totalPages = (int) Math.ceil((double) totalNotices / size); // 총 공지사항 페이지 숫자
         
+        log.info(totalNotices+" "+totalPages);
+        log.info(adminService.searchNotices(null,null,null,null,1,10));
+        
         // 페이지네이션 그룹 설정 (한 그룹에 10페이지씩)
         int pageGroupSize = 10;
         int startPage = (page - 1) / pageGroupSize * pageGroupSize + 1;
@@ -92,7 +95,7 @@ public class UserController {
         int prevPageGroupStart = startPage - pageGroupSize;
         int nextPageGroupStart = startPage + pageGroupSize;
         
-        Notice latestNotice = adminService.getLatestNotice(); // 윗 화면에 출력되는 최근 공지사항 내용
+        Notice latestNotice = adminService.getLatestNotice(noticeList); // 윗 화면에 출력되는 최근 공지사항 내용
         if (latestNotice == null) {
             latestNotice = new Notice(); // 빈 Notice 객체를 생성
             latestNotice.setTitle("최근 공지사항이 없습니다."); // 기본 메시지 설정
@@ -116,6 +119,25 @@ public class UserController {
         model.addAttribute("nextPageGroupStart", nextPageGroupStart);
                 
         return  "dashboard";
+    }
+    
+    @GetMapping(value="/getNotice" , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getNotice(@RequestParam int seq) {
+    	Map<String, Object> response = new HashMap<>();
+    	Notice notice = adminService.getNoticeById(seq); // seq로 공지사항을 찾는 서비스 메소드
+    	
+    	// 공지사항이 존재할 경우
+        response.put("seq", notice.getSeq());
+        response.put("postDate", notice.getPostDate());
+        response.put("title", notice.getTitle());
+        response.put("content", notice.getContent());
+        
+        // 첨부파일 리스트 추가
+        List<FileAttachment> attachments = adminService.getAttachments(seq,4);
+        response.put("attachments", attachments);
+
+        return ResponseEntity.ok(response); // 200 OK 응답
     }
     
 //    // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환

@@ -110,9 +110,8 @@
 	
 	<!-- 공지사항 정보 추출 -->
     <select id="searchNotices" parameterType="map" resultMap="NoticeResultMap">
-        SELECT n.*, a.*
+        SELECT n.*
         FROM notices n
-        LEFT JOIN file_attachments a ON n.SEQ = a.identifier
         WHERE 1=1
          <!-- 시작일과 종료일에 따른 POST_DATE 범위 검색 -->
         <if test="startDate != null and startDate != ''">
@@ -154,13 +153,6 @@
             AND CONTENT LIKE CONCAT('%', #{content}, '%')
         </if>
     </select>
-    <!-- 최근 공지사항 정보 추출 -->
-    <select id="getLatestNotice" resultMap="NoticeResultMap">
-	    SELECT *
-	    FROM notices
-	    ORDER BY CREATED_DATE DESC
-	    LIMIT 1
-	</select>
     <!-- 공지사항 정보 입력 -->
     <insert id="insertNotice" useGeneratedKeys="true" keyProperty="seq">
         INSERT INTO notices (POST_DATE, TITLE, CONTENT)
