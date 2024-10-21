@@ -10,7 +10,7 @@
       href="${pageContext.request.contextPath}/resources/css/testProgressReg.css"
     />
 
-    <title>TMS 테스트 진행관리 - 테스트 시나리오 등록</title>
+    <title>TMS 테스트진행관리 - 테스트 시나리오 등록</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/testProgressReg.js"></script>
   </head>
 

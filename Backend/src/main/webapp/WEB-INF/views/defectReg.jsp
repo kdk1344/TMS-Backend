@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/defectReg.css" />
 
-    <title>TMS 결함진행 관리 - 결함 등록</title>
+    <title>TMS 결함진행관리 - 결함 등록</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/defectReg.js"></script>
   </head>
 
@@ -16,7 +16,7 @@
     </header>
 
     <main class="content">
-      <h1 class="page-title">결함 등록</h1>
+      <h1 class="page-title">결함 등록<span id="previousScreenInfo"></span></h1>
 
       <!-- 프로그램 검색 모달 -->
       <div id="programSearchModal" class="modal">
@@ -152,6 +152,42 @@
                 <label for="testId">테스트ID<span class="required-indicator">*</span></label>
                 <input id="testId" name="testId" required placeholder="UT-프로그램ID" />
               </div>
+
+              <div class="form-group">
+                <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
+                <div class="search-input-wrapper">
+                  <input id="programId" name="programId" required readonly placeholder="프로그램 조회" />
+
+                  <button type="button" class="search-button" id="programSearchButton">
+                    <img
+                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
+                      alt="프로그램 검색"
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="programName">프로그램명<span class="required-indicator">*</span></label>
+                <input
+                  id="programName"
+                  name="programName"
+                  required
+                  readonly
+                  placeholder="프로그램ID를 선택해 주세요."
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
+                <input
+                  id="programType"
+                  name="programType"
+                  required
+                  readonly
+                  placeholder="프로그램ID를 선택해 주세요."
+                />
+              </div>
             </div>
 
             <div class="form-group-row">
@@ -194,32 +230,6 @@
                   <input type="file" id="defectFileInput" class="hidden" name="defectAttachments" multiple />
                   <div id="defectFileOutput" class="file-preview custom-scroll"></div>
                 </div>
-              </div>
-            </div>
-
-            <div class="form-group-row">
-              <div class="form-group">
-                <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
-                <div class="search-input-wrapper">
-                  <input id="programId" name="programId" required readonly />
-
-                  <button type="button" class="search-button" id="programSearchButton">
-                    <img
-                      src="${pageContext.request.contextPath}/resources/images/search_icon.png"
-                      alt="프로그램 검색"
-                    />
-                  </button>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="programName">프로그램명<span class="required-indicator">*</span></label>
-                <input id="programName" name="programName" required readonly />
-              </div>
-
-              <div class="form-group">
-                <label for="programType">프로그램 구분<span class="required-indicator">*</span></label>
-                <input id="programType" name="programType" required readonly />
               </div>
             </div>
           </div>

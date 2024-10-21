@@ -10,7 +10,7 @@
       href="${pageContext.request.contextPath}/resources/css/devProgressEdit.css"
     />
 
-    <title>TMS 개발진행 관리 - 프로그램 개발 수정</title>
+    <title>TMS 개발진행관리 - 프로그램 개발 수정</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/devProgressEdit.js"></script>
   </head>
 

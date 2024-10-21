@@ -232,11 +232,16 @@ async function initializePageByReferer() {
   const { majorCategory, subCategory, programId, programName, programType, developer, pl, testStage, testId } =
     Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
+  const previousScreenInfo = document.getElementById("previousScreenInfo");
+
   const majorCategorySelect = document.getElementById("majorCategory");
   const subCategorySelect = document.getElementById("subCategory");
   const testStageSelect = document.getElementById("testStage");
   const testIdInput = document.getElementById("testId");
   const plInput = document.getElementById("pl");
+  const programIdInput = document.getElementById("programId");
+  const programNameInput = document.getElementById("programName");
+  const programTypeInput = document.getElementById("programType");
 
   if (referer === REFERER.DEV_PROGRESS || referer === REFERER.TEST_PROGRESS) {
     document.getElementById("programId").value = programId;
@@ -271,6 +276,8 @@ async function initializePageByReferer() {
 
   // 개발진행관리 > 결함 등록
   if (referer === REFERER.DEV_PROGRESS) {
+    previousScreenInfo.textContent = " (개발진행관리)";
+
     const programSearchButton = document.getElementById("programSearchButton");
 
     testIdInput.value = `UT-${programId}`;
@@ -292,6 +299,8 @@ async function initializePageByReferer() {
 
   // 테스트 진행관리 > 결함 등록
   if (referer === REFERER.TEST_PROGRESS) {
+    previousScreenInfo.textContent = " (테스트진행관리)";
+
     testIdInput.value = testId;
 
     for (let option of testStageSelect.options) {
@@ -303,6 +312,13 @@ async function initializePageByReferer() {
 
     // 자동 세팅 값 수정 막기
     testStageSelect.classList.add("readonly");
+  }
+
+  // 결함 진행관리 > 결함 등록
+  if (referer === REFERER.DEFECT) {
+    programIdInput.classList.add("white-background");
+    programNameInput.classList.add("white-background");
+    programTypeInput.classList.add("white-background");
   }
 }
 

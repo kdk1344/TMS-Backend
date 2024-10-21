@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/defectEdit.css" />
 
-    <title>TMS 결함진행 관리 - 결함 수정</title>
+    <title>TMS 결함진행관리 - 결함 수정</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/defectEdit.js"></script>
   </head>
 
@@ -16,7 +16,7 @@
     </header>
 
     <main class="content">
-      <h1 class="page-title">결함 수정</h1>
+      <h1 class="page-title">결함 수정<span id="previousScreenInfo"></span></h1>
 
       <!-- 프로그램 검색 모달 -->
       <div id="programSearchModal" class="modal">

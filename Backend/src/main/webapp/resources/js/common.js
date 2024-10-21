@@ -51,7 +51,7 @@ const menuData = [
     subMenu: [{ name: "프로그램 개발 진행현황", link: "/tms/devProgress" }],
   },
   {
-    name: "테스트 진행관리",
+    name: "테스트진행관리",
     subMenu: [{ name: "테스트 진행현황", link: "/tms/testProgress" }],
   },
   {

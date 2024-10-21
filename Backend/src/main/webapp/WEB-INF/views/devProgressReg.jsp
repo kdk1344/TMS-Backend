@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/devProgressReg.css" />
 
-    <title>TMS 개발진행 관리 - 프로그램 개발 등록</title>
+    <title>TMS 개발진행관리 - 프로그램 개발 등록</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/devProgressReg.js"></script>
   </head>
 

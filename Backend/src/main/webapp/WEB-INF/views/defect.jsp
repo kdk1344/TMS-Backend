@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/defect.css" />
 
-    <title>TMS 결함진행 관리</title>
+    <title>TMS 결함진행관리</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/defect.js"></script>
   </head>
 

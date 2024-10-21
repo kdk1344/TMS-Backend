@@ -68,7 +68,7 @@ legend {
 
 .form-group input,
 .form-group select {
-  width: 200px;
+  width: 224px;
 }
 
 .form-group textarea {
@@ -246,4 +246,12 @@ legend {
 #defectNumberTable th.seq,
 #defectNumberTable td.seq {
   width: fit-content;
+}
+
+#programId {
+  width: calc(224px - 36px);
+}
+
+input[readonly].white-background {
+  background-color: var(--white);
 }

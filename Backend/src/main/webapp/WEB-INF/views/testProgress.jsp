@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/testProgress.css" />
 
-    <title>TMS 테스트 진행관리</title>
+    <title>TMS 테스트진행관리</title>
     <script type="module" src="${pageContext.request.contextPath}/resources/js/testProgress.js"></script>
   </head>
 
