@@ -233,27 +233,27 @@ async function renderTestProgress(
 
       row.innerHTML = `
         <td><input type="checkbox" name="testProgress" value="${seq}"></td>
-        <td class="sub-category">${subCategory}</td>
+        <td class="sub-category ellipsis">${subCategory}</td>
         <td class="test-id ellipsis">${testId}</td>
         <td class="test-scenario-name ellipsis">${testScenarioName}</td>
         <td class="test-case-name ellipsis">${testCaseName}</td>
         <td class="test-step-name ellipsis">${testStepName}</td>
-        <td class="screen-id">${screenId}</th>
+        <td class="screen-id ellipsis">${screenId}</th>
         <td class="screen-name ellipsis">${screenName}</td>
-        <td class="program-type">${programType}</td>
+        <td class="program-type ellipsis">${programType}</td>
         <td class="program-id ellipsis">${programId}</td>
         <td class="program-name ellipsis">${programName}</td>
         <td class="exec-company-test-date">${convertDate(execCompanyTestDate)}</td>
         <td class="exec-company-confirm-date">${convertDate(execCompanyConfirmDate)}</td>
-        <td class="developer">${developer}</td>
-        <td class="pl">${pl}</td>
-        <td class="third-party-test-mgr">${thirdPartyTestMgr}</td>
+        <td class="developer ellipsis">${developer}</td>
+        <td class="pl ellipsis">${pl}</td>
+        <td class="third-party-test-mgr ellipsis">${thirdPartyTestMgr}</td>
         <td class="third-party-confirm-date">${convertDate(thirdPartyConfirmDate)}</td>
-        <td class="it-mgr">${itMgr}</td>
+        <td class="it-mgr ellipsis">${itMgr}</td>
         <td class="it-confirm-date">${convertDate(itConfirmDate)}</td>
-        <td class="busi-mgr">${busiMgr}</td>
+        <td class="busi-mgr ellipsis">${busiMgr}</td>
         <td class="busi-confirm-date">${convertDate(busiConfirmDate)}</td>
-        <td class="test-status">${testStatus}</td>
+        <td class="test-status ellipsis">${testStatus}</td>
       `;
       testProgressTableBody.appendChild(row);
     });
