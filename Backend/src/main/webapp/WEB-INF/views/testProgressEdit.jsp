@@ -296,15 +296,21 @@
                 <input id="screenName" name="screenName" readonly />
               </div>
 
-              <div class="form-group">
-                <label for="screenMenuPath">화면경로</label>
-                <input id="screenMenuPath" name="screenMenuPath" readonly />
-              </div>
-
               <!-- @todo 현재 테스트 진핸현황 DB에 요구사항ID를 저장하는 컬럼 없으므로 화면엔 보이되 서버에 전송X, 나중에 사용하게 되면 disabled 제거 -->
               <div class="form-group">
                 <label for="reqId">요구사항ID</label>
                 <input id="reqId" name="reqId" readonly disabled />
+              </div>
+
+              <div class="form-group">
+                <!-- 자리채우기용 -->
+              </div>
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="screenMenuPath">화면경로</label>
+                <textarea class="custom-scroll" id="screenMenuPath" name="screenMenuPath" readonly></textarea>
               </div>
             </div>
 
@@ -326,36 +332,52 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="preConditions">사전조건</label>
-                <input id="preConditions" name="preConditions" placeholder="테스트 사전조건" tabindex="6" readonly />
+                <textarea
+                  class="custom-scroll"
+                  id="preConditions"
+                  name="preConditions"
+                  placeholder="테스트 사전조건"
+                  tabindex="6"
+                  readonly
+                ></textarea>
               </div>
 
               <div class="form-group">
                 <label for="inputData">입력 데이터<span class="required-indicator">*</span></label>
-                <input
+                <textarea
+                  class="custom-scroll"
                   id="inputData"
                   name="inputData"
                   required
                   placeholder="테스트 입력 데이터"
                   tabindex="7"
                   readonly
-                />
+                ></textarea>
               </div>
 
               <div class="form-group">
                 <label for="expectedResult">예상결과<span class="required-indicator">*</span></label>
-                <input
+                <textarea
+                  class="custom-scroll"
                   id="expectedResult"
                   name="expectedResult"
                   required
                   placeholder="테스트 예상결과"
                   tabindex="8"
                   readonly
-                />
+                ></textarea>
               </div>
 
               <div class="form-group">
                 <label for="actualResult">실제결과</label>
-                <input id="actualResult" name="actualResult" placeholder="테스트 실제결과" tabindex="9" readonly />
+                <textarea
+                  class="custom-scroll"
+                  id="actualResult"
+                  name="actualResult"
+                  placeholder="테스트 실제결과"
+                  tabindex="9"
+                  readonly
+                ></textarea>
               </div>
             </div>
           </div>
