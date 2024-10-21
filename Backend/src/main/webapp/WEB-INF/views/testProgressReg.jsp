@@ -160,7 +160,7 @@
               <div class="form-group">
                 <label for="programId">프로그램ID<span class="required-indicator">*</span></label>
                 <div class="search-input-wrapper">
-                  <input id="programId" name="programId" required readonly />
+                  <input id="programId" name="programId" required readonly placeholder="프로그램 조회" />
 
                   <button type="button" class="search-button" id="programSearchButton">
                     <img
@@ -173,7 +173,7 @@
 
               <div class="form-group">
                 <label for="pl">PL<span class="required-indicator">*</span></label>
-                <input id="pl" name="pl" required readonly />
+                <input id="pl" name="pl" required readonly placeholder="프로그램ID를 선택해 주세요." />
               </div>
             </div>
 
@@ -192,7 +192,7 @@
               <div class="form-group">
                 <label for="screenId">화면ID<span class="required-indicator">*</span></label>
                 <div class="search-input-wrapper">
-                  <input id="screenId" name="screenId" required readonly />
+                  <input id="screenId" name="screenId" required readonly placeholder="화면 조회" />
 
                   <button type="button" class="search-button" id="screenSearchButton">
                     <img src="${pageContext.request.contextPath}/resources/images/search_icon.png" alt="화면 검색" />
@@ -202,12 +202,12 @@
 
               <div class="form-group">
                 <label for="programName">프로그램명</label>
-                <input id="programName" name="programName" readonly />
+                <input id="programName" name="programName" readonly placeholder="프로그램ID를 선택해 주세요." />
               </div>
 
               <div class="form-group">
                 <label for="developer">개발자<span class="required-indicator">*</span></label>
-                <input id="developer" name="developer" required readonly />
+                <input id="developer" name="developer" required readonly placeholder="프로그램ID를 선택해 주세요." />
               </div>
             </div>
 
@@ -219,13 +219,13 @@
 
               <div class="form-group">
                 <label for="screenName">화면명</label>
-                <input id="screenName" name="screenName" readonly />
+                <input id="screenName" name="screenName" readonly placeholder="화면ID를 선택해 주세요." />
               </div>
 
               <!-- @todo 현재 테스트 진핸현황 DB에 요구사항ID를 저장하는 컬럼 없으므로 화면엔 보이되 서버에 전송X, 나중에 사용하게 되면 disabled 제거 -->
               <div class="form-group">
                 <label for="reqId">요구사항ID</label>
-                <input id="reqId" name="reqId" readonly disabled />
+                <input id="reqId" name="reqId" readonly disabled placeholder="프로그램ID를 선택해 주세요." />
               </div>
 
               <div class="form-group">
@@ -236,7 +236,13 @@
             <div class="form-group-row">
               <div class="form-group">
                 <label for="screenMenuPath">화면경로</label>
-                <textarea class="custom-scroll" id="screenMenuPath" name="screenMenuPath" readonly></textarea>
+                <textarea
+                  class="custom-scroll"
+                  id="screenMenuPath"
+                  name="screenMenuPath"
+                  readonly
+                  placeholder="프로그램ID를 선택해 주세요."
+                ></textarea>
               </div>
             </div>
 
