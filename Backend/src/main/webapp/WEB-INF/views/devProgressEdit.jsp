@@ -197,11 +197,6 @@
                 <input id="deletionDate" name="deletionDate" type="date" readonly />
               </div>
 
-              <div class="form-group">
-                <label for="deletionReason">삭제처리 사유</label>
-                <input id="deletionReason" name="deletionReason" placeholder="사유를 입력해 주세요." readonly />
-              </div>
-
               <div class="small-form-group">
                 <label for="plannedStartDate">개발착수예정일<span class="required-indicator">*</span></label>
                 <input id="plannedStartDate" name="plannedStartDate" type="date" required readonly />
@@ -215,6 +210,10 @@
                 <span>-</span>
                 <input id="actualEndDate" name="actualEndDate" type="date" readonly />
               </div>
+
+              <div class="form-group">
+                <!-- 자리채우기용 -->
+              </div>
             </div>
 
             <div class="form-group-container">
@@ -225,6 +224,19 @@
                   id="screenMenuPath"
                   name="screenMenuPath"
                   placeholder="화면경로를 입력해 주세요."
+                  readonly
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-group-container">
+              <div class="form-group">
+                <label for="deletionReason">삭제처리 사유</label>
+                <textarea
+                  class="custom-scroll"
+                  id="deletionReason"
+                  name="deletionReason"
+                  placeholder="사유를 입력해 주세요."
                   readonly
                 ></textarea>
               </div>
