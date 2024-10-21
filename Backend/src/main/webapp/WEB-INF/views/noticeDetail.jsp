@@ -53,7 +53,7 @@
             <div class="file-preview-container">
               <button type="button" class="file-button" id="fileSelectButtonForEdit">파일 선택</button>
               <input type="file" id="fileInputForEdit" class="hidden" name="file" multiple />
-              <div id="fileOutputForEdit" class="file-preview"></div>
+              <div id="fileOutputForEdit" class="file-preview custom-scroll"></div>
             </div>
           </div>
 
@@ -86,10 +86,9 @@
         </div>
         <div class="notice-field">
           <dt>첨부파일</dt>
-          <dd class="file-preview">
-            <ul id="noticeAttachments">
-              <!-- 정보 동적으로 삽입-->
-            </ul>
+          <dd class="file-preview-container">
+            <input type="file" id="fileInputForRead" class="hidden" name="file" multiple readonly />
+            <div id="fileOutputForRead" class="file-preview custom-scroll"></div>
           </dd>
         </div>
       </dl>

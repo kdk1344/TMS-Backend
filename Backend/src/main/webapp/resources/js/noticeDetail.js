@@ -8,7 +8,6 @@
   updateFilePreview,
   showSpinner,
   hideSpinner,
-  downloadFile,
   loadFilesToInput,
   addFiles,
   checkSession,
@@ -35,11 +34,11 @@ const MODAL_ID = {
 document.addEventListener("DOMContentLoaded", init);
 
 // 초기화 함수
-function init() {
+async function init() {
   renderTMSHeader();
   setupEventListeners();
-  loadInitialNoticeDetail();
-  initializePageByUser();
+  await loadInitialNoticeDetail();
+  await initializePageByUser();
 }
 
 // 이벤트 핸들러 설정
@@ -73,8 +72,8 @@ function setupEventListeners() {
 
   // 모달 열기 및 닫기 버튼 이벤트 핸들러
   if (openNoticeEditModalButton && closeNoticeEditModalButton) {
-    openNoticeEditModalButton.addEventListener("click", () => {
-      loadNoticeDataFromNoticeDetail(); // 공지사항 수정 폼에 데이터 채우기
+    openNoticeEditModalButton.addEventListener("click", async () => {
+      await loadNoticeDataFromNoticeDetail(); // 공지사항 수정 폼에 데이터 채우기
       openModal(MODAL_ID.NOTICE_EDIT);
     });
 
@@ -104,7 +103,7 @@ async function initializePageByUser() {
 async function loadInitialNoticeDetail() {
   const { noticeDetail, attachments } = await getNoticeDetail();
 
-  displayNoticeDetail(noticeDetail, attachments);
+  await displayNoticeDetail(noticeDetail, attachments);
 }
 
 async function getNoticeDetail() {
@@ -122,7 +121,7 @@ async function getNoticeDetail() {
 }
 
 // 공지사항 상세 표시
-function displayNoticeDetail(noticeDetail, attachments) {
+async function displayNoticeDetail(noticeDetail, attachments) {
   if (!noticeDetail) return;
 
   // 공지사항 상세 정보를 DOM 요소에 넣기
@@ -132,32 +131,22 @@ function displayNoticeDetail(noticeDetail, attachments) {
   document.getElementById("noticeContent").textContent = noticeDetail.content || "N/A";
 
   // 첨부파일 리스트 표시
-  const attachmentsList = document.getElementById("noticeAttachments");
-  attachmentsList.innerHTML = ""; // 기존 내용을 초기화
+  const fileInputId = "fileInputForRead";
+  const fileOutputId = "fileOutputForRead";
 
   if (attachments && attachments.length > 0) {
-    attachments.forEach((attachment) => {
-      const listItem = document.createElement("li");
-      const link = document.createElement("a");
+    const fileIds = attachments.map((file) => file.seq);
 
-      listItem.id = attachment.seq;
+    await loadFilesToInput(fileInputId, fileIds); // 파일 input에 가져온 파일들 채우기
 
-      // 다운로드 링크 설정
-      link.href = "#";
-      link.textContent = attachment.fileName;
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        downloadFile(attachment.seq); // 클릭 시 파일 다운로드 시작
-      });
+    updateFilePreview(fileInputId, fileOutputId); // 파일 목록 렌더링
 
-      listItem.appendChild(link);
-      attachmentsList.appendChild(listItem);
-    });
+    const fileRemoveButtons = document.querySelectorAll(".file-remove-button");
+    fileRemoveButtons.forEach((button) => button.classList.add("hidden")); // 파일 삭제 버튼 가리기
   } else {
     // 첨부파일이 없을 경우
-    const noAttachmentsItem = document.createElement("li");
-    noAttachmentsItem.textContent = "첨부파일이 없습니다.";
-    attachmentsList.appendChild(noAttachmentsItem);
+    document.getElementById(fileOutputId).textContent = "첨부파일이 없습니다.";
+    document.getElementById(fileOutputId).style.padding = "8px";
   }
 }
 
@@ -222,25 +211,24 @@ async function editNotice(event) {
 
 // HTML 요소에서 공지사항 정보를 가져와서 공지사항 수정 폼에 미리 채우기
 async function loadNoticeDataFromNoticeDetail() {
-  const noticePostDate = document.getElementById("noticePostDate").textContent;
-  const noticeTitle = document.getElementById("noticeTitle").textContent;
-  const noticeContent = document.getElementById("noticeContent").textContent;
-  const fileIDs = Array.from(document.querySelectorAll("#noticeAttachments li")).map((file) => file.id);
+  const { noticeDetail, attachments } = await getNoticeDetail();
+  const { postDate: noticePostDate, title: noticeTitle, content: noticeContent } = noticeDetail;
 
   // 폼에 공지사항 정보 입력
-  document.getElementById("postDateForEdit").value = noticePostDate;
+  document.getElementById("postDateForEdit").value = getCurrentDate(noticePostDate);
   document.getElementById("titleForEdit").value = noticeTitle;
   document.getElementById("contentForEdit").value = noticeContent;
 
+  // 첨부파일 채우기
+  const fileIds = attachments.map((file) => file.seq);
   const fileInputId = "fileInputForEdit";
   const fileListOutputId = "fileOutputForEdit";
 
-  await loadFilesToInput(fileInputId, fileIDs);
+  await loadFilesToInput(fileInputId, fileIds); // 파일 input에 가져온 파일들 채우기
 
-  updateFilePreview(fileInputId, fileListOutputId);
+  addFiles(fileInputId); // 전역변수에 가져온 첨부파일 저장
 
-  // 모달 열기
-  openModal(MODAL_ID.NOTICE_EDIT);
+  updateFilePreview(fileInputId, fileListOutputId); // 파일 목록 렌더링
 }
 
 // 공지사항 삭제

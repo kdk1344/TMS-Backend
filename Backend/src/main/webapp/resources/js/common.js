@@ -333,6 +333,15 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     fileName.textContent = file.name;
     fileName.classList.add("file-name");
 
+    // 이미지 파일일 경우 미리보기 추가
+    if (file.type.startsWith("image/")) {
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = file.name;
+      img.classList.add("image-preview");
+      fileItem.appendChild(img); // 이미지 미리보기를 <li>에 추가
+    }
+
     // 삭제 버튼 생성
     const removeButton = document.createElement("button");
     removeButton.textContent = "삭제";
@@ -460,7 +469,49 @@ export async function getFile(fileID) {
     response.headers.get("Content-Disposition").split("filename=")[1].replace(/"/g, "")
   );
 
-  return { blob, fileName };
+  // 응답 헤더에서 MIME 타입 추출 (또는 빈 문자열을 반환)
+  let fileType = response.headers.get("Content-Type") || "";
+
+  // application/octet-stream으로 넘어오는 경우 파일의 실제 타입을 확인
+  if (fileType.startsWith("application/octet-stream")) {
+    fileType = await getMimeTypeFromBlob(blob); // Blob을 통해 MIME 타입 추출
+  }
+
+  return { blob, fileName, fileType };
+}
+
+// Blob으로부터 MIME 타입을 추출하는 함수
+async function getMimeTypeFromBlob(blob) {
+  const arrayBuffer = await blob.arrayBuffer();
+  const byteArray = new Uint8Array(arrayBuffer);
+
+  // 이미지 파일 시그니처 (헤더) 매칭
+  const headerSignatures = {
+    jpeg: [0xff, 0xd8, 0xff], // JPEG 파일의 시그니처
+    png: [0x89, 0x50, 0x4e, 0x47], // PNG 파일의 시그니처
+    gif: [0x47, 0x49, 0x46, 0x38], // GIF 파일의 시그니처
+    webp: [0x52, 0x49, 0x46, 0x46], // WebP 파일의 시그니처 (RIFF)
+  };
+
+  // JPEG 확인
+  if (byteArray.subarray(0, 3).every((val, idx) => val === headerSignatures.jpeg[idx])) {
+    return "image/jpeg";
+  }
+  // PNG 확인
+  if (byteArray.subarray(0, 4).every((val, idx) => val === headerSignatures.png[idx])) {
+    return "image/png";
+  }
+  // GIF 확인
+  if (byteArray.subarray(0, 4).every((val, idx) => val === headerSignatures.gif[idx])) {
+    return "image/gif";
+  }
+  // WebP 확인
+  if (byteArray.subarray(0, 4).every((val, idx) => val === headerSignatures.webp[idx])) {
+    return "image/webp";
+  }
+
+  // 기본 MIME 타입 (확인되지 않으면 빈 문자열 반환)
+  return "";
 }
 
 // 파일 ID를 기반으로 서버에서 파일을 가져와 파일 입력 필드에 추가
@@ -482,9 +533,12 @@ export async function loadFilesToInput(fileInputID, fileIDs) {
         try {
           if (fileID === "") return null;
 
-          const { blob, fileName } = await getFile(fileID); // getFile 함수로 파일을 가져옴
+          const { blob, fileName, fileType } = await getFile(fileID); // getFile 함수로 파일을 가져옴
 
-          return new File([blob], fileName); // Blob과 파일 이름으로 File 객체 생성
+          // 파일 타입이 없는 경우 기본값으로 'application/octet-stream' 설정
+          const mimeType = fileType || "application/octet-stream";
+
+          return new File([blob], fileName, { type: mimeType }); // Blob과 파일 이름으로 File 객체 생성
         } catch (error) {
           console.error(`파일 ID ${fileID}를 가져오는 데 실패했습니다:`, error);
           return null; // 실패한 파일은 null로 반환

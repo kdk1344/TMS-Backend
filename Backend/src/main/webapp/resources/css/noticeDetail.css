@@ -115,3 +115,7 @@ h2 {
   width: 30px;
   height: auto;
 }
+
+.notice-field dd.file-preview-container {
+  padding: 0;
+}

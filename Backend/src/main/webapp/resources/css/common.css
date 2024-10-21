@@ -744,3 +744,9 @@ button:hover {
 #totalCount {
   color: var(--dark-gray);
 }
+
+.image-preview {
+  max-width: 100px; /* 또는 적절한 크기로 설정 */
+  max-height: 100px; /* 또는 적절한 크기로 설정 */
+  margin-bottom: 8px;
+}
