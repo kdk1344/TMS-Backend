@@ -69,6 +69,22 @@
         </div>
       </div>
 
+      <!-- 첨부파일 미리보기 모달 -->
+      <div id="previewModal" class="modal">
+        <div class="modal-content hidden-scroll">
+          <div class="flex-box justify-between">
+            <h2>첨부파일 미리보기</h2>
+            <button type="button" id="closePreviewModallButton" class="modal-close-button">
+              <img src="${pageContext.request.contextPath}/resources/images/close_icon.png" alt="닫기" />
+            </button>
+          </div>
+
+          <div id="previewImageInModalWrapper">
+            <img id="previewImageInModal" />
+          </div>
+        </div>
+      </div>
+
       <!-- 공지사항 조회 필터링 폼 -->
       <form id="noticeFilterForm">
         <div class="filter-container">

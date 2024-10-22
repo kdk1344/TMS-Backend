@@ -177,10 +177,6 @@ textarea {
   min-width: fit-content;
 }
 
-.modal-content {
-  max-height: 50vh;
-}
-
 .definition-container {
   display: flex;
   gap: 16px;

@@ -193,10 +193,6 @@ legend .flex-box {
   min-width: fit-content;
 }
 
-.modal-content {
-  max-height: 50vh;
-}
-
 #programFilterForm {
   display: flex;
   justify-content: space-between;

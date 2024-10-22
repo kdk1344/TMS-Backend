@@ -255,7 +255,3 @@ legend .flex-box {
   white-space: nowrap;
   min-width: fit-content;
 }
-
-.modal-content {
-  max-height: 50vh;
-}

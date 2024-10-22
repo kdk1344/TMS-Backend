@@ -14,6 +14,7 @@
     <header class="header">
       <!-- 공통 헤더 정보 동적으로 삽입-->
     </header>
+
     <!-- 공지사항 수정 모달 -->
     <div id="noticeEditModal" class="modal">
       <!-- Modal content -->
@@ -62,6 +63,22 @@
             <button type="submit" class="save-button">저장</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- 첨부파일 미리보기 모달 -->
+    <div id="previewModal" class="modal">
+      <div class="modal-content hidden-scroll">
+        <div class="flex-box justify-between">
+          <h2>첨부파일 미리보기</h2>
+          <button type="button" id="closePreviewModallButton" class="modal-close-button">
+            <img src="${pageContext.request.contextPath}/resources/images/close_icon.png" alt="닫기" />
+          </button>
+        </div>
+
+        <div id="previewImageInModalWrapper">
+          <img id="previewImageInModal" />
+        </div>
       </div>
     </div>
 

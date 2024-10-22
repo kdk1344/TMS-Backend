@@ -42,6 +42,18 @@ document.addEventListener("DOMContentLoaded", init);
 // 초기화 함수
 function init() {
   hideSpinner();
+  setupEventListeners();
+}
+
+function setupEventListeners() {
+  // 첨부파일 미리보기 모달
+  const PREVIEW_MODAL_ID = "previewModal";
+  const closePreviewModalButton = document.getElementById("closePreviewModallButton");
+
+  if (closePreviewModalButton) closePreviewModalButton.addEventListener("click", () => closeModal(PREVIEW_MODAL_ID));
+
+  // 모달 외부 클릭 시 닫기 버튼 이벤트 핸들러
+  setupModalEventListeners([PREVIEW_MODAL_ID]);
 }
 
 // 메뉴 항목과 하위 항목들을 정의
@@ -333,15 +345,6 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     fileName.textContent = file.name;
     fileName.classList.add("file-name");
 
-    // 이미지 파일일 경우 미리보기 추가
-    if (file.type.startsWith("image/")) {
-      const img = document.createElement("img");
-      img.src = url;
-      img.alt = file.name;
-      img.classList.add("image-preview");
-      fileItem.appendChild(img); // 이미지 미리보기를 <li>에 추가
-    }
-
     // 삭제 버튼 생성
     const removeButton = document.createElement("button");
     removeButton.textContent = "삭제";
@@ -356,6 +359,31 @@ export function updateFilePreview(fileInputId, fileListOutputId) {
     fileLink.appendChild(fileName);
     fileItem.appendChild(fileLink);
     fileItem.appendChild(removeButton);
+
+    // 이미지 파일일 경우 미리보기 버튼 추가
+    if (file.type.startsWith("image/")) {
+      const previewButton = document.createElement("button");
+
+      previewButton.textContent = "미리보기";
+      previewButton.type = "button";
+      previewButton.classList.add("file-preview-button");
+
+      // 미리보기 버튼 클릭 이벤트
+      previewButton.addEventListener("click", () => {
+        const PREVIEW_MODAL_ID = "previewModal";
+        const PREVIEW_IMAGE = "previewImageInModal";
+        const previewImage = document.getElementById(PREVIEW_IMAGE);
+
+        if (previewImage) {
+          previewImage.src = url;
+          previewImage.alt = file.name;
+        }
+
+        openModal(PREVIEW_MODAL_ID);
+      });
+
+      fileItem.appendChild(previewButton); // 미리보기 버튼을 <li>에 추가
+    }
 
     // <li> 요소를 <ul> 요소에 추가
     fileList.appendChild(fileItem);
