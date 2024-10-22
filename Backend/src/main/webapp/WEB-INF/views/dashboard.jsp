@@ -18,8 +18,11 @@
     </header>
 
     <main class="content">
-      <h1 class="page-title">공지사항</h1>
-      <!-- 화면 진입 시 최신 게시 내용 -->
+      <div class="top-line">
+	      <h1 class="page-title">메인화면</h1>
+	      <button id="admin-notice" type="button" onclick="location.href='/tms/notice'">공지사항</button>
+      </div>
+      <!-- 화면 진입 시 클릭한 페이지 최신 및 공지사항 게시 내용 -->
 	    <div class="main-display">
 	    	<dl class="nt-details">
 		    <div class="nt-field">

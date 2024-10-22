@@ -168,7 +168,7 @@ public class AdminService {
     }
     
     // 첨부파일 삭제
-    public void deleteAttachmentsByNoticeId(Integer seq, int type) {
+    public void deleteAttachmentsByNoticeId(Integer seq, int type) { // type에 따라서 상위 게시판에 맞는 첨부파일이 삭제됨
     	adminmapper.deleteAttachmentsByNoticeId(seq, type);
     }
     

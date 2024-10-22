@@ -333,7 +333,6 @@ public class TestController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			log.info(testProgress.getSeq());
 	        testProgress TestProgressEdit = testService.getTestById(testProgress.getSeq());
 	        testProgress.setInitRegistrar(TestProgressEdit.getInitRegistrar());
 	        
@@ -347,7 +346,8 @@ public class TestController {
 			TestProgressEdit.setLastModifier(UserName);
     	    
     	    // 공지사항에 등록된 기존 첨부파일 전부 삭제
-            adminService.deleteAttachmentsByNoticeId(TestProgressEdit.getSeq(), 1);
+            adminService.deleteAttachmentsByNoticeId(TestProgressEdit.getSeq(), 21);
+            adminService.deleteAttachmentsByNoticeId(TestProgressEdit.getSeq(), 22);
             
             // 새로운 파일 업로드 처리
             fileservice.handleFileUpload(execfiles, "testProgress", testProgress.getSeq());

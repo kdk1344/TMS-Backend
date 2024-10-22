@@ -3,12 +3,25 @@ main.content {
     padding: 20px;
 }
 
+.top-line {
+    display: flex;               
+    justify-content: space-between; 
+    align-items: center;       
+    padding: 10px;
+    padding-bottom : 20px;
+}
+
 .page-title {
     font-size: 28px;
     margin-bottom: 20px;
+    margin : 0;
 }
 
-/* Main Display Section (for the notice details) */
+#admin-notice {
+	float : right;
+	width : 100px;
+}
+
 .main-display {
 	background-color: #fff;
 	padding: 20px;
