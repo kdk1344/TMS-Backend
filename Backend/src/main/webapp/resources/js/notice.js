@@ -14,6 +14,7 @@
   checkSession,
   AUTHORITY_CODE,
   getNotices,
+  addFiles,
 } from "./common.js";
 
 let currentPage = 1;
@@ -83,6 +84,8 @@ function setupEventListeners() {
     fileInputForRegister.addEventListener("change", () => {
       const fileInputId = "fileInputForRegister";
       const fileListOutputId = "fileOutputForRegister";
+
+      addFiles(fileInputId);
 
       updateFilePreview(fileInputId, fileListOutputId);
     });
