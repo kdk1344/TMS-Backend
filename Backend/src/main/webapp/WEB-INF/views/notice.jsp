@@ -21,7 +21,7 @@
       <!-- Register Modal -->
       <div id="noticeRegisterModal" class="modal">
         <!-- Modal content -->
-        <div class="modal-content">
+        <div class="modal-content hidden-scroll">
           <h2>공지사항 등록</h2>
           <form id="noticeRegisterForm" class="modal-form">
             <div class="modal-form-group">
