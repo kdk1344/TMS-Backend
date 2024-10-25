@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.servlet.http.HttpSession;
@@ -55,7 +56,6 @@ public class FileService {
 	//첨부파일 업로드
     public void handleFileUpload(MultipartFile[] files, String boardType, int identifier) {
         List<FileAttachment> attachments = new ArrayList<>();
-        log.info(boardType + "첨부 체크" + identifier);
         // boardType에 따라 boardTypeNumber 설정
         Integer boardTypeNumber;
         switch (boardType) {
@@ -86,7 +86,9 @@ public class FileService {
 	        if (file != null && !file.isEmpty()) {
 	            try {
 	            	String fileType = getFileType(file.getContentType()); // 파일 타입
-	                String storageLocation = getStorageLocation(fileType, file.getOriginalFilename()); // 파일 저장 장소
+	                String dBFileName = file.getOriginalFilename(); //DB에 저장될 파일명
+	                String newFileName = UUID.randomUUID().toString() + "_"+ dBFileName;
+	                String storageLocation = getStorageLocation(fileType, newFileName); // 파일 저장 장소
 	
 	                File destinationFile = new File(storageLocation);
 	                file.transferTo(destinationFile);
@@ -96,12 +98,11 @@ public class FileService {
 	                attachment.setIdentifier(identifier);
 	                attachment.setType(boardTypeNumber);
 	                attachment.setStorageLocation(storageLocation);
-	                attachment.setFileName(file.getOriginalFilename());
+	                attachment.setFileName(dBFileName);
 	
 	                attachments.add(attachment);
-	                log.info(attachments);
 	            } catch (Exception e) {
-	                log.info("File upload failed");
+	            	e.printStackTrace();
 	            }
 	        } else {
 	        	log.info("비었어!");
@@ -112,7 +113,10 @@ public class FileService {
     
     // 첨부파일 저장 장소 정리
     public String getStorageLocation(String fileType, String fileName) {
-        String baseDir = "C:\\Users\\User\\Desktop\\TMS_DEV\\";
+    	String baseDir = System.getenv("APP_BASE_DIR"); // 고급 시스템 설정의 path에서 설정
+    	if (baseDir == null) {
+    	    baseDir = "C:\\ProgramData\\TMS\\Windows\\"; // 기본 경로
+    	}
         String storageLocation;
         switch (fileType) {
         case "IMAGE":
