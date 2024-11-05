@@ -12,6 +12,7 @@
 
 // DOM 요소
 const loginForm = document.getElementById("loginForm");
+const changePasswordForm = document.getElementById("changePasswordForm");
 
 // 문서 로드 시 초기화
 document.addEventListener("DOMContentLoaded", init);
@@ -41,6 +42,16 @@ function setupEventListeners() {
   if (loginForm) {
     loginForm.addEventListener("submit", login);
   }
+  
+  const passwordChangeModalId = "passwordChangeModal";
+  
+  // 비밀번호 수정 폼 제출 이벤트 핸들러
+  if (changePasswordForm) {
+    changePasswordForm.addEventListener("submit", pwChange);
+  }
+  
+  document.getElementById("closechangePasswordModalButton").addEventListener("click", () => closeModal(passwordChangeModalId));
+  setupModalEventListeners([passwordChangeModalId]);
 
   const testGuideModalId = "testGuideModal";
 
@@ -172,11 +183,56 @@ async function login(event) {
       body: JSON.stringify(formDataObj),
     });
 
-    const success = response.status === "success";
-    if (success) window.location.href = "/tms/dashboard"; // 대시보드로 이동
+    const { status, pwChange, userID } = response; // 응답에서 상태와 데이터를 구조 분해 할당
+
+    if (status === "success") {
+      // 비밀번호 변경 횟수 확인
+      const pwChangeCount = pwChange; // 서버에서 비밀번호 변경 횟수를 포함해서 받아온다고 가정
+
+      if (pwChangeCount === 0) {
+      	document.getElementById("userIDForEdit").value = userID; 
+        document.getElementById("passwordChangeModal").style.display = "block"; // 모달 열기
+        document.body.style.overflow = "hidden"; // 배경 스크롤 비활성화
+        return;
+      }
+
+      window.location.href = "/tms/dashboard"; // 대시보드로 이동
+    }
   } catch (error) {
     alert(error.message);
   } finally {
     hideSpinner();
+  }
+}
+
+// 사용자 수정
+async function pwChange(event) {
+  event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  // 사용자 정보 가져와서 폼에 넣기
+
+  const formData = new FormData(event.target);
+
+  // FormData 객체를 JSON 객체로 변환
+  const formDataObj = Object.fromEntries(formData.entries());
+
+  try {
+    const { user, status } = await tmsFetch("/pwChange", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formDataObj),
+    });
+
+    const success = status === "success";
+
+    if (success) {
+      alert(`비밀번호 수정이 완료되었습니다.`);
+      event.target.reset(); // 폼 초기화
+      document.getElementById("passwordChangeModal").style.display = "none"; // 모달 닫기
+	  document.body.style.overflow = ""; // 배경 스크롤 활성화
+      location.reload(); // 페이지 새로고침
+    }
+  } catch (error) {
+    alert(error.message + "\n다시 시도해주세요.");
   }
 }

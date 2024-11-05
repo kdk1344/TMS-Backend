@@ -11,6 +11,7 @@ import com.tms.backend.controller.UserController;
 import com.tms.backend.mapper.UserMapper;
 import com.tms.backend.vo.Criteria;
 import com.tms.backend.vo.User;
+import com.tms.backend.vo.testProgress;
 
 import lombok.extern.log4j.Log4j;
 
@@ -35,6 +36,12 @@ public class UserService {
         } else {
         	return null;
         }
+    }
+    
+    //아이디에 따른 사용자 정보 가져오기
+    public User getUserByUserID(String userID) {
+    	User user = userMapper.getUserByUserID(userID);
+    	return user;
     }
     
     // 모든 사용자 데이터 추출

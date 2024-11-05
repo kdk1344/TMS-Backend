@@ -16,6 +16,7 @@
     <header class="header">
       <!-- 공통 헤더 정보 동적으로 삽입-->
     </header>
+    
 
     <main class="content">
       <div class="top-line">

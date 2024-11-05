@@ -140,36 +140,35 @@ public class UserController {
         return ResponseEntity.ok(response); // 200 OK 응답
     }
     
-//    // 페이징 및 검색을 통한 공지사항 목록을 JSON으로 반환
-//    @GetMapping(value = "api/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public Map<String, Object> getNotices(@RequestParam(value = "startDate", required = false) String startDate,
-//                                          @RequestParam(value = "endDate", required = false) String endDate,
-//                                          @RequestParam(value = "title", required = false) String title,
-//                                          @RequestParam(value = "content", required = false) String content,
-//                                          @RequestParam(value = "page", defaultValue = "1") int page,
-//                                          @RequestParam(value = "size", defaultValue = "10") int size) {
-//    	
-//        // 공지사항 조회
-//        List<Notice> notices = adminService.searchNotices(startDate, endDate, title, content, page, size);
-//        int totalNotices = adminService.getTotalNoticesCount(startDate, endDate, title, content);
-//        int totalPages = (int) Math.ceil((double) totalNotices / size);
-//        
-//        //최근 공지글
-//        Notice latestNotice = adminService.getLatestNotice();
-//        List<FileAttachment> attachments = adminService.getAttachments(latestNotice.getSeq(),4);
-//        latestNotice.setAttachments(attachments);
-//
-//        // 응답 생성
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("notices", notices);
-//        response.put("currentPage", page);
-//        response.put("totalPages", totalPages);
-//        response.put("totalNotices", totalNotices);
-//        response.put("latestNotice", latestNotice);
-//
-//        return response;
-//    }
+    // 사용자가 직접 비밀번호 변경
+    @PostMapping(value = "api/pwChange", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> APIpwChange(HttpServletRequest request,
+    		@RequestBody User user
+    		) {
+        Map<String, Object> response = new HashMap<>();
+
+        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
+        String userID = (String) session.getAttribute("id"); // 로그인한 ID 가져오기
+        User users = userService.getUserByUserID(userID); // ID를 통해 수정을 위한 사용자 정보 가져오기
+        log.info(users);
+        users.setPassword(user.getPassword()); // 변경할 비밀번호 입력
+        users.setPwChangeCnt(user.getPwChangeCnt()+1);
+        log.info(users);
+        boolean success = adminService.updateUser(users, request);
+        if (success) {
+            response.put("status", "success");
+            response.put("message", "비밀번호 수정이 완료되었습니다.");
+            response.put("user", user); // 업데이트된 사용자 정보 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.put("status", "failure");
+            response.put("message", "비밀번호 수정 중에 실패했습니다");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    
     
     // 로그아웃 기능
     @GetMapping(value = "api/logout", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -208,6 +207,8 @@ public class UserController {
         String userID = (String) session.getAttribute("id");
         String userName = (String) session.getAttribute("name");
         Integer authorityCode = (Integer) session.getAttribute("authorityCode");
+        // 세션에서 pwChange 가져오기
+        Integer pwChange = (Integer) session.getAttribute("pwChange");
 
         // 클라이언트에 사용자 정보 전송
         response.put("status", "success");
@@ -234,7 +235,7 @@ public class UserController {
         
         //로그인 확인
         User check = userService.authenticateUser(userID, password);
-        
+     
         if (check != null) {            
             // 사용자 ID와 이름, 권한 코드를 세션에 저장
             session.setAttribute("id", loginRequest.get("userID"));
@@ -253,6 +254,7 @@ public class UserController {
             response.put("status", "success");
             response.put("message", "로그인 성공");
             response.put("userID", loginRequest.get("userID"));
+            response.put("pwChange", check.getPwChangeCnt());
             response.put("userName", check.getUserName());
             response.put("authorityCode", check.getAuthorityCode());
             
@@ -260,7 +262,7 @@ public class UserController {
         } else {            
             // 실패 응답 생성
             response.put("status", "error");
-            response.put("message", "Invalid userID or password.");
+            response.put("message", "잘못된 아이디나 비밀번호를 입력하셨습니다.");
             
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response); // 401 Unauthorized
         }

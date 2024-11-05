@@ -1,4 +1,4 @@
-﻿/** @global */
+﻿﻿/** @global */
 export const REFERER = {
   DEV_PROGRESS: "devProgress",
   TEST_PROGRESS: "testProgress",

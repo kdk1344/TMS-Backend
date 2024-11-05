@@ -24,6 +24,25 @@
         <div id="testGuideModalContent"></div>
       </div>
     </div>
+    <div id="passwordChangeModal" class="modal" style="display:none;">
+        <div class="modal-contents">
+          <h2 id="passh2">비밀번호 수정</h2>
+          <form id="changePasswordForm" class="modal-form">
+            <div class="modal-form-group">
+              <label for="userIDForEdit">아이디</label>
+              <input type="text" id="userIDForEdit" name="userID" readonly required></input>
+            </div>
+            <div class="modal-form-group">
+              <label for="passwordForEdit">비밀번호</label>
+              <input type="password" id="passwordForEdit" name="password" required autocomplete />
+            </div>
+            <div class="flex-box justify-end">
+              <button type="button" id="closechangePasswordModalButton" class="cancel-button">취소</button>
+              <button type="submit" class="save-button">저장</button>
+            </div>
+          </form>
+        </div>
+   	</div>
 
     <header class="flex-box title">
       <h1 class="logo">TMS</h1>

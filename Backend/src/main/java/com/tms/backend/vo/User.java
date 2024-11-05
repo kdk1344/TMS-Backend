@@ -10,4 +10,5 @@ public class User {
     private String password;      // 패스워드
     private int authorityCode;      // 권한 코드
     private String authorityName;      // 권한명
+    private int pwChangeCnt; //비밀번호 변경횟수
 }

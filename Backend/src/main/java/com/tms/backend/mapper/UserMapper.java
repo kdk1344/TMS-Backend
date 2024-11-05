@@ -17,4 +17,5 @@ public interface UserMapper {
     public List<User> findAll(); // 사용자 데이터 추출
     public List<User> UfindAll(); // 사용자 데이터 추출
     public List<User> findUsersByCriteria(Criteria criteria); // Criteria 데이터에 맞춘 사용자 데이터 추출
+    public void updatePassword(String userID, String Password); // 사용자 비밀번호 변경
 }

@@ -50,6 +50,7 @@ public class AdminService {
     // 사용자 데이터 수정 
     @Transactional
     public boolean updateUser(User user, HttpServletRequest request) {
+    	log.info(user.getPassword());
     	//비밀번호 암호화
     	String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);

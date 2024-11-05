@@ -34,7 +34,8 @@
 			              WHEN #{authorityName} = '테스터' THEN 6
 			              WHEN #{authorityName} = '고객 IT 담당자' THEN 7
 			              WHEN #{authorityName} = '고객 현업 담당자' THEN 8
-                      END
+                      END,
+            PW_CHANGE_CNT = #{pwChangeCnt}
         WHERE User_ID = #{userID}
     </update>
     <!-- 사용자 정보 삭제 -->
