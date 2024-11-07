@@ -147,7 +147,11 @@ async function renderDefect(getDefectListProps = {}) {
     defectHandler: "",
     pl: "",
   };
-  const { defectList, totalPages, totalCount } = await getDefectList({ ...defaultProps, getDefectListProps });
+  // getDefectListProps와 defaultProps를 병합하여 최종 props 생성
+  const finalProps = { ...defaultProps, ...getDefectListProps };
+
+  // 서버에서 결함 목록 가져오기
+  const { defectList, totalPages, totalCount } = await getDefectList(finalProps);
 
   document.getElementById("totalCount").textContent = `총 게시물 ${totalCount}개`;
 
@@ -196,7 +200,8 @@ async function renderDefect(getDefectListProps = {}) {
       defectTableBody.appendChild(row);
     });
 
-    setupPagination({ paginationElementId: "defectPagination", totalPages, currentPage, changePage });
+    // 페이지네이션 설정 (현재 페이지와 총 페이지 수를 기반으로)
+    setupPagination({ paginationElementId: "defectPagination", totalPages, currentPage: finalProps.page, changePage });
   }
 }
 
