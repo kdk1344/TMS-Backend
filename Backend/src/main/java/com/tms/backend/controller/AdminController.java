@@ -89,6 +89,7 @@ public class AdminController {
         Map<String, Object> response = new HashMap<>();
         // join 메서드에서 성공 시 예외를 발생시키지 않음
         try {
+        	user.setPassword("tms123");
             adminService.join(user);  // 사용자 등록
             response.put("status", "success");
             response.put("message", "사용자 등록에 성공했습니다.");
@@ -133,6 +134,12 @@ public class AdminController {
         
     	Map<String, Object> response = new HashMap<>();
         try {
+        	if(user.getPassword().equals("tms123")) { // 비밀번호를 기본 비밀번호로 설정하면 재설정 팝업이 띄도록 설정
+        		user.setPwChangeCnt(0);
+        	}
+        	else {
+        		user.setPwChangeCnt(1);
+        	}
         	//사용자 수정
             boolean success = adminService.updateUser(user, request);
             if (success) {

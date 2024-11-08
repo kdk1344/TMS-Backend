@@ -35,11 +35,6 @@
             </div>
 
             <div class="modal-form-group">
-              <label for="password">비밀번호</label>
-              <input type="password" id="password" name="password" required autocomplete />
-            </div>
-
-            <div class="modal-form-group">
               <label for="authorityName">직무</label>
               <select id="authorityName" name="authorityName">
                 <option value="관리자">관리자</option>

@@ -147,25 +147,32 @@ public class UserController {
     		@RequestBody User user
     		) {
         Map<String, Object> response = new HashMap<>();
-
-        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
-        String userID = (String) session.getAttribute("id"); // 로그인한 ID 가져오기
-        User users = userService.getUserByUserID(userID); // ID를 통해 수정을 위한 사용자 정보 가져오기
-        log.info(users);
-        users.setPassword(user.getPassword()); // 변경할 비밀번호 입력
-        users.setPwChangeCnt(user.getPwChangeCnt()+1);
-        log.info(users);
-        boolean success = adminService.updateUser(users, request);
-        if (success) {
-            response.put("status", "success");
-            response.put("message", "비밀번호 수정이 완료되었습니다.");
-            response.put("user", user); // 업데이트된 사용자 정보 반환
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            response.put("status", "failure");
-            response.put("message", "비밀번호 수정 중에 실패했습니다");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+        try {
+	        HttpSession session = request.getSession(false); // false는 세션이 없으면 새로 만들지 않음을 의미
+	        String userID = (String) session.getAttribute("id"); // 로그인한 ID 가져오기
+	        User users = userService.getUserByUserID(userID); // ID를 통해 수정을 위한 사용자 정보 가져오기
+	        String change_Pw = user.getPassword();
+	        if (change_Pw.equals("tms123")) {
+	        	throw new IllegalArgumentException("비밀번호를 기본 지급 번호에서 변경시키고 로그인해주시기 바랍니다.");
+	        }
+	        users.setPassword(change_Pw); // 변경할 비밀번호 입력
+	        users.setPwChangeCnt(user.getPwChangeCnt()+1);
+	        boolean success = adminService.updateUser(users, request);
+	        if (success) {
+	            response.put("status", "success");
+	            response.put("message", "비밀번호 수정이 완료되었습니다.");
+	            response.put("user", user); // 업데이트된 사용자 정보 반환
+	            return new ResponseEntity<>(response, HttpStatus.OK);
+	        } else {
+	            response.put("status", "failure");
+	            response.put("message", "비밀번호 수정 중에 실패했습니다");
+	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	        }
+	        } catch(IllegalArgumentException e){
+	        	response.put("status", "failure");
+	            response.put("message", e.getMessage());
+	            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	        }
     }
     
     

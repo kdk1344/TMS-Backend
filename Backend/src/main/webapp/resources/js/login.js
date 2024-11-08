@@ -190,6 +190,7 @@ async function login(event) {
       const pwChangeCount = pwChange; // 서버에서 비밀번호 변경 횟수를 포함해서 받아온다고 가정
 
       if (pwChangeCount === 0) {
+      	alert(`지급된 기본 비밀번호를 변경한 이후에 로그인하시기 바랍니다.`);
       	document.getElementById("userIDForEdit").value = userID; 
         document.getElementById("passwordChangeModal").style.display = "block"; // 모달 열기
         document.body.style.overflow = "hidden"; // 배경 스크롤 비활성화
